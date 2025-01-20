@@ -1,0 +1,25 @@
+{
+  "folders": [
+    {
+      "path": "./../reeltok.client/reeltok.client.reactNative",
+      "name": "ReelTok client React-native"
+    },
+    {
+      "path": "./../reeltok.client/reeltok.client.common",
+      "name": "ReelTok client common"
+    },
+    {
+      "path": "./../.git"
+    }
+  ],
+  "settings": {
+    "conventionalCommits.scopes": [
+      "api.recommendations",
+      "api.users",
+      "api.videos",
+      "client.reactNative",
+      "database",
+      "documentation"
+    ]
+  }
+}

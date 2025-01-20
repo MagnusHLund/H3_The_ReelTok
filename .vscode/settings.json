@@ -1,0 +1,10 @@
+{
+  "conventionalCommits.scopes": [
+    "api.recommendations",
+    "api.users",
+    "api.videos",
+    "client.reactNative",
+    "database",
+    "documentation"
+  ]
+}

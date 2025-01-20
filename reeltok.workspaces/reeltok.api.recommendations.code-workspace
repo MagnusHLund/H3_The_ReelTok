@@ -1,0 +1,46 @@
+{
+  "folders": [
+    {
+      "path": "./../reeltok.api/reeltok.api.recommendations",
+      "name": "ReelTok Recommendations API"
+    },
+    {
+      "path": "./../.git"
+    }
+  ],
+  "settings": {
+    "dotnet.defaultSolution": "RecommendationsService.sln",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "conventionalCommits.scopes": [
+      "api.recommendations",
+      "api.users",
+      "api.videos",
+      "client.reactNative",
+      "database",
+      "documentation"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": ".NET Core Launch (Recommendations Service)",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder:ReelTok Recommendations API}/bin/Debug/net6.0/RecommendationsService.dll",
+        "args": [],
+        "cwd": "${workspaceFolder:ReelTok Recommendations API}",
+        "stopAtEntry": false,
+        "serverReadyAction": {
+          "action": "openExternally",
+          "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+        },
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+      }
+    ],
+    "compounds": []
+  }
+}

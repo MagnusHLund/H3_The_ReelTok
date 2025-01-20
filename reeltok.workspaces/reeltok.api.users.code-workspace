@@ -1,0 +1,46 @@
+{
+  "folders": [
+    {
+      "path": "./../reeltok.api/reeltok.api.users/",
+      "name": "ReelTok Users API"
+    },
+    {
+      "path": "./../.git/"
+    }
+  ],
+  "settings": {
+    "dotnet.defaultSolution": "UsersService.sln",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "conventionalCommits.scopes": [
+      "api.recommendations",
+      "api.users",
+      "api.videos",
+      "client.reactNative",
+      "database",
+      "documentation"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": ".NET Core Launch (Users Service)",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder:ReelTok Users API}/bin/Debug/net6.0/UsersService.dll",
+        "args": [],
+        "cwd": "${workspaceFolder:ReelTok Users API}",
+        "stopAtEntry": false,
+        "serverReadyAction": {
+          "action": "openExternally",
+          "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+        },
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+      }
+    ],
+    "compounds": []
+  }
+}
