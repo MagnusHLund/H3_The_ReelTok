@@ -5,7 +5,7 @@
       "name": "ReelTok Recommendations API"
     },
     {
-      "path": "./../reeltok.database.recommendations",
+      "path": "./../reeltok.database/reeltok.database.recommendations",
       "name": "ReelTok Recommendations database"
     },
     {

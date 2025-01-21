@@ -5,7 +5,7 @@
       "name": "ReelTok Auth API"
     },
     {
-      "path": "./../reeltok.database.auth",
+      "path": "./../reeltok.database/reeltok.database.auth",
       "name": "ReelTok Auth database"
     },
     {

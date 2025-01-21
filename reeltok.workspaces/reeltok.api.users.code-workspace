@@ -5,7 +5,7 @@
       "name": "ReelTok Users API"
     },
     {
-      "path": "./../reeltok.database.users",
+      "path": "./../reeltok.database/reeltok.database.users",
       "name": "ReelTok Users database"
     },
     {
