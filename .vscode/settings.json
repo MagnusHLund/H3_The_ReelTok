@@ -3,6 +3,8 @@
     "api.recommendations",
     "api.users",
     "api.videos",
+    "api.auth",
+    "api.gateway",
     "client.reactNative",
     "database",
     "documentation"
