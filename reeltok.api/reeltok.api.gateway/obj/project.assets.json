@@ -434,11 +434,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\GatewayService\\GatewayService.csproj",
+      "projectUniqueName": "c:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\reeltok.api.gateway\\GatewayService.csproj",
       "projectName": "GatewayService",
-      "projectPath": "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\GatewayService\\GatewayService.csproj",
+      "projectPath": "c:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\reeltok.api.gateway\\GatewayService.csproj",
       "packagesPath": "C:\\Users\\magnu\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\GatewayService\\obj\\",
+      "outputPath": "c:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\reeltok.api.gateway\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

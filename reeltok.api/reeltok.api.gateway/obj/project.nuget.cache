@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "njH7seaAgMdRP9SKwzCSe8ZTaOtpm8EMQWF4YvJ2yWkk7cNqIQRlHD0+vemeDGkza7Dol3I5pA0+UeQB99UFTg==",
+  "dgSpecHash": "Ym9EtymNR4XwPJhTBt0XyWiCUcTF42phwQvemm+3XUp4aocJJM3hg0ii3l88sXXdA2Db0+g+C67WQHWWOAfeVw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\GatewayService\\GatewayService.csproj",
+  "projectFilePath": "c:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\reeltok.api.gateway\\GatewayService.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\magnu\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\magnu\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",

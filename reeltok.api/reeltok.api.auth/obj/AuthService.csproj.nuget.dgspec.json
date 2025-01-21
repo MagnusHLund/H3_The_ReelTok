@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\AuthService\\AuthService.csproj": {}
+    "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\reeltok.api.auth\\AuthService.csproj": {}
   },
   "projects": {
-    "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\AuthService\\AuthService.csproj": {
+    "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\reeltok.api.auth\\AuthService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\AuthService\\AuthService.csproj",
+        "projectUniqueName": "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\reeltok.api.auth\\AuthService.csproj",
         "projectName": "AuthService",
-        "projectPath": "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\AuthService\\AuthService.csproj",
+        "projectPath": "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\reeltok.api.auth\\AuthService.csproj",
         "packagesPath": "C:\\Users\\magnu\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\AuthService\\obj\\",
+        "outputPath": "C:\\Users\\magnu\\source\\repos\\H3_Tiktok\\H3_The_ReelTok\\reeltok.api\\reeltok.api.auth\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
