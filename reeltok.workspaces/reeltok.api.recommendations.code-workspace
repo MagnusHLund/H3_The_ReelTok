@@ -5,6 +5,10 @@
       "name": "ReelTok Recommendations API"
     },
     {
+      "path": "./../reeltok.database.recommendations",
+      "name": "ReelTok Recommendations database"
+    },
+    {
       "path": "./../.git"
     }
   ],
@@ -15,6 +19,8 @@
       "api.recommendations",
       "api.users",
       "api.videos",
+      "api.auth",
+      "api.gateway",
       "client.reactNative",
       "database",
       "documentation"

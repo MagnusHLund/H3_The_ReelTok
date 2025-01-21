@@ -2,7 +2,11 @@
   "folders": [
     {
       "path": "./../reeltok.api/reeltok.api.videos/",
-      "name": "ReelTok videos API"
+      "name": "ReelTok Videos API"
+    },
+    {
+      "path": "./../reeltok.database.videos",
+      "name": "ReelTok Videos database"
     },
     {
       "path": "./../.git/"
@@ -15,6 +19,8 @@
       "api.recommendations",
       "api.users",
       "api.videos",
+      "api.auth",
+      "api.gateway",
       "client.reactNative",
       "database",
       "documentation"
@@ -28,9 +34,9 @@
         "type": "coreclr",
         "request": "launch",
         "preLaunchTask": "build",
-        "program": "${workspaceFolder:Reeltok videos API}/bin/Debug/net6.0/VideosService.dll",
+        "program": "${workspaceFolder:Reeltok Videos API}/bin/Debug/net6.0/VideosService.dll",
         "args": [],
-        "cwd": "${workspaceFolder:Reeltok videos API}",
+        "cwd": "${workspaceFolder:Reeltok Videos API}",
         "stopAtEntry": false,
         "serverReadyAction": {
           "action": "openExternally",

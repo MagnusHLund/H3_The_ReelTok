@@ -7,6 +7,57 @@ Each API will have unit tests, to ensure a stable backend for our social media p
 
 ## Ports
 
-- RecommendationsService uses port 5000
-- UsersService uses port 5001
-- VideosService uses port 5002
+Below is a table, which shows the assigned port for each microservice.
+
+<table>
+    <thead>
+        <td>
+            Service
+        </td>
+        <td>
+            Port
+        </td>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                Gateway service
+            </td>
+            <td>
+                5000
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Users service
+            </td>
+            <td>
+                5001
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Videos service
+            </td>
+            <td>
+                5002
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Auth service
+            </td>
+            <td>
+                5003
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Recommendations service
+            </td>
+            <td>
+                5004
+            </td>
+        </tr>
+    </tbody>
+</table>

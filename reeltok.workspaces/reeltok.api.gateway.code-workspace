@@ -1,0 +1,48 @@
+{
+  "folders": [
+    {
+      "path": "./../reeltok.api/reeltok.api.gateway/",
+      "name": "ReelTok Gateway API"
+    },
+    {
+      "path": "./../.git/"
+    }
+  ],
+  "settings": {
+    "dotnet.defaultSolution": "GatewayService.sln",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "conventionalCommits.scopes": [
+      "api.recommendations",
+      "api.users",
+      "api.videos",
+      "api.auth",
+      "api.gateway",
+      "client.reactNative",
+      "database",
+      "documentation"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": ".NET Core Launch (Gateway Service)",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder:Reeltok Gateway API}/bin/Debug/net6.0/GatewayService.dll",
+        "args": [],
+        "cwd": "${workspaceFolder:Reeltok Gateway API}",
+        "stopAtEntry": false,
+        "serverReadyAction": {
+          "action": "openExternally",
+          "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+        },
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+      }
+    ],
+    "compounds": []
+  }
+}
