@@ -5,7 +5,7 @@
       "name": "ReelTok Videos API"
     },
     {
-      "path": "./../reeltok.database.videos",
+      "path": "./../reeltok.database/reeltok.database.videos",
       "name": "ReelTok Videos database"
     },
     {
