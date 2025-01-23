@@ -1,19 +1,15 @@
 {
   "folders": [
     {
-      "path": "./../reeltok.api/reeltok.api.recommendations",
-      "name": "ReelTok Recommendations API"
+      "path": "./../reeltok.api/reeltok.api.comments/",
+      "name": "ReelTok Comments API"
     },
     {
-      "path": "./../reeltok.database/reeltok.database.recommendations",
-      "name": "ReelTok Recommendations database"
-    },
-    {
-      "path": "./../.git"
+      "path": "./../.git/"
     }
   ],
   "settings": {
-    "dotnet.defaultSolution": "RecommendationsService.sln",
+    "dotnet.defaultSolution": "CommentsService.sln",
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "conventionalCommits.scopes": [
       "api.recommendations",
@@ -31,13 +27,13 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": ".NET Core Launch (Recommendations Service)",
+        "name": ".NET Core Launch (Comments Service)",
         "type": "coreclr",
         "request": "launch",
         "preLaunchTask": "build",
-        "program": "${workspaceFolder:ReelTok Recommendations API}/bin/Debug/net6.0/RecommendationsService.dll",
+        "program": "${workspaceFolder:Reeltok Comments API}/bin/Debug/net6.0/CommentsService.dll",
         "args": [],
-        "cwd": "${workspaceFolder:ReelTok Recommendations API}",
+        "cwd": "${workspaceFolder:Reeltok Comments API}",
         "stopAtEntry": false,
         "serverReadyAction": {
           "action": "openExternally",

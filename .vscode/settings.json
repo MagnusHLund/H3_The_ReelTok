@@ -5,6 +5,7 @@
     "api.videos",
     "api.auth",
     "api.gateway",
+    "api.comments",
     "client.reactNative",
     "database",
     "documentation"
