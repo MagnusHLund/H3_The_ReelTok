@@ -1,0 +1,49 @@
+{
+  "folders": [
+    {
+      "path": "./../reeltok.api/reeltok.api.comments/",
+      "name": "ReelTok Comments API"
+    },
+    {
+      "path": "./../.git/"
+    }
+  ],
+  "settings": {
+    "dotnet.defaultSolution": "CommentsService.sln",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "conventionalCommits.scopes": [
+      "api.recommendations",
+      "api.users",
+      "api.videos",
+      "api.auth",
+      "api.gateway",
+      "api.comments",
+      "client.reactNative",
+      "database",
+      "documentation"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": ".NET Core Launch (Comments Service)",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder:Reeltok Comments API}/bin/Debug/net6.0/CommentsService.dll",
+        "args": [],
+        "cwd": "${workspaceFolder:Reeltok Comments API}",
+        "stopAtEntry": false,
+        "serverReadyAction": {
+          "action": "openExternally",
+          "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+        },
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+      }
+    ],
+    "compounds": []
+  }
+}
