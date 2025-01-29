@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace reeltok.api.gateway.DTOs
 {
-    public class NewClass
+    public class UserDetails
     {
-
+        
     }
 }

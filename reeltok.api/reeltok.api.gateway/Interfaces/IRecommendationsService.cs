@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace reeltok.api.gateway.Data
+namespace reeltok.api.gateway.Interfaces
 {
-    public class NewClass
+    public interface IRecommendationsService
     {
         
     }

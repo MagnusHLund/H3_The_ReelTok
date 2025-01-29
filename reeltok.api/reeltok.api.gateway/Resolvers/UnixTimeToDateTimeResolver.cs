@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace reeltok.api.gateway.Services
+namespace reeltok.api.gateway.Resolvers
 {
-    public class NewClass
+    public class UnixTimeToDateTimeResolver
     {
         
     }
