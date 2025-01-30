@@ -7,6 +7,6 @@ namespace reeltok.api.gateway.Interfaces
 {
     public interface IRecommendationsService
     {
-        
+        public void ChangeRecommendedCategory(string category);
     }
 }

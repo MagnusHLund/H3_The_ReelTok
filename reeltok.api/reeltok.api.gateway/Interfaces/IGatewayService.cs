@@ -7,6 +7,7 @@ namespace reeltok.api.gateway.Interfaces
 {
     public interface IGatewayService
     {
-        
+        public HttpResponseMessage ProcessRequest(HttpRequest request);
+        public HttpResponseMessage RouteRequest(HttpResponseMessage response);
     }
 }

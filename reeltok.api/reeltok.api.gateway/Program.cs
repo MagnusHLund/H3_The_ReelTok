@@ -1,3 +1,5 @@
+using reeltok.api.gateway.Interfaces;
+using reeltok.api.gateway.Services;
 
 namespace GatewayService
 {
@@ -8,6 +10,8 @@ namespace GatewayService
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
+			builder.Services.AddTransient<IGatewayService, reeltok.api.gateway.Services.GatewayService>();
+			builder.Services.AddTransient<IAuthService, AuthService>();
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

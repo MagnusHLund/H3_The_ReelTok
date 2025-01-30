@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace reeltok.api.gateway.Entities
 {
-    public class Video
+    public class VideoUpload
     {
-
+        
     }
 }

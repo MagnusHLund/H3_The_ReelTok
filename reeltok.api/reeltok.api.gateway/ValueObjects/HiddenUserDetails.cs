@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace reeltok.api.gateway.Entities
+namespace reeltok.api.gateway.ValueObjects
 {
-    public class Video
+    public class HiddenUserDetails
     {
 
     }
