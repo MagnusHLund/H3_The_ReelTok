@@ -1,7 +1,9 @@
 using reeltok.api.gateway.Interfaces;
 using reeltok.api.gateway.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
-namespace GatewayService
+namespace GatewayServiceApi
 {
 	public class Program
 	{
@@ -10,7 +12,7 @@ namespace GatewayService
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
-			builder.Services.AddTransient<IGatewayService, reeltok.api.gateway.Services.GatewayService>();
+			builder.Services.AddTransient<IGatewayService, GatewayService>();
 			builder.Services.AddTransient<IAuthService, AuthService>();
 
 			builder.Services.AddControllers();

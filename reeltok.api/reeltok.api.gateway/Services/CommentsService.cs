@@ -9,9 +9,9 @@ namespace reeltok.api.gateway.Services
 {
     public class CommentsService : ICommentsService
     {
-        private readonly AuthService _authService;
-        private readonly GatewayService _gatewayService;
-        internal CommentsService(AuthService authService, GatewayService gatewayService)
+        private readonly IAuthService _authService;
+        private readonly IGatewayService _gatewayService;
+        internal CommentsService(IAuthService authService, IGatewayService gatewayService)
         {
             _authService = authService;
             _gatewayService = gatewayService;
@@ -19,11 +19,13 @@ namespace reeltok.api.gateway.Services
 
         public List<Comment> LoadComments(Guid videoId, byte amount)
         {
-
+            return new List<Comment>() {
+                new Comment() {}
+            };
         }
         public Comment AddComment(string commentText)
         {
-
+            return new Comment();
         }
     }
 }

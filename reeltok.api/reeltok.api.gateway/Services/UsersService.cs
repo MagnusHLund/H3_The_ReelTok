@@ -10,10 +10,10 @@ namespace reeltok.api.gateway.Services
 {
     public class UsersService : IUsersService
     {
-        private readonly AuthService _authService;
-        private readonly GatewayService _gatewayService;
+        private readonly IAuthService _authService;
+        private readonly IGatewayService _gatewayService;
 
-        internal UsersService(AuthService authService, GatewayService gatewayService)
+        internal UsersService(IAuthService authService, IGatewayService gatewayService)
         {
             _authService = authService;
             _gatewayService = gatewayService;
@@ -29,7 +29,7 @@ namespace reeltok.api.gateway.Services
         }
         public UserProfileData GetUserProfileData(Guid userId)
         {
-
+            return new UserProfileData();
         }
         public void UpdateUserDetails(UserProfileData profileData)
         {
@@ -53,19 +53,19 @@ namespace reeltok.api.gateway.Services
         }
         public List<UserDetails> GetBlockListByUser(Guid userId)
         {
-
+            return new List<UserDetails>();
         }
         public List<Video> GetLikedVideosForUserProfile(Guid userId)
         {
-
+            return new List<Video>();
         }
         public List<UserDetails> GetAllUserSubscriptionsForUser(Guid userId)
         {
-
+            return new List<UserDetails>();
         }
         public List<UserDetails> GetAllSubscribingToUser(Guid userId)
         {
-
+            return new List<UserDetails>();
         }
     }
 }

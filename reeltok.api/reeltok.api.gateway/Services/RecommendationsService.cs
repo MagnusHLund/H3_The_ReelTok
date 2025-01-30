@@ -8,10 +8,14 @@ namespace reeltok.api.gateway.Services
 {
     public class RecommendationsService : IRecommendationsService
     {
-        private readonly AuthService _authService;
-        private readonly GatewayService _gatewayService;
+        private readonly IAuthService _authService;
+        private readonly IGatewayService _gatewayService;
 
-        internal RecommendationsService(AuthService authService, GatewayService gatewayService) { }
+        internal RecommendationsService(IAuthService authService, IGatewayService gatewayService)
+        {
+            _authService = authService;
+            _gatewayService = gatewayService;
+        }
 
         public void ChangeRecommendedCategory(string category) { }
     }

@@ -8,15 +8,18 @@ namespace reeltok.api.gateway.Services
 {
     internal class AuthService : IAuthService
     {
-        private readonly GatewayService _gatewayService;
-        internal AuthService(GatewayService gateway)
+        private readonly IGatewayService _gatewayService;
+        internal AuthService(IGatewayService gateway)
         {
             _gatewayService = gateway;
         }
 
-        public void LogOutUser()
+        public async Task<HttpResponseMessage> LogOutUser()
         {
+            HttpRequest httpRequest = new HttpRequest(HttpMethod.Post, "auth/logout");
+            HttpResponseMessage response = await _gatewayService.ProcessRequest(httpRequest);
 
+            return response;
         }
 
         public void UpdatePassword(string password)
@@ -24,7 +27,10 @@ namespace reeltok.api.gateway.Services
 
         }
 
-        public Guid GetUserIdByToken() { }
+        public Guid GetUserIdByToken()
+        {
+            return Guid.Empty;
+        }
 
     }
 }
