@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace reeltok.api.users.Data
 {
-    public class ApplicationDBContext
+    public class UserDBContext
     {
-        
+
     }
 }
