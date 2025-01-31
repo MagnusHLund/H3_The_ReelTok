@@ -7,6 +7,6 @@ namespace reeltok.api.gateway.Entities
 {
     public class VideoUpload
     {
-        
+
     }
 }
