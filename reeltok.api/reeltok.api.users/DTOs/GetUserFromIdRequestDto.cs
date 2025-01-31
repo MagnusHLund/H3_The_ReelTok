@@ -5,8 +5,12 @@ using System.Threading.Tasks;
 
 namespace reeltok.api.users.DTOs
 {
-    public class GetUserFromIdRequestDto
+    internal class GetUserFromIdRequestDto
     {
+        internal Guid UserId { get;}
 
+        internal GetUserFromIdRequestDto(Guid userId){
+            UserId = userId;
+        }
     }
 }
