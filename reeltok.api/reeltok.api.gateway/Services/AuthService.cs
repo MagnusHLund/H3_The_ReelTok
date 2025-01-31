@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Services
@@ -16,8 +17,10 @@ namespace reeltok.api.gateway.Services
 
         public async Task<HttpResponseMessage> LogOutUser()
         {
-            HttpRequest httpRequest = new HttpRequest(HttpMethod.Post, "auth/logout");
-            HttpResponseMessage response = await _gatewayService.ProcessRequest(httpRequest);
+            LogOutUserRequestDto requestDto = new LogOutUserRequestDto();
+
+            string targetUri = "auth/logout";
+            HttpResponseMessage response = await _gatewayService.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(requestDto, targetUri);
 
             return response;
         }

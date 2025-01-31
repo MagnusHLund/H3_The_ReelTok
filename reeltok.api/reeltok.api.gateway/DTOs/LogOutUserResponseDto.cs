@@ -5,13 +5,10 @@ using System.Threading.Tasks;
 
 namespace reeltok.api.gateway.DTOs
 {
-    public abstract class BaseResponseDto
+    public class LogOutUserResponseDto : BaseResponseDto
     {
-        public bool Success { get; set; }
-
-        public BaseResponseDto(bool success)
+        public LogOutUserResponseDto(bool success) : base(success)
         {
-            Success = success;
         }
     }
 }

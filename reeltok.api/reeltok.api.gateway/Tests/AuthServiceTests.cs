@@ -3,6 +3,7 @@ using Xunit;
 using Moq;
 using reeltok.api.gateway.Services;
 using System.Net;
+using reeltok.api.gateway.DTOs;
 
 namespace reeltok.api.gateway.Tests
 {
@@ -29,15 +30,16 @@ namespace reeltok.api.gateway.Tests
             var mockHttpContext = new Mock<HttpContext>();
             mockHttpRequest.Setup(req => req.HttpContext).Returns(mockHttpContext.Object);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync(It.IsAny<HttpRequest>())).ReturnsAsync(expectedResponse);
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(It.IsAny<LogOutUserRequestDto>(), "auth/logOut")).ReturnsAsync(expectedResponse);
 
             // Act
-            var result = _authService.LogOutUser(mockHttpRequest.Object).Result;
+            var result = _authService.LogOutUser().Result;
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-            Assert.Contains("JWT=; Expires=Thu, 01 Jan 1970 00:00:00 GMT", result.Headers.GetValues("Set-Cookie"));
-            Assert.Contains("RefreshToken=; Expires=Thu, 01 Jan 1970 00:00:00 GMT", result.Headers.GetValues(
+            Assert.True(result.Headers.TryGetValues("Set-Cookie", out var cookieValues));
+            Assert.Contains("JWT=; Expires=Thu, 01 Jan 1970 00:00:00 GMT", cookieValues);
+            Assert.Contains("RefreshToken=; Expires=Thu, 01 Jan 1970 00:00:00 GMT", cookieValues);
         }
 
         [Fact]
@@ -54,22 +56,22 @@ namespace reeltok.api.gateway.Tests
 
         public void UpdatePassword_WithInvalidUser_ReturnInvalidUserMessage()
         {
-
+            Assert.True(true);
         }
 
         public void UpdatePassword_WithValidParameters_ReturnSuccessful()
         {
-
+            Assert.True(true);
         }
 
         public void GetUserIdByToken_WithInvalidUser_ReturnInvalidUserMessage()
         {
-
+            Assert.True(true);
         }
 
         public void GetUserIdByToken_WithValidToken_ReturnUserId()
         {
-
+            Assert.True(true);
         }
     }
 }

@@ -9,7 +9,7 @@
     }
   ],
   "settings": {
-    "dotnet.defaultSolution": "GatewayService.sln",
+    "dotnet.defaultSolution": "GatewayServiceApi.sln",
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "conventionalCommits.scopes": [
       "api.recommendations",
@@ -31,7 +31,7 @@
         "type": "coreclr",
         "request": "launch",
         "preLaunchTask": "build",
-        "program": "${workspaceFolder:Reeltok Gateway API}/bin/Debug/net6.0/GatewayService.dll",
+        "program": "${workspaceFolder:Reeltok Gateway API}/bin/Debug/net6.0/GatewayServiceApi.dll",
         "args": [],
         "cwd": "${workspaceFolder:Reeltok Gateway API}",
         "stopAtEntry": false,

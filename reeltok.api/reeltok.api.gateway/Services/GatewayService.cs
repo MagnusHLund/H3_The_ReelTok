@@ -22,7 +22,7 @@ namespace reeltok.api.gateway.Services
             _httpClient = httpClient;
         }
 
-        public async Task<HttpResponseMessage> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, string targetUri) where TResponse : BaseResponseDto, new()
+        public async Task<HttpResponseMessage> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, string targetUri) where TResponse : BaseResponseDto
         {
             var requestContent = SerializeToXml(requestDto);
 
@@ -36,7 +36,7 @@ namespace reeltok.api.gateway.Services
         }
 
         // TODO: Rework this method
-        public async Task<HttpResponseMessage> RouteRequestAsync<TResponse>(HttpRequestMessage request) where TResponse : BaseResponseDto, new()
+        public async Task<HttpResponseMessage> RouteRequestAsync<TResponse>(HttpRequestMessage request) where TResponse : BaseResponseDto
         {
             var response = await _httpClient.SendAsync(request);
 
