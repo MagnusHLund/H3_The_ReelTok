@@ -7,8 +7,7 @@ namespace reeltok.api.gateway.Interfaces
 {
     public interface IAuthService
     {
-        public Task<HttpResponseMessage> LogOutUser();
-        public void UpdatePassword(string password);
-        public Guid GetUserIdByToken();
+        public Task<bool> LogOutUser();
+        public Task<Guid> GetUserIdByToken();
     }
 }

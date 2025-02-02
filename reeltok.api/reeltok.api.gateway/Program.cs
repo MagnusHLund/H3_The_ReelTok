@@ -2,6 +2,7 @@ using reeltok.api.gateway.Interfaces;
 using reeltok.api.gateway.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using reeltok.api.gateway.Middleware;
 
 namespace GatewayServiceApi
 {
@@ -15,12 +16,17 @@ namespace GatewayServiceApi
 			builder.Services.AddTransient<IGatewayService, GatewayService>();
 			builder.Services.AddTransient<IAuthService, AuthService>();
 
+			builder.Services.AddAutoMapper(typeof(Program));
+			builder.Services.AddHttpClient();
+
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 
 			var app = builder.Build();
+
+			app.UseMiddleware<ExceptionMiddleware>();
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())

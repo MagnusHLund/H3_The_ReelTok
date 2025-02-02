@@ -6,7 +6,7 @@ using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Services
 {
-    public class RecommendationsService : IRecommendationsService
+    internal class RecommendationsService : IRecommendationsService
     {
         private readonly IAuthService _authService;
         private readonly IGatewayService _gatewayService;
