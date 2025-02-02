@@ -9,7 +9,9 @@ namespace reeltok.api.gateway.DTOs
     {
         public bool Success { get; set; }
 
-        protected BaseResponseDto(bool success)
+        public BaseResponseDto() { }
+
+        public BaseResponseDto(bool success)
         {
             Success = success;
         }

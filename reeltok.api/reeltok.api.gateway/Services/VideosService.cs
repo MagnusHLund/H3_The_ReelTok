@@ -8,11 +8,11 @@ using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Services
 {
-    public class VideosService : IVideosService
+    internal class VideosService : IVideosService
     {
         private readonly IMapper _mapper;
         private readonly IGatewayService _gatewayService;
-        internal VideosService(IMapper mapper, IGatewayService gatewayService)
+        public VideosService(IMapper mapper, IGatewayService gatewayService)
         {
             _mapper = mapper;
             _gatewayService = gatewayService;

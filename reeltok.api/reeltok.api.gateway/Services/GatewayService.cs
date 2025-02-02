@@ -1,32 +1,29 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using reeltok.api.gateway.Interfaces;
-using System.Xml.Serialization;
 using System.Text;
-using System.Net;
 using reeltok.api.gateway.DTOs;
+using reeltok.api.gateway.Utils;
+using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Services
 {
-    public class GatewayService : IGatewayService
+    internal class GatewayService : IGatewayService
     {
-        private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
 
-        public GatewayService(IMapper mapper, HttpClient httpClient)
+        public GatewayService(HttpClient httpClient)
         {
-            _mapper = mapper;
             _httpClient = httpClient;
         }
 
-        public async Task<HttpResponseMessage> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, string targetUri) where TResponse : BaseResponseDto, new()
+        public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, string targetUri, HttpMethod httpMethod) where TResponse : BaseResponseDto
         {
-            var requestContent = SerializeToXml(requestDto);
+            if (requestDto == null)
+            {
+                throw new ArgumentNullException(nameof(requestDto));
+            }
 
-            var request = new HttpRequestMessage(HttpMethod.Post, targetUri)
+            var requestContent = XmlUtils.SerializeDtoToXml(requestDto);
+
+            var request = new HttpRequestMessage(httpMethod, targetUri)
             {
                 Content = new StringContent(requestContent, Encoding.UTF8, "application/xml")
             };
@@ -35,44 +32,19 @@ namespace reeltok.api.gateway.Services
             return response;
         }
 
-        // TODO: Rework this method
-        public async Task<HttpResponseMessage> RouteRequestAsync<TResponse>(HttpRequestMessage request) where TResponse : BaseResponseDto, new()
+        public async Task<BaseResponseDto> RouteRequestAsync<TResponse>(HttpRequestMessage request) where TResponse : BaseResponseDto
         {
-            var response = await _httpClient.SendAsync(request);
+            HttpResponseMessage response = await _httpClient.SendAsync(request);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var responseDto = DeserializeFromXml<TResponse>(responseContent);
-
-                var responseXml = SerializeToXml(responseDto);
-
-                return new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StringContent(responseXml, Encoding.UTF8, "application/xml")
-                };
-            }
-
-            return response;
+            return response.IsSuccessStatusCode
+                ? await DeserializeXmlToDto<TResponse>(response)
+                : await DeserializeXmlToDto<FailureResponseDto>(response);
         }
 
-        private static string SerializeToXml<T>(T obj)
+        private static async Task<BaseResponseDto> DeserializeXmlToDto<TResponse>(HttpResponseMessage response) where TResponse : BaseResponseDto
         {
-            var xmlSerializer = new XmlSerializer(typeof(T));
-            using (var stringWriter = new StringWriter())
-            {
-                xmlSerializer.Serialize(stringWriter, obj);
-                return stringWriter.ToString();
-            }
-        }
-
-        private static T DeserializeFromXml<T>(string xml)
-        {
-            var xmlSerializer = new XmlSerializer(typeof(T));
-            using (var stringReader = new StringReader(xml))
-            {
-                return (T)xmlSerializer.Deserialize(stringReader);
-            }
+            string responseContent = await response.Content.ReadAsStringAsync();
+            return XmlUtils.DeserializeFromXml<TResponse>(responseContent);
         }
     }
 }
