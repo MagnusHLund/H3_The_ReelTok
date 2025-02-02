@@ -1,0 +1,23 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace reeltok.api.gateway.DTOs.Comments
+{
+    public class AddCommentResponseCommentsServiceDto : BaseResponseDto
+    {
+        public Guid CommentId { get; set; }
+        public Guid UserId { get; set; }
+        public string CommentText { get; set; }
+        public uint CreatedAt { get; set; }
+
+        public AddCommentResponseCommentsServiceDto(Guid commentId, Guid userId, string commentText, uint createdAt, bool success) : base(success)
+        {
+            CommentId = commentId;
+            UserId = userId;
+            CommentText = commentText;
+            CreatedAt = createdAt;
+        }
+    }
+}

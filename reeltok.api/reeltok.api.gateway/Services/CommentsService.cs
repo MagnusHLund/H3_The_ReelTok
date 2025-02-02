@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Interfaces;
+using reeltok.api.gateway.ValueObjects;
 
 namespace reeltok.api.gateway.Services
 {
@@ -17,15 +18,16 @@ namespace reeltok.api.gateway.Services
             _gatewayService = gatewayService;
         }
 
-        public List<Comment> LoadComments(Guid videoId, byte amount)
+        public CommentUsingDateTime AddComment(string commentText)
         {
-            return new List<Comment>() {
-                new Comment() {}
-            };
+            return new CommentUsingDateTime(Guid.Empty, new CommentDetailsUsingDateTime(Guid.Empty, Guid.Empty, commentText, DateTime.Now));
         }
-        public Comment AddComment(string commentText)
+
+        public List<CommentUsingDateTime> LoadComments(Guid videoId, byte amount)
         {
-            return new Comment();
+            return new List<CommentUsingDateTime>() {
+                new CommentUsingDateTime(Guid.Empty, new CommentDetailsUsingDateTime(Guid.Empty, Guid.Empty, "", DateTime.Now)) {}
+            };
         }
     }
 }

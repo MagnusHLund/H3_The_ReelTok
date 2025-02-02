@@ -8,7 +8,7 @@ using reeltok.api.gateway.ValueObjects;
 
 namespace reeltok.api.gateway.Services
 {
-    public class UsersService : IUsersService
+    internal class UsersService : IUsersService
     {
         private readonly IAuthService _authService;
         private readonly IGatewayService _gatewayService;
