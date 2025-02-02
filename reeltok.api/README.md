@@ -59,5 +59,13 @@ Below is a table, which shows the assigned port for each microservice.
                 5004
             </td>
         </tr>
+                <tr>
+            <td>
+                Comments service
+            </td>
+            <td>
+                5005
+            </td>
+        </tr>
     </tbody>
 </table>
