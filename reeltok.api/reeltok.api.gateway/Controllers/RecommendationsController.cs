@@ -23,7 +23,7 @@ namespace reeltok.api.gateway.Controllers
         {
             if (string.IsNullOrWhiteSpace(request.Category))
             {
-                return BadRequest(new FailureResponseDto("Invalid Category!"));
+                return BadRequest(new FailureResponseDto("Invalid recommendations category!"));
             }
 
             bool success = await _recommendationsService.ChangeRecommendedCategory(request.Category);

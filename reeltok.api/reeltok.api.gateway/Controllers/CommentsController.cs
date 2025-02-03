@@ -23,7 +23,7 @@ namespace reeltok.api.gateway.Controllers
         {
             if (string.IsNullOrEmpty(request.CommentText))
             {
-                BadRequest(new FailureResponseDto("Empty comment!"));
+                BadRequest(new FailureResponseDto("Comments must include text!"));
             }
 
             CommentUsingDateTime comment = await _commentsService.AddComment(request.VideoId, request.CommentText);
