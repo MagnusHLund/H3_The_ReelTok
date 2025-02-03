@@ -7,7 +7,7 @@ namespace reeltok.api.recommendations.DTOs
     internal abstract class BaseResponseDto
     {
         [Required]
-        internal bool Success { get; private set; }
+        internal bool Success { get; set; }
 
         private protected BaseResponseDto(bool success)
         {
