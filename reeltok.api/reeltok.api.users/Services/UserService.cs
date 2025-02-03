@@ -5,6 +5,12 @@ namespace reeltok.api.users.Services
 {
     public class UserService : IUserService
     {
+        private readonly IUserRepository _userRepository;
+
+        public UserService(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
         public Task AddToLikedVideosAsync(Guid userId, Guid likedVideoId)
         {
             throw new NotImplementedException();

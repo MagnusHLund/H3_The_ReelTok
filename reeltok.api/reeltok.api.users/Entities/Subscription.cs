@@ -3,7 +3,7 @@ using reeltok.api.users.ValueObjects;
 
 namespace reeltok.api.users.Entities
 {
-    public class Subscribption
+    public class Subscription
     {
         [Required]
         internal Guid UserId { get; private set; }
@@ -11,7 +11,7 @@ namespace reeltok.api.users.Entities
         [Required]
         internal SubscribptionDetails SubDetails { get; private set; }
 
-        public Subscribption(Guid userId, SubscribptionDetails subDetails)
+        public Subscription(Guid userId, SubscribptionDetails subDetails)
         {
             UserId = userId;
             SubDetails = subDetails;
