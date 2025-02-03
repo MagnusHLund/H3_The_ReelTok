@@ -12,9 +12,10 @@ namespace reeltok.api.gateway.DTOs
         [XmlElement(elementName: "Message")]
         public string Message { get; set; }
 
-        public FailureResponseDto(bool success, string message) : base(success)
+        public FailureResponseDto(string message, bool success) : base(success)
         {
             Message = message;
         }
+        public FailureResponseDto() { }
     }
 }

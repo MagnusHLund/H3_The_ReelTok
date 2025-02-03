@@ -8,6 +8,7 @@ namespace reeltok.api.gateway.Services
 {
     internal class RecommendationsService : IRecommendationsService
     {
+        private const string RecommendationsMicroServiceBaseUrl = "http://localhost:5004/recommendations";
         private readonly IAuthService _authService;
         private readonly IGatewayService _gatewayService;
 

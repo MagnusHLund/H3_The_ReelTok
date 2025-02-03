@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using reeltok.api.gateway.DTOs.Comments;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Utils;
 using reeltok.api.gateway.ValueObjects;
 
-namespace reeltok.api.gateway.Mapper
+namespace reeltok.api.gateway.Mappers
 {
     internal static class CommentMapper
     {
@@ -33,6 +30,17 @@ namespace reeltok.api.gateway.Mapper
                     commentText: commentToConvert.CommentDetails.CommentText,
                     createdAt: DateTimeUtils.DateTimeToUnixTime(commentToConvert.CommentDetails.CreatedAt)
                 )
+            );
+        }
+
+        internal static AddCommentResponseDto ConvertToResponseDto(CommentUsingDateTime commentToConvert, bool success)
+        {
+            return new AddCommentResponseDto(
+                commentToConvert.CommentId,
+                commentToConvert.CommentDetails.UserId,
+                commentToConvert.CommentDetails.CommentText,
+                commentToConvert.CommentDetails.CreatedAt,
+                success
             );
         }
     }

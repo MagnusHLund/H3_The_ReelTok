@@ -17,17 +17,16 @@ namespace reeltok.api.gateway.Utils
 
         internal static T DeserializeFromXml<T>(string xml)
         {
-            var xmlSerializer = new XmlSerializer(typeof(T));
-
-            using (var stringReader = new StringReader(xml))
+            if (string.IsNullOrWhiteSpace(xml))
             {
-                using (var xmlReader = XmlReader.Create(stringReader))
-                {
-                    return (T)xmlSerializer.Deserialize(xmlReader);
-
-                }
+                throw new ArgumentException("Input XML cannot be null or whitespace.", nameof(xml));
             }
 
+            var xmlSerializer = new XmlSerializer(typeof(T));
+            using (var stringReader = new StringReader(xml))
+            {
+                return (T)xmlSerializer.Deserialize(stringReader);
+            }
         }
     }
 }

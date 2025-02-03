@@ -24,7 +24,7 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             bool success = false;
-            FailureResponseDto failureResponseDto = new FailureResponseDto(success, "Already logged out");
+            FailureResponseDto failureResponseDto = new FailureResponseDto("Already logged out", success);
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(
                 It.IsAny<LogOutUserRequestDto>(), $"{BaseTestUrl}/logout", HttpMethod.Post))
@@ -40,7 +40,7 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             bool success = false;
-            FailureResponseDto failureResponseDto = new FailureResponseDto(success, "Invalid user");
+            FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid user", success);
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(
                 It.IsAny<LogOutUserRequestDto>(), $"{BaseTestUrl}/logout", HttpMethod.Post))
@@ -74,7 +74,7 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             bool success = false;
-            FailureResponseDto failureResponseDto = new FailureResponseDto(success, "Invalid token");
+            FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid token", success);
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<GetUserIdByTokenRequestDto, GetUserIdByTokenResponseDto>(
                 It.IsAny<GetUserIdByTokenRequestDto>(), $"{BaseTestUrl}/getUserIdByToken", HttpMethod.Get))

@@ -6,6 +6,8 @@ using reeltok.api.gateway.Services;
 using reeltok.api.gateway.Interfaces;
 using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.DTOs.Comments;
+using Microsoft.IdentityModel.Tokens;
+using reeltok.api.gateway.Utils;
 
 namespace reeltok.api.gateway.Tests
 {
@@ -27,8 +29,9 @@ namespace reeltok.api.gateway.Tests
         public async Task AddComment_WithInvalidVideoId_ShouldThrowInvalidOperationException()
         {
             // Arrange
+            bool success = false;
             Guid videoId = Guid.Empty;
-            FailureResponseDto failureResponse = new FailureResponseDto(false, "Video does not exist");
+            FailureResponseDto failureResponse = new FailureResponseDto("Video does not exist", success);
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<AddCommentRequestDto, AddCommentResponseDto>(
                 It.IsAny<AddCommentRequestDto>(), $"{BaseTestUrl}/add", HttpMethod.Post))
@@ -45,8 +48,9 @@ namespace reeltok.api.gateway.Tests
         public async Task AddComment_WithEmptyMessage_ShouldThrowInvalidOperationException()
         {
             // Arrange
+            bool success = false;
             Guid videoId = Guid.NewGuid();
-            FailureResponseDto failureResponse = new FailureResponseDto(false, "Invalid comment text test!");
+            FailureResponseDto failureResponse = new FailureResponseDto("Invalid comment text test!", success);
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<AddCommentRequestDto, AddCommentResponseDto>(
                 It.IsAny<AddCommentRequestDto>(), $"{BaseTestUrl}/Add", HttpMethod.Post))
@@ -88,7 +92,8 @@ namespace reeltok.api.gateway.Tests
         public async Task LoadComments_WithInvalidParameters_ReturnInvalidParametersMessage()
         {
             // Arrange
-            FailureResponseDto failureResponse = new FailureResponseDto(false, "Invalid parameters");
+            bool success = false;
+            FailureResponseDto failureResponse = new FailureResponseDto("Invalid parameters!", success);
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<LoadCommentsRequestDto, LoadCommentsResponseDto>(
                 It.IsAny<LoadCommentsRequestDto>(), $"{BaseTestUrl}/load", HttpMethod.Get))
@@ -98,7 +103,7 @@ namespace reeltok.api.gateway.Tests
             InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _commentsService.LoadComments(Guid.Empty, 0));
 
             // Assert
-            Assert.Equal("Invalid parameters", exception.Message);
+            Assert.Equal("Invalid parameters!", exception.Message);
         }
 
         [Fact]
@@ -106,17 +111,17 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             Guid videoId = Guid.NewGuid();
-            uint createdAt = (uint)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+            uint createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.Now);
             List<CommentUsingUnixTime> comments = new List<CommentUsingUnixTime>
             {
-                new CommentUsingUnixTime(Guid.NewGuid(), new CommentDetailsUsingUnixTime(Guid.NewGuid(), Guid.NewGuid(), "Cool Test!", createdAt)),
-                new CommentUsingUnixTime(Guid.NewGuid(), new CommentDetailsUsingUnixTime(Guid.NewGuid(), Guid.NewGuid(), "I Agree with the previous comment", createdAt))
+                new CommentUsingUnixTime(Guid.NewGuid(), new CommentDetailsUsingUnixTime(Guid.NewGuid(), videoId, "Cool Test!", createdAt)),
+                new CommentUsingUnixTime(Guid.NewGuid(), new CommentDetailsUsingUnixTime(Guid.NewGuid(), videoId, "I Agree with the previous comment", createdAt))
             };
             bool success = true;
             LoadCommentsResponseCommentsServiceDto successResponse = new LoadCommentsResponseCommentsServiceDto(comments, success);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<LoadCommentsRequestDto, LoadCommentsResponseDto>(
-                It.IsAny<LoadCommentsRequestDto>(), $"{BaseTestUrl}/load", HttpMethod.Get))
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<LoadCommentsRequestCommentsServiceDto, LoadCommentsResponseCommentsServiceDto>(
+                It.IsAny<LoadCommentsRequestCommentsServiceDto>(), $"{BaseTestUrl}/Load", HttpMethod.Get))
                 .ReturnsAsync(successResponse);
 
             // Act

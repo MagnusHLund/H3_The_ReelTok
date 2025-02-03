@@ -10,6 +10,7 @@ namespace reeltok.api.gateway.Services
 {
     internal class UsersService : IUsersService
     {
+        private const string UsersMicroServiceBaseUrl = "http://localhost:5001/users";
         private readonly IAuthService _authService;
         private readonly IGatewayService _gatewayService;
 

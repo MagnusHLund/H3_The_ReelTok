@@ -7,11 +7,10 @@ namespace reeltok.api.gateway.DTOs
         [XmlElement(elementName: "Success")]
         public bool Success { get; set; }
 
-        protected BaseResponseDto() { }
-
         protected BaseResponseDto(bool success)
         {
             Success = success;
         }
+        protected BaseResponseDto() { }
     }
 }

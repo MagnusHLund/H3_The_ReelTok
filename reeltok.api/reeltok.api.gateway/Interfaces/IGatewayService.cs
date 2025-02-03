@@ -8,7 +8,7 @@ namespace reeltok.api.gateway.Interfaces
 {
     public interface IGatewayService
     {
-        public Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, string targetUri, HttpMethod httpMethod) where TResponse : BaseResponseDto;
+        public Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, string targetUrl, HttpMethod httpMethod) where TResponse : BaseResponseDto;
         public Task<BaseResponseDto> RouteRequestAsync<TResponse>(HttpRequestMessage request) where TResponse : BaseResponseDto;
     }
 }

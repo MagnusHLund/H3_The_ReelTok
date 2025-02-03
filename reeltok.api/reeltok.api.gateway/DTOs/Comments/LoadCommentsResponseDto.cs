@@ -3,7 +3,7 @@ using reeltok.api.gateway.Entities;
 
 namespace reeltok.api.gateway.DTOs.Comments
 {
-    [XmlRoot("FailureResponseDto")]
+    [XmlRoot("LoadCommentsResponseDto")]
     public class LoadCommentsResponseDto : BaseResponseDto
     {
         [XmlElement(elementName: "Comments")]

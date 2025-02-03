@@ -1,9 +1,8 @@
-using System.Threading.Tasks;
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.DTOs.Comments;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Interfaces;
-using reeltok.api.gateway.Mapper;
+using reeltok.api.gateway.Mappers;
 using reeltok.api.gateway.Utils;
 using reeltok.api.gateway.ValueObjects;
 
@@ -35,9 +34,9 @@ namespace reeltok.api.gateway.Services
             Guid userId = await _authService.GetUserIdByToken();
 
             AddCommentRequestCommentsServiceDto requestDto = new AddCommentRequestCommentsServiceDto(userId, videoId, commentText);
-            string targetUri = $"{CommentMicroServiceBaseUrl}/Add";
+            string targetUrl = $"{CommentMicroServiceBaseUrl}/Add";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<AddCommentRequestCommentsServiceDto, AddCommentResponseCommentsServiceDto>(requestDto, targetUri, HttpMethod.Post);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<AddCommentRequestCommentsServiceDto, AddCommentResponseCommentsServiceDto>(requestDto, targetUrl, HttpMethod.Post);
 
             if (response.Success && response is AddCommentResponseCommentsServiceDto responseDto)
             {
@@ -57,25 +56,19 @@ namespace reeltok.api.gateway.Services
 
         public async Task<List<CommentUsingDateTime>> LoadComments(Guid videoId, byte amount)
         {
-            if (videoId.Equals(Guid.Empty))
+            if (videoId == Guid.Empty || amount <= 0)
             {
-                throw new InvalidOperationException("Video does not exist!");
+                throw new InvalidOperationException("Invalid parameters!");
             }
 
-            if (amount < 0)
-            {
-                throw new InvalidOperationException("Invalid comment amount");
-            }
+            LoadCommentsRequestCommentsServiceDto requestDto = new LoadCommentsRequestCommentsServiceDto(videoId, amount);
+            string targetUrl = $"{CommentMicroServiceBaseUrl}/Load";
 
-            LoadCommentsRequestCommentsServiceDto request = new LoadCommentsRequestCommentsServiceDto(videoId);
-            string targetUri = $"{CommentMicroServiceBaseUrl}/Load";
-
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<LoadCommentsRequestCommentsServiceDto, LoadCommentsResponseCommentsServiceDto>(request, targetUri, HttpMethod.Get);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<LoadCommentsRequestCommentsServiceDto, LoadCommentsResponseCommentsServiceDto>(requestDto, targetUrl, HttpMethod.Get);
 
             if (response.Success && response is LoadCommentsResponseCommentsServiceDto responseDto)
             {
-                return (List<CommentUsingDateTime>)responseDto.Comments
-                    .Select(comment => CommentMapper.ConvertToDateTime(comment));
+                return responseDto.Comments.Select(comment => CommentMapper.ConvertToDateTime(comment)).ToList();
             }
 
             if (response is FailureResponseDto failureResponse)
