@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using reeltok.api.users.Entities;
 
 namespace reeltok.api.users.Interfaces
@@ -10,7 +6,6 @@ namespace reeltok.api.users.Interfaces
     {
         Task CreateAsync(UserProfileData user);
         Task<UserProfileData?> GetByIdAsync(Guid userId);
-        Task UpdateUserAsync(UserProfileData user);
 
         Task SubscribeAsync(Guid userId, Guid subscribeUserId);
         Task UnsubscribeAsync(Guid userId, Guid subscribeUserId);
