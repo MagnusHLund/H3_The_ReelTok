@@ -21,6 +21,11 @@ namespace reeltok.api.gateway.Controllers
         [Route("Add")]
         public async Task<IActionResult> AddComment([FromBody] AddCommentRequestDto request)
         {
+            if (string.IsNullOrEmpty(request.CommentText))
+            {
+                BadRequest(new FailureResponseDto("Empty comment!"));
+            }
+
             CommentUsingDateTime comment = await _commentsService.AddComment(request.VideoId, request.CommentText);
 
             bool success = true;
@@ -35,7 +40,7 @@ namespace reeltok.api.gateway.Controllers
         {
             if (request.Amount <= 0)
             {
-                return BadRequest(new FailureResponseDto("Amount should be greater than zero!", false));
+                return BadRequest(new FailureResponseDto("Amount should be greater than zero!"));
             }
 
             List<CommentUsingDateTime> comments = await _commentsService.LoadComments(request.VideoId, request.Amount);

@@ -1,11 +1,11 @@
+using Moq;
+using Xunit;
 using System.Net;
 using System.Text;
-using Moq;
 using Moq.Protected;
 using reeltok.api.gateway.DTOs;
-using reeltok.api.gateway.DTOs.Auth;
 using reeltok.api.gateway.Services;
-using Xunit;
+using reeltok.api.gateway.DTOs.Auth;
 
 namespace reeltok.api.gateway.Tests
 {
@@ -88,8 +88,10 @@ namespace reeltok.api.gateway.Tests
             string targetUrl = BaseTestUrl;
 
             // Act & Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            ArgumentNullException exception = await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, LogOutUserResponseDto>(null, targetUrl, HttpMethod.Get));
+
+            Assert.Equal("requestDto", exception.ParamName);
         }
 
 
