@@ -5,7 +5,7 @@ namespace reeltok.api.gateway.DTOs
     public abstract class BaseResponseDto
     {
         [XmlElement(elementName: "Success")]
-        public bool Success { get; set; }
+        public virtual bool Success { get; set; }
 
         protected BaseResponseDto(bool success)
         {

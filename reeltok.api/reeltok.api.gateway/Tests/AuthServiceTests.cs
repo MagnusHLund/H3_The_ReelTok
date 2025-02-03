@@ -1,9 +1,9 @@
 using Moq;
 using Xunit;
-using reeltok.api.gateway.Services;
-using reeltok.api.gateway.Interfaces;
 using reeltok.api.gateway.DTOs;
+using reeltok.api.gateway.Services;
 using reeltok.api.gateway.DTOs.Auth;
+using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Tests
 {
@@ -20,11 +20,10 @@ namespace reeltok.api.gateway.Tests
         }
 
         [Fact]
-        public async Task LogOutUser_WithRevokedAccess_ReturnAlreadyLoggedOutMessage()
+        public async Task LogOutUser_WithBadResponse_ThrowInvalidOperationException()
         {
             // Arrange
-            bool success = false;
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Already logged out", success);
+            FailureResponseDto failureResponseDto = new FailureResponseDto("Already logged out");
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(
                 It.IsAny<LogOutUserRequestDto>(), $"{BaseTestUrl}/logout", HttpMethod.Post))
@@ -32,23 +31,7 @@ namespace reeltok.api.gateway.Tests
 
             // Act & Assert
             InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _authService.LogOutUser());
-            Assert.Equal("Logout failed", exception.Message);
-        }
-
-        [Fact]
-        public async Task LogOutUser_WithInvalidUser_ThrowsInvalidOperationException()
-        {
-            // Arrange
-            bool success = false;
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid user", success);
-
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(
-                It.IsAny<LogOutUserRequestDto>(), $"{BaseTestUrl}/logout", HttpMethod.Post))
-                .ReturnsAsync(failureResponseDto);
-
-            // Act & Assert
-            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _authService.LogOutUser());
-            Assert.Equal("Logout failed", exception.Message);
+            Assert.Equal("Already logged out", exception.Message);
         }
 
         [Fact]
@@ -70,11 +53,10 @@ namespace reeltok.api.gateway.Tests
         }
 
         [Fact]
-        public async Task GetUserIdByToken_WithInvalidUser_ThrowsInvalidOperationException()
+        public async Task GetUserIdByToken_WithBadResponse_ThrowsInvalidOperationException()
         {
             // Arrange
-            bool success = false;
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid token", success);
+            FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid authentication token");
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<GetUserIdByTokenRequestDto, GetUserIdByTokenResponseDto>(
                 It.IsAny<GetUserIdByTokenRequestDto>(), $"{BaseTestUrl}/getUserIdByToken", HttpMethod.Get))
@@ -82,7 +64,7 @@ namespace reeltok.api.gateway.Tests
 
             // Act & Assert
             InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _authService.GetUserIdByToken());
-            Assert.Equal("Invalid token", exception.Message);
+            Assert.Equal("Invalid authentication token", exception.Message);
         }
 
         [Fact]

@@ -21,16 +21,6 @@ namespace reeltok.api.gateway.Services
 
         public async Task<CommentUsingDateTime> AddComment(Guid videoId, string commentText)
         {
-            if (videoId.Equals(Guid.Empty))
-            {
-                throw new InvalidOperationException("Video does not exist!");
-            }
-
-            if (commentText.Equals(string.Empty))
-            {
-                throw new InvalidOperationException("Comment cannot be empty!");
-            }
-
             Guid userId = await _authService.GetUserIdByToken();
 
             AddCommentRequestCommentsServiceDto requestDto = new AddCommentRequestCommentsServiceDto(userId, videoId, commentText);
@@ -56,11 +46,6 @@ namespace reeltok.api.gateway.Services
 
         public async Task<List<CommentUsingDateTime>> LoadComments(Guid videoId, byte amount)
         {
-            if (videoId == Guid.Empty || amount <= 0)
-            {
-                throw new InvalidOperationException("Invalid parameters!");
-            }
-
             LoadCommentsRequestCommentsServiceDto requestDto = new LoadCommentsRequestCommentsServiceDto(videoId, amount);
             string targetUrl = $"{CommentMicroServiceBaseUrl}/Load";
 
