@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace reeltok.api.gateway.DTOs.Comments
 {
+    [XmlRoot("FailureResponseDto")]
     public class AddCommentResponseDto : BaseResponseDto
     {
         public Guid CommentId { get; set; }

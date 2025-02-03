@@ -24,9 +24,10 @@ namespace reeltok.api.gateway.Tests
         }
 
         [Fact]
-        public void AddComment_WithInvalidVideoId_ShouldThrowInvalidOperationException()
+        public async Task AddComment_WithInvalidVideoId_ShouldThrowInvalidOperationException()
         {
             // Arrange
+            Guid videoId = Guid.Empty;
             FailureResponseDto failureResponse = new FailureResponseDto(false, "Video does not exist");
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<AddCommentRequestDto, AddCommentResponseDto>(
@@ -34,33 +35,35 @@ namespace reeltok.api.gateway.Tests
                 .ReturnsAsync(failureResponse);
 
             // Act
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => _commentsService.AddComment("Invalid Video"));
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _commentsService.AddComment(videoId, "Invalid videoId test"));
 
             // Assert
-            Assert.Equal("Video does not exist", exception.Message);
+            Assert.Equal("Video does not exist!", exception.Message);
         }
 
         [Fact]
-        public void AddComment_WithEmptyMessage_ShouldThrowInvalidOperationException()
+        public async Task AddComment_WithEmptyMessage_ShouldThrowInvalidOperationException()
         {
             // Arrange
-            FailureResponseDto failureResponse = new FailureResponseDto(false, "Comment cannot be empty");
+            Guid videoId = Guid.NewGuid();
+            FailureResponseDto failureResponse = new FailureResponseDto(false, "Invalid comment text test!");
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<AddCommentRequestDto, AddCommentResponseDto>(
-                It.IsAny<AddCommentRequestDto>(), $"{BaseTestUrl}/add", HttpMethod.Post))
+                It.IsAny<AddCommentRequestDto>(), $"{BaseTestUrl}/Add", HttpMethod.Post))
                 .ReturnsAsync(failureResponse);
 
             // Act
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => _commentsService.AddComment(""));
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _commentsService.AddComment(videoId, ""));
 
             // Assert
-            Assert.Equal("Comment cannot be empty", exception.Message);
+            Assert.Equal("Comment cannot be empty!", exception.Message);
         }
 
         [Fact]
-        public void AddComment_WithValidParameters_ReturnNewlyCreatedComment()
+        public async Task AddComment_WithValidParameters_ReturnNewlyCreatedComment()
         {
             // Arrange
+            Guid videoId = Guid.NewGuid();
             Guid commentId = Guid.NewGuid();
             Guid userId = Guid.NewGuid();
             string commentText = "Amazing test!";
@@ -69,12 +72,12 @@ namespace reeltok.api.gateway.Tests
 
             AddCommentResponseCommentsServiceDto successResponse = new AddCommentResponseCommentsServiceDto(commentId, userId, commentText, createdAt, success);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<AddCommentRequestDto, AddCommentResponseDto>(
-                It.IsAny<AddCommentRequestDto>(), $"{BaseTestUrl}/add", HttpMethod.Post))
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<AddCommentRequestCommentsServiceDto, AddCommentResponseCommentsServiceDto>(
+                It.IsAny<AddCommentRequestCommentsServiceDto>(), $"{BaseTestUrl}/Add", HttpMethod.Post))
                 .ReturnsAsync(successResponse);
 
             // Act
-            CommentUsingDateTime result = _commentsService.AddComment("Valid Comment");
+            CommentUsingDateTime result = await _commentsService.AddComment(videoId, "Valid Comment");
 
             // Assert
             Assert.NotNull(result);
@@ -82,7 +85,7 @@ namespace reeltok.api.gateway.Tests
         }
 
         [Fact]
-        public void LoadComments_WithInvalidParameters_ReturnInvalidParametersMessage()
+        public async Task LoadComments_WithInvalidParameters_ReturnInvalidParametersMessage()
         {
             // Arrange
             FailureResponseDto failureResponse = new FailureResponseDto(false, "Invalid parameters");
@@ -92,14 +95,14 @@ namespace reeltok.api.gateway.Tests
                 .ReturnsAsync(failureResponse);
 
             // Act
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => _commentsService.LoadComments(Guid.Empty, 0));
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _commentsService.LoadComments(Guid.Empty, 0));
 
             // Assert
             Assert.Equal("Invalid parameters", exception.Message);
         }
 
         [Fact]
-        public void LoadComments_WithValidParameters_LoadListOfCommentsForVideo()
+        public async Task LoadComments_WithValidParameters_LoadListOfCommentsForVideo()
         {
             // Arrange
             Guid videoId = Guid.NewGuid();
@@ -117,7 +120,7 @@ namespace reeltok.api.gateway.Tests
                 .ReturnsAsync(successResponse);
 
             // Act
-            List<CommentUsingDateTime> result = _commentsService.LoadComments(videoId, 2);
+            List<CommentUsingDateTime> result = await _commentsService.LoadComments(videoId, 2);
 
             // Assert
             Assert.NotNull(result);

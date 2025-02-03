@@ -12,7 +12,7 @@ namespace reeltok.api.gateway.Tests
 {
     public class GatewayServiceTests
     {
-        private const string BaseTestUrl = "http://localhost:5003/auth/getUserIdByToken";
+        private const string BaseTestUrl = "http://localhost:5003/auth/LogOut";
         private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
         private readonly HttpClient _httpClient;
         private readonly GatewayService _gatewayService;
@@ -31,9 +31,9 @@ namespace reeltok.api.gateway.Tests
         public async Task ProcessRequestAsync_WithValidRequest_ReturnsExpectedResponse()
         {
             // Arrange
-            var requestDto = new GetUserIdByTokenRequestDto();
+            var requestDto = new LogOutUserRequestDto();
             string targetUri = BaseTestUrl;
-            var responseContent = "<LogOutUserResponseDto><Success>true</Success><LoggedOutAt>2025-02-02T13:43:00</LoggedOutAt></LogOutUserResponseDto>";
+            var responseContent = "<LogOutUserResponseDto><Success>true</Success></LogOutUserResponseDto>";
             var expectedResponse = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")
@@ -47,7 +47,7 @@ namespace reeltok.api.gateway.Tests
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, LogOutUserResponseDto>(requestDto, targetUri, HttpMethod.Get);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(requestDto, targetUri, HttpMethod.Post);
 
             // Assert
             Assert.True(response.Success);

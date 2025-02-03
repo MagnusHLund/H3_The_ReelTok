@@ -1,3 +1,4 @@
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace reeltok.api.gateway.Utils
@@ -17,10 +18,16 @@ namespace reeltok.api.gateway.Utils
         internal static T DeserializeFromXml<T>(string xml)
         {
             var xmlSerializer = new XmlSerializer(typeof(T));
+
             using (var stringReader = new StringReader(xml))
             {
-                return (T)xmlSerializer.Deserialize(stringReader);
+                using (var xmlReader = XmlReader.Create(stringReader))
+                {
+                    return (T)xmlSerializer.Deserialize(xmlReader);
+
+                }
             }
+
         }
     }
 }

@@ -1,17 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace reeltok.api.gateway.DTOs.Comments
 {
+    [XmlRoot("AddCommentRequestCommentsServiceDto")]
     public class AddCommentRequestCommentsServiceDto
     {
+        [XmlElement(elementName: "UserId")]
+        public Guid UserId { get; set; }
+        [XmlElement(elementName: "VideoId")]
         public Guid VideoId { get; set; }
+        [XmlElement(elementName: "CommentText")]
         public string CommentText { get; set; }
 
-        public AddCommentRequestCommentsServiceDto(Guid videoId, string commentText)
+        public AddCommentRequestCommentsServiceDto(Guid userId, Guid videoId, string commentText)
         {
+            UserId = userId;
             VideoId = videoId;
             CommentText = commentText;
         }
