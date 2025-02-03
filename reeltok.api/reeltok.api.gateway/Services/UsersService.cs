@@ -20,51 +20,31 @@ namespace reeltok.api.gateway.Services
             _gatewayService = gatewayService;
         }
 
-        public void LoginUser(string email, string password)
+        public Task<UserProfileData> LoginUser(string email, string password)
         {
 
         }
-        public void CreateUser(string email, string password, string username)
+        public Task<UserProfileData> CreateUser(string email, string password, string username)
         {
 
         }
-        public UserProfileData GetUserProfileData(Guid userId)
+        public Task<UserProfileData> GetUserProfileData(Guid userId)
         {
             return new UserProfileData();
         }
-        public void UpdateUserDetails(UserProfileData profileData)
+        public Task<UserDetails> UpdateUserDetails(UserProfileData profileData)
         {
 
         }
-        public void UpdateProfilePicture(IFormFile image)
+        public Task<IFormFile> UpdateProfilePicture(IFormFile image) // TODO: Maybe theres a better return type than this?
         {
 
         }
-        public void DeleteUser(Guid userId)
-        {
-
-        }
-        public void BlockUser(Guid userIdToBlock)
-        {
-
-        }
-        public void UnblockUser(Guid userIdToUnblock)
-        {
-
-        }
-        public List<UserDetails> GetBlockListByUser(Guid userId)
+        public Task<List<UserDetails>> GetAllUserSubscriptionsForUser(Guid userId)
         {
             return new List<UserDetails>();
         }
-        public List<Video> GetLikedVideosForUserProfile(Guid userId)
-        {
-            return new List<Video>();
-        }
-        public List<UserDetails> GetAllUserSubscriptionsForUser(Guid userId)
-        {
-            return new List<UserDetails>();
-        }
-        public List<UserDetails> GetAllSubscribingToUser(Guid userId)
+        public Task<List<UserDetails>> GetAllSubscribingToUser(Guid userId)
         {
             return new List<UserDetails>();
         }
