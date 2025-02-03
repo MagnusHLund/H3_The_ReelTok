@@ -1,21 +1,20 @@
-
-
 using System.ComponentModel.DataAnnotations;
 using reeltok.api.users.ValueObjects;
 
 namespace reeltok.api.users.Entities
 {
-    internal class Subscription
+    public class Subscribption
     {
         [Required]
         internal Guid UserId { get; private set; }
+        
         [Required]
-        internal UserDetails UserDetails { get; private set; }
+        internal SubscribptionDetails SubDetails { get; private set; }
 
-        internal Subscription(Guid userId, UserDetails userDetails)
+        public Subscribption(Guid userId, SubscribptionDetails subDetails)
         {
             UserId = userId;
-            UserDetails = userDetails;
+            SubDetails = subDetails;
         }
     }
 }

@@ -8,20 +8,22 @@ using reeltok.api.users.Entities;
 
 namespace reeltok.api.users.ValueObjects
 {
-    public class BlockedDetails
+    public class SubscribptionDetails
     {
+        [Required]
         [ForeignKey("User")]
         public Guid UserId { get; } = Guid.Empty;
         public UserProfileData? User { get; } = null;
 
-        [ForeignKey("BlockUser")]
-        public Guid BlockUserId { get; } = Guid.Empty;
-        public UserProfileData? BlockUser { get; } = null;
-        
-        public BlockedDetails(Guid userId, Guid blockUserId)
+        [Required]
+        [ForeignKey("SubscribeToUser")]
+        public Guid SubscriptionId { get; } = Guid.Empty;
+        public UserProfileData? SubscribeToUser { get; } = null;
+
+        public SubscribptionDetails(Guid userId, Guid subscriptionId)
         {
             UserId = userId;
-            BlockUserId = blockUserId;
+            SubscriptionId = subscriptionId;
         }
     }
 }
