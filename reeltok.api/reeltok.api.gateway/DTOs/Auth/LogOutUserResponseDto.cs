@@ -1,17 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace reeltok.api.gateway.DTOs.Auth
 {
+    [XmlRoot("LogOutUserResponseDto")]
     public class LogOutUserResponseDto : BaseResponseDto
     {
-        public LogOutUserResponseDto()
-        {
-        }
-        public LogOutUserResponseDto(bool success) : base(success)
-        {
-        }
+        public LogOutUserResponseDto(bool success) : base(success) { }
+        public LogOutUserResponseDto() { }
     }
 }

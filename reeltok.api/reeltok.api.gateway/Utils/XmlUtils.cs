@@ -1,3 +1,4 @@
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace reeltok.api.gateway.Utils
@@ -16,6 +17,11 @@ namespace reeltok.api.gateway.Utils
 
         internal static T DeserializeFromXml<T>(string xml)
         {
+            if (string.IsNullOrWhiteSpace(xml))
+            {
+                throw new ArgumentException("Input XML cannot be null or whitespace.", nameof(xml));
+            }
+
             var xmlSerializer = new XmlSerializer(typeof(T));
             using (var stringReader = new StringReader(xml))
             {

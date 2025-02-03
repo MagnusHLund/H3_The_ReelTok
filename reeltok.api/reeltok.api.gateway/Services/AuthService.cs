@@ -17,9 +17,9 @@ namespace reeltok.api.gateway.Services
         public async Task<bool> LogOutUser()
         {
             LogOutUserRequestDto requestDto = new LogOutUserRequestDto();
-            string targetUri = $"{AuthMicroServiceBaseUrl}/logout";
+            string targetUrl = $"{AuthMicroServiceBaseUrl}/logout";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(requestDto, targetUri, HttpMethod.Post);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
             if (!response.Success)
             {
@@ -32,9 +32,9 @@ namespace reeltok.api.gateway.Services
         public async Task<Guid> GetUserIdByToken()
         {
             GetUserIdByTokenRequestDto requestDto = new GetUserIdByTokenRequestDto();
-            string targetUri = $"{AuthMicroServiceBaseUrl}/getUserIdByToken";
+            string targetUrl = $"{AuthMicroServiceBaseUrl}/getUserIdByToken";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, GetUserIdByTokenResponseDto>(requestDto, targetUri, HttpMethod.Get);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, GetUserIdByTokenResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
             if (response.Success && response is GetUserIdByTokenResponseDto getUserIdResponse)
             {

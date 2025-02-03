@@ -8,7 +8,7 @@ namespace reeltok.api.gateway.Interfaces
 {
     public interface ICommentsService
     {
-        public Comment AddComment(string commentText);
-        public List<Comment> LoadComments(Guid videoId, byte amount);
+        public Task<CommentUsingDateTime> AddComment(Guid videoId, string commentText);
+        public Task<List<CommentUsingDateTime>> LoadComments(Guid videoId, byte amount);
     }
 }

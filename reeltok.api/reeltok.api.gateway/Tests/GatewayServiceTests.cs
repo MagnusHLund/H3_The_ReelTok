@@ -1,6 +1,5 @@
 using System.Net;
 using System.Text;
-using AutoMapper;
 using Moq;
 using Moq.Protected;
 using reeltok.api.gateway.DTOs;
@@ -12,7 +11,7 @@ namespace reeltok.api.gateway.Tests
 {
     public class GatewayServiceTests
     {
-        private const string BaseTestUrl = "http://localhost:5003/auth/getUserIdByToken";
+        private const string BaseTestUrl = "http://localhost:5003/auth/LogOut";
         private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
         private readonly HttpClient _httpClient;
         private readonly GatewayService _gatewayService;
@@ -20,9 +19,6 @@ namespace reeltok.api.gateway.Tests
         public GatewayServiceTests()
         {
             _mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-
-            var mockMapper = new MapperConfiguration(cfg => { });
-
             _httpClient = new HttpClient(_mockHttpMessageHandler.Object);
             _gatewayService = new GatewayService(_httpClient);
         }
@@ -31,10 +27,10 @@ namespace reeltok.api.gateway.Tests
         public async Task ProcessRequestAsync_WithValidRequest_ReturnsExpectedResponse()
         {
             // Arrange
-            var requestDto = new GetUserIdByTokenRequestDto();
-            string targetUri = BaseTestUrl;
-            var responseContent = "<LogOutUserResponseDto><Success>true</Success><LoggedOutAt>2025-02-02T13:43:00</LoggedOutAt></LogOutUserResponseDto>";
-            var expectedResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            LogOutUserRequestDto requestDto = new LogOutUserRequestDto();
+            string targetUrl = BaseTestUrl;
+            string responseContent = "<LogOutUserResponseDto><Success>true</Success></LogOutUserResponseDto>";
+            HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")
             };
@@ -47,11 +43,11 @@ namespace reeltok.api.gateway.Tests
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, LogOutUserResponseDto>(requestDto, targetUri, HttpMethod.Get);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
             // Assert
             Assert.True(response.Success);
-            var logOutResponse = response as LogOutUserResponseDto;
+            LogOutUserResponseDto logOutResponse = response as LogOutUserResponseDto;
             Assert.NotNull(logOutResponse);
         }
 
@@ -60,10 +56,10 @@ namespace reeltok.api.gateway.Tests
         public async Task ProcessRequestAsync_WithInvalidRequest_ReturnsErrorResponse()
         {
             // Arrange
-            var requestDto = new GetUserIdByTokenRequestDto();
-            string targetUri = BaseTestUrl;
-            var responseContent = "<FailureResponseDto><Success>false</Success><Message>Test message</Message></FailureResponseDto>";
-            var expectedResponse = new HttpResponseMessage(HttpStatusCode.BadRequest)
+            GetUserIdByTokenRequestDto requestDto = new GetUserIdByTokenRequestDto();
+            string targetUrl = BaseTestUrl;
+            string responseContent = "<FailureResponseDto><Success>false</Success><Message>Test message</Message></FailureResponseDto>";
+            HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.BadRequest)
             {
                 Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")
             };
@@ -76,7 +72,7 @@ namespace reeltok.api.gateway.Tests
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, FailureResponseDto>(requestDto, targetUri, HttpMethod.Get);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, FailureResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
             // Assert
             var failureResponse = response as FailureResponseDto;
@@ -89,11 +85,11 @@ namespace reeltok.api.gateway.Tests
         public async Task ProcessRequestAsync_WithNullRequestDto_ThrowsArgumentNullException()
         {
             // Arrange
-            string targetUri = BaseTestUrl;
+            string targetUrl = BaseTestUrl;
 
             // Act & Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, LogOutUserResponseDto>(null, targetUri, HttpMethod.Get));
+                _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, LogOutUserResponseDto>(null, targetUrl, HttpMethod.Get));
         }
 
 
@@ -101,9 +97,9 @@ namespace reeltok.api.gateway.Tests
         public async Task RouteRequestAsync_WithSuccessfulResponse_ReturnsCorrectResponse()
         {
             // Arrange
-            string targetUri = BaseTestUrl;
-            var responseContent = "<LogOutUserResponseDto><Success>true</Success></LogOutUserResponseDto>";
-            var expectedResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            string targetUrl = BaseTestUrl;
+            string responseContent = "<LogOutUserResponseDto><Success>true</Success></LogOutUserResponseDto>";
+            HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")
             };
@@ -115,7 +111,7 @@ namespace reeltok.api.gateway.Tests
                     ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(expectedResponse);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, targetUri);
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetUrl);
 
             // Act
             BaseResponseDto response = await _gatewayService.RouteRequestAsync<LogOutUserResponseDto>(request);
@@ -128,9 +124,9 @@ namespace reeltok.api.gateway.Tests
         public async Task RouteRequestAsync_WithFailedResponse_ReturnsErrorResponse()
         {
             // Arrange
-            string targetUri = BaseTestUrl;
-            var responseContent = "<FailureResponseDto><Success>false</Success><Message>Test message</Message></FailureResponseDto>";
-            var expectedResponse = new HttpResponseMessage(HttpStatusCode.BadRequest)
+            string targetUrl = BaseTestUrl;
+            string responseContent = "<FailureResponseDto><Success>false</Success><Message>Test message</Message></FailureResponseDto>";
+            HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.BadRequest)
             {
                 Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")
             };
@@ -142,13 +138,13 @@ namespace reeltok.api.gateway.Tests
                     ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(expectedResponse);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, targetUri);
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetUrl);
 
             // Act
-            BaseResponseDto response = await _gatewayService.RouteRequestAsync<FailureResponseDto>(request);
+            BaseResponseDto response = await _gatewayService.RouteRequestAsync<LogOutUserResponseDto>(request);
 
             // Assert
-            var failureResponse = response as FailureResponseDto;
+            FailureResponseDto failureResponse = response as FailureResponseDto;
             Assert.False(response.Success);
             Assert.NotNull(failureResponse);
         }
@@ -157,8 +153,8 @@ namespace reeltok.api.gateway.Tests
         public async Task RouteRequestAsync_WithTimeout_ThrowsTaskCanceledException()
         {
             // Arrange
-            string targetUri = BaseTestUrl;
-            var request = new HttpRequestMessage(HttpMethod.Post, targetUri);
+            string targetUrl = BaseTestUrl;
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetUrl);
 
             _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>(
