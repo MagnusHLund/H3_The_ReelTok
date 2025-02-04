@@ -9,6 +9,7 @@ namespace reeltok.api.users.Interfaces
         Task<UserProfileData?> GetUserByIdAsync(Guid id);
 
         Task AddUserToSubscriptionAsync(Guid userId, Guid subscriptionUserId);
+        Task RemoveUserFromSubscriptionAsync(Guid userId, Guid subscriptionUserId);
 
         Task AddToLikedVideoAsync(Guid userId, Guid videoId);
         Task RemoveFromLikedVideoAsync(Guid userId, Guid videoId);
