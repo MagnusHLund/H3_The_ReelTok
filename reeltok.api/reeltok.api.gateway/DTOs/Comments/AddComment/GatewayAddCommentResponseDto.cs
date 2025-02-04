@@ -14,14 +14,12 @@ namespace reeltok.api.gateway.DTOs.Comments
         [XmlElement(elementName: "CreatedAt")]
         public DateTime CreatedAt { get; set; }
 
-        public GatewayAddCommentResponseDto(Guid commentId, Guid userId, string commentText, DateTime createdAt, bool success) : base(success)
+        public GatewayAddCommentResponseDto(Guid commentId, Guid userId, string commentText, DateTime createdAt, bool success = true) : base(success)
         {
             CommentId = commentId;
             UserId = userId;
             CommentText = commentText;
             CreatedAt = createdAt;
         }
-
-        public GatewayAddCommentResponseDto() { }
     }
 }

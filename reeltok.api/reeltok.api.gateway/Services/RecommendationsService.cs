@@ -4,7 +4,7 @@ using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class RecommendationsService : IRecommendationsService
+    internal class RecommendationsService : BaseService, IRecommendationsService
     {
         private const string RecommendationsMicroServiceBaseUrl = "http://localhost:5004/recommendations";
         private readonly IAuthService _authService;
@@ -30,12 +30,7 @@ namespace reeltok.api.gateway.Services
                 return responseDto.Success;
             }
 
-            if (response is FailureResponseDto failureResponse)
-            {
-                throw new InvalidOperationException(failureResponse.Message);
-            }
-
-            throw new InvalidOperationException("An unknown error has occurred!");
+            throw HandleExceptions(response);
         }
     }
 }

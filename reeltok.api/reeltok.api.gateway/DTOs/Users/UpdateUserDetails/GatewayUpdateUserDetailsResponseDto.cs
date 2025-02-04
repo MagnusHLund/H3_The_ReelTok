@@ -5,7 +5,6 @@ namespace reeltok.api.gateway.DTOs.Users
     [XmlRoot("UpdateUserDetailsResponseDto")]
     public class GatewayUpdateUserDetailsResponseDto : BaseResponseDto
     {
-        public GatewayUpdateUserDetailsResponseDto(bool success) : base(success) { }
-        public GatewayUpdateUserDetailsResponseDto() { }
+        public GatewayUpdateUserDetailsResponseDto(bool success = true) : base(success) { }
     }
 }

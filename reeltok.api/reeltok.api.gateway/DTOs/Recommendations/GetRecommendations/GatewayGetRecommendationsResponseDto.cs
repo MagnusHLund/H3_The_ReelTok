@@ -5,7 +5,6 @@ namespace reeltok.api.gateway.DTOs.Recommendations
     [XmlRoot("GetRecommendationsResponseDto")]
     public class GatewayGetRecommendationsResponseDto : BaseResponseDto
     {
-        public GatewayGetRecommendationsResponseDto(bool success) : base(success) { }
-        public GatewayGetRecommendationsResponseDto() { }
+        public GatewayGetRecommendationsResponseDto(bool success = true) : base(success) { }
     }
 }

@@ -14,7 +14,7 @@ namespace reeltok.api.gateway.DTOs.Comments
         [XmlElement(elementName: "CreatedAt")]
         public uint CreatedAt { get; set; }
 
-        public ServiceAddCommentResponseDto(Guid commentId, Guid userId, string commentText, uint createdAt, bool success) : base(success)
+        public ServiceAddCommentResponseDto(Guid commentId, Guid userId, string commentText, uint createdAt, bool success = true) : base(success)
         {
             CommentId = commentId;
             UserId = userId;
