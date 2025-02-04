@@ -58,8 +58,8 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid authentication token");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<GetUserIdByTokenRequestDto, GetUserIdByTokenResponseDto>(
-                It.IsAny<GetUserIdByTokenRequestDto>(), $"{BaseTestUrl}/getUserIdByToken", HttpMethod.Get))
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(
+                It.IsAny<ServiceGetUserIdByTokenRequestDto>(), $"{BaseTestUrl}/getUserIdByToken", HttpMethod.Get))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -73,10 +73,10 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             bool success = true;
             Guid validUserId = Guid.NewGuid();
-            GetUserIdByTokenResponseDto successResponseDto = new GetUserIdByTokenResponseDto(success, validUserId);
+            ServiceGetUserIdByTokenResponseDto successResponseDto = new ServiceGetUserIdByTokenResponseDto(validUserId, success);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<GetUserIdByTokenRequestDto, GetUserIdByTokenResponseDto>(
-                It.IsAny<GetUserIdByTokenRequestDto>(), $"{BaseTestUrl}/getUserIdByToken", HttpMethod.Get))
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(
+                It.IsAny<ServiceGetUserIdByTokenRequestDto>(), $"{BaseTestUrl}/getUserIdByToken", HttpMethod.Get))
                 .ReturnsAsync(successResponseDto);
 
             // Act

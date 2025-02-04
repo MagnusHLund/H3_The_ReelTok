@@ -3,12 +3,15 @@ using System.Xml.Serialization;
 namespace reeltok.api.gateway.DTOs.Recommendations
 {
     [XmlRoot("ChangeRecommendedCategoryRequestDto")]
-    public class GatewayChangeRecommendedCategoryRequestDto
+    public class ServiceChangeRecommendedCategoryRequestDto
     {
+        [XmlElement(elementName: "UserId")]
+        public Guid UserId { get; set; }
         [XmlElement(elementName: "Category")]
         public string Category { get; set; }
-        public GatewayChangeRecommendedCategoryRequestDto(string category)
+        public ServiceChangeRecommendedCategoryRequestDto(Guid userId, string category)
         {
+            UserId = userId;
             Category = category;
         }
     }

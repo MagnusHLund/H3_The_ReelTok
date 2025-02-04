@@ -5,6 +5,14 @@ namespace reeltok.api.gateway.DTOs.Users
     [XmlRoot("UpdateProfilePictureResponseDto")]
     public class ServiceUpdateProfilePictureResponseDto : BaseResponseDto
     {
+        [XmlElement("ProfilePictureUrl")]
+        public string ProfilePictureUrl { get; set; }
 
+        public ServiceUpdateProfilePictureResponseDto(string profilePictureUrl, bool success) : base(success)
+        {
+            ProfilePictureUrl = profilePictureUrl;
+        }
+
+        public ServiceUpdateProfilePictureResponseDto() { }
     }
 }

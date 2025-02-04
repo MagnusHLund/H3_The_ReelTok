@@ -33,9 +33,9 @@ namespace reeltok.api.gateway.Mappers
             );
         }
 
-        internal static AddCommentResponseDto ConvertToResponseDto(CommentUsingDateTime commentToConvert, bool success)
+        internal static GatewayAddCommentResponseDto ConvertToResponseDto(CommentUsingDateTime commentToConvert, bool success)
         {
-            return new AddCommentResponseDto(
+            return new GatewayAddCommentResponseDto(
                 commentToConvert.CommentId,
                 commentToConvert.CommentDetails.UserId,
                 commentToConvert.CommentDetails.CommentText,

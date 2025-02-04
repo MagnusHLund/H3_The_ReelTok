@@ -21,5 +21,7 @@ namespace reeltok.api.gateway.DTOs.Comments
             CommentText = commentText;
             CreatedAt = createdAt;
         }
+
+        public GatewayAddCommentResponseDto() { }
     }
 }

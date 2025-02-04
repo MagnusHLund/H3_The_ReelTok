@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.Data;
 using Moq;
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.DTOs.Users;
@@ -34,8 +29,8 @@ namespace reeltok.api.gateway.Tests
             string password = "Test";
             FailureResponseDto failureResponseDto = new FailureResponseDto("Password does not meet minimum requirements!");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<LoginRequestDto, LoginResponseDto>(
-                It.IsAny<LoginRequestDto>(), $"{BaseTestUrl}/Login", HttpMethod.Post))
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(
+                It.IsAny<ServiceLoginRequestDto>(), $"{BaseTestUrl}/Login", HttpMethod.Post))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -50,11 +45,11 @@ namespace reeltok.api.gateway.Tests
             bool success = true;
             string email = "test@reeltok.com";
             string password = "Sup3rSecur3Passw0rd";
-            LoginResponseDto successResponseDto = new LoginResponseDto();
+            ServiceLoginResponseDto successResponseDto = new ServiceLoginResponseDto();
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<LoginRequestDto, LoginResponseDto>(
-                It.IsAny<LoginRequestDto>(), $"{BaseTestUrl}/Login", HttpMethod.Post))
-                .ReturnsAsync(failureResponseDto);
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(
+                It.IsAny<ServiceLoginRequestDto>(), $"{BaseTestUrl}/Login", HttpMethod.Post))
+                .ReturnsAsync(successResponseDto);
 
             // Act & Assert
             InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _usersService.LoginUser(email, password));
