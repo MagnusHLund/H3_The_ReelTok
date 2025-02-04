@@ -19,7 +19,7 @@ namespace reeltok.api.gateway.Controllers
 
         [HttpPut]
         [Route("UpdateCategory")]
-        public async Task<IActionResult> UpdateRecommendedCategory([FromBody] ChangeRecommendedCategoryRequestDto request)
+        public async Task<IActionResult> UpdateRecommendedCategory([FromBody] GatewayChangeRecommendedCategoryRequestDto request)
         {
             if (string.IsNullOrWhiteSpace(request.Category))
             {
@@ -27,7 +27,14 @@ namespace reeltok.api.gateway.Controllers
             }
 
             bool success = await _recommendationsService.ChangeRecommendedCategory(request.Category);
-            return Ok(new ChangeRecommendedCategoryResponseDto(success));
+            return Ok(new GatewayChangeRecommendedCategoryResponseDto(success));
         }
+
+        /* // TODO: Implement this
+                [HttpGet]
+                [Route("GetCategories")]
+                public async Task<IActionResult> GetRecommendedCategories([FromBody] GatewayGetRecommendationsRequestDto request)
+                {
+                } */
     }
 }

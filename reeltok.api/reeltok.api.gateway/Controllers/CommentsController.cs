@@ -19,7 +19,7 @@ namespace reeltok.api.gateway.Controllers
 
         [HttpPost]
         [Route("Add")]
-        public async Task<IActionResult> AddComment([FromBody] AddCommentRequestDto request)
+        public async Task<IActionResult> AddComment([FromBody] GatewayAddCommentRequestDto request)
         {
             if (string.IsNullOrEmpty(request.CommentText))
             {
@@ -29,14 +29,14 @@ namespace reeltok.api.gateway.Controllers
             CommentUsingDateTime comment = await _commentsService.AddComment(request.VideoId, request.CommentText);
 
             bool success = true;
-            AddCommentResponseDto responseDto = CommentMapper.ConvertToResponseDto(comment, success);
+            GatewayAddCommentResponseDto responseDto = CommentMapper.ConvertToResponseDto(comment, success);
 
             return Ok(responseDto);
         }
 
         [HttpGet]
         [Route("Get")]
-        public async Task<IActionResult> LoadComments([FromBody] LoadCommentsRequestDto request)
+        public async Task<IActionResult> LoadComments([FromBody] GatewayLoadCommentsRequestDto request)
         {
             if (request.Amount <= 0)
             {
@@ -51,7 +51,7 @@ namespace reeltok.api.gateway.Controllers
             }
 
             bool success = true;
-            return Ok(new LoadCommentsResponseDto(comments, success));
+            return Ok(new GatewayLoadCommentsResponseDto(comments, success));
         }
     }
 }

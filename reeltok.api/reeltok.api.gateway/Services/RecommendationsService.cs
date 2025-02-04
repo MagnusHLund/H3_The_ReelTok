@@ -20,12 +20,12 @@ namespace reeltok.api.gateway.Services
         {
             Guid userId = await _authService.GetUserIdByToken();
 
-            ChangeRecommendationsCategoryRequestRecommendationsService requestDto = new ChangeRecommendationsCategoryRequestRecommendationsService(userId, category);
+            ServiceChangeRecommendationsCategoryRequestDto requestDto = new ServiceChangeRecommendationsCategoryRequestDto(userId, category);
             string targetUrl = $"{RecommendationsMicroServiceBaseUrl}/update";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ChangeRecommendationsCategoryRequestRecommendationsService, ChangeRecommendationsCategoryResponseRecommendationsService>(requestDto, targetUrl, HttpMethod.Put);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceChangeRecommendationsCategoryRequestDto, GatewayChangeRecommendedCategoryResponseDto>(requestDto, targetUrl, HttpMethod.Put);
 
-            if (response.Success && response is ChangeRecommendationsCategoryResponseRecommendationsService responseDto)
+            if (response.Success && response is GatewayChangeRecommendedCategoryResponseDto responseDto)
             {
                 return responseDto.Success;
             }
