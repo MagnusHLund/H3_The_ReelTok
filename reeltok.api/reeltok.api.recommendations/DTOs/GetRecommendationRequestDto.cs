@@ -7,9 +7,9 @@ namespace reeltok.api.recommendations.DTOs
     public class GetRecommendationRequestDto
     {
         [Required]
-        internal Guid UserId { get; set; }
+        public Guid UserId { get; set; }
 
-        internal GetRecommendationRequestDto(Guid userId)
+        public GetRecommendationRequestDto(Guid userId)
         {
             UserId = userId;
         }

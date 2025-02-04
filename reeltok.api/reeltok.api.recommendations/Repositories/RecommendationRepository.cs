@@ -12,7 +12,7 @@ namespace reeltok.api.recommendations.Repositories
     {
         private readonly RecommendationDbContext _Context;
 
-        internal RecommendationRepository(RecommendationDbContext recommendationDbContext)
+        public RecommendationRepository(RecommendationDbContext recommendationDbContext)
         {
             _Context = recommendationDbContext;
         }

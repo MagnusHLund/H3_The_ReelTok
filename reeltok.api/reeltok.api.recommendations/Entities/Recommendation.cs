@@ -8,8 +8,8 @@ namespace reeltok.api.recommendations.Entities
 {
     public class Recommendations
     {
-        internal Guid UserId { get; set; }
-        internal List<RecommendationsEnum> RecommendationCategory { get; set; }
+        public Guid UserId { get; set; }
+        public List<RecommendationsEnum> RecommendationCategory { get; set; }
 
         public Recommendations(Guid userId, List<RecommendationsEnum> recommendationsEnum)
         {

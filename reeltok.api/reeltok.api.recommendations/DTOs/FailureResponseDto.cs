@@ -2,9 +2,9 @@
 
 namespace reeltok.api.recommendations.DTOs
 {
-    internal class FailureResponseDto : BaseResponseDto
+    public class FailureResponseDto : BaseResponseDto
     {
-        internal FailureResponseDto(bool success) : base(success)
+        public FailureResponseDto(bool success) : base(success)
         {
         }
     }

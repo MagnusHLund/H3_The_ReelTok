@@ -40,9 +40,8 @@ namespace reeltok.api.recommendations.Tests
             List<RecommendationsEnum> recommendation = await _recommendationService.GetRecommendation(userId);
 
             // Assert
-            // Do a count, an check that you have expected amount of categories (1)
             Assert.True(recommendation.Count() == 1);
-            // Ensure recommendation is the same as set in Arrange.
+            
             Assert.Equal(recommendation.First(), recommendations.RecommendationCategory.First());
         }
         [Fact]
