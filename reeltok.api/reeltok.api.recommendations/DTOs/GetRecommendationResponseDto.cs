@@ -8,12 +8,12 @@ using reeltok.api.recommendations.Enums;
 
 namespace reeltok.api.recommendations.DTOs
 {
-    internal class GetRecommendationResponseDto : BaseResponseDto
+    public class GetRecommendationResponseDto : BaseResponseDto
     {
         [Required]
-        internal List<RecommendationsEnum> Recommendations;
+        public List<RecommendationsEnum> Recommendations;
 
-        internal GetRecommendationResponseDto(List<RecommendationsEnum> recommendations, bool success) : base(success)
+        public GetRecommendationResponseDto(List<RecommendationsEnum> recommendations, bool success) : base(success)
         {
             Recommendations = recommendations;
         }

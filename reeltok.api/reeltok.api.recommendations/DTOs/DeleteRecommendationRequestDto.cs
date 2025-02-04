@@ -2,14 +2,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.recommendations.DTOs
 {
-    internal class DeleteRecommendationRequestDto
+    public class DeleteRecommendationRequestDto
     {
         [Required]
-        internal string Category { get; set; }
+        public string Category { get; set; }
         [Required]
-        internal Guid UserId { get; set; }
+        public Guid UserId { get; set; }
 
-        internal DeleteRecommendationRequestDto(string category, Guid userId)
+        public DeleteRecommendationRequestDto(string category, Guid userId)
         {
             Category = category;
             UserId = userId;
