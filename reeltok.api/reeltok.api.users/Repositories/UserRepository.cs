@@ -37,6 +37,11 @@ namespace reeltok.api.users.Repositories
             throw new NotImplementedException();
         }
 
+        public Task RemoveUserFromSubscriptionAsync(Guid userId, Guid subscriptionUserId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task UpdateUserAsync(Guid id, UserProfileData user)
         {
             throw new NotImplementedException();
