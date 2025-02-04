@@ -2,9 +2,9 @@
 
 namespace reeltok.api.recommendations.DTOs
 {
-    internal class DeleteRecommendationResponseDto : BaseResponseDto
+    public class DeleteRecommendationResponseDto : BaseResponseDto
     {
-        internal DeleteRecommendationResponseDto(bool success) : base(success)
+        public DeleteRecommendationResponseDto(bool success) : base(success)
         {
         }
     }

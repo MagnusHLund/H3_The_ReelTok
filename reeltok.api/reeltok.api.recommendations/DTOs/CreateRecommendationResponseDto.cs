@@ -2,9 +2,9 @@
 
 namespace reeltok.api.recommendations.DTOs
 {
-    internal class CreateRecommendationResponseDto : BaseResponseDto
+    public class CreateRecommendationResponseDto : BaseResponseDto
     {
-        internal CreateRecommendationResponseDto(bool success) : base(success)
+        public CreateRecommendationResponseDto(bool success) : base(success)
         {
         }
     }
