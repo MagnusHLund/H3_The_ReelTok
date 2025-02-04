@@ -16,7 +16,7 @@ namespace reeltok.api.gateway.Services
 
         public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, string targetUrl, HttpMethod httpMethod) where TResponse : BaseResponseDto
         {
-            if (object.Equals(requestDto, null))
+            if (Equals(requestDto, null))
             {
                 throw new ArgumentNullException(nameof(requestDto));
             }
