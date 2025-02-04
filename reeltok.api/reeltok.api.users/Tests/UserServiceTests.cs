@@ -1,4 +1,6 @@
+using System.Net;
 using Moq;
+using Moq.Protected;
 using reeltok.api.users.Entities;
 using reeltok.api.users.Interfaces;
 using reeltok.api.users.Services;
@@ -9,15 +11,24 @@ namespace reeltok.api.users.Tests
 {
     public class UserServiceTests
     {
+        private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
         private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly IUserService _userService;
+        private readonly HttpClient _httpClient;
 
         public UserServiceTests()
         {
             _userRepositoryMock = new Mock<IUserRepository>();
-            _userService = new UserService(_userRepositoryMock.Object);
+
+            // Mock the HttpMessageHandler
+            _mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+            _httpClient = new HttpClient(_mockHttpMessageHandler.Object);
+
+
+            _userService = new UserService(_userRepositoryMock.Object, _httpClient);
         }
-        
+
+
         #region Create
 
         [Fact]
@@ -213,6 +224,133 @@ namespace reeltok.api.users.Tests
             Assert.Equal("User to unsubscribe from does not exist.", exception.Message);
         }
 
+
+        #endregion
+
+        #region AddToLikedVideos
+
+        [Fact]
+        public async Task AddToLikedVideosAsync_ShouldAddLikedVideoToUserProfile()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var likedVideoId = Guid.NewGuid();
+
+            // Create a user profile to mock
+            var userProfileData = new UserProfileData(userId, new UserDetails("testuser", "https://example.com", "https://example.com/profile.jpg", new HiddenUserDetails("test@example.com")));
+
+            // Mock GetUserByIdAsync to return the user profile when the userId is provided
+            _userRepositoryMock.Setup(repo => repo.GetUserByIdAsync(userId)).ReturnsAsync(userProfileData);
+
+            // Mock AddToLikedVideoAsync (make sure this is set up)
+            _userRepositoryMock.Setup(repo => repo.AddToLikedVideoAsync(userId, likedVideoId)).Returns(Task.CompletedTask);
+
+            _mockHttpMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                });
+
+            // Act
+            await _userService.AddToLikedVideosAsync(userId, likedVideoId);
+
+            // Assert that the AddToLikedVideoAsync method was called once
+            _userRepositoryMock.Verify(repo => repo.AddToLikedVideoAsync(userId, likedVideoId), Times.Once);
+        }
+
+        [Fact]
+        public async Task AddToLikedVideosAsync_ShouldThrowException_WhenVideoIsInvalid()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var likedVideoId = Guid.NewGuid();
+
+            // Create a user profile to mock
+            var userProfileData = new UserProfileData(userId, new UserDetails("testuser", "https://example.com", "https://example.com/profile.jpg", new HiddenUserDetails("test@example.com")));
+
+            // Mock GetUserByIdAsync to return the user profile when the userId is provided
+            _userRepositoryMock.Setup(repo => repo.GetUserByIdAsync(userId)).ReturnsAsync(userProfileData);
+
+            // Mock AddToLikedVideoAsync (make sure this is set up)
+            _userRepositoryMock.Setup(repo => repo.AddToLikedVideoAsync(userId, likedVideoId)).Returns(Task.CompletedTask);
+
+            // Mock the video service response to return an error (BadRequest) for an invalid video
+            _mockHttpMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.BadRequest, // Simulating an invalid video
+                });
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _userService.AddToLikedVideosAsync(userId, likedVideoId));
+            Assert.Equal("Invalid video.", exception.Message); // Ensure the exception message matches
+        }
+
+        #endregion
+
+        #region RemoveFromLikedVideos
+
+        [Fact]
+        public async Task RemoveFromLikedVideosAsync_ShouldRemoveLikedVideo_WhenUserAndVideoExist()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var likedVideoId = Guid.NewGuid();
+
+            // Create a user profile to mock
+            var userProfileData = new UserProfileData(userId, new UserDetails("testuser", "https://example.com", "https://example.com/profile.jpg", new HiddenUserDetails("test@example.com")));
+
+            // Mock GetUserByIdAsync to return the user profile when the userId is provided
+            _userRepositoryMock.Setup(repo => repo.GetUserByIdAsync(userId)).ReturnsAsync(userProfileData);
+
+            // Mock RemoveFromLikedVideoAsync (make sure this is set up)
+            _userRepositoryMock.Setup(repo => repo.RemoveFromLikedVideoAsync(userId, likedVideoId)).Returns(Task.CompletedTask);
+
+            // Mock the video service response to return success for a valid video
+            _mockHttpMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK, // Simulating a valid video
+                });
+
+            // Act
+            await _userService.RemoveFromLikedVideosAsync(userId, likedVideoId);
+
+            // Assert that the RemoveFromLikedVideoAsync method was called once
+            _userRepositoryMock.Verify(repo => repo.RemoveFromLikedVideoAsync(userId, likedVideoId), Times.Once);
+        }
+
+        [Fact]
+        public async Task RemoveFromLikedVideosAsync_ShouldThrowException_WhenVideoIsInvalid()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var likedVideoId = Guid.NewGuid();
+
+            // Create a user profile to mock
+            var userProfileData = new UserProfileData(userId, new UserDetails("testuser", "https://example.com", "https://example.com/profile.jpg", new HiddenUserDetails("test@example.com")));
+
+            // Mock GetUserByIdAsync to return the user profile when the userId is provided
+            _userRepositoryMock.Setup(repo => repo.GetUserByIdAsync(userId)).ReturnsAsync(userProfileData);
+
+            // Mock RemoveFromLikedVideoAsync (make sure this is set up)
+            _userRepositoryMock.Setup(repo => repo.RemoveFromLikedVideoAsync(userId, likedVideoId)).Returns(Task.CompletedTask);
+
+            // Mock the video service response to return an error (BadRequest) for an invalid video
+            _mockHttpMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.BadRequest, // Simulating an invalid video
+                });
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _userService.RemoveFromLikedVideosAsync(userId, likedVideoId));
+            Assert.Equal("Invalid video.", exception.Message); // Ensure the exception message matches
+        }
 
         #endregion
 

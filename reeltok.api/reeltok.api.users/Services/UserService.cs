@@ -6,15 +6,33 @@ namespace reeltok.api.users.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly HttpClient _httpClient;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, HttpClient httpClient)
         {
             _userRepository = userRepository;
+            _httpClient = httpClient;
         }
-        public Task AddToLikedVideosAsync(Guid userId, Guid likedVideoId)
+
+        public async Task AddToLikedVideosAsync(Guid userId, Guid likedVideoId)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("User does not exist.");
+            }
+
+            // Call the video service to check if the video is valid
+            var response = await _httpClient.GetAsync($"http://localhost:5002/videos/validate/{likedVideoId}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ArgumentException("Invalid video.");
+            }
+
+            await _userRepository.AddToLikedVideoAsync(userId, likedVideoId);
         }
+
 
         public async Task CreateAsync(UserProfileData user)
         {
@@ -49,9 +67,22 @@ namespace reeltok.api.users.Services
             return user;
         }
 
-        public Task RemoveFromLikedVideosAsync(Guid userId, Guid likedVideoId)
+        public async Task RemoveFromLikedVideosAsync(Guid userId, Guid likedVideoId)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("User does not exist.");
+            }
+
+            var response = await _httpClient.GetAsync($"http://localhost:5002/videos/validate/{likedVideoId}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ArgumentException("Invalid video.");
+            }
+
+            await _userRepository.RemoveFromLikedVideoAsync(userId, likedVideoId);
         }
 
         public async Task SubscribeAsync(Guid userId, Guid subscribeUserId)
