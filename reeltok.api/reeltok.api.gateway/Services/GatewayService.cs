@@ -14,16 +14,16 @@ namespace reeltok.api.gateway.Services
             _httpClient = httpClient;
         }
 
-        public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, string targetUri, HttpMethod httpMethod) where TResponse : BaseResponseDto
+        public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, string targetUrl, HttpMethod httpMethod) where TResponse : BaseResponseDto
         {
-            if (requestDto == null)
+            if (object.Equals(requestDto, null))
             {
                 throw new ArgumentNullException(nameof(requestDto));
             }
 
             var requestContent = XmlUtils.SerializeDtoToXml(requestDto);
 
-            var request = new HttpRequestMessage(httpMethod, targetUri)
+            var request = new HttpRequestMessage(httpMethod, targetUrl)
             {
                 Content = new StringContent(requestContent, Encoding.UTF8, "application/xml")
             };

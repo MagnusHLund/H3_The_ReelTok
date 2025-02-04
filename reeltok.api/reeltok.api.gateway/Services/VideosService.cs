@@ -10,6 +10,7 @@ namespace reeltok.api.gateway.Services
 {
     internal class VideosService : IVideosService
     {
+        private const string AuthMicroServiceBaseUrl = "http://localhost:5002/videos";
         private readonly IMapper _mapper;
         private readonly IGatewayService _gatewayService;
         public VideosService(IMapper mapper, IGatewayService gatewayService)

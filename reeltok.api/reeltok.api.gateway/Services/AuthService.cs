@@ -17,32 +17,33 @@ namespace reeltok.api.gateway.Services
         public async Task<bool> LogOutUser()
         {
             LogOutUserRequestDto requestDto = new LogOutUserRequestDto();
-            string targetUri = $"{AuthMicroServiceBaseUrl}/logout";
+            string targetUrl = $"{AuthMicroServiceBaseUrl}/logout";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(requestDto, targetUri, HttpMethod.Post);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
-            if (!response.Success)
+            if (response.Success && response is LogOutUserResponseDto responseDto)
             {
-                throw new InvalidOperationException("Logout failed");
+                return responseDto.Success;
             }
 
-            return response.Success;
+            if (response is FailureResponseDto failureResponse)
+            {
+                throw new InvalidOperationException(failureResponse.Message);
+            }
+
+            throw new InvalidOperationException("An unknown error has occurred!");
         }
 
         public async Task<Guid> GetUserIdByToken()
         {
             GetUserIdByTokenRequestDto requestDto = new GetUserIdByTokenRequestDto();
-            string targetUri = $"{AuthMicroServiceBaseUrl}/getUserIdByToken";
+            string targetUrl = $"{AuthMicroServiceBaseUrl}/getUserIdByToken";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, GetUserIdByTokenResponseDto>(requestDto, targetUri, HttpMethod.Get);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, GetUserIdByTokenResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
-            if (response.Success && response is GetUserIdByTokenResponseDto getUserIdResponse)
+            if (response.Success && response is GetUserIdByTokenResponseDto responseDto)
             {
-                if (getUserIdResponse.UserId != Guid.Empty)
-                {
-                    return getUserIdResponse.UserId;
-                }
-                throw new InvalidOperationException("Invalid user ID");
+                return responseDto.UserId;
             }
 
             if (response is FailureResponseDto failureResponse)

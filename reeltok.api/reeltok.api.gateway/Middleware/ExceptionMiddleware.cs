@@ -33,7 +33,7 @@ namespace reeltok.api.gateway.Middleware
             context.Response.ContentType = "application/xml";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            FailureResponseDto response = new FailureResponseDto(false, "Internal server error!");
+            FailureResponseDto response = new FailureResponseDto("Internal server error!");
 
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(FailureResponseDto));
             using (StringWriter stringWriter = new StringWriter())

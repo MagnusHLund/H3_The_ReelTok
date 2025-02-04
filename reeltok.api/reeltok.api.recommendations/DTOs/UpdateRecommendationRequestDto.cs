@@ -5,9 +5,9 @@ namespace reeltok.api.recommendations.DTOs
     internal class UpdateRecommendationRequestDto
     {
         [Required]
-        internal string Category { get; private set; }
+        internal string Category { get; set; }
         [Required]
-        internal Guid UserId { get; private set; }
+        internal Guid UserId { get; set; }
 
         internal UpdateRecommendationRequestDto(string category, Guid userId)
         {
