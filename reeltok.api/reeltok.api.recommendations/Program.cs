@@ -1,5 +1,5 @@
 
-namespace RecommendationsService
+namespace RecommendationsServiceApi
 {
 	public class Program
 	{
