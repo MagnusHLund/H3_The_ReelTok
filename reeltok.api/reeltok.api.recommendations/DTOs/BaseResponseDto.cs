@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.recommendations.DTOs
 {
-    internal abstract class BaseResponseDto
+    public abstract class BaseResponseDto
     {
         [Required]
-        internal bool Success { get; set; }
+        public bool Success { get; set; }
 
         private protected BaseResponseDto(bool success)
         {
