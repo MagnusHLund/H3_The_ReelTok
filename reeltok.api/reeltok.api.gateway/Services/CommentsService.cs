@@ -23,12 +23,12 @@ namespace reeltok.api.gateway.Services
         {
             Guid userId = await _authService.GetUserIdByToken();
 
-            AddCommentRequestCommentsServiceDto requestDto = new AddCommentRequestCommentsServiceDto(userId, videoId, commentText);
+            ServiceAddCommentRequestDto requestDto = new ServiceAddCommentRequestDto(userId, videoId, commentText);
             string targetUrl = $"{CommentMicroServiceBaseUrl}/Add";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<AddCommentRequestCommentsServiceDto, AddCommentResponseCommentsServiceDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceAddCommentRequestDto, ServiceAddCommentResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
-            if (response.Success && response is AddCommentResponseCommentsServiceDto responseDto)
+            if (response.Success && response is ServiceAddCommentResponseDto responseDto)
             {
                 DateTime createdAt = DateTimeUtils.UnixTimeToDateTime(responseDto.CreatedAt);
                 CommentDetailsUsingDateTime commentDetails = new CommentDetailsUsingDateTime(responseDto.UserId, videoId, responseDto.CommentText, createdAt);
@@ -46,12 +46,12 @@ namespace reeltok.api.gateway.Services
 
         public async Task<List<CommentUsingDateTime>> LoadComments(Guid videoId, byte amount)
         {
-            LoadCommentsRequestCommentsServiceDto requestDto = new LoadCommentsRequestCommentsServiceDto(videoId, amount);
+            ServiceLoadCommentsRequestDto requestDto = new ServiceLoadCommentsRequestDto(videoId, amount);
             string targetUrl = $"{CommentMicroServiceBaseUrl}/Load";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<LoadCommentsRequestCommentsServiceDto, LoadCommentsResponseCommentsServiceDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceLoadCommentsRequestDto, ServiceLoadCommentsResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
-            if (response.Success && response is LoadCommentsResponseCommentsServiceDto responseDto)
+            if (response.Success && response is ServiceLoadCommentsResponseDto responseDto)
             {
                 return responseDto.Comments.Select(comment => CommentMapper.ConvertToDateTime(comment)).ToList();
             }

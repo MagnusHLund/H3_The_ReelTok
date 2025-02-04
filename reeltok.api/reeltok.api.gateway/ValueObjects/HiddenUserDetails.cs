@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace reeltok.api.gateway.ValueObjects
 {
     public class HiddenUserDetails
     {
+        public string Email { get; }
 
+        public HiddenUserDetails(string email)
+        {
+            Email = email;
+        }
     }
 }

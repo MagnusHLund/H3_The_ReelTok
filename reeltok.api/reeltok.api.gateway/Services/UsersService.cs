@@ -20,31 +20,31 @@ namespace reeltok.api.gateway.Services
             _gatewayService = gatewayService;
         }
 
-        public Task<UserProfileData> LoginUser(string email, string password)
+        public async Task<UserProfileData> LoginUser(string email, string password)
         {
-
+            return new UserProfileData(Guid.Empty, new UserDetails("", "", ""), new HiddenUserDetails(""));
         }
-        public Task<UserProfileData> CreateUser(string email, string password, string username)
+        public async Task<UserProfileData> CreateUser(string email, string username, string password)
         {
-
+            return new UserProfileData(Guid.Empty, new UserDetails("", "", ""), new HiddenUserDetails(""));
         }
-        public Task<UserProfileData> GetUserProfileData(Guid userId)
+        public async Task<UserProfileData> GetUserProfileData(Guid userId)
         {
-            return new UserProfileData();
+            return new UserProfileData(Guid.Empty, new UserDetails("", "", ""), new HiddenUserDetails(""));
         }
-        public Task<UserDetails> UpdateUserDetails(UserProfileData profileData)
+        public async Task<UserDetails> UpdateUserDetails(UserProfileData profileData)
         {
-
+            return new UserDetails("", "", "");
         }
-        public Task<IFormFile> UpdateProfilePicture(IFormFile image) // TODO: Maybe theres a better return type than this?
+        public async Task<IFormFile> UpdateProfilePicture(IFormFile image) // TODO: Maybe theres a better return type than this?
         {
-
+            return image;
         }
-        public Task<List<UserDetails>> GetAllUserSubscriptionsForUser(Guid userId)
+        public async Task<List<UserDetails>> GetAllUserSubscriptionsForUser(Guid userId)
         {
             return new List<UserDetails>();
         }
-        public Task<List<UserDetails>> GetAllSubscribingToUser(Guid userId)
+        public async Task<List<UserDetails>> GetAllSubscribingToUser(Guid userId)
         {
             return new List<UserDetails>();
         }

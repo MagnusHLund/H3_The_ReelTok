@@ -25,8 +25,8 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             FailureResponseDto failureResponseDto = new FailureResponseDto("Already logged out");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(
-                It.IsAny<LogOutUserRequestDto>(), $"{BaseTestUrl}/logout", HttpMethod.Post))
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(
+                It.IsAny<ServiceLogOutUserRequestDto>(), $"{BaseTestUrl}/logout", HttpMethod.Post))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -39,10 +39,10 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             bool success = true;
-            LogOutUserResponseDto successResponseDto = new LogOutUserResponseDto(success);
+            ServiceLogOutUserResponseDto successResponseDto = new ServiceLogOutUserResponseDto(success);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(
-                It.IsAny<LogOutUserRequestDto>(), $"{BaseTestUrl}/logout", HttpMethod.Post))
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(
+                It.IsAny<ServiceLogOutUserRequestDto>(), $"{BaseTestUrl}/logout", HttpMethod.Post))
                 .ReturnsAsync(successResponseDto);
 
             // Act

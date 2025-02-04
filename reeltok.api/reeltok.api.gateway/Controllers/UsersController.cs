@@ -17,44 +17,51 @@ namespace reeltok.api.gateway.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> LoginUser([FromBody] LoginRequestDto request)
+        public async Task<IActionResult> LoginUser([FromBody] GatewayLoginRequestDto request)
         {
+            return (Ok(request));
         }
 
         [HttpPost]
         [Route("Create")]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDto request)
+        public async Task<IActionResult> CreateUser([FromBody] GatewayCreateUserRequestDto request)
         {
+            return (Ok(request));
         }
 
         [HttpGet]
         [Route("GetUserProfileData/{userId}")] // TODO: Verify this
-        public async Task<IActionResult> GetUserProfileData([FromBody] LoginRequestDto request) // TODO: Replace parameters
+        public async Task<IActionResult> GetUserProfileData([FromBody] GatewayLoginRequestDto request) // TODO: Replace parameters
         {
+            return (Ok(request));
         }
 
         [HttpPut]
         [Route("UpdateUserDetails")]
-        public async Task<IActionResult> UpdateUserDetails([FromBody] UpdateUserDetailsRequestDto request)
+        public async Task<IActionResult> UpdateUserDetails([FromBody] GatewayUpdateUserDetailsRequestDto request)
         {
+            return (Ok(request));
         }
 
         [HttpPut]
         [Route("UpdateProfilePicture")]
-        public async Task<IActionResult> UpdateProfilePicture([FromBody] UpdateProfilePictureRequestDto request)
+        public async Task<IActionResult> UpdateProfilePicture([FromBody] GatewayUpdateProfilePictureRequestDto request)
         {
+            return (Ok(request));
         }
 
         [HttpGet]
         [Route("GetAllSubscriptionsForUser")]
-        public async Task<IActionResult> GetAllSubscriptionsForUser([FromBody] GetAllSubscriptionsForUserRequestDto request)
+        public async Task<IActionResult> GetAllSubscriptionsForUser([FromBody] GatewayGetAllSubscriptionsForUserRequestDto request)
         {
+            return (Ok(request));
         }
 
         [HttpGet]
         [Route("GetAllSubscribingToUser")]
-        public async Task<IActionResult> GetAllSubscribingToUser([FromBody] GetAllSubscribingToUserRequestDto request)
+        public async Task<IActionResult> GetAllSubscribingToUser([FromBody] GatewayGetAllSubscribingToUserRequestDto request)
         {
+            return (Ok(request));
         }
     }
 }
