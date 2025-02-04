@@ -9,17 +9,17 @@ namespace reeltok.api.gateway.DTOs.Users
         public Guid UserId { get; set; }
         [XmlElement("Username")]
         public string Username { get; set; }
-        [XmlElement("ProfilePictureUrl")]
-        public string ProfilePictureUrl { get; set; }
         [XmlElement("ProfileUrl")]
         public string ProfileUrl { get; set; }
+        [XmlElement("ProfilePictureUrl")]
+        public string ProfilePictureUrl { get; set; }
 
-        public ServiceGetUserProfileDataResponseDto(Guid userId, string username, string profilePictureUrl, string profileUrl, bool success) : base(success)
+        public ServiceGetUserProfileDataResponseDto(Guid userId, string username, string profileUrl, string profilePictureUrl, bool success = true) : base(success)
         {
             UserId = userId;
             Username = username;
-            ProfilePictureUrl = profilePictureUrl;
             ProfileUrl = profileUrl;
+            ProfilePictureUrl = profilePictureUrl;
         }
 
         public ServiceGetUserProfileDataResponseDto() { }

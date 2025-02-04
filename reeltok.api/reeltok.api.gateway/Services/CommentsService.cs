@@ -8,7 +8,7 @@ using reeltok.api.gateway.ValueObjects;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class CommentsService : ICommentsService
+    internal class CommentsService : BaseService, ICommentsService
     {
         private const string CommentMicroServiceBaseUrl = "http://localhost:5005/comments";
         private readonly IAuthService _authService;
@@ -36,12 +36,7 @@ namespace reeltok.api.gateway.Services
                 return new CommentUsingDateTime(responseDto.CommentId, commentDetails);
             }
 
-            if (response is FailureResponseDto failureResponse)
-            {
-                throw new InvalidOperationException(failureResponse.Message);
-            }
-
-            throw new InvalidOperationException("An unknown error has occurred!");
+            throw HandleExceptions(response);
         }
 
         public async Task<List<CommentUsingDateTime>> LoadComments(Guid videoId, byte amount)
@@ -56,12 +51,7 @@ namespace reeltok.api.gateway.Services
                 return responseDto.Comments.Select(comment => CommentMapper.ConvertToDateTime(comment)).ToList();
             }
 
-            if (response is FailureResponseDto failureResponse)
-            {
-                throw new InvalidOperationException(failureResponse.Message);
-            }
-
-            throw new InvalidOperationException("An unknown error has occurred!");
+            throw HandleExceptions(response);
         }
     }
 }

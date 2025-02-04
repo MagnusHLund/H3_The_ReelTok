@@ -9,10 +9,9 @@ namespace reeltok.api.gateway.DTOs.Comments
         [XmlElement(elementName: "Comments")]
         public List<CommentUsingDateTime> Comments { get; set; }
 
-        public GatewayLoadCommentsResponseDto(List<CommentUsingDateTime> comments, bool success) : base(success)
+        public GatewayLoadCommentsResponseDto(List<CommentUsingDateTime> comments, bool success = true) : base(success)
         {
             Comments = comments;
         }
-        public GatewayLoadCommentsResponseDto() { }
     }
 }

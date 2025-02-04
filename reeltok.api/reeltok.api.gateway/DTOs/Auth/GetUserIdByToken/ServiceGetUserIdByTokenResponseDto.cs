@@ -7,7 +7,7 @@ namespace reeltok.api.gateway.DTOs.Auth
     {
         [XmlElement(elementName: "UserId")]
         public Guid UserId { get; set; }
-        public ServiceGetUserIdByTokenResponseDto(Guid userId, bool success) : base(success)
+        public ServiceGetUserIdByTokenResponseDto(Guid userId, bool success = true) : base(success)
         {
             UserId = userId;
         }

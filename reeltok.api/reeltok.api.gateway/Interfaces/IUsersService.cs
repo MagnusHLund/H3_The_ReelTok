@@ -6,7 +6,7 @@ namespace reeltok.api.gateway.Interfaces
     public interface IUsersService
     {
         public Task<UserProfileData> LoginUser(string email, string password);
-        public Task<UserProfileData> CreateUser(string email, string password, string username);
+        public Task<UserProfileData> CreateUser(string email, string username, string password);
         public Task<UserProfileData> GetUserProfileData(Guid userId);
         public Task<UserDetails> UpdateUserDetails(UserProfileData profileData);
         public Task<IFormFile> UpdateProfilePicture(IFormFile image);

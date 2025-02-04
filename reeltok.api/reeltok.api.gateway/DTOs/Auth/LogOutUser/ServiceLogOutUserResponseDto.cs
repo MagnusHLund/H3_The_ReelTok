@@ -5,7 +5,8 @@ namespace reeltok.api.gateway.DTOs.Auth
     [XmlRoot("LogOutUserResponseDto")]
     public class ServiceLogOutUserResponseDto : BaseResponseDto
     {
-        public ServiceLogOutUserResponseDto(bool success) : base(success) { }
+        // TODO: Test if its an issue assigning a value to the only parameter, when also having a parameterless constructor.
+        public ServiceLogOutUserResponseDto(bool success = true) : base(success) { }
         public ServiceLogOutUserResponseDto() { }
     }
 }

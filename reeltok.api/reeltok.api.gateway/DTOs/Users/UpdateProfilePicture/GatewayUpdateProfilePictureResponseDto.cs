@@ -8,11 +8,9 @@ namespace reeltok.api.gateway.DTOs.Users
         [XmlElement("ProfilePictureUrl")]
         public string ProfilePictureUrl { get; set; }
 
-        public GatewayUpdateProfilePictureResponseDto(string profilePictureUrl, bool success) : base(success)
+        public GatewayUpdateProfilePictureResponseDto(string profilePictureUrl, bool success = true) : base(success)
         {
             ProfilePictureUrl = profilePictureUrl;
         }
-
-        public GatewayUpdateProfilePictureResponseDto() { }
     }
 }

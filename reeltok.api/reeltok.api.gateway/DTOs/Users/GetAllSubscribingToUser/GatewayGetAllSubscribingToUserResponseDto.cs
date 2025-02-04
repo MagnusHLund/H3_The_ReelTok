@@ -9,11 +9,9 @@ namespace reeltok.api.gateway.DTOs.Users
         [XmlElement("Users")]
         public List<UserDetails> Users { get; set; }
 
-        public GatewayGetAllSubscribingToUserResponseDto(List<UserDetails> users, bool success) : base(success)
+        public GatewayGetAllSubscribingToUserResponseDto(List<UserDetails> users, bool success = true) : base(success)
         {
             Users = users;
         }
-
-        public GatewayGetAllSubscribingToUserResponseDto() { }
     }
 }

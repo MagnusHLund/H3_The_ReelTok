@@ -4,14 +4,14 @@ using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class AuthService : IAuthService
+    internal class AuthService : BaseService, IAuthService
     {
         private const string AuthMicroServiceBaseUrl = "http://localhost:5003/auth";
         private readonly IGatewayService _gatewayService;
 
-        public AuthService(IGatewayService gateway)
+        public AuthService(IGatewayService gatewayService)
         {
-            _gatewayService = gateway;
+            _gatewayService = gatewayService;
         }
 
         public async Task<bool> LogOutUser()
@@ -26,12 +26,7 @@ namespace reeltok.api.gateway.Services
                 return responseDto.Success;
             }
 
-            if (response is FailureResponseDto failureResponse)
-            {
-                throw new InvalidOperationException(failureResponse.Message);
-            }
-
-            throw new InvalidOperationException("An unknown error has occurred!");
+            throw HandleExceptions(response);
         }
 
         public async Task<Guid> GetUserIdByToken()
@@ -46,12 +41,7 @@ namespace reeltok.api.gateway.Services
                 return responseDto.UserId;
             }
 
-            if (response is FailureResponseDto failureResponse)
-            {
-                throw new InvalidOperationException(failureResponse.Message);
-            }
-
-            throw new InvalidOperationException("An unknown error has occurred!");
+            throw HandleExceptions(response);
         }
     }
 }

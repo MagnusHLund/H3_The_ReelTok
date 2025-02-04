@@ -5,7 +5,8 @@ namespace reeltok.api.gateway.DTOs.Users
     [XmlRoot("UpdateUserDetailsResponseDto")]
     public class ServiceUpdateUserDetailsResponseDto : BaseResponseDto
     {
-        public ServiceUpdateUserDetailsResponseDto(bool success) : base(success) { }
+        // TODO: Test if its an issue assigning a value to the only parameter, when also having a parameterless constructor.
+        public ServiceUpdateUserDetailsResponseDto(bool success = true) : base(success) { }
         public ServiceUpdateUserDetailsResponseDto() { }
     }
 }

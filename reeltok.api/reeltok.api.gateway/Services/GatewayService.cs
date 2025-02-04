@@ -5,7 +5,7 @@ using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class GatewayService : IGatewayService
+    internal class GatewayService : BaseService, IGatewayService
     {
         private readonly HttpClient _httpClient;
 
@@ -16,19 +16,27 @@ namespace reeltok.api.gateway.Services
 
         public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, string targetUrl, HttpMethod httpMethod) where TResponse : BaseResponseDto
         {
-            if (object.Equals(requestDto, null))
+            if (Equals(requestDto, null))
             {
                 throw new ArgumentNullException(nameof(requestDto));
             }
 
-            var requestContent = XmlUtils.SerializeDtoToXml(requestDto);
+            string requestContent = XmlUtils.SerializeDtoToXml(requestDto);
 
-            var request = new HttpRequestMessage(httpMethod, targetUrl)
+            HttpRequestMessage request = new HttpRequestMessage(httpMethod, targetUrl)
             {
                 Content = new StringContent(requestContent, Encoding.UTF8, "application/xml")
             };
 
-            var response = await RouteRequestAsync<TResponse>(request);
+            BaseResponseDto response = await RouteRequestAsync<TResponse>(request);
+
+            if (Equals(response, null))
+            {
+                // TODO: Write test for this
+                string exceptionMessage = $"Received null response, when calling endpoint: {targetUrl}";
+                throw new HttpRequestException(exceptionMessage);
+            }
+
             return response;
         }
 

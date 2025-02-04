@@ -9,7 +9,7 @@ namespace reeltok.api.gateway.DTOs.Users
         [XmlElement("Users")]
         public List<UserDetails> Users { get; set; }
 
-        public ServiceGetAllSubscriptionsForUserResponseDto(List<UserDetails> users, bool success) : base(success)
+        public ServiceGetAllSubscriptionsForUserResponseDto(List<UserDetails> users, bool success = true) : base(success)
         {
             Users = users;
         }

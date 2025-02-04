@@ -9,7 +9,7 @@ namespace reeltok.api.gateway.DTOs.Comments
         [XmlElement(elementName: "Comments")]
         public List<CommentUsingUnixTime> Comments { get; set; }
 
-        public ServiceLoadCommentsResponseDto(List<CommentUsingUnixTime> comments, bool success) : base(success)
+        public ServiceLoadCommentsResponseDto(List<CommentUsingUnixTime> comments, bool success = true) : base(success)
         {
             Comments = comments;
         }
