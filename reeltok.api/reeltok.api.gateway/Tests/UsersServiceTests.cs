@@ -162,66 +162,176 @@ namespace reeltok.api.gateway.Tests
         public async Task UpdateUserDetails_WithBadRequest_ThrowInvalidOperationException()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
             string email = "test@reeltok.com";
             string username = "xX_TestName_Xx";
-            string profileUrl = "testUrl.com"; // TODO: Why is this even here?
-            string profilePictureUrl = "testurl.com";
-            UserDetails userDetails = new UserDetails(username, profilePictureUrl, profileUrl);
-            HiddenUserDetails hiddenUserDetails = new HiddenUserDetails(email);
-            UserProfileData userProfileData = new UserProfileData(userId, userDetails, hiddenUserDetails);
+            EditableUserDetails userDetails = new EditableUserDetails(username, email);
 
             FailureResponseDto failureResponseDto = new FailureResponseDto("User does not exist!");
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(
-                It.IsAny<ServiceUpdateUserDetailsRequestDto>(), $"{BaseTestUrl}/Update", HttpMethod.Put))
+                It.IsAny<ServiceUpdateUserDetailsRequestDto>(), $"{BaseTestUrl}/UpdateDetails", HttpMethod.Put))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
-            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _usersService.UpdateUserDetails(userProfileData));
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _usersService.UpdateUserDetails(userDetails));
             Assert.Equal("User does not exist!", exception.Message);
         }
 
         [Fact]
         public async Task UpdateUserDetails_WithValidParameters_ReturnUserDetails()
         {
-            Assert.True(true);
+            // Arrange
+            string email = "test@reeltok.com";
+            string username = "xX_TestName_Xx";
+            EditableUserDetails userDetails = new EditableUserDetails(username, email);
+
+            ServiceUpdateUserDetailsResponseDto successResponseDto = new ServiceUpdateUserDetailsResponseDto();
+
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<GatewayUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(
+                It.IsAny<GatewayUpdateUserDetailsRequestDto>(), $"{BaseTestUrl}/UpdateDetails", HttpMethod.Put))
+                .ReturnsAsync(successResponseDto);
+
+            // Act
+            EditableUserDetails result = await _usersService.UpdateUserDetails(userDetails);
+
+            // Assert
+            Assert.Equal(username, result.Username);
+            Assert.Equal(email, result.Email);
         }
 
         [Fact]
         public async Task UpdateProfilePicture_WithBadRequest_ThrowInvalidOperationException()
         {
-            Assert.True(true);
+            // Arrange
+            Stream stream = new MemoryStream();
+            IFormFile image = new FormFile(stream, 0, 0, "file", "file name");
+
+            FailureResponseDto failureResponseDto = new FailureResponseDto("Error uploading profile picture!");
+
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(
+                It.IsAny<ServiceUpdateProfilePictureRequestDto>(), $"{BaseTestUrl}/UpdateProfilePicture", HttpMethod.Put))
+                .ReturnsAsync(failureResponseDto);
+
+            // Act & Assert
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _usersService.UpdateProfilePicture(image));
+            Assert.Equal("Error uploading profile picture!", exception.Message);
         }
 
         [Fact]
         public async Task UpdateProfilePicture_WithValidParameters_ReturnProfilePicture()
         {
-            Assert.True(true);
+            // Arrange
+            string profilePictureUrl = "pictureUrl";
+            Stream stream = new MemoryStream();
+            IFormFile image = new FormFile(stream, 0, 0, "file", "file name");
+
+            ServiceUpdateProfilePictureResponseDto successResponseDto = new ServiceUpdateProfilePictureResponseDto();
+
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(
+                It.IsAny<ServiceUpdateProfilePictureRequestDto>(), $"{BaseTestUrl}/UpdateProfilePicture", HttpMethod.Put))
+                .ReturnsAsync(successResponseDto);
+
+            // Act
+            string result = await _usersService.UpdateProfilePicture(image);
+
+            // Assert
+            Assert.Equal(profilePictureUrl, result);
         }
 
         [Fact]
         public async Task GetAllSubscriptionsForUser_WithBadRequest_ThrowInvalidOperationException()
         {
-            Assert.True(true);
+            // Arrange
+            Guid userId = Guid.NewGuid();
+
+            FailureResponseDto failureResponseDto = new FailureResponseDto("Unable to retrieve subscriptions!");
+
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(
+                It.IsAny<ServiceGetAllSubscriptionsForUserRequestDto>(), $"{BaseTestUrl}/GetSubscriptions", HttpMethod.Get))
+                .ReturnsAsync(failureResponseDto);
+
+            // Act & Assert
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _usersService.GetAllSubscriptionsForUser(userId));
+            Assert.Equal("Unable to retrieve subscriptions!", exception.Message);
         }
 
         [Fact]
         public async Task GetAllSubscriptionsForUser_WithValidParameters_ReturnAllSubscriptionsForUser()
         {
-            Assert.True(true);
+            // Arrange
+            Guid userId = Guid.NewGuid();
+
+            List<UserDetails> usersDetails = new List<UserDetails>()
+            {
+                new UserDetails( "username1", "profilePictureUrl1", "profileUrl1"),
+                new UserDetails( "username2", "profilePictureUrl2", "profileUrl2")
+            };
+            ServiceGetAllSubscriptionsForUserResponseDto successResponseDto = new ServiceGetAllSubscriptionsForUserResponseDto();
+
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(
+                It.IsAny<ServiceGetAllSubscriptionsForUserRequestDto>(), $"{BaseTestUrl}/GetSubscriptions", HttpMethod.Get))
+                .ReturnsAsync(successResponseDto);
+
+            // Act
+            List<UserDetails> result = await _usersService.GetAllSubscriptionsForUser(userId);
+
+            // Assert
+            Assert.Equal(usersDetails.Count, result.Count);
+            for (int i = 0; i < usersDetails.Count; i++)
+            {
+                Assert.Equal(usersDetails[i].Username, result[i].Username);
+                Assert.Equal(usersDetails[i].ProfilePictureUrl, result[i].ProfilePictureUrl);
+                Assert.Equal(usersDetails[i].ProfileUrl, result[i].ProfileUrl);
+
+            }
         }
 
         [Fact]
         public async Task GetAllSubscribingToUser_WithBadRequest_ThrowInvalidOperationException()
         {
-            Assert.True(true);
+            // Arrange
+            Guid userId = Guid.NewGuid();
+
+            FailureResponseDto failureResponseDto = new FailureResponseDto("Unable to retrieve subscribers!");
+
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(
+                It.IsAny<ServiceGetAllSubscriptionsForUserRequestDto>(), $"{BaseTestUrl}/GetSubscribers", HttpMethod.Get))
+                .ReturnsAsync(failureResponseDto);
+
+            // Act & Assert
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _usersService.GetAllSubscribingToUser(userId));
+            Assert.Equal("Unable to retrieve subscribers!", exception.Message);
         }
 
         [Fact]
         public async Task GetAllSubscribingToUser_WithValidParameters_ReturnAllSubscribingToUser()
         {
-            Assert.True(true);
+            // Arrange
+            Guid userId = Guid.NewGuid();
+
+            List<UserDetails> usersDetails = new List<UserDetails>()
+            {
+                new UserDetails( "username1", "profilePictureUrl1", "profileUrl1"),
+                new UserDetails( "username2", "profilePictureUrl2", "profileUrl2")
+            };
+            ServiceGetAllSubscribingToUserResponseDto successResponseDto = new ServiceGetAllSubscribingToUserResponseDto();
+
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(
+                It.IsAny<ServiceGetAllSubscribingToUserRequestDto>(), $"{BaseTestUrl}/GetSubscribers", HttpMethod.Get))
+                .ReturnsAsync(successResponseDto);
+
+            // Act
+            List<UserDetails> result = await _usersService.GetAllSubscribingToUser(userId);
+
+            // Assert
+            Assert.Equal(usersDetails.Count, result.Count);
+            for (int i = 0; i < usersDetails.Count; i++)
+            {
+                Assert.Equal(usersDetails[i].Username, result[i].Username);
+                Assert.Equal(usersDetails[i].ProfilePictureUrl, result[i].ProfilePictureUrl);
+                Assert.Equal(usersDetails[i].ProfileUrl, result[i].ProfileUrl);
+
+            }
         }
     }
 }

@@ -9,10 +9,10 @@ namespace reeltok.api.gateway.Services
         {
             if (response is FailureResponseDto failureResponse)
             {
-                throw new InvalidOperationException(failureResponse.Message);
+                return new InvalidOperationException(failureResponse.Message);
             }
 
-            throw new InvalidOperationException("An unknown error has occurred!");
+            return new InvalidOperationException("An unknown error has occurred!");
         }
     }
 }
