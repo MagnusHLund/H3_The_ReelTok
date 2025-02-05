@@ -31,11 +31,13 @@ namespace reeltok.api.gateway.Controllers
             return Ok(new GatewayChangeRecommendedCategoryResponseDto(success));
         }
 
-        /* // TODO: Implement this
+        //   TODO: Implement this
                 [HttpGet]
                 [Route("GetCategories")]
                 public async Task<IActionResult> GetRecommendedCategories([FromBody] GatewayGetRecommendationsRequestDto request)
                 {
-                } */
+                    var categories = await _recommendationsService.GetRecommendedCategories();
+                    return Ok(new GatewayGetRecommendationsResponseDto(categories));
+                } 
     }
 }
