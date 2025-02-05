@@ -38,7 +38,7 @@ namespace reeltok.api.users.Tests
             var userProfileData = new UserProfileData(Guid.NewGuid(), userDetails);
 
             // Act
-            await _userService.CreateAsync(userProfileData);
+            await _userService.CreateAsync(userProfileData, Guid.NewGuid());
 
             // Assert
             _userRepositoryMock.Verify(repo => repo.CreateUserAsync(It.Is<UserDetails>(
@@ -56,7 +56,7 @@ namespace reeltok.api.users.Tests
             var invalidUser = new UserProfileData(Guid.NewGuid(), null); // 'null' Details should cause an error
 
             // Act & Assert: Expect an exception when calling CreateAsync
-            await Assert.ThrowsAsync<ArgumentException>(() => _userService.CreateAsync(invalidUser));
+            await Assert.ThrowsAsync<ArgumentException>(() => _userService.CreateAsync(invalidUser, Guid.NewGuid()));
 
             // Ensure the repository's CreateUserAsync method was never called
             _userRepositoryMock.Verify(repo => repo.CreateUserAsync(It.IsAny<UserDetails>()), Times.Never);
