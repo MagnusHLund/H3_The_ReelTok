@@ -60,15 +60,15 @@ namespace reeltok.api.gateway.Services
         {
             return new UserProfileData(Guid.Empty, new UserDetails("", "", ""), new HiddenUserDetails(""));
         }
-        public async Task<UserDetails> UpdateUserDetails(UserProfileData profileData)
+        public async Task<EditableUserDetails> UpdateUserDetails(EditableUserDetails userDetails)
         {
-            return new UserDetails("", "", "");
+            return new EditableUserDetails("", "");
         }
-        public async Task<IFormFile> UpdateProfilePicture(IFormFile image) // TODO: Maybe theres a better return type than this?
+        public async Task<string> UpdateProfilePicture(IFormFile image)
         {
-            return image;
+            return "Image url";
         }
-        public async Task<List<UserDetails>> GetAllUserSubscriptionsForUser(Guid userId)
+        public async Task<List<UserDetails>> GetAllSubscriptionsForUser(Guid userId)
         {
             return new List<UserDetails>();
         }
