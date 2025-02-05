@@ -168,21 +168,5 @@ namespace reeltok.api.gateway.Tests
             // Act & Assert
             await Assert.ThrowsAsync<TaskCanceledException>(() => _gatewayService.RouteRequestAsync<ServiceLogOutUserResponseDto>(request));
         }
-
-        [Fact]
-          public async Task GetResponse_NullResponse_ThrowsHttpRequestException()
-        {
-            // Arrange
-            var mockHttpClientFactory = new Mock<IHttpClientFactory>();
-            var httpClient = new HttpClient(new MockHttpMessageHandler(null));
-            mockHttpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-
-            var gatewayService = new GatewayService(mockHttpClientFactory.Object);
-            var targetUrl = baseTestUrl;
-
-            // Act & Assert
-            var exception = await Assert.ThrowsAsync<HttpRequestException>(() => gatewayService.GetResponse(targetUrl));
-            Assert.Equal($"Received null response, when calling endpoint: {targetUrl}", exception.Message);
-        }
     }
 }

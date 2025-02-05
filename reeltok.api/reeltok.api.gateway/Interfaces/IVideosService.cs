@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using reeltok.api.gateway.Entities;
+using reeltok.api.gateway.ValueObjects;
 
 namespace reeltok.api.gateway.Interfaces
 {
@@ -10,8 +7,8 @@ namespace reeltok.api.gateway.Interfaces
     {
         public Task<bool> LikeVideo(Guid VideoId);
         public Task<bool> RemoveLikeFromVideo(Guid VideoId);
-        public List<Video> GetVideosForFeed(byte amount);
-        public Task<string> UploadVideo(VideoUpload video);
+        public Task<List<Video>> GetVideosForFeed(byte amount);
+        public Task<Video> UploadVideo(VideoUpload video);
         public Task<bool> DeleteVideo(Guid videoId);
     }
 }
