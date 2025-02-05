@@ -9,25 +9,23 @@ using Xunit;
 
 namespace reeltok.api.users.Tests
 {
-    public class UserServiceTests
+    public class UsersServiceTests
     {
         private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
-        private readonly Mock<IUserRepository> _userRepositoryMock;
-        private readonly IUserService _userService;
+        private readonly Mock<IUsersRepository> _userRepositoryMock;
+        private readonly IUsersService _userService;
         private readonly HttpClient _httpClient;
 
-        public UserServiceTests()
+        public UsersServiceTests()
         {
-            _userRepositoryMock = new Mock<IUserRepository>();
+            _userRepositoryMock = new Mock<IUsersRepository>();
 
             // Mock the HttpMessageHandler
             _mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-            _httpClient = new HttpClient(_mockHttpMessageHandler.Object);
+            _httpClient = new HttpClient(_mockHttpMessageHandler.Object); 
 
-
-            _userService = new UserService(_userRepositoryMock.Object, _httpClient);
+            _userService = new UsersService(_userRepositoryMock.Object);
         }
-
 
         #region Create
 

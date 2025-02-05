@@ -5,13 +5,14 @@ using reeltok.api.users.ValueObjects;
 
 namespace reeltok.api.users.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UsersRepository : IUsersRepository
     {
         private readonly UserDBContext _context;
-        public UserRepository(UserDBContext context)
+        public UsersRepository(UserDBContext context)
         {
             _context = context;
         }
+
         public Task AddToLikedVideoAsync(Guid userId, Guid videoId)
         {
             throw new NotImplementedException();
@@ -38,11 +39,6 @@ namespace reeltok.api.users.Repositories
         }
 
         public Task RemoveUserFromSubscriptionAsync(Guid userId, Guid subscriptionUserId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateUserAsync(Guid id, UserProfileData user)
         {
             throw new NotImplementedException();
         }

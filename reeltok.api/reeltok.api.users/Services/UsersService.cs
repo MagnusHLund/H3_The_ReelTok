@@ -1,17 +1,16 @@
+using System.Web;
 using reeltok.api.users.Entities;
 using reeltok.api.users.Interfaces;
+using reeltok.api.users.Utils;
 
 namespace reeltok.api.users.Services
 {
-    public class UserService : IUserService
+    public class UsersService : IUsersService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly HttpClient _httpClient;
-
-        public UserService(IUserRepository userRepository, HttpClient httpClient)
+        private readonly IUsersRepository _userRepository;
+        public UsersService(IUsersRepository userRepository)
         {
             _userRepository = userRepository;
-            _httpClient = httpClient;
         }
 
         public async Task AddToLikedVideosAsync(Guid userId, Guid likedVideoId)
@@ -22,10 +21,8 @@ namespace reeltok.api.users.Services
                 throw new ArgumentException("User does not exist.");
             }
 
-            // Call the video service to check if the video is valid
-            var response = await _httpClient.GetAsync($"http://localhost:5002/videos/validate/{likedVideoId}");
-
-            if (!response.IsSuccessStatusCode)
+            bool isValidVideo = await HttpUtils.ValidateVideoAsync(likedVideoId);
+            if (!isValidVideo)
             {
                 throw new ArgumentException("Invalid video.");
             }
@@ -33,25 +30,40 @@ namespace reeltok.api.users.Services
             await _userRepository.AddToLikedVideoAsync(userId, likedVideoId);
         }
 
-
-        public async Task CreateAsync(UserProfileData user)
+        public async Task CreateAsync(UserProfileData user, Guid userId)
         {
-            if (user == null)
-                throw new ArgumentException("User profile data cannot be null");
+            // if (user == null)
+            //     throw new ArgumentException("User profile data cannot be null");
 
-            if (user.Details == null)
-                throw new ArgumentException("User details cannot be null");
+            // if (user.Details == null)
+            //     throw new ArgumentException("User details cannot be null");
 
-            if (string.IsNullOrWhiteSpace(user.Details.UserName) ||
-                string.IsNullOrWhiteSpace(user.Details.ProfileUrl) ||
-                string.IsNullOrWhiteSpace(user.Details.ProfilePictureUrl) ||
-                string.IsNullOrWhiteSpace(user.Details.HiddenDetails.Email))
+            // if (string.IsNullOrWhiteSpace(user.Details.UserName) ||
+            //     string.IsNullOrWhiteSpace(user.Details.ProfileUrl) ||
+            //     string.IsNullOrWhiteSpace(user.Details.ProfilePictureUrl) ||
+            //     string.IsNullOrWhiteSpace(user.Details.HiddenDetails.Email))
+            // {
+            //     throw new ArgumentException("User details contain invalid or missing values");
+            // }
+
+            // Try to create the user
+            try
             {
-                throw new ArgumentException("User details contain invalid or missing values");
+                await _userRepository.CreateUserAsync(user.Details);
+            }
+            catch (Exception ex)
+            {
+                // Handle the error, you can log it or throw a custom exception if needed
+                throw new InvalidOperationException("User creation failed.", ex);
             }
 
-            // If all validations pass, call the repository
-            await _userRepository.CreateUserAsync(user.Details);
+            // Optionally, check if the user now exists in the repository to confirm successful creation
+            var createdUser = await _userRepository.GetUserByIdAsync(userId);
+
+            if (createdUser == null)
+            {
+                throw new InvalidOperationException("User was not created successfully.");
+            }
         }
 
 
@@ -61,7 +73,7 @@ namespace reeltok.api.users.Services
 
             if (user == null)
             {
-                throw new ArgumentException("User not found");  // Or a custom exception like NotFoundException
+                return null;
             }
 
             return user;
@@ -75,9 +87,8 @@ namespace reeltok.api.users.Services
                 throw new ArgumentException("User does not exist.");
             }
 
-            var response = await _httpClient.GetAsync($"http://localhost:5002/videos/validate/{likedVideoId}");
-
-            if (!response.IsSuccessStatusCode)
+            bool isValidVideo = await HttpUtils.ValidateVideoAsync(likedVideoId);
+            if (!isValidVideo)
             {
                 throw new ArgumentException("Invalid video.");
             }

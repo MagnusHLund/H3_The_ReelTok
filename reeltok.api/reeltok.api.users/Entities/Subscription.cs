@@ -6,10 +6,10 @@ namespace reeltok.api.users.Entities
     public class Subscription
     {
         [Required]
-        internal Guid UserId { get; private set; }
+        internal Guid UserId { get; set; }
         
         [Required]
-        internal SubscribptionDetails SubDetails { get; private set; }
+        internal SubscribptionDetails SubDetails { get; set; }
 
         public Subscription(Guid userId, SubscribptionDetails subDetails)
         {

@@ -6,10 +6,10 @@ namespace reeltok.api.users.Entities
     public class BlockedUser
     {
         [Required]
-        public uint BlockId { get; } = 0;
+        public uint BlockId { get; set; } = 0;
 
         [Required]
-        public BlockedUserDetail Details { get; }
+        public BlockedUserDetail Details { get; set; }
         public BlockedUser(uint blockId, BlockedUserDetail details)
         {
             BlockId = blockId;
