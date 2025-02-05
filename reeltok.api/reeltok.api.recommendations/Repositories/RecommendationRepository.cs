@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using reeltok.api.recommendations.Data;
 using reeltok.api.recommendations.Entities;
+using reeltok.api.recommendations.Enums;
 using reeltok.api.recommendations.Interfaces;
 
 namespace reeltok.api.recommendations.Repositories
@@ -17,14 +18,16 @@ namespace reeltok.api.recommendations.Repositories
             _Context = recommendationDbContext;
         }
 
-        public Task<Recommendations> GetRecommendationAsync(Guid userId)
+        public Task<List<RecommendationsEnum>> GetRecommendationAsync(Guid userId)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateRecommendationAsync(Recommendations recommendation, Guid userId)
+        public Task UpdateRecommendationAsync(Recommendations recommendations)
         {
             throw new NotImplementedException();
         }
+
+
     }
 }
