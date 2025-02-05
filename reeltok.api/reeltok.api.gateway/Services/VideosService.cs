@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class VideosService : IVideosService
+    internal class VideosService : BaseService, IVideosService
     {
         private const string AuthMicroServiceBaseUrl = "http://localhost:5002/videos";
         private readonly IMapper _mapper;

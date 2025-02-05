@@ -4,54 +4,44 @@ using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class AuthService : IAuthService
+    internal class AuthService : BaseService, IAuthService
     {
         private const string AuthMicroServiceBaseUrl = "http://localhost:5003/auth";
         private readonly IGatewayService _gatewayService;
 
-        public AuthService(IGatewayService gateway)
+        public AuthService(IGatewayService gatewayService)
         {
-            _gatewayService = gateway;
+            _gatewayService = gatewayService;
         }
 
         public async Task<bool> LogOutUser()
         {
-            LogOutUserRequestDto requestDto = new LogOutUserRequestDto();
+            ServiceLogOutUserRequestDto requestDto = new ServiceLogOutUserRequestDto();
             string targetUrl = $"{AuthMicroServiceBaseUrl}/logout";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
-            if (response.Success && response is LogOutUserResponseDto responseDto)
+            if (response.Success && response is ServiceLogOutUserResponseDto responseDto)
             {
                 return responseDto.Success;
             }
 
-            if (response is FailureResponseDto failureResponse)
-            {
-                throw new InvalidOperationException(failureResponse.Message);
-            }
-
-            throw new InvalidOperationException("An unknown error has occurred!");
+            throw HandleExceptions(response);
         }
 
         public async Task<Guid> GetUserIdByToken()
         {
-            GetUserIdByTokenRequestDto requestDto = new GetUserIdByTokenRequestDto();
+            ServiceGetUserIdByTokenRequestDto requestDto = new ServiceGetUserIdByTokenRequestDto();
             string targetUrl = $"{AuthMicroServiceBaseUrl}/getUserIdByToken";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, GetUserIdByTokenResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
-            if (response.Success && response is GetUserIdByTokenResponseDto responseDto)
+            if (response.Success && response is ServiceGetUserIdByTokenResponseDto responseDto)
             {
                 return responseDto.UserId;
             }
 
-            if (response is FailureResponseDto failureResponse)
-            {
-                throw new InvalidOperationException(failureResponse.Message);
-            }
-
-            throw new InvalidOperationException("An unknown error has occurred!");
+            throw HandleExceptions(response);
         }
     }
 }

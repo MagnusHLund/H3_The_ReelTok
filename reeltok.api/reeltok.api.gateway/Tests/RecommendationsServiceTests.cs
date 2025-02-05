@@ -26,10 +26,10 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             string category = "Gaming";
             bool success = true;
-            ChangeRecommendationsCategoryResponseRecommendationsService successResponse = new ChangeRecommendationsCategoryResponseRecommendationsService(success);
+            ServiceChangeRecommendedCategoryResponseDto successResponse = new ServiceChangeRecommendedCategoryResponseDto(success);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ChangeRecommendationsCategoryRequestRecommendationsService, ChangeRecommendationsCategoryResponseRecommendationsService>(
-                It.IsAny<ChangeRecommendationsCategoryRequestRecommendationsService>(), $"{BaseTestUrl}/update", HttpMethod.Put))
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceChangeRecommendedCategoryRequestDto, ServiceChangeRecommendedCategoryResponseDto>(
+                It.IsAny<ServiceChangeRecommendedCategoryRequestDto>(), $"{BaseTestUrl}/update", HttpMethod.Put))
                 .ReturnsAsync(successResponse);
 
             // act
@@ -46,8 +46,8 @@ namespace reeltok.api.gateway.Tests
             string category = "Gaming";
             FailureResponseDto failureResponseDto = new FailureResponseDto("Unable to update users recommendations!");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ChangeRecommendationsCategoryRequestRecommendationsService, ChangeRecommendationsCategoryResponseRecommendationsService>(
-                It.IsAny<ChangeRecommendationsCategoryRequestRecommendationsService>(), $"{BaseTestUrl}/update", HttpMethod.Put))
+            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceChangeRecommendedCategoryRequestDto, ServiceChangeRecommendedCategoryResponseDto>(
+                It.IsAny<ServiceChangeRecommendedCategoryRequestDto>(), $"{BaseTestUrl}/update", HttpMethod.Put))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
