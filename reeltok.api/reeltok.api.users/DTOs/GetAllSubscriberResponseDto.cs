@@ -11,11 +11,11 @@ namespace reeltok.api.users.DTOs
     {
 
         [Required]
-        internal List<Subscriber> AllSubscribers { get;}
+        internal List<Subscription> AllSubscribers { get;}
 
 
         
-        public GetAllSubscriberResponseDto(bool success, List<Subscriber> allSubscribers) : base(success)
+        public GetAllSubscriberResponseDto(bool success, List<Subscription> allSubscribers) : base(success)
         {
             AllSubscribers = allSubscribers;
         }

@@ -1,19 +1,22 @@
-using System.ComponentModel.DataAnnotations;
-using reeltok.api.users.ValueObjects;
+using System.ComponentModel.DataAnnotations.Schema;
+using reeltok.api.users.Entities;
 
 namespace reeltok.api.users.ValueObjects
 {
-    internal class BlockedUserDetail
+    public class BlockedUserDetail
     {
-        [Required]
-        internal Guid UserId { get; private set; }
-        [Required]
-        internal UserDetails UserDetails { get; private set; }
+        [ForeignKey("User")]
+        public Guid UserId { get; } = Guid.Empty;
+        public UserProfileData? User { get; } = null;
 
-        internal BlockedUserDetail(Guid userId, UserDetails userDetails)
+        [ForeignKey("BlockUser")]
+        public Guid BlockUserId { get; } = Guid.Empty;
+        public UserProfileData? BlockUser { get; } = null;
+
+        public BlockedUserDetail(Guid userId, Guid blockUserId)
         {
             UserId = userId;
-            UserDetails = userDetails;
+            BlockUserId = blockUserId;
         }
     }
 }
