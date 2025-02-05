@@ -30,10 +30,10 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpGet]
-        [Route("GetUserProfileData/{userId}")] // TODO: Verify this
-        public async Task<IActionResult> GetUserProfileData([FromBody] GatewayLoginRequestDto request) // TODO: Replace parameters
+        [Route("GetUserProfileData/{userId}")]
+        public async Task<IActionResult> GetUserProfileData([FromRoute] Guid userId)
         {
-            return (Ok(request));
+            return (Ok(userId));
         }
 
         [HttpPut]
@@ -52,14 +52,14 @@ namespace reeltok.api.gateway.Controllers
 
         [HttpGet]
         [Route("GetAllSubscriptionsForUser")]
-        public async Task<IActionResult> GetAllSubscriptionsForUser([FromBody] GatewayGetAllSubscriptionsForUserRequestDto request)
+        public async Task<IActionResult> GetAllSubscriptionsForUser([FromRoute] Guid userId)
         {
             return (Ok(request));
         }
 
         [HttpGet]
         [Route("GetAllSubscribingToUser")]
-        public async Task<IActionResult> GetAllSubscribingToUser([FromBody] GatewayGetAllSubscribingToUserRequestDto request)
+        public async Task<IActionResult> GetAllSubscribingToUser([FromBody] Guid userId)
         {
             return (Ok(request));
         }
