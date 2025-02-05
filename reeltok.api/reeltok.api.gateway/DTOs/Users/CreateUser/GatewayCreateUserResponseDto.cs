@@ -1,9 +1,10 @@
 using System.Xml.Serialization;
+using reeltok.api.gateway.DTOs.Interfaces;
 
 namespace reeltok.api.gateway.DTOs.Users
 {
     [XmlRoot("CreateUserResponseDto")]
-    public class GatewayCreateUserResponseDto : BaseResponseDto
+    public class GatewayCreateUserResponseDto : BaseResponseDto, IUserProfileDataDto
     {
 
         [XmlElement("UserId")]
@@ -24,5 +25,6 @@ namespace reeltok.api.gateway.DTOs.Users
             ProfileUrl = profileUrl;
             ProfilePictureUrl = profilePictureUrl;
         }
+        public GatewayCreateUserResponseDto() { }
     }
 }

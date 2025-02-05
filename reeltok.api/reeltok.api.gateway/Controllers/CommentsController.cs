@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using reeltok.api.gateway.ActionFilters;
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.DTOs.Comments;
 using reeltok.api.gateway.Entities;
@@ -8,6 +9,7 @@ using reeltok.api.gateway.Mappers;
 namespace reeltok.api.gateway.Controllers
 {
     [ApiController]
+    [ValidateModel]
     [Route("api/[controller]")]
     public class CommentsController : ControllerBase
     {

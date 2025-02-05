@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using reeltok.api.gateway.ActionFilters;
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.DTOs.Recommendations;
 using reeltok.api.gateway.Interfaces;
@@ -7,6 +7,7 @@ using reeltok.api.gateway.Interfaces;
 namespace reeltok.api.gateway.Controllers
 {
     [ApiController]
+    [ValidateModel]
     [Route("api/[controller]")]
     public class RecommendationsController : ControllerBase
     {

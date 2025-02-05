@@ -1,9 +1,10 @@
 using System.Xml.Serialization;
+using reeltok.api.gateway.DTOs.Interfaces;
 
 namespace reeltok.api.gateway.DTOs.Users
 {
     [XmlRoot("UpdateUserDetailsResponseDto")]
-    public class GatewayUpdateUserDetailsResponseDto : BaseResponseDto
+    public class GatewayUpdateUserDetailsResponseDto : BaseResponseDto, IEditableUserDetailsDto
     {
         [XmlElement("Username")]
         public string Username { get; set; }
@@ -15,6 +16,6 @@ namespace reeltok.api.gateway.DTOs.Users
             Email = email;
         }
 
-        public GatewayUpdateUserDetailsResponseDto(bool success = true) : base(success) { }
+        public GatewayUpdateUserDetailsResponseDto() { }
     }
 }
