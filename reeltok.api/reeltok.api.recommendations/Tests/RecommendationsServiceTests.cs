@@ -10,6 +10,7 @@ using reeltok.api.recommendations.DTOs;
 using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Enums;
 using Castle.Components.DictionaryAdapter.Xml;
+using Xunit.Sdk;
 
 namespace reeltok.api.recommendations.Tests
 {
@@ -40,25 +41,51 @@ namespace reeltok.api.recommendations.Tests
 
             // Assert
             Assert.True(recommendation.Count() == 1);
-            
+
             Assert.Equal(recommendation.First(), recommendations.RecommendationCategory.First());
         }
 
         [Fact]
-        public void GetRecommendation_WithInvalidParameters_ReturnRecommendation()
+        public async Task GetRecommendation_WithInvalidParameters_ThrowException()
         {
-            
-            Assert.True(true);
+            // Arrange
+            Guid userId = Guid.NewGuid();
+            Recommendations recommendations = new Recommendations(userId, new List<RecommendationsEnum>()
+            {
+                RecommendationsEnum.Gaming
+            });
+
+            // Act and Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            {
+                await _recommendationService.GetRecommendation(userId);
+            });
         }
         [Fact]
-        public void updateRecommendation_WithValidParameters_ReturnSuccessMessage()
+        public async Task updateRecommendation_WithValidParameters_ReturnSuccessMessage()
         {
-            Assert.True(true);
+            // Arrange
+            Guid userId = Guid.NewGuid();
+            List<RecommendationsEnum> testRecommendations = new List<RecommendationsEnum> { RecommendationsEnum.Gaming };
+            Recommendations recommendations = new Recommendations(userId, testRecommendations);
+            // Act
+            var result = await _recommendationService.UpdateRecommendation(recommendations);
+
+            // Assert
+            Assert.True(result);
         }
+
         [Fact]
-        public void updateRecommendation_WithInvalidParameters_ReturnSuccessMessage()
+        public async Task updateRecommendation_WithInvalidParameters_ReturnErrorMessage()
         {
-            Assert.True(true);
+            // Arrange
+            Guid userId = Guid.Empty; // Invalid userId
+            List<RecommendationsEnum> testRecommendations = null; // Invalid recommendations
+            Recommendations recommendations = new Recommendations(userId, testRecommendations);
+
+            // Act & Assert
+            var result = await Assert.ThrowsAsync<InvalidOperationException>(() => _recommendationService.UpdateRecommendation(recommendations));
+            Assert.Equal("Invalid parameters provided.", result.Message);
         }
     }
 }
