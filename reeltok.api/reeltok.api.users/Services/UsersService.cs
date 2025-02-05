@@ -1,4 +1,3 @@
-using System.Web;
 using reeltok.api.users.Entities;
 using reeltok.api.users.Interfaces;
 using reeltok.api.users.Utils;
@@ -7,30 +6,21 @@ namespace reeltok.api.users.Services
 {
     public class UsersService : IUsersService
     {
+        #region Private Fields
         private readonly IUsersRepository _userRepository;
+
+        #endregion
+
+        #region Constructors
         public UsersService(IUsersRepository userRepository)
         {
             _userRepository = userRepository;
         }
 
-        public async Task AddToLikedVideosAsync(Guid userId, Guid likedVideoId)
-        {
-            var user = await _userRepository.GetUserByIdAsync(userId);
-            if (user == null)
-            {
-                throw new ArgumentException("User does not exist.");
-            }
+        #endregion
 
-            bool isValidVideo = await HttpUtils.ValidateVideoAsync(likedVideoId);
-            if (!isValidVideo)
-            {
-                throw new ArgumentException("Invalid video.");
-            }
-
-            await _userRepository.AddToLikedVideoAsync(userId, likedVideoId);
-        }
-
-        public async Task CreateAsync(UserProfileData user, Guid userId)
+        #region User CRUD Methods
+        public async Task CreateUserAsync(UserProfileData user, Guid userId)
         {
             // if (user == null)
             //     throw new ArgumentException("User profile data cannot be null");
@@ -65,8 +55,6 @@ namespace reeltok.api.users.Services
                 throw new InvalidOperationException("User was not created successfully.");
             }
         }
-
-
         public async Task<UserProfileData?> GetUserByIdAsync(Guid userId)
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
@@ -78,7 +66,31 @@ namespace reeltok.api.users.Services
 
             return user;
         }
+        public Task UpdateUserAsync(UserProfileData user, Guid userId)
 
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region User Like Methods
+        public async Task AddToLikedVideosAsync(Guid userId, Guid likedVideoId)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("User does not exist.");
+            }
+
+            bool isValidVideo = await HttpUtils.ValidateVideoAsync(likedVideoId);
+            if (!isValidVideo)
+            {
+                throw new ArgumentException("Invalid video.");
+            }
+
+            await _userRepository.AddToLikedVideoAsync(userId, likedVideoId);
+        }
         public async Task RemoveFromLikedVideosAsync(Guid userId, Guid likedVideoId)
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
@@ -96,6 +108,9 @@ namespace reeltok.api.users.Services
             await _userRepository.RemoveFromLikedVideoAsync(userId, likedVideoId);
         }
 
+        #endregion
+
+        #region User Subscription Methods
         public async Task SubscribeAsync(Guid userId, Guid subscribeUserId)
         {
             // Check if the first user exists
@@ -117,7 +132,6 @@ namespace reeltok.api.users.Services
             // If both users exist, call the repository to persist the subscription
             await _userRepository.AddUserToSubscriptionAsync(userId, subscribeUserId);
         }
-
         public async Task UnsubscribeAsync(Guid userId, Guid subscribeUserId)
         {
             // Check if both users exist
@@ -137,10 +151,26 @@ namespace reeltok.api.users.Services
             await _userRepository.RemoveUserFromSubscriptionAsync(userId, subscribeUserId);
         }
 
+        #endregion
 
-        public Task UpdateUserAsync(UserProfileData user)
+        #region User Image Methods
+        public Task DeleteUserImageAsync(Guid userId, string saveDirectory)
         {
             throw new NotImplementedException();
         }
+        public Task SaveUserImageAsync(Guid userId, IFormFile imageFile, string saveDirectory)
+        {
+            throw new NotImplementedException();
+        }
+        public Task UpdateUserImageAsync(Guid userId, IFormFile imageFile, string saveDirectory)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<string> GetUserImageAsync(Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

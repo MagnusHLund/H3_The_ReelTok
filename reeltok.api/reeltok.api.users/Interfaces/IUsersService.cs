@@ -4,8 +4,14 @@ namespace reeltok.api.users.Interfaces
 {
     public interface IUsersService
     {
-        public Task CreateAsync(UserProfileData user, Guid userId);
+        public Task CreateUserAsync(UserProfileData user, Guid userId);
         public Task<UserProfileData?> GetUserByIdAsync(Guid userId);
+        public Task UpdateUserAsync(UserProfileData user, Guid userId);
+
+        public Task SaveUserImageAsync(Guid userId, IFormFile imageFile, string saveDirectory);
+        public Task<string> GetUserImageAsync(Guid userId);
+        public Task UpdateUserImageAsync(Guid userId, IFormFile imageFile, string saveDirectory);
+        public Task DeleteUserImageAsync(Guid userId, string saveDirectory);
 
         public Task SubscribeAsync(Guid userId, Guid subscribeUserId);
         public Task UnsubscribeAsync(Guid userId, Guid subscribeUserId);
