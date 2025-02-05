@@ -5,8 +5,8 @@ namespace reeltok.api.users.Entities
     public class UserProfileData
     {
         
-        public Guid UserId { get; } = Guid.Empty;
-        public UserDetails Details { get; }
+        public Guid UserId { get; set; } = Guid.Empty;
+        public UserDetails Details { get; set; }
         public UserProfileData(Guid userId, UserDetails details)
         {
             UserId = userId;
