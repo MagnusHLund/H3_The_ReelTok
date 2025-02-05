@@ -1,18 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using reeltok.api.users.ValueObjects;
 
 namespace reeltok.api.users.Entities
 {
     public class LikedVideo
     {
-        public uint LikedId { get; } = 0;
-        public LikedDetails Details { get; }
-        public LikedVideo(uint likedId, LikedDetails details)
+        [Required]
+        public uint LikedVideoId { get; set; } = 0;
+        
+        [Required]
+        public LikedDetails Details { get; set; }
+        public LikedVideo(uint likedVideoId, LikedDetails details)
         {
-            LikedId = likedId;
+            LikedVideoId = likedVideoId;
             Details = details;
         }
     }

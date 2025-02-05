@@ -1,5 +1,8 @@
+using reeltok.api.users.Repositories;
+using reeltok.api.users.Interfaces;
+using reeltok.api.users.Services;
 
-namespace UsersService
+namespace UsersServiceApi
 {
 	public class Program
 	{
@@ -8,6 +11,9 @@ namespace UsersService
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
+			builder.Services.AddTransient<IUsersRepository, UsersRepository>();
+			builder.Services.AddTransient<IUsersService, UsersService>();
+
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -1,18 +1,12 @@
-
-using System.ComponentModel.DataAnnotations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace reeltok.api.users.Entities
 {
-    internal class Video
+    public class Video
     {
-        [Required]
-        internal Guid VideoId { get; set; }
-        [Required]
-        internal string Title { get; set; }
-
-        internal Video(Guid videoId, string title){
-            VideoId = videoId;
-            Title = title;
-        }
+        
     }
 }
