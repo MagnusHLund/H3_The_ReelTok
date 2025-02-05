@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Interfaces;
+using reeltok.api.gateway.ValueObjects;
 
 namespace reeltok.api.gateway.Services
 {
@@ -17,26 +17,32 @@ namespace reeltok.api.gateway.Services
         public async Task<bool> LikeVideo(Guid VideoId)
         {
             Guid userId = await _authService.GetUserIdByToken();
-
-
-
-            throw HandleExceptions(request);
+            throw new NotImplementedException();
+            //  throw HandleExceptions(request);
         }
-        public Task<bool> RemoveLikeFromVideo(Guid VideoId)
+        public async Task<bool> RemoveLikeFromVideo(Guid VideoId)
         {
-            throw HandleExceptions(request);
+            Guid userId = await _authService.GetUserIdByToken();
+            throw new NotImplementedException();
+            //throw HandleExceptions(request);
         }
-        public List<Video> GetVideosForFeed(byte amount)
+        public async Task<List<Video>> GetVideosForFeed(byte amount)
         {
-            throw HandleExceptions(request);
+            Guid userId = await _authService.GetUserIdByToken();
+            throw new NotImplementedException();
+            //throw HandleExceptions(request);
         }
-        public Task<string> UploadVideo(VideoUpload video)
+        public async Task<Video> UploadVideo(VideoUpload video)
         {
-            throw HandleExceptions(request);
+            Guid userId = await _authService.GetUserIdByToken();
+            throw new NotImplementedException();
+            //throw HandleExceptions(request);
         }
-        public Task<bool> DeleteVideo(Guid videoId)
+        public async Task<bool> DeleteVideo(Guid videoId)
         {
-            throw HandleExceptions(request);
+            Guid userId = await _authService.GetUserIdByToken();
+            throw new NotImplementedException();
+            //throw HandleExceptions(request);
         }
     }
 }

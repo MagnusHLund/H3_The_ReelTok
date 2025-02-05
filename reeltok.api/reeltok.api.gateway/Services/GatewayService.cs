@@ -30,13 +30,6 @@ namespace reeltok.api.gateway.Services
 
             BaseResponseDto response = await RouteRequestAsync<TResponse>(request);
 
-            if (Equals(response, null))
-            {
-                // TODO: Write test for this
-                string exceptionMessage = $"Received null response, when calling endpoint: {targetUrl}";
-                throw new HttpRequestException(exceptionMessage);
-            }
-
             return response;
         }
 

@@ -200,8 +200,7 @@ namespace reeltok.api.gateway.Tests
         public async Task UpdateProfilePicture_WithBadRequest_ThrowInvalidOperationException()
         {
             // Arrange
-            Stream stream = new MemoryStream();
-            IFormFile image = new FormFile(stream, 0, 0, "file", "file name");
+            IFormFile image = new Mock<IFormFile>().Object;
 
             FailureResponseDto failureResponseDto = new FailureResponseDto("Error uploading profile picture!");
 
