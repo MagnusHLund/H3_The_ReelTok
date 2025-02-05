@@ -8,13 +8,13 @@ using reeltok.api.auth.Entites;
 
 namespace reeltok.api.auth.Services
 {
-  public class AuthService : IAuthService
-  {
-        private readonly IAuthService _authRepository;
-    
-        public AuthService(IAuthService authRepository)
+    public class AuthService : IAuthService
+    {
+        private readonly IAuthRepository _authRepository;
+
+        public AuthService(IAuthRepository authRepository)
         {
-          _authRepository = authRepository;
+            _authRepository = authRepository;
         }
 
         public Task DeleteUser(Guid userId)
@@ -46,5 +46,5 @@ namespace reeltok.api.auth.Services
         {
             throw new NotImplementedException();
         }
-  }
+    }
 }

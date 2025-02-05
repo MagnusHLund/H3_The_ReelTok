@@ -1,4 +1,4 @@
-namespace AuthService
+namespace AuthServiceApi
 {
 	public class Program
 	{
