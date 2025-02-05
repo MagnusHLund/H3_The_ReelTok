@@ -35,7 +35,6 @@ namespace reeltok.api.recommendations.Tests
                 RecommendationsEnum.Gaming
             });
 
-
             // act
             List<RecommendationsEnum> recommendation = await _recommendationService.GetRecommendation(userId);
 
@@ -44,9 +43,11 @@ namespace reeltok.api.recommendations.Tests
             
             Assert.Equal(recommendation.First(), recommendations.RecommendationCategory.First());
         }
+
         [Fact]
         public void GetRecommendation_WithInvalidParameters_ReturnRecommendation()
         {
+            
             Assert.True(true);
         }
         [Fact]

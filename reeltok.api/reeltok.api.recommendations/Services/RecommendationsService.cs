@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using reeltok.api.recommendations.Entities;
+
 using reeltok.api.recommendations.Enums;
 using reeltok.api.recommendations.Interfaces;
 
@@ -17,6 +13,7 @@ namespace reeltok.api.recommendations.Services
         }
         public Task<List<RecommendationsEnum>> GetRecommendation(Guid userId)
         {
+
             throw new NotImplementedException();
         }
 
