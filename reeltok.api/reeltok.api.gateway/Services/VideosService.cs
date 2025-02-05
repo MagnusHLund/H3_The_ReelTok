@@ -1,4 +1,4 @@
-using AutoMapper;
+using System.Threading.Tasks;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Interfaces;
 
@@ -7,28 +7,36 @@ namespace reeltok.api.gateway.Services
     internal class VideosService : BaseService, IVideosService
     {
         private const string AuthMicroServiceBaseUrl = "http://localhost:5002/videos";
-        private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
         private readonly IGatewayService _gatewayService;
-        public VideosService(IMapper mapper, IGatewayService gatewayService)
+        public VideosService(IAuthService authService, IGatewayService gatewayService)
         {
-            _mapper = mapper;
+            _authService = authService;
             _gatewayService = gatewayService;
         }
-        public void LikeVideo(Guid VideoId) { }
-        public void RemoveLikeFromVideo(Guid VideoId) { }
+        public async Task<bool> LikeVideo(Guid VideoId)
+        {
+            Guid userId = await _authService.GetUserIdByToken();
+
+
+
+            throw HandleExceptions(request);
+        }
+        public Task<bool> RemoveLikeFromVideo(Guid VideoId)
+        {
+            throw HandleExceptions(request);
+        }
         public List<Video> GetVideosForFeed(byte amount)
         {
-            return new List<Video>();
+            throw HandleExceptions(request);
         }
-        public Stream GetVideoStream(Guid VideoId)
+        public Task<string> UploadVideo(VideoUpload video)
         {
-            return new FileStream("", FileMode.Create, FileAccess.Read);
+            throw HandleExceptions(request);
         }
-        public void UploadVideo(VideoUpload video) { }
-        public VideoDetails EditVideoInformation(VideoDetails videoDetails)
+        public Task<bool> DeleteVideo(Guid videoId)
         {
-            return new VideoDetails();
+            throw HandleExceptions(request);
         }
-        public void DeleteVideo(Guid videoId) { }
     }
 }

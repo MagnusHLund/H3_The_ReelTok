@@ -8,12 +8,10 @@ namespace reeltok.api.gateway.Interfaces
 {
     public interface IVideosService
     {
-        public void LikeVideo(Guid VideoId);
-        public void RemoveLikeFromVideo(Guid VideoId);
+        public Task<bool> LikeVideo(Guid VideoId);
+        public Task<bool> RemoveLikeFromVideo(Guid VideoId);
         public List<Video> GetVideosForFeed(byte amount);
-        public Stream GetVideoStream(Guid VideoId);
-        public void UploadVideo(VideoUpload video);
-        public VideoDetails EditVideoInformation(VideoDetails videoDetails);
-        public void DeleteVideo(Guid videoId);
+        public Task<string> UploadVideo(VideoUpload video);
+        public Task<bool> DeleteVideo(Guid videoId);
     }
 }
