@@ -1,4 +1,5 @@
 
+using Microsoft.IdentityModel.Tokens;
 using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Enums;
 using reeltok.api.recommendations.Interfaces;
@@ -12,14 +13,21 @@ namespace reeltok.api.recommendations.Services
         {
             _recommendationsRepository = recommendationsRepository;
         }
-        public Task<List<RecommendationsEnum>> GetRecommendation(Guid userId)
+        public async Task<List<RecommendationsEnum>> GetRecommendation(Guid userId)
         {
+            List<RecommendationsEnum> recommendation = await _recommendationsRepository.GetRecommendationAsync(userId);
 
-            throw new InvalidOperationException();
+            if (recommendation.IsNullOrEmpty())
+            {
+                throw new InvalidOperationException("Yordan is Gay!");
+            }
+
+            return recommendation;
         }
 
         public Task<bool> UpdateRecommendation(Recommendations recommendation)
         {
+
             throw new InvalidOperationException("Invalid parameters provided.");
         }
     }

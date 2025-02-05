@@ -1,16 +1,10 @@
-using System;
 using Moq;
 using Xunit;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using reeltok.api.recommendations.Interfaces;
 using reeltok.api.recommendations.Services;
-using reeltok.api.recommendations.DTOs;
 using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Enums;
-using Castle.Components.DictionaryAdapter.Xml;
-using Xunit.Sdk;
+
 
 namespace reeltok.api.recommendations.Tests
 {
@@ -32,17 +26,23 @@ namespace reeltok.api.recommendations.Tests
         {
             // Arrange
             Guid userId = Guid.NewGuid();
-            Recommendations recommendations = new Recommendations(userId, new List<RecommendationsEnum>() {
+
+            var recommendation = new List<RecommendationsEnum>() {
                 RecommendationsEnum.Gaming
-            });
+            };
+
+            // Mock the repo
+            _MockRecommendationsRepository
+                .Setup(r => r.GetRecommendationAsync(userId))
+                .ReturnsAsync(recommendation);
 
             // act
-            List<RecommendationsEnum> recommendation = await _recommendationService.GetRecommendation(userId);
+            var recommendationReturn = await _recommendationService.GetRecommendation(userId);
 
             // Assert
+            Assert.NotNull(recommendation);
             Assert.True(recommendation.Count() == 1);
-
-            Assert.Equal(recommendation.First(), recommendations.RecommendationCategory.First());
+            Assert.Equal(recommendation.First(), recommendationReturn.First());
         }
 
         [Fact]
@@ -50,10 +50,15 @@ namespace reeltok.api.recommendations.Tests
         {
             // Arrange
             Guid userId = Guid.NewGuid();
-            Recommendations recommendations = new Recommendations(userId, new List<RecommendationsEnum>()
+            var recommendations = new List<RecommendationsEnum>()
             {
-                RecommendationsEnum.Gaming
-            });
+
+            };
+
+            _MockRecommendationsRepository
+                .Setup(r => r.GetRecommendationAsync(userId))
+                .ReturnsAsync(recommendations);
+
 
             // Act and Assert
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
@@ -68,6 +73,12 @@ namespace reeltok.api.recommendations.Tests
             Guid userId = Guid.NewGuid();
             List<RecommendationsEnum> testRecommendations = new List<RecommendationsEnum> { RecommendationsEnum.Gaming };
             Recommendations recommendations = new Recommendations(userId, testRecommendations);
+
+
+            _MockRecommendationsRepository
+                .Setup(r => r.UpdateRecommendationAsync(recommendations))
+                .Returns(Task.CompletedTask);
+
             // Act
             var result = await _recommendationService.UpdateRecommendation(recommendations);
 
