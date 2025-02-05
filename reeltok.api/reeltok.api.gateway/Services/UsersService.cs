@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.DTOs.Users;
 using reeltok.api.gateway.Entities;
@@ -31,10 +27,9 @@ namespace reeltok.api.gateway.Services
 
             if (response.Success && response is ServiceLoginResponseDto responseDto)
             {
-                Guid userId = responseDto.UserId;
                 UserDetails userDetails = new UserDetails(responseDto.Username, responseDto.ProfilePictureUrl, responseDto.ProfileUrl);
                 HiddenUserDetails hiddenUserDetails = new HiddenUserDetails(responseDto.Email);
-                return new UserProfileData(userId, userDetails, hiddenUserDetails);
+                return new UserProfileData(responseDto.UserId, userDetails, hiddenUserDetails);
             }
 
             throw HandleExceptions(response);
@@ -48,7 +43,22 @@ namespace reeltok.api.gateway.Services
 
             if (response.Success && response is ServiceCreateUserResponseDto responseDto)
             {
-                Guid userId = responseDto.UserId;
+                UserDetails userDetails = new UserDetails(responseDto.Username, responseDto.ProfilePictureUrl, responseDto.ProfileUrl);
+                HiddenUserDetails hiddenUserDetails = new HiddenUserDetails(responseDto.Email);
+                return new UserProfileData(responseDto.UserId, userDetails, hiddenUserDetails);
+            }
+
+            throw HandleExceptions(response);
+        }
+        public async Task<UserProfileData> GetUserProfileData(Guid userId)
+        {
+            ServiceGetUserProfileDataRequestDto requestDto = new ServiceGetUserProfileDataRequestDto(userId);
+            string targetUrl = $"{UsersMicroServiceBaseUrl}/GetProfileData";
+
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+
+            if (response.Success && response is ServiceGetUserProfileDataResponseDto responseDto)
+            {
                 UserDetails userDetails = new UserDetails(responseDto.Username, responseDto.ProfilePictureUrl, responseDto.ProfileUrl);
                 HiddenUserDetails hiddenUserDetails = new HiddenUserDetails(responseDto.Email);
                 return new UserProfileData(userId, userDetails, hiddenUserDetails);
@@ -56,25 +66,67 @@ namespace reeltok.api.gateway.Services
 
             throw HandleExceptions(response);
         }
-        public async Task<UserProfileData> GetUserProfileData(Guid userId)
+        public async Task<EditableUserDetails> UpdateUserDetails(string username, string email)
         {
-            return new UserProfileData(Guid.Empty, new UserDetails("", "", ""), new HiddenUserDetails(""));
+            Guid userId = await _authService.GetUserIdByToken();
+
+            ServiceUpdateUserDetailsRequestDto requestDto = new ServiceUpdateUserDetailsRequestDto(userId, username, email);
+            string targetUrl = $"{UsersMicroServiceBaseUrl}/UpdateDetails";
+
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(requestDto, targetUrl, HttpMethod.Put);
+
+            if (response.Success && response is ServiceUpdateUserDetailsResponseDto responseDto)
+            {
+                return new EditableUserDetails(responseDto.Username, responseDto.Email);
+            }
+
+            throw HandleExceptions(response);
         }
-        public async Task<EditableUserDetails> UpdateUserDetails(EditableUserDetails userDetails)
-        {
-            return new EditableUserDetails("", "");
-        }
+
         public async Task<string> UpdateProfilePicture(IFormFile image)
         {
-            return "Image url";
+            Guid userId = await _authService.GetUserIdByToken();
+
+            ServiceUpdateProfilePictureRequestDto requestDto = new ServiceUpdateProfilePictureRequestDto(userId, image);
+            string targetUrl = $"{UsersMicroServiceBaseUrl}/UpdateProfilePicture";
+
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(requestDto, targetUrl, HttpMethod.Put);
+
+            if (response.Success && response is ServiceUpdateProfilePictureResponseDto responseDto)
+            {
+                return responseDto.ProfilePictureUrl;
+            }
+
+            throw HandleExceptions(response);
         }
+
         public async Task<List<UserDetails>> GetAllSubscriptionsForUser(Guid userId)
         {
-            return new List<UserDetails>();
+            ServiceGetAllSubscriptionsForUserRequestDto requestDto = new ServiceGetAllSubscriptionsForUserRequestDto(userId);
+            string targetUrl = $"{UsersMicroServiceBaseUrl}/GetSubscriptions";
+
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+
+            if (response.Success && response is ServiceGetAllSubscriptionsForUserResponseDto responseDto)
+            {
+                return responseDto.Users;
+            }
+
+            throw HandleExceptions(response);
         }
         public async Task<List<UserDetails>> GetAllSubscribingToUser(Guid userId)
         {
-            return new List<UserDetails>();
+            ServiceGetAllSubscribingToUserRequestDto requestDto = new ServiceGetAllSubscribingToUserRequestDto(userId);
+            string targetUrl = $"{UsersMicroServiceBaseUrl}/GetSubscribers";
+
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+
+            if (response.Success && response is ServiceGetAllSubscribingToUserResponseDto responseDto)
+            {
+                return responseDto.Users;
+            }
+
+            throw HandleExceptions(response);
         }
     }
 }
