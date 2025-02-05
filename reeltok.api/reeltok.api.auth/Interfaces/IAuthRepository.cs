@@ -15,6 +15,5 @@ namespace reeltok.api.auth.Interfaces
       public Task DeleteUser(Guid userId);
       public Task<Guid> GetUserIdByToken(string refreshToken);
       public Task LogOutUser(string refreshToken);
-      public Task ChangeUserPassword(Guid userId, string newPassword);
     }
 }

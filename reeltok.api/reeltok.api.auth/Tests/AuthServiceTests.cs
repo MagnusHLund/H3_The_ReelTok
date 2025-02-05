@@ -10,12 +10,13 @@ namespace reeltok.api.auth.Tests
   public class AuthServiceTests
   {
     private const string BaseTestUrl = "http://localhost:5003/auth";
-    private readonly Mock<IAuthRepository> _MockAuthRepository;
+    private readonly Mock<IAuthRepository> _mockAuthRepository;
     private readonly IAuthService _authService;
 
     public AuthServiceTests()
     {
-      _MockAuthRepository = new Mock<IAuthRepository>();
+      _mockAuthRepository = new Mock<IAuthRepository>();
+      _authService = new AuthService(_mockAuthRepository.Object);
     }
   }
 }

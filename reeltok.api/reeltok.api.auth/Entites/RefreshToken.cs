@@ -5,16 +5,16 @@ namespace reeltok.api.auth.Entites
   public class RefreshToken 
   {
      [Required]
-     public Guid UserId { get; private set; }
+     public Guid UserId { get; set; }
 
      [Required]
-     public string Token { get; private set; }
+     public string Token { get; set; }
 
      [Required]
-     public DateTime CreateDate { get; private set; }
+     public DateTime CreateDate { get; set; }
 
      [Required]
-     public DateTime ExpireDate { get; private set; }
+     public DateTime ExpireDate { get; set; }
 
      
      public RefreshToken(Guid userId, string token, DateTime createDate, DateTime expireDate)
