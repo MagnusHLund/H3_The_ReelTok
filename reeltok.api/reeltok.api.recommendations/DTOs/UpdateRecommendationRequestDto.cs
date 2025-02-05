@@ -1,15 +1,16 @@
 using System.ComponentModel.DataAnnotations;
+using reeltok.api.recommendations.Enums;
 
 namespace reeltok.api.recommendations.DTOs
 {
     public class UpdateRecommendationRequestDto
     {
         [Required]
-        public string Category { get; set; }
+        public List<RecommendationsEnum> Category { get; set; }
         [Required]
         public Guid UserId { get; set; }
 
-        public UpdateRecommendationRequestDto(string category, Guid userId)
+        public UpdateRecommendationRequestDto(List<RecommendationsEnum> category, Guid userId)
         {
             Category = category;
             UserId = userId;

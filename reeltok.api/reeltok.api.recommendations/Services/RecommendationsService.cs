@@ -1,4 +1,5 @@
 
+using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Enums;
 using reeltok.api.recommendations.Interfaces;
 
@@ -14,12 +15,12 @@ namespace reeltok.api.recommendations.Services
         public Task<List<RecommendationsEnum>> GetRecommendation(Guid userId)
         {
 
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
 
-        public Task<bool> UpdateRecommendation()
+        public Task<bool> UpdateRecommendation(Recommendations recommendation)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Invalid parameters provided.");
         }
     }
 }

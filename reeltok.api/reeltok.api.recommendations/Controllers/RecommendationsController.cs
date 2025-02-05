@@ -33,9 +33,11 @@ namespace reeltok.api.recommendations.RecommendationsServiceApi.Api.Controllers
 
         [HttpPut("UpdateRecommendations")]
 
-        public async Task<IActionResult> UpdateRecommendation()
+        public async Task<IActionResult> UpdateRecommendation([FromBody] UpdateRecommendationRequestDto request)
         {
-            bool success = await _recommendationsService.UpdateRecommendation();
+            Recommendations recommendations = new Recommendations(request.UserId, request.Category);
+
+            bool success = await _recommendationsService.UpdateRecommendation(recommendations);
             return Ok(new UpdateRecommendationResponseDto(success));
         }
 
