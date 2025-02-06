@@ -21,7 +21,13 @@
       "client.reactNative",
       "database",
       "documentation"
-    ]
+    ],
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[csharp]": {
+      "editor.defaultFormatter": "Leopotam.csharpfixformat"
+    },
+    "cSpell.words": ["reeltok"]
   },
   "launch": {
     "version": "0.2.0",

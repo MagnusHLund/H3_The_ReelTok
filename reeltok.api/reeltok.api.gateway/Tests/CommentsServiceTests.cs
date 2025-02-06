@@ -52,7 +52,7 @@ namespace reeltok.api.gateway.Tests
             uint createdAt = (uint)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
             bool success = true;
 
-            ServiceAddCommentResponseDto successResponse = new ServiceAddCommentResponseDto(commentId, userId, commentText, createdAt, success);
+            ServiceAddCommentResponseDto successResponse = new ServiceAddCommentResponseDto(commentId, userId, videoId, commentText, createdAt, success);
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceAddCommentRequestDto, ServiceAddCommentResponseDto>(
                 It.IsAny<ServiceAddCommentRequestDto>(), $"{BaseTestUrl}/Add", HttpMethod.Post))
