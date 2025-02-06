@@ -30,7 +30,7 @@ namespace reeltok.api.gateway.Controllers
 
             CommentUsingDateTime comment = await _commentsService.AddComment(request.VideoId, request.CommentText);
 
-            GatewayAddCommentResponseDto responseDto = CommentMapper.ConvertToResponseDto(comment);
+            GatewayAddCommentResponseDto responseDto = CommentMapper.ConvertToResponseDto<GatewayAddCommentResponseDto>(comment);
 
             return Ok(responseDto);
         }

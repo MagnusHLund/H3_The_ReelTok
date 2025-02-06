@@ -141,7 +141,7 @@ namespace reeltok.api.gateway.Tests
             string profileUrl = "testUrl.com";
             string profilePictureUrl = "testurl.com";
 
-            ServiceGetUserProfileDataResponseDto successResponseDto = new ServiceGetUserProfileDataResponseDto(username, profileUrl, profilePictureUrl);
+            ServiceGetUserProfileDataResponseDto successResponseDto = new ServiceGetUserProfileDataResponseDto(userId, username, profileUrl, profilePictureUrl);
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(
                 It.IsAny<ServiceGetUserProfileDataRequestDto>(), $"{BaseTestUrl}/GetProfileData", HttpMethod.Get))
