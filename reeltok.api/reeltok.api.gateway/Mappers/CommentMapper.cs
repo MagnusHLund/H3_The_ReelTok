@@ -33,14 +33,14 @@ namespace reeltok.api.gateway.Mappers
             );
         }
 
-        internal static GatewayAddCommentResponseDto ConvertToResponseDto(CommentUsingDateTime commentToConvert, bool success)
+        internal static GatewayAddCommentResponseDto ConvertToResponseDto(CommentUsingDateTime commentToConvert, bool success = true)
         {
             return new GatewayAddCommentResponseDto(
-                commentToConvert.CommentId,
-                commentToConvert.CommentDetails.UserId,
-                commentToConvert.CommentDetails.CommentText,
-                commentToConvert.CommentDetails.CreatedAt,
-                success
+                commentId: commentToConvert.CommentId,
+                userId: commentToConvert.CommentDetails.UserId,
+                commentText: commentToConvert.CommentDetails.CommentText,
+                createdAt: commentToConvert.CommentDetails.CreatedAt,
+                success: success
             );
         }
     }

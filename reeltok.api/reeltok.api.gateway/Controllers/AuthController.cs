@@ -22,7 +22,9 @@ namespace reeltok.api.gateway.Controllers
         public async Task<IActionResult> LogOutUser()
         {
             bool success = await _authService.LogOutUser();
-            return Ok(new GatewayLogOutUserResponseDto(success));
+            GatewayLogOutUserResponseDto responseDto = new GatewayLogOutUserResponseDto(success);
+
+            return Ok(responseDto);
         }
     }
 }
