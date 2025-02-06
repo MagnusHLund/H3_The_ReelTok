@@ -28,7 +28,9 @@ namespace reeltok.api.gateway.Controllers
             }
 
             bool success = await _recommendationsService.ChangeRecommendedCategory(request.Category);
-            return Ok(new GatewayChangeRecommendedCategoryResponseDto(success));
+            GatewayChangeRecommendedCategoryResponseDto requestDto = new GatewayChangeRecommendedCategoryResponseDto(success);
+
+            return Ok(requestDto);
         }
 
         /* //   TODO: Implement this
