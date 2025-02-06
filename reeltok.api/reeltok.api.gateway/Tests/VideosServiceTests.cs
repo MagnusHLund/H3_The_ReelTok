@@ -4,9 +4,6 @@ using reeltok.api.gateway.Services;
 using reeltok.api.gateway.Interfaces;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using reeltok.api.gateway.DTOs.Videos.LikeVideo;
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.DTOs.Videos.RemoveLike;
@@ -51,7 +48,8 @@ namespace reeltok.api.gateway.Tests
         public async Task LikeVideo_ValidParameters_ReturnSuccess()
         {
             // Arrange
-            ServiceAddLikeResponseDto successResponse = new ServiceAddLikeResponseDto();
+            bool success = true;
+            ServiceAddLikeResponseDto successResponse = new ServiceAddLikeResponseDto(success);
             Guid validVideoId = Guid.NewGuid();
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(
                 It.IsAny<ServiceAddLikeRequestDto>(), $"{BaseTestUrl}/AddLike", HttpMethod.Post)).ReturnsAsync(successResponse);
@@ -83,7 +81,8 @@ namespace reeltok.api.gateway.Tests
         public async Task RemoveLikeFromVideo_ValidParameters_ReturnSuccess()
         {
             // Arrange
-            ServiceRemoveLikeResponseDto successResponse = new ServiceRemoveLikeResponseDto();
+            bool success = true;
+            ServiceRemoveLikeResponseDto successResponse = new ServiceRemoveLikeResponseDto(success);
             Guid validVideoId = Guid.NewGuid();
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceRemoveLikeRequestDto, ServiceRemoveLikeResponseDto>(
                 It.IsAny<ServiceRemoveLikeRequestDto>(), $"{BaseTestUrl}/RemoveLike", HttpMethod.Post)).ReturnsAsync(successResponse);
@@ -158,11 +157,12 @@ namespace reeltok.api.gateway.Tests
         public async Task UploadVideo_ValidParameters_ReturnVideo()
         {
             // Arrange
-            var videoDetails = new VideoDetails("Title", "Description", RecommendedCategories.Tech);
+            VideoDetails videoDetails = new VideoDetails("Title", "Description", RecommendedCategories.Tech);
             IFormFile videoFile = new Mock<IFormFile>().Object;
             VideoUpload validVideoUpload = new VideoUpload(videoDetails, videoFile);
             Video video = new Video(Guid.NewGuid(), videoDetails, 0, false, "url", DateTime.UtcNow, new UserDetails("username", "profilePictureUrl", "profileUrl"));
-            ServiceUploadVideoResponseDto successResponse = new ServiceUploadVideoResponseDto(video);
+            bool success = true;
+            ServiceUploadVideoResponseDto successResponse = new ServiceUploadVideoResponseDto(video, success);
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUploadVideoRequestDto, ServiceUploadVideoResponseDto>(
                 It.IsAny<ServiceUploadVideoRequestDto>(), $"{BaseTestUrl}/Upload", HttpMethod.Post)).ReturnsAsync(successResponse);
@@ -197,7 +197,8 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             Guid videoId = Guid.NewGuid();
 
-            ServiceDeleteVideoResponseDto successResponse = new ServiceDeleteVideoResponseDto();
+            bool success = true;
+            ServiceDeleteVideoResponseDto successResponse = new ServiceDeleteVideoResponseDto(success);
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceDeleteVideoRequestDto, ServiceDeleteVideoResponseDto>(It.IsAny<ServiceDeleteVideoRequestDto>(), $"{BaseTestUrl}/Delete", HttpMethod.Delete)).ReturnsAsync(successResponse);
 
             // Act

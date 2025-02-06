@@ -10,7 +10,7 @@ namespace reeltok.api.gateway.Services
 {
     internal class CommentsService : BaseService, ICommentsService
     {
-        private const string CommentMicroServiceBaseUrl = "http://localhost:5005/comments";
+        private const string CommentsMicroServiceBaseUrl = "http://localhost:5005/comments";
         private readonly IAuthService _authService;
         private readonly IGatewayService _gatewayService;
         internal CommentsService(IAuthService authService, IGatewayService gatewayService)
@@ -24,7 +24,7 @@ namespace reeltok.api.gateway.Services
             Guid userId = await _authService.GetUserIdByToken();
 
             ServiceAddCommentRequestDto requestDto = new ServiceAddCommentRequestDto(userId, videoId, commentText);
-            string targetUrl = $"{CommentMicroServiceBaseUrl}/Add";
+            string targetUrl = $"{CommentsMicroServiceBaseUrl}/Add";
 
             BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceAddCommentRequestDto, ServiceAddCommentResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
@@ -42,7 +42,7 @@ namespace reeltok.api.gateway.Services
         public async Task<List<CommentUsingDateTime>> LoadComments(Guid videoId, byte amount)
         {
             ServiceLoadCommentsRequestDto requestDto = new ServiceLoadCommentsRequestDto(videoId, amount);
-            string targetUrl = $"{CommentMicroServiceBaseUrl}/Load";
+            string targetUrl = $"{CommentsMicroServiceBaseUrl}/Load";
 
             BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceLoadCommentsRequestDto, ServiceLoadCommentsResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
