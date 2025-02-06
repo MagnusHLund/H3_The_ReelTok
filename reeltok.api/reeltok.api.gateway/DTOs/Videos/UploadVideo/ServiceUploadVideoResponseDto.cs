@@ -8,7 +8,7 @@ namespace reeltok.api.gateway.DTOs.Videos.UploadVideo
     {
         public Video Video { get; set; }
 
-        public ServiceUploadVideoResponseDto(Video video)
+        public ServiceUploadVideoResponseDto(Video video, bool success) : base(success)
         {
             Video = video;
         }
