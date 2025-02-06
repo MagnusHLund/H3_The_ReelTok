@@ -1,4 +1,4 @@
-using reeltok.api.gateway.DTOs.Comments;
+using reeltok.api.gateway.DTOs.Interfaces;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Utils;
 using reeltok.api.gateway.ValueObjects;
@@ -33,14 +33,29 @@ namespace reeltok.api.gateway.Mappers
             );
         }
 
-        internal static GatewayAddCommentResponseDto ConvertToResponseDto(CommentUsingDateTime commentToConvert, bool success = true)
+        internal static TResponseDto ConvertToResponseDto<TResponseDto>(CommentUsingDateTime commentToConvert) where TResponseDto : ICommentUsingDateTimeDto, new()
         {
-            return new GatewayAddCommentResponseDto(
-                commentId: commentToConvert.CommentId,
-                userId: commentToConvert.CommentDetails.UserId,
-                commentText: commentToConvert.CommentDetails.CommentText,
-                createdAt: commentToConvert.CommentDetails.CreatedAt,
-                success: success
+            return new TResponseDto
+            {
+                CommentId = commentToConvert.CommentId,
+                UserId = commentToConvert.CommentDetails.UserId,
+                CommentText = commentToConvert.CommentDetails.CommentText,
+                CreatedAt = commentToConvert.CommentDetails.CreatedAt
+            };
+        }
+
+        internal static CommentUsingDateTime ConvertResponseDtoToCommentUsingDateTime<TResponseDto>(TResponseDto responseDto) where TResponseDto : ICommentUsingUnixTimeDto
+        {
+            CommentDetailsUsingDateTime details = new CommentDetailsUsingDateTime(
+                userId: responseDto.UserId,
+                videoId: responseDto.VideoId,
+                commentText: responseDto.CommentText,
+                createdAt: DateTimeUtils.UnixTimeToDateTime(responseDto.CreatedAt)
+            );
+
+            return new CommentUsingDateTime(
+                responseDto.CommentId,
+                commentDetails: details
             );
         }
     }
