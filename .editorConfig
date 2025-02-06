@@ -79,3 +79,6 @@ file_header_template = "File header template goes here"
 # Modifier settings
 csharp_prefer_readonly_structs = true:suggestion
 csharp_prefer_readonly_parameters = true:suggestion
+
+# Access modifiers settings
+dotnet_diagnostic.IDE0040.severity = error
