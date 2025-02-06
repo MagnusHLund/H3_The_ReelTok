@@ -9,7 +9,7 @@
     }
   ],
   "settings": {
-    "dotnet.defaultSolution": "CommentsService.sln",
+    "dotnet.defaultSolution": "CommentsServiceApi.sln",
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "conventionalCommits.scopes": [
       "api.recommendations",
@@ -21,7 +21,13 @@
       "client.reactNative",
       "database",
       "documentation"
-    ]
+    ],
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[csharp]": {
+      "editor.defaultFormatter": "Leopotam.csharpfixformat"
+    },
+    "cSpell.words": ["reeltok"]
   },
   "launch": {
     "version": "0.2.0",
@@ -31,7 +37,7 @@
         "type": "coreclr",
         "request": "launch",
         "preLaunchTask": "build",
-        "program": "${workspaceFolder:Reeltok Comments API}/bin/Debug/net6.0/CommentsService.dll",
+        "program": "${workspaceFolder:Reeltok Comments API}/bin/Debug/net6.0/CommentsServiceApi.dll",
         "args": [],
         "cwd": "${workspaceFolder:Reeltok Comments API}",
         "stopAtEntry": false,
