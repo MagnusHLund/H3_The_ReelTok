@@ -28,14 +28,19 @@ namespace reeltok.api.gateway.Controllers
             }
 
             bool success = await _recommendationsService.ChangeRecommendedCategory(request.Category);
-            return Ok(new GatewayChangeRecommendedCategoryResponseDto(success));
+            GatewayChangeRecommendedCategoryResponseDto requestDto = new GatewayChangeRecommendedCategoryResponseDto(success);
+
+            return Ok(requestDto);
         }
 
-        /* // TODO: Implement this
+        /* //   TODO: Implement this
                 [HttpGet]
                 [Route("GetCategories")]
                 public async Task<IActionResult> GetRecommendedCategories([FromBody] GatewayGetRecommendationsRequestDto request)
                 {
-                } */
+                    var categories = await _recommendationsService.GetRecommendedCategories();
+                    return Ok(new GatewayGetRecommendationsResponseDto(categories));
+                }  
+        */
     }
 }

@@ -168,6 +168,5 @@ namespace reeltok.api.gateway.Tests
             // Act & Assert
             await Assert.ThrowsAsync<TaskCanceledException>(() => _gatewayService.RouteRequestAsync<ServiceLogOutUserResponseDto>(request));
         }
-
     }
 }

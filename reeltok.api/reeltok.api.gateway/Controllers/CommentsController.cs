@@ -30,8 +30,7 @@ namespace reeltok.api.gateway.Controllers
 
             CommentUsingDateTime comment = await _commentsService.AddComment(request.VideoId, request.CommentText);
 
-            bool success = true;
-            GatewayAddCommentResponseDto responseDto = CommentMapper.ConvertToResponseDto(comment, success);
+            GatewayAddCommentResponseDto responseDto = CommentMapper.ConvertToResponseDto(comment);
 
             return Ok(responseDto);
         }
@@ -52,8 +51,9 @@ namespace reeltok.api.gateway.Controllers
                 return NoContent();
             }
 
-            bool success = true;
-            return Ok(new GatewayLoadCommentsResponseDto(comments, success));
+            GatewayLoadCommentsResponseDto responseDto = new GatewayLoadCommentsResponseDto(comments);
+
+            return Ok(responseDto);
         }
     }
 }
