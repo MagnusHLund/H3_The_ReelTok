@@ -31,5 +31,17 @@ namespace reeltok.api.gateway.Mappers
                 Email = userDetails.Email
             };
         }
+
+        internal static UserProfileData ConvertResponseDtoToUserProfileData(IUserProfileDataDto responseDto)
+        {
+            UserDetails userDetails = new UserDetails(
+                username: responseDto.Username,
+                profilePictureUrl: responseDto.ProfilePictureUrl,
+                profileUrl: responseDto.ProfileUrl
+                );
+
+            HiddenUserDetails hiddenUserDetails = new HiddenUserDetails(email: responseDto.Email);
+            return new UserProfileData(responseDto.UserId, userDetails, hiddenUserDetails);
+        }
     }
 }

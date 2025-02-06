@@ -30,10 +30,7 @@ namespace reeltok.api.gateway.Services
 
             if (response.Success && response is ServiceAddCommentResponseDto responseDto)
             {
-                DateTime createdAt = DateTimeUtils.UnixTimeToDateTime(responseDto.CreatedAt);
-                CommentDetailsUsingDateTime commentDetails = new CommentDetailsUsingDateTime(responseDto.UserId, videoId, responseDto.CommentText, createdAt);
-
-                return new CommentUsingDateTime(responseDto.CommentId, commentDetails);
+                return CommentMapper.ConvertResponseDtoToCommentUsingDateTime<ServiceAddCommentResponseDto>(responseDto);
             }
 
             throw HandleExceptions(response);
