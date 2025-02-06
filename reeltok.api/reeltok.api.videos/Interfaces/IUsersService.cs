@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace reeltok.api.videos.Interfaces
 {
-    public interface IVideosService
+    public interface IUsersService
     {
-        Task<List<Video>> GetVideos(Guid userId, byte amount);
+        uint GetVideoLikesAsync();
     }
 }
