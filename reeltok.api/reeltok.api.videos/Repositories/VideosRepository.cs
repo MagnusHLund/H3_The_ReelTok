@@ -6,8 +6,8 @@ using reeltok.api.videos.Interfaces;
 
 namespace reeltok.api.videos.Repositories
 {
-    public class VideoRepository : IVideoRepository
+    public class VideosRepository : IVideosRepository
     {
-        
+
     }
 }

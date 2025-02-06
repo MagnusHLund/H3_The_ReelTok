@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace reeltok.api.videos.Controllers
+namespace reeltok.api.videos.Interfaces
 {
-    public class VideoController
+    public interface IVideosService
     {
-        
+
     }
 }

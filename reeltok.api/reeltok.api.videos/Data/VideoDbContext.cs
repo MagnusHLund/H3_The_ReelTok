@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace reeltok.api.videos.Data
 {
-    public class ApplicationDBContext
+    public class VideoDbContext
     {
         
     }

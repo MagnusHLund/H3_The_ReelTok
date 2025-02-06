@@ -6,8 +6,8 @@ using reeltok.api.videos.Interfaces;
 
 namespace reeltok.api.videos.Services
 {
-    public class VideoService : IVideoService
+    public class VideosService : IVideosService
     {
-        
+
     }
 }

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace reeltok.api.videos.Interfaces
 {
-    public interface IVideoRepository
+    public interface IVideosRepository
     {
-        
+
     }
 }
