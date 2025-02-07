@@ -1,6 +1,6 @@
 namespace reeltok.api.recommendations.Enums
 {
-    public enum RecommendationsEnum
+    public enum RecommendedCategories
     {
         Gaming,
         Tech,

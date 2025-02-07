@@ -7,6 +7,8 @@ namespace reeltok.api.gateway.DTOs.Comments
     public class ServiceLoadCommentsResponseDto : BaseResponseDto
     {
         [XmlElement(elementName: "Comments")]
+        [XmlArray]
+        [XmlArrayItem("Comment")]
         public List<CommentUsingUnixTime> Comments { get; set; }
 
         public ServiceLoadCommentsResponseDto(List<CommentUsingUnixTime> comments, bool success = true) : base(success)

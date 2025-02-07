@@ -1,4 +1,5 @@
 
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 
 namespace reeltok.api.gateway.DTOs
@@ -7,6 +8,7 @@ namespace reeltok.api.gateway.DTOs
     public class FailureResponseDto : BaseResponseDto
     {
         [XmlElement(elementName: "Message")]
+        [Required]
         public string Message { get; set; }
         [XmlElement(elementName: "Success")]
         public override bool Success { get; set; }
