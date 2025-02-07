@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 namespace reeltok.api.videos.ValueObjects
 {
     [XmlRoot("VideoDetails")]
-    internal class VideoUpload
+    public class VideoUpload
     {
         [XmlElement("VideoDetails")]
         internal VideoDetails VideoDetails { get; }

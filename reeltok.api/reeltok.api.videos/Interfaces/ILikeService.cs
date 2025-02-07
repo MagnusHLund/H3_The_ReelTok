@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace reeltok.api.videos.Interfaces
 {
-    public interface IUsersService
+    public interface ILikeService
     {
+        Task<bool> LikeVideo(Guid userId, Guid videoId);
+        Task<bool> RemoveLikeFromVideo(Guid userId, Guid videoId);
         uint GetVideoLikesAsync();
     }
 }

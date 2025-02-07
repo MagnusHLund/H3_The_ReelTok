@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace reeltok.api.videos.Tests
 {
-    public class UsersServiceTests
+    public class LikeServiceTests
     {
-
+        
     }
 }

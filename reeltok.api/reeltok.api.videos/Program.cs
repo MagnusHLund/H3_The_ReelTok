@@ -1,4 +1,6 @@
 
+using reeltok.api.videos.Middleware;
+
 namespace VideosService
 {
 	public class Program
@@ -15,6 +17,8 @@ namespace VideosService
 			builder.Services.AddSwaggerGen();
 
 			var app = builder.Build();
+
+	        app.UseMiddleware<ExceptionMiddleware>();
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
