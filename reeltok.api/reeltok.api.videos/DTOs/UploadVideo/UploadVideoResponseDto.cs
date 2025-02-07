@@ -8,12 +8,12 @@ using reeltok.api.videos.Entities;
 namespace reeltok.api.videos.DTOs.UploadVideo
 {
     [XmlRoot("UploadVideoResponseDto")]
-    internal class UploadVideoResponseDto : BaseResponseDto
+    public class UploadVideoResponseDto : BaseResponseDto
     {
         [XmlElement("Video")]
-        internal Video Video;
+        public Video Video;
 
-        internal UploadVideoResponseDto(Video video, bool success)
+        public UploadVideoResponseDto(Video video, bool success)
         {
             Video = video;
         }

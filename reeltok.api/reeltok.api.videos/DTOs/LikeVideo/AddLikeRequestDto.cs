@@ -3,17 +3,19 @@ using System.Xml.Serialization;
 namespace reeltok.api.videos.DTOs.LikeVideo
 {
     [XmlRoot("AddLikeRequestDto")]
-    internal class AddLikeRequestDto
+    public class AddLikeRequestDto
     {
         [XmlElement("UserId")]
-        internal Guid UserId { get; set; }
+        public Guid UserId { get; set; }
         [XmlElement("VideoId")]
-        internal Guid VideoId { get; set; }
+        public Guid VideoId { get; set; }
 
-        internal AddLikeRequestDto(Guid userId, Guid videoId)
+        public AddLikeRequestDto(Guid userId, Guid videoId)
         {
             UserId = userId;
             VideoId = videoId;
         }
+
+        public AddLikeRequestDto() {}
     }
 }

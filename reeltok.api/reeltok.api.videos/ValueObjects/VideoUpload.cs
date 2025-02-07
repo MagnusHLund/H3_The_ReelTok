@@ -6,11 +6,11 @@ namespace reeltok.api.videos.ValueObjects
     public class VideoUpload
     {
         [XmlElement("VideoDetails")]
-        internal VideoDetails VideoDetails { get; }
+        public VideoDetails VideoDetails { get; }
         [XmlElement("VideoFile")]
-        internal IFormFile VideoFile { get; }
+        public IFormFile VideoFile { get; }
 
-        internal VideoUpload(VideoDetails videoDetails, IFormFile videoFile)
+        public VideoUpload(VideoDetails videoDetails, IFormFile videoFile)
         {
             VideoDetails = videoDetails;
             VideoFile = videoFile;

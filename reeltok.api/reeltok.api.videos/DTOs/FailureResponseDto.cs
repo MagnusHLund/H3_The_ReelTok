@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 namespace reeltok.api.videos.DTOs
 {
     [XmlRoot("FailureResponseDto")]
-    internal class FailureResponseDto : BaseResponseDto
+    public class FailureResponseDto : BaseResponseDto
     {
         [XmlElement(elementName: "Message")]
         public string Message { get; set; }

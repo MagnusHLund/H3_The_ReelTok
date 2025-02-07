@@ -31,7 +31,7 @@ namespace reeltok.api.videos.Tests
             Guid videoId = Guid.NewGuid();
             AddLikeRequestDto requestDto = new AddLikeRequestDto(userId, videoId);
             string targetUrl = BaseTestUrl;
-            string responseContent = "<LogOutUserResponseDto><Success>true</Success></LogOutUserResponseDto>";
+            string responseContent = "<AddLikeResponseDto><Success>true</Success></AddLikeResponseDto>";
             HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")

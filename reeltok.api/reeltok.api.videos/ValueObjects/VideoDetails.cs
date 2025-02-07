@@ -4,14 +4,14 @@ using reeltok.api.videos.Enums;
 namespace reeltok.api.videos.ValueObjects
 {
     [XmlRoot("VideoDetails")]
-    internal class VideoDetails
+    public class VideoDetails
     {
         [XmlElement("Title")]
-        internal string Title { get; }
+        public string Title { get; }
         [XmlElement("Description")]
-        internal string Description { get; }
+        public string Description { get; }
         [XmlElement("RecommendedCategories")]
-        internal RecommendedCategories Tag { get; }
+        public RecommendedCategories Tag { get; }
 
         public VideoDetails(string title, string description, RecommendedCategories tag)
         {

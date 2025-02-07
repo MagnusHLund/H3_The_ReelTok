@@ -2,9 +2,10 @@ using System.Xml.Serialization;
 
 namespace reeltok.api.videos.DTOs.LikeVideo
 {
-    [XmlRoot("AddLikeRequestDto")]
-    internal class AddLikeResponseDto : BaseResponseDto
+    [XmlRoot("AddLikeResponseDto")]
+    public class AddLikeResponseDto : BaseResponseDto
     {
-        internal AddLikeResponseDto(bool success) : base(success) { }
+        public AddLikeResponseDto(bool success) : base(success) { }
+        public AddLikeResponseDto() { }
     }
 }

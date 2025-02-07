@@ -3,14 +3,14 @@ using System.Xml.Serialization;
 namespace reeltok.api.videos.DTOs
 {
     [XmlRoot("GetVideosForFeedRequestDto")]
-    internal class GetVideosForFeedRequestDto
+    public class GetVideosForFeedRequestDto
     {
         [XmlElement("UserId")]
-        internal Guid UserId { get; set; }
+        public Guid UserId { get; set; }
         [XmlElement("Amount")]
-        internal byte Amount { get; set; }
+        public byte Amount { get; set; }
 
-        internal GetVideosForFeedRequestDto(Guid userId, byte amount)
+        public GetVideosForFeedRequestDto(Guid userId, byte amount)
         {
             UserId = userId;
             Amount = amount;

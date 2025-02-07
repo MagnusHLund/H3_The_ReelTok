@@ -3,14 +3,14 @@ using System.Xml.Serialization;
 namespace reeltok.api.videos.DTOs
 {
     [XmlRoot("DeleteVideoRequestDto")]
-    internal class DeleteVideoRequestDto
+    public class DeleteVideoRequestDto
     {
         [XmlElement("UserId")]
-        internal Guid UserId { get; set; }
+        public Guid UserId { get; set; }
         [XmlElement("VideoId")]
-        internal Guid VideoId { get; set; }
+        public Guid VideoId { get; set; }
 
-        internal DeleteVideoRequestDto(Guid userId, Guid videoId)
+        public DeleteVideoRequestDto(Guid userId, Guid videoId)
         {
             UserId = userId;
             VideoId = videoId;
