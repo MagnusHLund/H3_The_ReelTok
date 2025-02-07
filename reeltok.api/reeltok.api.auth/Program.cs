@@ -1,3 +1,10 @@
+using reeltok.api.auth.Services;
+using reeltok.api.auth.Interfaces;
+using reeltok.api.auth.Repositories;
+using reeltok.api.auth.Data;
+using reeltok.api.auth.Middleware;
+using Microsoft.EntityFrameworkCore;
+
 namespace AuthServiceApi
 {
 	public class Program
@@ -10,6 +17,9 @@ namespace AuthServiceApi
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+      builder.Services.AddTransient<IAuthService, AuthService>();
+      builder.Services.AddTransient<IAuthRepository, AuthRepository>();
+      builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AuthDb")));
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 
@@ -23,7 +33,7 @@ namespace AuthServiceApi
 			}
 
 			app.UseAuthorization();
-
+      app.UseMiddleware<ExceptionMiddleware>();
 
 			app.MapControllers();
 

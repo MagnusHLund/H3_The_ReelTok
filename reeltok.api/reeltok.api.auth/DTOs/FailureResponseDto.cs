@@ -1,10 +1,16 @@
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.auth.DTOs
 {
     internal class FailureResponseDto : BaseResponseDto
     {
-        internal FailureResponseDto(bool success) : base(success)
+
+        [Required]
+        public string Message { get; set; }
+
+        internal FailureResponseDto(string message, bool success) : base(success)
         {
+          Message = message;
         }
     }
 }

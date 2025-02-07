@@ -19,11 +19,11 @@ namespace reeltok.api.auth.Controllers
       }
       
 
-      [HttpGet]
-      [Route("test")]
-      public async Task<IActionResult> test()
+      [HttpPost]
+      [Route("RegisterUser")]
+      public async Task<IActionResult> RegisterUser()
       {
-        return Ok("hello"); 
+        throw new NotImplementedException();
       }
       
     }
