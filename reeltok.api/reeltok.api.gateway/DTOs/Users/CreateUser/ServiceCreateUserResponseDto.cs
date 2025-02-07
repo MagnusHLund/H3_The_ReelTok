@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
+using reeltok.api.gateway.DTOs.Interfaces;
 
 namespace reeltok.api.gateway.DTOs.Users
 {
     [XmlRoot("CreateUserResponseDto")]
-    public class ServiceCreateUserResponseDto : BaseResponseDto
+    public class ServiceCreateUserResponseDto : BaseResponseDto, IUserProfileDataDto
     {
         [XmlElement("UserId")]
 

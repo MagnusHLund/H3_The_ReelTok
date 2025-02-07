@@ -13,7 +13,7 @@
     }
   ],
   "settings": {
-    "dotnet.defaultSolution": "AuthService.sln",
+    "dotnet.defaultSolution": "AuthServiceApi.sln",
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "conventionalCommits.scopes": [
       "api.recommendations",
@@ -25,7 +25,13 @@
       "client.reactNative",
       "database",
       "documentation"
-    ]
+    ],
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[csharp]": {
+      "editor.defaultFormatter": "Leopotam.csharpfixformat"
+    },
+    "cSpell.words": ["reeltok"]
   },
   "launch": {
     "version": "0.2.0",
@@ -35,7 +41,7 @@
         "type": "coreclr",
         "request": "launch",
         "preLaunchTask": "build",
-        "program": "${workspaceFolder:Reeltok Auth API}/bin/Debug/net6.0/AuthService.dll",
+        "program": "${workspaceFolder:Reeltok Auth API}/bin/Debug/net6.0/AuthServiceApi.dll",
         "args": [],
         "cwd": "${workspaceFolder:Reeltok Auth API}",
         "stopAtEntry": false,

@@ -2,6 +2,7 @@ using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.DTOs.Users;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Interfaces;
+using reeltok.api.gateway.Mappers;
 using reeltok.api.gateway.ValueObjects;
 
 namespace reeltok.api.gateway.Services
@@ -27,9 +28,7 @@ namespace reeltok.api.gateway.Services
 
             if (response.Success && response is ServiceLoginResponseDto responseDto)
             {
-                UserDetails userDetails = new UserDetails(responseDto.Username, responseDto.ProfilePictureUrl, responseDto.ProfileUrl);
-                HiddenUserDetails hiddenUserDetails = new HiddenUserDetails(responseDto.Email);
-                return new UserProfileData(responseDto.UserId, userDetails, hiddenUserDetails);
+                return UserMapper.ConvertResponseDtoToUserProfileData(responseDto);
             }
 
             throw HandleExceptions(response);
@@ -43,9 +42,7 @@ namespace reeltok.api.gateway.Services
 
             if (response.Success && response is ServiceCreateUserResponseDto responseDto)
             {
-                UserDetails userDetails = new UserDetails(responseDto.Username, responseDto.ProfilePictureUrl, responseDto.ProfileUrl);
-                HiddenUserDetails hiddenUserDetails = new HiddenUserDetails(responseDto.Email);
-                return new UserProfileData(responseDto.UserId, userDetails, hiddenUserDetails);
+                return UserMapper.ConvertResponseDtoToUserProfileData(responseDto);
             }
 
             throw HandleExceptions(response);
@@ -59,9 +56,7 @@ namespace reeltok.api.gateway.Services
 
             if (response.Success && response is ServiceGetUserProfileDataResponseDto responseDto)
             {
-                UserDetails userDetails = new UserDetails(responseDto.Username, responseDto.ProfilePictureUrl, responseDto.ProfileUrl);
-                HiddenUserDetails hiddenUserDetails = new HiddenUserDetails(responseDto.Email);
-                return new UserProfileData(userId, userDetails, hiddenUserDetails);
+                return UserMapper.ConvertResponseDtoToUserProfileData(responseDto);
             }
 
             throw HandleExceptions(response);
