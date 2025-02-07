@@ -27,20 +27,6 @@ namespace reeltok.api.users.Data
             modelBuilder.Entity<LikedVideo>().OwnsOne(lv => lv.LikedVideoDetails);
 
             modelBuilder.Entity<Subscription>().OwnsOne(s => s.SubDetails);
-
-            // Cascade delete when UserId (Subscriber) is deleted
-            modelBuilder.Entity<Subscription>()
-                .HasOne(sd => sd.SubDetails.User)
-                .WithMany()
-                .HasForeignKey(sd => sd.SubDetails.UserId)
-                .OnDelete(DeleteBehavior.Cascade); // This will delete subscriptions where the UserId matches the deleted user
-
-            // Cascade delete when SubscribingToUserId (Subscribed-to User) is deleted
-            modelBuilder.Entity<Subscription>()
-                .HasOne(sd => sd.SubDetails.SubscribeToUser)
-                .WithMany()
-                .HasForeignKey(sd => sd.SubDetails.SubscribingToUserId)
-                .OnDelete(DeleteBehavior.Cascade); // This will delete subscriptions where SubscribingToUserId matches the deleted user
         }
     }
 }

@@ -1,0 +1,39 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+
+namespace reeltok.api.users.DTOs.UserResponseDTO
+{
+    [XmlRoot("ReturnCreatedUser")]
+    public class ReturnCreateUserResponseDTO
+    {
+        [XmlElement("UserId")]
+        public Guid UserId { get; set; }
+        [XmlElement("Email")]
+        public string Email { get; set; }
+        [XmlElement("Username")]
+        public string Username { get; set; }
+        [XmlElement("ProfileUrl")]
+        public string ProfileUrl { get; set; }
+        [XmlElement("ProfilePictureUrl")]
+        public string ProfilePictureUrl { get; set; }
+
+        public ReturnCreateUserResponseDTO( Guid userId, string email, string username, string profileUrl, string profilePictureUrl)
+        {
+            UserId = userId;
+            Email = email;
+            Username = username;
+            ProfileUrl = profileUrl;
+            ProfilePictureUrl = profilePictureUrl;
+        }
+
+        public ReturnCreateUserResponseDTO()
+        {
+            
+        }
+
+
+    }
+}

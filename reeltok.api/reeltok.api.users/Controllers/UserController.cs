@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using reeltok.api.users.DTOs.UserResponseDTO;
 using reeltok.api.users.Entities;
 using reeltok.api.users.Interfaces;
+using reeltok.api.users.Mappers;
 
 namespace reeltok.api.users.Controllers
 {
@@ -15,18 +17,15 @@ namespace reeltok.api.users.Controllers
             _usersService = usersService;
         }
 
-        [HttpPost("{Create User}")]
+        [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUserAsync([FromBody] UserProfileData user)
         {
-            try
-            {
-                await _usersService.CreateUserAsync(user);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            UserProfileData dbUser = await _usersService.CreateUserAsync(user);
+
+            // Map the entity to DTO
+            ReturnCreateUserResponseDTO responseDto = UserMapper.ToReturnCreateUserResponseDTO(dbUser);
+
+            return Ok(responseDto);
         }
     }
 }

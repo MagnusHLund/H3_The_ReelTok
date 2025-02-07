@@ -20,7 +20,7 @@ namespace reeltok.api.users.Services
         #endregion
 
         #region User CRUD Methods
-        public async Task CreateUserAsync(UserProfileData user)
+        public async Task<UserProfileData> CreateUserAsync(UserProfileData user)
         {
             // if (user == null)
             //     throw new ArgumentException("User profile data cannot be null");
@@ -37,9 +37,13 @@ namespace reeltok.api.users.Services
             // }
 
             // Try to create the user
+
+            UserProfileData returnUser;
+
             try
             {
-                await _userRepository.CreateUserAsync(user);
+                returnUser = await _userRepository.CreateUserAsync(user);
+
             }
             catch (Exception ex)
             {
@@ -47,13 +51,15 @@ namespace reeltok.api.users.Services
                 throw new InvalidOperationException("User creation failed.", ex);
             }
 
-            // Optionally, check if the user now exists in the repository to confirm successful creation
-            var createdUser = await _userRepository.GetUserByIdAsync(user.UserId);
+            return returnUser;
 
-            if (createdUser == null)
-            {
-                throw new InvalidOperationException("User was not created successfully.");
-            }
+            // // Optionally, check if the user now exists in the repository to confirm successful creation
+            // var createdUser = await _userRepository.GetUserByIdAsync(user.UserId);
+
+            // if (createdUser == null)
+            // {
+            //     throw new InvalidOperationException("User was not created successfully.");
+            // }
         }
         public async Task<UserProfileData?> GetUserByIdAsync(Guid userId)
         {

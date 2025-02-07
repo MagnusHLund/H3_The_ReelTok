@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using reeltok.api.users.DTOs.UserRequestDTO;
 using reeltok.api.users.ValueObjects;
 using reeltok.api.users.Entities;
+using reeltok.api.users.DTOs.UserResponseDTO;
 
 namespace reeltok.api.users.Mappers
 {
@@ -32,5 +33,17 @@ namespace reeltok.api.users.Mappers
                 entity.UserDetails.HiddenDetails.Email
             );
         }
+
+        public static ReturnCreateUserResponseDTO ToReturnCreateUserResponseDTO(UserProfileData user)
+        {
+            return new ReturnCreateUserResponseDTO(
+                user.UserId,
+                user.UserDetails.HiddenDetails.Email,
+                user.UserDetails.UserName,
+                user.UserDetails.ProfileUrl,
+                user.UserDetails.ProfilePictureUrl
+            );
+        }
+
     }
 }

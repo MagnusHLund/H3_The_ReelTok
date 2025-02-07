@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using reeltok.api.users.ValueObjects;
 
 namespace reeltok.api.users.Entities
