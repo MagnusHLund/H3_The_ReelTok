@@ -27,8 +27,8 @@ namespace reeltok.api.recommendations.Tests
             // Arrange
             Guid userId = Guid.NewGuid();
 
-            var recommendation = new List<RecommendationsEnum>() {
-                RecommendationsEnum.Gaming
+            var recommendation = new List<RecommendedCategories>() {
+                RecommendedCategories.Gaming
             };
 
             // Mock the repo
@@ -50,7 +50,7 @@ namespace reeltok.api.recommendations.Tests
         {
             // Arrange
             Guid userId = Guid.NewGuid();
-            var recommendations = new List<RecommendationsEnum>()
+            var recommendations = new List<RecommendedCategories>()
             {
 
             };
@@ -71,7 +71,7 @@ namespace reeltok.api.recommendations.Tests
         {
             // Arrange
             Guid userId = Guid.NewGuid();
-            List<RecommendationsEnum> testRecommendations = new List<RecommendationsEnum> { RecommendationsEnum.Gaming };
+            List<RecommendedCategories> testRecommendations = new List<RecommendedCategories> { RecommendedCategories.Gaming };
             Recommendations recommendations = new Recommendations(userId, testRecommendations);
 
 
@@ -91,7 +91,7 @@ namespace reeltok.api.recommendations.Tests
         {
             // Arrange
             Guid userId = Guid.Empty; // Invalid userId
-            List<RecommendationsEnum> testRecommendations = null; // Invalid recommendations
+            List<RecommendedCategories> testRecommendations = null; // Invalid recommendations
             Recommendations recommendations = new Recommendations(userId, testRecommendations);
 
             // Act & Assert

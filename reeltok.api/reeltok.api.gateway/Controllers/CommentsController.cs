@@ -23,10 +23,6 @@ namespace reeltok.api.gateway.Controllers
         [Route("Add")]
         public async Task<IActionResult> AddComment([FromBody] GatewayAddCommentRequestDto request)
         {
-            if (string.IsNullOrEmpty(request.CommentText))
-            {
-                BadRequest(new FailureResponseDto("Comments must include text!"));
-            }
 
             CommentUsingDateTime comment = await _commentsService.AddComment(request.VideoId, request.CommentText);
 

@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using reeltok.api.recommendations.Enums;
+using reeltok.api.gateway.Enums;
 
-namespace reeltok.api.recommendations.Entities
+namespace reeltok.api.gateway.Entities
 {
     public class Recommendations
     {
@@ -22,6 +18,4 @@ namespace reeltok.api.recommendations.Entities
             RecommendationCategory.Add(recommendation);
         }
     }
-
 }
-
