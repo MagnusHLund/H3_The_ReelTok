@@ -1,14 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using reeltok.api.gateway.DTOs;
+using reeltok.api.gateway.DTOs.Users;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Interfaces;
+using reeltok.api.gateway.Mappers;
 using reeltok.api.gateway.ValueObjects;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class UsersService : IUsersService
+    internal class UsersService : BaseService, IUsersService
     {
         private const string UsersMicroServiceBaseUrl = "http://localhost:5001/users";
         private readonly IAuthService _authService;
@@ -20,53 +19,109 @@ namespace reeltok.api.gateway.Services
             _gatewayService = gatewayService;
         }
 
-        public void LoginUser(string email, string password)
+        public async Task<UserProfileData> LoginUser(string email, string password)
         {
+            ServiceLoginRequestDto requestDto = new ServiceLoginRequestDto(email, password);
+            string targetUrl = $"{UsersMicroServiceBaseUrl}/Login";
 
-        }
-        public void CreateUser(string email, string password, string username)
-        {
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
-        }
-        public UserProfileData GetUserProfileData(Guid userId)
-        {
-            return new UserProfileData();
-        }
-        public void UpdateUserDetails(UserProfileData profileData)
-        {
+            if (response.Success && response is ServiceLoginResponseDto responseDto)
+            {
+                return UserMapper.ConvertResponseDtoToUserProfileData(responseDto);
+            }
 
+            throw HandleExceptions(response);
         }
-        public void UpdateProfilePicture(IFormFile image)
+        public async Task<UserProfileData> CreateUser(string email, string username, string password)
         {
+            ServiceCreateUserRequestDto requestDto = new ServiceCreateUserRequestDto(email, username, password);
+            string targetUrl = $"{UsersMicroServiceBaseUrl}/Create";
 
-        }
-        public void DeleteUser(Guid userId)
-        {
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceCreateUserRequestDto, ServiceCreateUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
-        }
-        public void BlockUser(Guid userIdToBlock)
-        {
+            if (response.Success && response is ServiceCreateUserResponseDto responseDto)
+            {
+                return UserMapper.ConvertResponseDtoToUserProfileData(responseDto);
+            }
 
+            throw HandleExceptions(response);
         }
-        public void UnblockUser(Guid userIdToUnblock)
+        public async Task<UserProfileData> GetUserProfileData(Guid userId)
         {
+            ServiceGetUserProfileDataRequestDto requestDto = new ServiceGetUserProfileDataRequestDto(userId);
+            string targetUrl = $"{UsersMicroServiceBaseUrl}/GetProfileData";
 
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+
+            if (response.Success && response is ServiceGetUserProfileDataResponseDto responseDto)
+            {
+                return UserMapper.ConvertResponseDtoToUserProfileData(responseDto);
+            }
+
+            throw HandleExceptions(response);
         }
-        public List<UserDetails> GetBlockListByUser(Guid userId)
+        public async Task<EditableUserDetails> UpdateUserDetails(string username, string email)
         {
-            return new List<UserDetails>();
+            Guid userId = await _authService.GetUserIdByToken();
+
+            ServiceUpdateUserDetailsRequestDto requestDto = new ServiceUpdateUserDetailsRequestDto(userId, username, email);
+            string targetUrl = $"{UsersMicroServiceBaseUrl}/UpdateDetails";
+
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(requestDto, targetUrl, HttpMethod.Put);
+
+            if (response.Success && response is ServiceUpdateUserDetailsResponseDto responseDto)
+            {
+                return new EditableUserDetails(responseDto.Username, responseDto.Email);
+            }
+
+            throw HandleExceptions(response);
         }
-        public List<Video> GetLikedVideosForUserProfile(Guid userId)
+
+        public async Task<string> UpdateProfilePicture(IFormFile image)
         {
-            return new List<Video>();
+            Guid userId = await _authService.GetUserIdByToken();
+
+            ServiceUpdateProfilePictureRequestDto requestDto = new ServiceUpdateProfilePictureRequestDto(userId, image);
+            string targetUrl = $"{UsersMicroServiceBaseUrl}/UpdateProfilePicture";
+
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(requestDto, targetUrl, HttpMethod.Put);
+
+            if (response.Success && response is ServiceUpdateProfilePictureResponseDto responseDto)
+            {
+                return responseDto.ProfilePictureUrl;
+            }
+
+            throw HandleExceptions(response);
         }
-        public List<UserDetails> GetAllUserSubscriptionsForUser(Guid userId)
+
+        public async Task<List<UserDetails>> GetAllSubscriptionsForUser(Guid userId)
         {
-            return new List<UserDetails>();
+            ServiceGetAllSubscriptionsForUserRequestDto requestDto = new ServiceGetAllSubscriptionsForUserRequestDto(userId);
+            string targetUrl = $"{UsersMicroServiceBaseUrl}/GetSubscriptions";
+
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+
+            if (response.Success && response is ServiceGetAllSubscriptionsForUserResponseDto responseDto)
+            {
+                return responseDto.Users;
+            }
+
+            throw HandleExceptions(response);
         }
-        public List<UserDetails> GetAllSubscribingToUser(Guid userId)
+        public async Task<List<UserDetails>> GetAllSubscribingToUser(Guid userId)
         {
-            return new List<UserDetails>();
+            ServiceGetAllSubscribingToUserRequestDto requestDto = new ServiceGetAllSubscribingToUserRequestDto(userId);
+            string targetUrl = $"{UsersMicroServiceBaseUrl}/GetSubscribers";
+
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+
+            if (response.Success && response is ServiceGetAllSubscribingToUserResponseDto responseDto)
+            {
+                return responseDto.Users;
+            }
+
+            throw HandleExceptions(response);
         }
     }
 }

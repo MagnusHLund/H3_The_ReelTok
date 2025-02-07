@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using reeltok.api.gateway.ActionFilters;
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.DTOs.Recommendations;
 using reeltok.api.gateway.Interfaces;
@@ -7,6 +7,7 @@ using reeltok.api.gateway.Interfaces;
 namespace reeltok.api.gateway.Controllers
 {
     [ApiController]
+    [ValidateModel]
     [Route("api/[controller]")]
     public class RecommendationsController : ControllerBase
     {
@@ -19,7 +20,7 @@ namespace reeltok.api.gateway.Controllers
 
         [HttpPut]
         [Route("UpdateCategory")]
-        public async Task<IActionResult> UpdateRecommendedCategory([FromBody] ChangeRecommendedCategoryRequestDto request)
+        public async Task<IActionResult> UpdateRecommendedCategory([FromBody] GatewayChangeRecommendedCategoryRequestDto request)
         {
             if (string.IsNullOrWhiteSpace(request.Category))
             {
@@ -27,7 +28,19 @@ namespace reeltok.api.gateway.Controllers
             }
 
             bool success = await _recommendationsService.ChangeRecommendedCategory(request.Category);
-            return Ok(new ChangeRecommendedCategoryResponseDto(success));
+            GatewayChangeRecommendedCategoryResponseDto requestDto = new GatewayChangeRecommendedCategoryResponseDto(success);
+
+            return Ok(requestDto);
         }
+
+        /* //   TODO: Implement this
+                [HttpGet]
+                [Route("GetCategories")]
+                public async Task<IActionResult> GetRecommendedCategories([FromBody] GatewayGetRecommendationsRequestDto request)
+                {
+                    var categories = await _recommendationsService.GetRecommendedCategories();
+                    return Ok(new GatewayGetRecommendationsResponseDto(categories));
+                }  
+        */
     }
 }

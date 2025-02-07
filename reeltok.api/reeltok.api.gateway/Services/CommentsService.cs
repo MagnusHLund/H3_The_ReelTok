@@ -8,9 +8,9 @@ using reeltok.api.gateway.ValueObjects;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class CommentsService : ICommentsService
+    internal class CommentsService : BaseService, ICommentsService
     {
-        private const string CommentMicroServiceBaseUrl = "http://localhost:5005/comments";
+        private const string CommentsMicroServiceBaseUrl = "http://localhost:5005/comments";
         private readonly IAuthService _authService;
         private readonly IGatewayService _gatewayService;
         internal CommentsService(IAuthService authService, IGatewayService gatewayService)
@@ -23,45 +23,32 @@ namespace reeltok.api.gateway.Services
         {
             Guid userId = await _authService.GetUserIdByToken();
 
-            AddCommentRequestCommentsServiceDto requestDto = new AddCommentRequestCommentsServiceDto(userId, videoId, commentText);
-            string targetUrl = $"{CommentMicroServiceBaseUrl}/Add";
+            ServiceAddCommentRequestDto requestDto = new ServiceAddCommentRequestDto(userId, videoId, commentText);
+            string targetUrl = $"{CommentsMicroServiceBaseUrl}/Add";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<AddCommentRequestCommentsServiceDto, AddCommentResponseCommentsServiceDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceAddCommentRequestDto, ServiceAddCommentResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
-            if (response.Success && response is AddCommentResponseCommentsServiceDto responseDto)
+            if (response.Success && response is ServiceAddCommentResponseDto responseDto)
             {
-                DateTime createdAt = DateTimeUtils.UnixTimeToDateTime(responseDto.CreatedAt);
-                CommentDetailsUsingDateTime commentDetails = new CommentDetailsUsingDateTime(responseDto.UserId, videoId, responseDto.CommentText, createdAt);
-
-                return new CommentUsingDateTime(responseDto.CommentId, commentDetails);
+                return CommentMapper.ConvertResponseDtoToCommentUsingDateTime<ServiceAddCommentResponseDto>(responseDto);
             }
 
-            if (response is FailureResponseDto failureResponse)
-            {
-                throw new InvalidOperationException(failureResponse.Message);
-            }
-
-            throw new InvalidOperationException("An unknown error has occurred!");
+            throw HandleExceptions(response);
         }
 
         public async Task<List<CommentUsingDateTime>> LoadComments(Guid videoId, byte amount)
         {
-            LoadCommentsRequestCommentsServiceDto requestDto = new LoadCommentsRequestCommentsServiceDto(videoId, amount);
-            string targetUrl = $"{CommentMicroServiceBaseUrl}/Load";
+            ServiceLoadCommentsRequestDto requestDto = new ServiceLoadCommentsRequestDto(videoId, amount);
+            string targetUrl = $"{CommentsMicroServiceBaseUrl}/Load";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<LoadCommentsRequestCommentsServiceDto, LoadCommentsResponseCommentsServiceDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceLoadCommentsRequestDto, ServiceLoadCommentsResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
-            if (response.Success && response is LoadCommentsResponseCommentsServiceDto responseDto)
+            if (response.Success && response is ServiceLoadCommentsResponseDto responseDto)
             {
                 return responseDto.Comments.Select(comment => CommentMapper.ConvertToDateTime(comment)).ToList();
             }
 
-            if (response is FailureResponseDto failureResponse)
-            {
-                throw new InvalidOperationException(failureResponse.Message);
-            }
-
-            throw new InvalidOperationException("An unknown error has occurred!");
+            throw HandleExceptions(response);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace reeltok.api.gateway.Tests
         public async Task ProcessRequestAsync_WithValidRequest_ReturnsExpectedResponse()
         {
             // Arrange
-            LogOutUserRequestDto requestDto = new LogOutUserRequestDto();
+            ServiceLogOutUserRequestDto requestDto = new ServiceLogOutUserRequestDto();
             string targetUrl = BaseTestUrl;
             string responseContent = "<LogOutUserResponseDto><Success>true</Success></LogOutUserResponseDto>";
             HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.OK)
@@ -43,11 +43,11 @@ namespace reeltok.api.gateway.Tests
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<LogOutUserRequestDto, LogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
             // Assert
             Assert.True(response.Success);
-            LogOutUserResponseDto logOutResponse = response as LogOutUserResponseDto;
+            ServiceLogOutUserResponseDto logOutResponse = response as ServiceLogOutUserResponseDto;
             Assert.NotNull(logOutResponse);
         }
 
@@ -56,7 +56,7 @@ namespace reeltok.api.gateway.Tests
         public async Task ProcessRequestAsync_WithInvalidRequest_ReturnsErrorResponse()
         {
             // Arrange
-            GetUserIdByTokenRequestDto requestDto = new GetUserIdByTokenRequestDto();
+            ServiceGetUserIdByTokenRequestDto requestDto = new ServiceGetUserIdByTokenRequestDto();
             string targetUrl = BaseTestUrl;
             string responseContent = "<FailureResponseDto><Success>false</Success><Message>Test message</Message></FailureResponseDto>";
             HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -72,7 +72,7 @@ namespace reeltok.api.gateway.Tests
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, FailureResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, FailureResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
             // Assert
             var failureResponse = response as FailureResponseDto;
@@ -89,7 +89,7 @@ namespace reeltok.api.gateway.Tests
 
             // Act & Assert
             ArgumentNullException exception = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                _gatewayService.ProcessRequestAsync<GetUserIdByTokenRequestDto, LogOutUserResponseDto>(null, targetUrl, HttpMethod.Get));
+                _gatewayService.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceLogOutUserResponseDto>(null, targetUrl, HttpMethod.Get));
 
             Assert.Equal("requestDto", exception.ParamName);
         }
@@ -116,7 +116,7 @@ namespace reeltok.api.gateway.Tests
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetUrl);
 
             // Act
-            BaseResponseDto response = await _gatewayService.RouteRequestAsync<LogOutUserResponseDto>(request);
+            BaseResponseDto response = await _gatewayService.RouteRequestAsync<ServiceLogOutUserResponseDto>(request);
 
             // Assert
             Assert.True(response.Success);
@@ -143,7 +143,7 @@ namespace reeltok.api.gateway.Tests
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetUrl);
 
             // Act
-            BaseResponseDto response = await _gatewayService.RouteRequestAsync<LogOutUserResponseDto>(request);
+            BaseResponseDto response = await _gatewayService.RouteRequestAsync<ServiceLogOutUserResponseDto>(request);
 
             // Assert
             FailureResponseDto failureResponse = response as FailureResponseDto;
@@ -166,8 +166,7 @@ namespace reeltok.api.gateway.Tests
                 .ThrowsAsync(new TaskCanceledException());
 
             // Act & Assert
-            await Assert.ThrowsAsync<TaskCanceledException>(() => _gatewayService.RouteRequestAsync<LogOutUserResponseDto>(request));
+            await Assert.ThrowsAsync<TaskCanceledException>(() => _gatewayService.RouteRequestAsync<ServiceLogOutUserResponseDto>(request));
         }
-
     }
 }

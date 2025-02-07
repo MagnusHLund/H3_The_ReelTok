@@ -4,7 +4,7 @@ using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class RecommendationsService : IRecommendationsService
+    internal class RecommendationsService : BaseService, IRecommendationsService
     {
         private const string RecommendationsMicroServiceBaseUrl = "http://localhost:5004/recommendations";
         private readonly IAuthService _authService;
@@ -20,22 +20,17 @@ namespace reeltok.api.gateway.Services
         {
             Guid userId = await _authService.GetUserIdByToken();
 
-            ChangeRecommendationsCategoryRequestRecommendationsService requestDto = new ChangeRecommendationsCategoryRequestRecommendationsService(userId, category);
+            ServiceChangeRecommendedCategoryRequestDto requestDto = new ServiceChangeRecommendedCategoryRequestDto(userId, category);
             string targetUrl = $"{RecommendationsMicroServiceBaseUrl}/update";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ChangeRecommendationsCategoryRequestRecommendationsService, ChangeRecommendationsCategoryResponseRecommendationsService>(requestDto, targetUrl, HttpMethod.Put);
+            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceChangeRecommendedCategoryRequestDto, ServiceChangeRecommendedCategoryResponseDto>(requestDto, targetUrl, HttpMethod.Put);
 
-            if (response.Success && response is ChangeRecommendationsCategoryResponseRecommendationsService responseDto)
+            if (response.Success && response is ServiceChangeRecommendedCategoryResponseDto responseDto)
             {
                 return responseDto.Success;
             }
 
-            if (response is FailureResponseDto failureResponse)
-            {
-                throw new InvalidOperationException(failureResponse.Message);
-            }
-
-            throw new InvalidOperationException("An unknown error has occurred!");
+            throw HandleExceptions(response);
         }
     }
 }
