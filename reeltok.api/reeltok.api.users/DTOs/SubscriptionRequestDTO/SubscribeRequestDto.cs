@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace reeltok.api.users.DTOs
+namespace reeltok.api.users.DTOs.SubscriptionRequestDTO
 {
-    public class RemoveLikedVideoRequestDto
+    public class SubscribeRequestDto
     {
         
     }

@@ -5,16 +5,17 @@ namespace reeltok.api.users.Entities
 {
     public class Subscription
     {
-        [Required]
-        internal Guid UserId { get; set; }
-        
-        [Required]
-        internal SubscribptionDetails SubDetails { get; set; }
+        [Key]
+        public uint SubscriptionId { get; set; }
 
-        public Subscription(Guid userId, SubscribptionDetails subDetails)
+        [Required]
+        public SubscribptionDetails SubDetails { get; set; }
+
+        public Subscription(uint subscriptionId, SubscribptionDetails subDetails)
         {
-            UserId = userId;
+            SubscriptionId = subscriptionId;
             SubDetails = subDetails;
         }
+        private Subscription() { }
     }
 }

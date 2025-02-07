@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using reeltok.api.users.ValueObjects;
 
-namespace reeltok.api.users.DTOs
+namespace reeltok.api.users.DTOs.UserResponseDTO
 {
     internal class GetUserResponseDto : BaseResponseDto
     {

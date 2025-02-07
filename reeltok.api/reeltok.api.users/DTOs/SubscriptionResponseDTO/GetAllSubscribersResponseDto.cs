@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using reeltok.api.users.Entities;
 
-namespace reeltok.api.users.DTOs
+namespace reeltok.api.users.DTOs.SubscriptionResponseDTO
 {
-    internal class GetAllSubscriberResponseDto : BaseResponseDto
+    internal class GetAllSubscribersResponseDto : BaseResponseDto
     {
 
         [Required]
@@ -15,7 +15,7 @@ namespace reeltok.api.users.DTOs
 
 
         
-        public GetAllSubscriberResponseDto(bool success, List<Subscription> allSubscribers) : base(success)
+        public GetAllSubscribersResponseDto(bool success, List<Subscription> allSubscribers) : base(success)
         {
             AllSubscribers = allSubscribers;
         }

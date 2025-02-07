@@ -8,18 +8,20 @@ namespace reeltok.api.users.ValueObjects
     {
         [Required]
         [ForeignKey("User")]
-        public Guid UserId { get; } = Guid.Empty;
-        public UserProfileData? User { get; } = null;
+        public Guid UserId { get; private set; }
+        public UserProfileData User { get; private set; }
 
         [Required]
         [ForeignKey("SubscribeToUser")]
-        public Guid SubscriptionId { get; } = Guid.Empty;
-        public UserProfileData? SubscribeToUser { get; } = null;
+        public Guid SubscribingToUserId { get; private set; }
+        public UserProfileData SubscribeToUser { get; private set; }
 
-        public SubscribptionDetails(Guid userId, Guid subscriptionId)
+        public SubscribptionDetails(Guid userId, Guid subscribingToUserId)
         {
             UserId = userId;
-            SubscriptionId = subscriptionId;
+            SubscribingToUserId = subscribingToUserId;
         }
+
+        private SubscribptionDetails() { }
     }
 }

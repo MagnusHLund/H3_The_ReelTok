@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using reeltok.api.users.Entities;
 
-namespace reeltok.api.users.DTOs
+namespace reeltok.api.users.DTOs.LikeVideoResponseDTO
 {
     internal class GetAllLikedVideoResponseDto : BaseResponseDto
     {

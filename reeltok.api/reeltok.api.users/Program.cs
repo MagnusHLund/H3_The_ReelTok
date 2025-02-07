@@ -1,6 +1,8 @@
 using reeltok.api.users.Repositories;
 using reeltok.api.users.Interfaces;
 using reeltok.api.users.Services;
+using reeltok.api.users.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace UsersServiceApi
 {
@@ -14,6 +16,10 @@ namespace UsersServiceApi
 			builder.Services.AddTransient<IUsersRepository, UsersRepository>();
 			builder.Services.AddTransient<IUsersService, UsersService>();
 
+			builder.Services.AddDbContext<UserDBContext>(options =>
+			{
+				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+			});
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -4,7 +4,7 @@ namespace reeltok.api.users.Interfaces
 {
     public interface IUsersService
     {
-        public Task CreateUserAsync(UserProfileData user, Guid userId);
+        public Task CreateUserAsync(UserProfileData user);
         public Task<UserProfileData?> GetUserByIdAsync(Guid userId);
         public Task UpdateUserAsync(UserProfileData user, Guid userId);
 
