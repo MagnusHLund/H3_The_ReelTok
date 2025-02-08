@@ -10,7 +10,6 @@ namespace reeltok.api.auth.Interfaces
     public interface IAuthRepository
     {
       public Task RegisterUser(Auth authInfo);
-      public Task<Tokens> LoginUser(LoginCredentials loginCredentials);
       public Task<AccessToken> RefreshAccessToken(string refreshToken);
       public Task DeleteUser(Guid userId);
       public Task<Guid> GetUserIdByToken(string refreshToken);

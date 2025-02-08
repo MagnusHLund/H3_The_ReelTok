@@ -45,12 +45,11 @@ public static class PasswordUtils
 
     public static bool IsValid(string password)
     {
-        return password.Length >= 8 &&
-               Regex.IsMatch(password, @"\d{1,}") &&
-               Regex.IsMatch(password, @"[A-Z]") &&
-               Regex.IsMatch(password, @"[a-z]") &&
-               Regex.IsMatch(password, @"[^a-zA-Z0-9]") &&
-               Regex.IsMatch(password, @"^(?!.*(\w)\1{2,}).+$");
+       return password.Length >= 8 &&
+       Regex.IsMatch(password, @"\d") &&
+       Regex.IsMatch(password, @"[A-Z]") &&
+       Regex.IsMatch(password, @"[a-z]") &&
+       !Regex.IsMatch(password, @"(.)\1{2,}"); 
     }
 }
 

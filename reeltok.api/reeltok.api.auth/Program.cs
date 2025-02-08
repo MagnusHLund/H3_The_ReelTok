@@ -19,6 +19,8 @@ namespace AuthServiceApi
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
       builder.Services.AddTransient<IAuthService, AuthService>();
       builder.Services.AddTransient<IAuthRepository, AuthRepository>();
+      builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+      builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
       builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AuthDb")));
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();

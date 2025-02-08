@@ -28,11 +28,6 @@ namespace reeltok.api.auth.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<Tokens> LoginUser(LoginCredentials loginCredentials)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task LogoutUser(string refreshToken)
         {
             throw new NotImplementedException();
@@ -40,7 +35,7 @@ namespace reeltok.api.auth.Repositories
 
         public async Task<Auth?> GetAuthByUserId(Guid userId)
         {
-            var auth =  await _context.FindAsync<Auth>(userId);
+            var auth = await _context.FindAsync<Auth>(userId);
             return auth;
         }
 
