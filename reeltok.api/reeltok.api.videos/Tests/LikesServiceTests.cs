@@ -6,6 +6,7 @@ using reeltok.api.videos.Services;
 using reeltok.api.videos.DTOs;
 using Xunit;
 using Moq;
+using reeltok.api.videos.DTOs.RemoveLike;
 
 namespace reeltok.api.videos.Tests
 {
@@ -33,12 +34,13 @@ namespace reeltok.api.videos.Tests
             FailureResponseDto response = new FailureResponseDto("Unable to like video!");
             Uri targetUrl = new Uri($"{BaseTestUrl}/AddLike");
 
-            _httpService
-                .Setup(x => x.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(It.IsAny<ServiceAddLikeRequestDto>(), targetUrl, HttpMethod.Post))
+            _httpService.Setup(x => x.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(
+                It.IsAny<ServiceAddLikeRequestDto>(), targetUrl, HttpMethod.Post))
                 .ReturnsAsync(response);
 
             // Act & Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(() => _likesService.LikeVideo(userId, videoId));
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _likesService.LikeVideo(userId, videoId));
+            Assert.Equal("Unable to like video!", exception.Message);
         }
 
         [Fact]
@@ -51,8 +53,8 @@ namespace reeltok.api.videos.Tests
             bool success = true;
             ServiceAddLikeResponseDto response = new ServiceAddLikeResponseDto(success);
 
-            _httpService
-                .Setup(x => x.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(It.IsAny<ServiceAddLikeRequestDto>(), targetUrl, HttpMethod.Post))
+            _httpService.Setup(x => x.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(
+                It.IsAny<ServiceAddLikeRequestDto>(), targetUrl, HttpMethod.Post))
                 .ReturnsAsync(response);
 
             // Act
@@ -63,6 +65,24 @@ namespace reeltok.api.videos.Tests
         }
 
         [Fact]
+        public async Task RemoveLikeFromVideo_WithBadResponse_ThrowInvalidOperationException()
+        {
+            // Arrange
+            Guid userId = Guid.NewGuid();
+            Guid videoId = Guid.NewGuid();
+            FailureResponseDto response = new FailureResponseDto("Unable to remove like from video!");
+            Uri targetUrl = new Uri($"{BaseTestUrl}/RemoveLike");
+
+            _httpService.Setup(x => x.ProcessRequestAsync<ServiceRemoveLikeRequestDto, ServiceRemoveLikeResponseDto>(
+                It.IsAny<ServiceRemoveLikeRequestDto>(), targetUrl, HttpMethod.Post))
+                .ReturnsAsync(response);
+
+            // Act & Assert
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _likesService.RemoveLikeFromVideo(userId, videoId));
+            Assert.Equal("Unable to remove like from video!", exception.Message);
+        }
+
+        [Fact]
         public async Task RemoveLikeFromVideo_WithValidParameters_ReturnSuccess()
         {
             // Arrange
@@ -70,12 +90,11 @@ namespace reeltok.api.videos.Tests
             Guid videoId = Guid.NewGuid();
             Uri targetUrl = new Uri($"{BaseTestUrl}/RemoveLike");
             bool success = true;
-            ServiceAddLikeResponseDto response = new ServiceAddLikeResponseDto(success);
+            ServiceRemoveLikeResponseDto response = new ServiceRemoveLikeResponseDto(success);
 
-            _httpService
-                .Setup(x => x.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(
-                    It.IsAny<ServiceAddLikeRequestDto>(), targetUrl, HttpMethod.Post))
-                    .ReturnsAsync(response);
+            _httpService.Setup(x => x.ProcessRequestAsync<ServiceRemoveLikeRequestDto, ServiceRemoveLikeResponseDto>(
+                It.IsAny<ServiceRemoveLikeRequestDto>(), targetUrl, HttpMethod.Post))
+                .ReturnsAsync(response);
 
             // Act
             bool result = await _likesService.RemoveLikeFromVideo(userId, videoId);
@@ -94,10 +113,9 @@ namespace reeltok.api.videos.Tests
             Uri targetUrl = new Uri($"{BaseTestUrl}/userLikedVideo");
             FailureResponseDto response = new FailureResponseDto("Unable to get total video likes!");
 
-            _httpService
-                .Setup(x => x.ProcessRequestAsync<ServiceUserLikedVideoRequestDto, ServiceUserLikedVideoResponseDto>(
-                    It.IsAny<ServiceUserLikedVideoRequestDto>(), targetUrl, HttpMethod.Get))
-                    .ReturnsAsync(response);
+            _httpService.Setup(x => x.ProcessRequestAsync<ServiceUserLikedVideoRequestDto, ServiceUserLikedVideoResponseDto>(
+                It.IsAny<ServiceUserLikedVideoRequestDto>(), targetUrl, HttpMethod.Get))
+                .ReturnsAsync(response);
 
             // Act & Assert
             InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _likesService.GetVideoLikes(userId, videoId));
@@ -115,11 +133,10 @@ namespace reeltok.api.videos.Tests
 
             ServiceUserLikedVideoResponseDto response = new ServiceUserLikedVideoResponseDto(expectedUserLiked);
 
-            _httpService
-                .Setup(x => x.ProcessRequestAsync<ServiceUserLikedVideoRequestDto, ServiceUserLikedVideoResponseDto>(
-                    It.IsAny<ServiceUserLikedVideoRequestDto>(),
-                    It.IsAny<Uri>(),
-                    It.IsAny<HttpMethod>()))
+            _httpService.Setup(x => x.ProcessRequestAsync<ServiceUserLikedVideoRequestDto, ServiceUserLikedVideoResponseDto>(
+                It.IsAny<ServiceUserLikedVideoRequestDto>(),
+                It.IsAny<Uri>(),
+                It.IsAny<HttpMethod>()))
                 .ReturnsAsync(response);
 
             _likesRepository

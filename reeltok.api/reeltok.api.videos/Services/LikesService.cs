@@ -1,5 +1,6 @@
 using reeltok.api.videos.DTOs;
 using reeltok.api.videos.DTOs.LikeVideo;
+using reeltok.api.videos.DTOs.RemoveLike;
 using reeltok.api.videos.DTOs.UserLikedVideo;
 using reeltok.api.videos.Interfaces;
 using reeltok.api.videos.ValueObjects;
@@ -35,13 +36,13 @@ namespace reeltok.api.videos.Services
 
         public async Task<bool> RemoveLikeFromVideo(Guid userId, Guid videoId)
         {
-            ServiceAddLikeRequestDto requestDto = new ServiceAddLikeRequestDto(userId, videoId);
+            ServiceRemoveLikeRequestDto requestDto = new ServiceRemoveLikeRequestDto(userId, videoId);
             Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/RemoveLike");
 
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(requestDto, targetUrl, HttpMethod.Post)
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceRemoveLikeRequestDto, ServiceRemoveLikeResponseDto>(requestDto, targetUrl, HttpMethod.Post)
                 .ConfigureAwait(false);
 
-            if(response.Success && response is ServiceAddLikeResponseDto responseDto)
+            if(response.Success && response is ServiceRemoveLikeResponseDto responseDto)
             {
                 return responseDto.Success;
             }
@@ -51,8 +52,8 @@ namespace reeltok.api.videos.Services
 
         public async Task<VideoLikes> GetVideoLikes(Guid userId, Guid videoId)
         {
-            bool hasUserLikedVideo = await HasUserLikedVideo(userId, videoId);
-            uint videoTotalLikes = await _likesRepository.GetTotalVideoLikesAsync(videoId);
+            bool hasUserLikedVideo = await HasUserLikedVideo(userId, videoId).ConfigureAwait(false);
+            uint videoTotalLikes = await _likesRepository.GetTotalVideoLikesAsync(videoId).ConfigureAwait(false);
 
             return new VideoLikes(videoTotalLikes, hasUserLikedVideo);
         }
@@ -61,7 +62,8 @@ namespace reeltok.api.videos.Services
             ServiceUserLikedVideoRequestDto requestDto = new ServiceUserLikedVideoRequestDto(userId, videoId);
             Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/userLikedVideo");
 
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceUserLikedVideoRequestDto, ServiceUserLikedVideoResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceUserLikedVideoRequestDto, ServiceUserLikedVideoResponseDto>(requestDto, targetUrl, HttpMethod.Get)
+                .ConfigureAwait(false);
 
             if(response.Success && response is ServiceUserLikedVideoResponseDto responseDto)
             {

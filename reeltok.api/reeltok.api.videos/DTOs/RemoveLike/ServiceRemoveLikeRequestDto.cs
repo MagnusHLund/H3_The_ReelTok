@@ -16,5 +16,7 @@ namespace reeltok.api.videos.DTOs.RemoveLike
             UserId = userId;
             VideoId = videoId;
         }
+
+        public ServiceRemoveLikeRequestDto() { }
     }
 }
