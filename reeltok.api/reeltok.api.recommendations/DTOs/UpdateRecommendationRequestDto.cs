@@ -6,11 +6,11 @@ namespace reeltok.api.recommendations.DTOs
     public class UpdateRecommendationRequestDto
     {
         [Required]
-        public List<RecommendationsEnum> Category { get; set; }
+        public List<RecommendedCategories> Category { get; set; }
         [Required]
         public Guid UserId { get; set; }
 
-        public UpdateRecommendationRequestDto(List<RecommendationsEnum> category, Guid userId)
+        public UpdateRecommendationRequestDto(List<RecommendedCategories> category, Guid userId)
         {
             Category = category;
             UserId = userId;
