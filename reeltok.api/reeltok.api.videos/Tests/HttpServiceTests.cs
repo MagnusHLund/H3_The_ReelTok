@@ -29,8 +29,8 @@ namespace reeltok.api.videos.Tests
             // Arrange
             Guid userId = Guid.NewGuid();
             Guid videoId = Guid.NewGuid();
-            AddLikeRequestDto requestDto = new AddLikeRequestDto(userId, videoId);
-            string targetUrl = BaseTestUrl;
+            ServiceAddLikeRequestDto requestDto = new ServiceAddLikeRequestDto(userId, videoId);
+            Uri targetUrl = new Uri(BaseTestUrl);
             string responseContent = "<AddLikeResponseDto><Success>true</Success></AddLikeResponseDto>";
             HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.OK)
             {
@@ -45,11 +45,11 @@ namespace reeltok.api.videos.Tests
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<AddLikeRequestDto, AddLikeResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
             // Assert
             Assert.True(response.Success);
-            AddLikeResponseDto logOutResponse = response as AddLikeResponseDto;
+            ServiceAddLikeResponseDto? logOutResponse = response as ServiceAddLikeResponseDto;
             Assert.NotNull(logOutResponse);
         }
 
@@ -60,9 +60,9 @@ namespace reeltok.api.videos.Tests
             // Arrange
             Guid userId = Guid.NewGuid();
             Guid videoId = Guid.NewGuid();
-            AddLikeRequestDto requestDto = new AddLikeRequestDto(userId, videoId);
-            string targetUrl = BaseTestUrl;
-            string responseContent = "<FailureResponseDto><Success>false</Success><Message>Test message</Message></FailureResponseDto>"; // TODO: Correct this!
+            ServiceAddLikeRequestDto requestDto = new ServiceAddLikeRequestDto(userId, videoId);
+            Uri targetUrl = new Uri(BaseTestUrl);
+            string responseContent = "<FailureResponseDto><Success>false</Success><Message>Test message</Message></FailureResponseDto>";
             HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.BadRequest)
             {
                 Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")
@@ -76,7 +76,7 @@ namespace reeltok.api.videos.Tests
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<AddLikeRequestDto, FailureResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceAddLikeRequestDto, FailureResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
             // Assert
             FailureResponseDto failureResponse = response as FailureResponseDto;
@@ -89,11 +89,11 @@ namespace reeltok.api.videos.Tests
         public async Task ProcessRequestAsync_WithNullRequestDto_ThrowsArgumentNullException()
         {
             // Arrange
-            string targetUrl = BaseTestUrl;
+            Uri targetUrl = new Uri(BaseTestUrl);
 
             // Act & Assert
             ArgumentNullException exception = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                _httpService.ProcessRequestAsync<AddLikeRequestDto, AddLikeResponseDto>(null, targetUrl, HttpMethod.Get));
+                _httpService.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(null, targetUrl, HttpMethod.Get));
 
             Assert.Equal("requestDto", exception.ParamName);
         }

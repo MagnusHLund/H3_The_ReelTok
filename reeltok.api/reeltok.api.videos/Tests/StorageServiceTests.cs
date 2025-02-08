@@ -3,13 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using reeltok.api.videos.Interfaces;
+using Xunit;
 
 namespace reeltok.api.videos.Tests
 {
-    public class StorageServiceTests : IStorageService
+    public class StorageServiceTests
     {
-        public Task UploadVideoToFileServer(IFormFile video)
+
+        [Fact]
+        public Task UploadVideoToFileServer_UnableToConnect_ThrowIOException()
         {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public Task UploadVideoToFileServer_WithValidParamters_SuccessfullyUploadVideo()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public Task UploadVideoToFileServer_WithInvalidFileType_ThrowFormatException() {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public Task UploadVideoToFileServer_WithTooShortVideo_ThrowValidationException() {
             throw new NotImplementedException();
         }
     }

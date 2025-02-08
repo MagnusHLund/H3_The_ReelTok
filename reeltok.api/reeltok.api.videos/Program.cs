@@ -1,5 +1,8 @@
 
+using reeltok.api.videos.Interfaces;
 using reeltok.api.videos.Middleware;
+using reeltok.api.videos.Repositories;
+using reeltok.api.videos.Services;
 
 namespace VideosServiceApi
 {
@@ -10,6 +13,11 @@ namespace VideosServiceApi
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
+            builder.Services.AddScoped<ILikesService, LikesService>();
+            builder.Services.AddScoped<IHttpService, HttpService>();  // Register HttpService if not already registered
+            builder.Services.AddScoped<ILikesRepository, LikesRepository>();
+
+            builder.Services.AddHttpClient();
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -28,7 +36,6 @@ namespace VideosServiceApi
 			}
 
 			app.UseAuthorization();
-
 
 			app.MapControllers();
 

@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using reeltok.api.videos.ValueObjects;
 
 namespace reeltok.api.videos.Interfaces
 {
-    public interface ILikeService
+    public interface ILikesService
     {
         Task<bool> LikeVideo(Guid userId, Guid videoId);
         Task<bool> RemoveLikeFromVideo(Guid userId, Guid videoId);
-        uint GetVideoLikesAsync();
+        Task<VideoLikes> GetVideoLikes(Guid userId, Guid videoId);
     }
 }

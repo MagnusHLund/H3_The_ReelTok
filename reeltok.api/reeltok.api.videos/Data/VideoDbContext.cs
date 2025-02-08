@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using reeltok.api.videos.Entities;
 
 namespace reeltok.api.videos.Data
 {
-    public class VideoDbContext
+    public class VideoDbContext : DbContext
     {
-        
+        public DbSet<Video> Videos { get; set; }
     }
 }

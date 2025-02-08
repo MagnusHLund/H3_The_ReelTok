@@ -1,16 +1,15 @@
 using System.Xml.Serialization;
 
-namespace reeltok.api.videos.DTOs.LikeVideo
+namespace reeltok.api.videos.DTOs.UserLikedVideo
 {
-    [XmlRoot("AddLikeRequestDto")]
-    public class AddLikeRequestDto
+    [XmlRoot("UserLikedVideoRequestDto")]
+    public class ServiceUserLikedVideoRequestDto
     {
         [XmlElement("UserId")]
         public Guid UserId { get; set; }
-        [XmlElement("VideoId")]
         public Guid VideoId { get; set; }
 
-        public AddLikeRequestDto(Guid userId, Guid videoId)
+        public ServiceUserLikedVideoRequestDto(Guid userId, Guid videoId)
         {
             UserId = userId;
             VideoId = videoId;

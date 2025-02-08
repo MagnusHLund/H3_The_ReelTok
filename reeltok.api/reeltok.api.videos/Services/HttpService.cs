@@ -1,10 +1,11 @@
 using System.Text;
 using reeltok.api.videos.DTOs;
+using reeltok.api.videos.Interfaces;
 using reeltok.api.videos.Utils;
 
 namespace reeltok.api.videos.Services
 {
-    public class HttpService
+    public class HttpService : IHttpService
     {
         private readonly HttpClient _httpClient;
 
@@ -13,7 +14,7 @@ namespace reeltok.api.videos.Services
             _httpClient = httpClient;
         }
 
-        public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, string targetUrl, HttpMethod httpMethod) where TResponse : BaseResponseDto
+        public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, Uri targetUrl, HttpMethod httpMethod) where TResponse : BaseResponseDto
         {
             if (Equals(requestDto, null))
             {

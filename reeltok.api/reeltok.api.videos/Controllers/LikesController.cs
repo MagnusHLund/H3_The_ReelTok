@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using reeltok.api.videos.DTOs.LikeVideo;
 using reeltok.api.videos.DTOs.RemoveLike;
 using reeltok.api.videos.Interfaces;
+using reeltok.api.videos.Services;
 
 namespace reeltok.api.videos.Controllers
 {
@@ -13,9 +14,9 @@ namespace reeltok.api.videos.Controllers
     [Route("api/[controller]")]
     public class LikesController : ControllerBase
     {
-        private readonly ILikeService _likesService;
-        public LikesController(ILikeService likeService) {
-            _likesService = likeService;
+        private readonly ILikesService _likesService;
+        public LikesController(ILikesService likesService) {
+            _likesService = likesService;
         }
 
         [HttpPost]
