@@ -17,18 +17,30 @@ namespace reeltok.api.videos.Tests
         }
 
         [Fact]
-        public Task UploadVideoToFileServer_WithValidParamters_SuccessfullyUploadVideo()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Fact]
         public Task UploadVideoToFileServer_WithInvalidFileType_ThrowFormatException() {
             throw new NotImplementedException();
         }
 
         [Fact]
         public Task UploadVideoToFileServer_WithTooShortVideo_ThrowValidationException() {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public Task UploadVideoToFileServer_WithValidParameters_SuccessfullyUploadVideo()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public Task DeleteVideoFromFileServer_UnableToFindVideo_ThrowFileNotFoundException()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public Task DeleteVideoFromFileServer_WithValidParameters_SuccessfullyUploadVideo()
+        {
             throw new NotImplementedException();
         }
     }

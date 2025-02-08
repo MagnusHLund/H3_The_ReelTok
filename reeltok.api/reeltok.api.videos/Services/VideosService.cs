@@ -15,7 +15,7 @@ namespace reeltok.api.videos.Services
 
         public Task<bool> DeleteVideo(Guid userId, Guid videosId)
         {
-            // Removes the video in the Videos database
+            // Removes the video in the Videos database and file server
             throw new NotImplementedException();
         }
 
