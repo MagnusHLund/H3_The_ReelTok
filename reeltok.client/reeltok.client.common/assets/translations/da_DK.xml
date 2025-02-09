@@ -1,0 +1,14 @@
+<translations>
+  <common>
+    <email>Email</email>
+    <password>Adgangskode</password>
+  </common>
+  <login>
+      <login>Login</login>
+    <orSignUpIfYouAreNew>... eller tilmeld dig hvis du er ny!</orSignUpIfYouAreNew>
+  </login>
+  <signUp>
+    <signUp>Tilmeld</signUp>
+    <orLoginIfYouArentNew>... eller login hvis du ikke er ny!</orLoginIfYouArentNew>
+  </signUp>
+</translations>
