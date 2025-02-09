@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using reeltok.api.auth.Interfaces;
 using reeltok.api.auth.Entites;
 using reeltok.api.auth.ValueObjects;
@@ -20,17 +21,25 @@ namespace reeltok.api.auth.Repositories
 
         public async Task DeleteUser(Guid userId)
         {
-            throw new NotImplementedException();
+            var userToDelete = await _context.Auths.Where(e => e.UserId == userId).FirstOrDefaultAsync();
+
+            _context.Remove<Auth>(userToDelete);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Guid> GetUserIdByToken(string refreshToken)
         {
-            throw new NotImplementedException();
+            var userRefreshToken = await _context.RefreshTokens.Where(e => e.Token == refreshToken).FirstOrDefaultAsync();
+            
+            return userRefreshToken.UserId;
         }
 
         public async Task LogoutUser(string refreshToken)
         {
-            throw new NotImplementedException();
+            var refreshTokenToInvalidate = await _context.RefreshTokens.Where(e => e.Token == refreshToken).FirstOrDefaultAsync();
+
+            _context.Remove<RefreshToken>(refreshTokenToInvalidate);
+            await _context.SaveChangesAsync(); 
         }
 
         public async Task<Auth?> GetAuthByUserId(Guid userId)
@@ -39,9 +48,12 @@ namespace reeltok.api.auth.Repositories
             return auth;
         }
 
-        public async Task<AccessToken> RefreshAccessToken(string refreshToken)
+        public async Task<RefreshToken> RefreshAccessToken(string refreshToken)
         {
-            throw new NotImplementedException();
+            // We're using this to check the expiry date so we can assure that our token is still valid
+            var refreshTokenToCheck = await _context.RefreshTokens.Where(e => e.Token == refreshToken).FirstOrDefaultAsync();
+            
+            return refreshTokenToCheck;
         }
 
         public async Task RegisterUser(Auth authInfo)

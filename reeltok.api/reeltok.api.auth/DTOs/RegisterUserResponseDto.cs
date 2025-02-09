@@ -1,5 +1,3 @@
-
-
 namespace reeltok.api.auth.DTOs
 {
     internal class RegisterUserResponseDto : BaseResponseDto

@@ -25,12 +25,15 @@ namespace reeltok.api.auth.Services
 
         public async Task DeleteUser(Guid userId)
         {
-            throw new NotImplementedException();
+           await _authRepository.DeleteUser(userId);
+           //TODO: add some sort of check either in repo or here somehow to see if our user even exists
         }
 
         public async Task<Guid> GetUserIdByToken(string refreshToken)
         {
-            throw new NotImplementedException();
+            Guid userId = await _authRepository.GetUserIdByToken(refreshToken);
+
+            return userId;
         }
 
         public async Task<Tokens> LoginUser(LoginCredentials loginCredentials)
@@ -39,7 +42,7 @@ namespace reeltok.api.auth.Services
            
             if (existingAuth == null)
             {
-              throw new UserDoesNotExistException(); 
+              throw new UserDoesNotExistException("User does not exist."); 
             }
             
             bool isPasswordValid = PasswordUtils.VerifyPassword(loginCredentials.PlainTextPassword, existingAuth.HashedPassword, existingAuth.Salt);
@@ -62,12 +65,30 @@ namespace reeltok.api.auth.Services
 
         public async Task LogoutUser(string refreshToken)
         {
-            throw new NotImplementedException();
+           if (refreshToken == null)
+           {
+             throw new TokenIsNullException("Provided token is null.");
+           }
+
+           await _authRepository.LogoutUser(refreshToken);
         }
 
         public async Task<AccessToken> RefreshAccessToken(string refreshToken)
         {
-            throw new NotImplementedException();
+            RefreshToken refreshTokenToCheck = await _authRepository.RefreshAccessToken(refreshToken);
+
+            if (refreshTokenToCheck.ExpireDate < DateTime.UtcNow)
+            {
+              throw new TokenExpiredException();
+            }
+
+            string secretKey = _configuration["JWTSettings:SecretKey"];
+            string issuer = _configuration["JWTSettings:Issuer"];
+            string audience = _configuration["JWTSettings:Audience"];
+
+            AccessToken accessToken = GenerateTokenUtility.GenerateAccessToken(refreshTokenToCheck.UserId, secretKey, issuer, audience);
+
+            return accessToken;
         }
 
         public async Task RegisterUser(RegisterDetails registerDetails)

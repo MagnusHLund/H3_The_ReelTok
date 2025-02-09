@@ -23,9 +23,9 @@ namespace reeltok.api.auth.Utils
             rng.GetBytes(randomBytes);
         }
     
-        var tokenString = Convert.ToBase64String(randomBytes);
-        var createDate = DateTime.UtcNow;
-        var expireDate = createDate.AddDays(7);
+        string tokenString = Convert.ToBase64String(randomBytes);
+        DateTime createDate = DateTime.UtcNow;
+        DateTime expireDate = createDate.AddDays(7);
 
         return new RefreshToken(userId, tokenString, createDate, expireDate);
     }
@@ -41,8 +41,8 @@ namespace reeltok.api.auth.Utils
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var createDate = DateTime.UtcNow;
-        var expireDate = createDate.AddHours(1);
+        DateTime createDate = DateTime.UtcNow;
+        DateTime expireDate = createDate.AddHours(1);
 
         var claims = new[]
         {
