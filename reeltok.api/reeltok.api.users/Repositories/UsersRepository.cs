@@ -21,13 +21,13 @@ namespace reeltok.api.users.Repositories
         #endregion
 
         #region User Methods
-        public async Task<UserProfileData> CreateUserAsync(UserProfileData user)
+        public async Task<Users> CreateUserAsync(Users user)
         {
-            UserProfileData DbUser = (await _context.Users.AddAsync(user)).Entity;
+            Users DbUser = (await _context.Users.AddAsync(user)).Entity;
             await _context.SaveChangesAsync();
             return DbUser;
         }
-        public Task<UserProfileData?> GetUserByIdAsync(Guid id)
+        public Task<Users?> GetUserByIdAsync(Guid id)
         {
             throw new NotImplementedException();
         }
@@ -35,7 +35,7 @@ namespace reeltok.api.users.Repositories
         {
             throw new NotImplementedException();
         }
-        public Task UpdateUserAsync(UserProfileData user, Guid userId)
+        public Task UpdateUserAsync(Users user, Guid userId)
         {
             throw new NotImplementedException();
         }

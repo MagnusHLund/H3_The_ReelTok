@@ -9,39 +9,29 @@ using reeltok.api.users.DTOs.UserResponseDTO;
 
 namespace reeltok.api.users.Mappers
 {
-    internal static class UserMapper
+    public static class UserMapper
     {
-        internal static UserProfileData ToEntity(CreateUserRequestDto dto)
+        public static Users ToUsersFromCreateDTO(this CreateUserRequestDto dto)
         {
-            return new UserProfileData(
-                Guid.NewGuid(), // Assuming a new user is created, so generating a new Guid
+            return new Users(
+                Guid.Empty,
                 new UserDetails(
                     dto.UserName,
-                    dto.ProfileUrl,
                     dto.ProfilePictureUrl,
+                    dto.ProfileUrl,
                     new HiddenUserDetails(dto.Email)
                 )
             );
         }
 
-        internal static CreateUserRequestDto ToDto(UserProfileData entity)
-        {
-            return new CreateUserRequestDto(
-                entity.UserDetails.UserName,
-                entity.UserDetails.ProfilePictureUrl,
-                entity.UserDetails.ProfileUrl,
-                entity.UserDetails.HiddenDetails.Email
-            );
-        }
-
-        public static ReturnCreateUserResponseDTO ToReturnCreateUserResponseDTO(UserProfileData user)
+        public static ReturnCreateUserResponseDTO ToReturnCreateUserResponseDTO(Users user)
         {
             return new ReturnCreateUserResponseDTO(
                 user.UserId,
-                user.UserDetails.HiddenDetails.Email,
                 user.UserDetails.UserName,
+                user.UserDetails.ProfilePictureUrl,
                 user.UserDetails.ProfileUrl,
-                user.UserDetails.ProfilePictureUrl
+                user.UserDetails.HiddenDetails.Email
             );
         }
 

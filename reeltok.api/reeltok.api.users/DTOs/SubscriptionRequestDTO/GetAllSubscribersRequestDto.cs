@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace reeltok.api.users.DTOs.SubscriptionRequestDTO
 {
-    internal class GetAllSubscribersRequestDto
+    public class GetAllSubscribersRequestDto
     {
         [Required]
-        internal Guid UserId { get; }
+        public Guid UserId { get; }
 
-        internal GetAllSubscribersRequestDto(Guid userId)
+        public GetAllSubscribersRequestDto(Guid userId)
         {
             UserId = userId;
         }

@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace reeltok.api.users.DTOs.LikeVideoRequestDTO
 {
-    internal class LikeVideoRequestDto
+    public class LikeVideoRequestDto
     {
         [Required]
-        internal Guid UserId { get; }
+        public Guid UserId { get; }
         [Required]
-        internal Guid VideoId { get; }
+        public Guid VideoId { get; }
 
-        internal LikeVideoRequestDto(Guid userId, Guid videoId)
+        public LikeVideoRequestDto(Guid userId, Guid videoId)
         {
             UserId = userId;
             VideoId = videoId;

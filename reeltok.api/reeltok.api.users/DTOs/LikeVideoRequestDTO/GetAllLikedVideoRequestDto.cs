@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.users.DTOs.LikeVideoRequestDTO
 {
-    internal class GetAllLikedVideoRequestDto
+    public class GetAllLikedVideoRequestDto
     {
         [Required]
-        internal Guid UserId { get; }
+        public Guid UserId { get; }
 
-        internal GetAllLikedVideoRequestDto(Guid userId)
+        public GetAllLikedVideoRequestDto(Guid userId)
         {
             UserId = userId;
         }

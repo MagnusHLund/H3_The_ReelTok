@@ -7,14 +7,14 @@ using reeltok.api.users.Entities;
 
 namespace reeltok.api.users.DTOs.SubscriptionResponseDTO
 {
-    internal class GetAllSubscribersResponseDto : BaseResponseDto
+    public class GetAllSubscribersResponseDto : BaseResponseDto
     {
 
         [Required]
-        internal List<Subscription> AllSubscribers { get;}
+        public List<Subscription> AllSubscribers { get; }
 
 
-        
+
         public GetAllSubscribersResponseDto(bool success, List<Subscription> allSubscribers) : base(success)
         {
             AllSubscribers = allSubscribers;

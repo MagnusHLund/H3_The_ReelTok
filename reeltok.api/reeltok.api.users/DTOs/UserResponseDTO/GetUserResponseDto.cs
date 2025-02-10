@@ -2,11 +2,11 @@ using reeltok.api.users.ValueObjects;
 
 namespace reeltok.api.users.DTOs.UserResponseDTO
 {
-    internal class GetUserResponseDto : BaseResponseDto
+    public class GetUserResponseDto : BaseResponseDto
     {
-        internal string Username { get; }
-        internal UserDetails UserDetails { get; }
-        internal GetUserResponseDto(bool success, string userName, UserDetails userDetails) : base(success)
+        public string Username { get; }
+        public UserDetails UserDetails { get; }
+        public GetUserResponseDto(bool success, string userName, UserDetails userDetails) : base(success)
         {
             Username = userName;
             UserDetails = userDetails;

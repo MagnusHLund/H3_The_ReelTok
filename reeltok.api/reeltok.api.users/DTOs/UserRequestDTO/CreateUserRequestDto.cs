@@ -2,20 +2,20 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.users.DTOs.UserRequestDTO
 {
-    internal class CreateUserRequestDto
+    public class CreateUserRequestDto
     {
         [Required]
-        internal string UserName { get; }
+        public string UserName { get; }
         [Required]
-        internal string ProfilePictureUrl { get; }
+        public string ProfilePictureUrl { get; }
         [Required]
-        internal string ProfileUrl { get; }
+        public string ProfileUrl { get; }
         [Required]
-        internal string Email { get; }
+        public string Email { get; }
 
 
 
-    internal CreateUserRequestDto(string userName, string profilePictureUrl, string profileUrl, string email)
+    public CreateUserRequestDto(string userName, string profilePictureUrl, string profileUrl, string email)
         {
             UserName = userName;
             ProfilePictureUrl = profilePictureUrl;

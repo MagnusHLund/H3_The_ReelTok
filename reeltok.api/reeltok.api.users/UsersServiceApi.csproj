@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
     <StartupObject>UsersServiceApi.Program</StartupObject>
-    <InvariantGlobalization>false</InvariantGlobalization>
+    <InvariantGlobalization>false</InvariantGlobalization>  <!-- This is to make it connect with the database for ef -->
   </PropertyGroup>
 
   <ItemGroup>
