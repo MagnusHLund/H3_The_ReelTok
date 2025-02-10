@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 using reeltok.api.gateway.DTOs.Interfaces;
 
@@ -13,6 +14,7 @@ namespace reeltok.api.gateway.DTOs.Comments
         [XmlElement("VideoId")]
         public Guid VideoId { get; set; }
         [XmlElement("CommentText")]
+        [Range(1, 1024)]
         public string CommentText { get; set; }
         [XmlElement("CreatedAt")]
         public DateTime CreatedAt { get; set; }

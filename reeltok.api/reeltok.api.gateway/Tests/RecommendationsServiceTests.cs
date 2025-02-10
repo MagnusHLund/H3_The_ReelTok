@@ -4,6 +4,8 @@ using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.Services;
 using reeltok.api.gateway.Interfaces;
 using reeltok.api.gateway.DTOs.Recommendations;
+using reeltok.api.gateway.Enums;
+using reeltok.api.gateway.Entities;
 
 namespace reeltok.api.gateway.Tests
 {
@@ -24,7 +26,8 @@ namespace reeltok.api.gateway.Tests
         public async Task ChangeRecommendedCategory_ValidParameters_ReturnSuccess()
         {
             // Arrange
-            string category = "Gaming";
+            List<RecommendedCategories> testRecommendations = new List<RecommendedCategories> { RecommendedCategories.Gaming };
+            Recommendations recommendations = new Recommendations(Guid.NewGuid(), testRecommendations);
             bool success = true;
             ServiceChangeRecommendedCategoryResponseDto successResponse = new ServiceChangeRecommendedCategoryResponseDto(success);
 
@@ -33,7 +36,7 @@ namespace reeltok.api.gateway.Tests
                 .ReturnsAsync(successResponse);
 
             // act
-            bool response = await _recommendationsService.ChangeRecommendedCategory(category);
+            bool response = await _recommendationsService.UpdateRecommendation(recommendations);
 
             // Assert
             Assert.True(response);
@@ -43,7 +46,8 @@ namespace reeltok.api.gateway.Tests
         public async Task ChangeRecommendedCategory_WithBadResponse_ThrowInvalidOperationException()
         {
             // Arrange
-            string category = "Gaming";
+            List<RecommendedCategories> testRecommendations = new List<RecommendedCategories> { RecommendedCategories.Gaming };
+            Recommendations recommendations = new Recommendations(Guid.NewGuid(), testRecommendations);
             FailureResponseDto failureResponseDto = new FailureResponseDto("Unable to update users recommendations!");
 
             _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceChangeRecommendedCategoryRequestDto, ServiceChangeRecommendedCategoryResponseDto>(
@@ -51,7 +55,7 @@ namespace reeltok.api.gateway.Tests
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
-            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _recommendationsService.ChangeRecommendedCategory(category));
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _recommendationsService.UpdateRecommendation(recommendations));
             Assert.Equal("Unable to update users recommendations!", exception.Message);
         }
     }

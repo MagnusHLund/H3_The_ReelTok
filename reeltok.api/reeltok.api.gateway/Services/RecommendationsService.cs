@@ -1,5 +1,7 @@
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.DTOs.Recommendations;
+using reeltok.api.gateway.Entities;
+using reeltok.api.gateway.Enums;
 using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Services
@@ -16,11 +18,17 @@ namespace reeltok.api.gateway.Services
             _gatewayService = gatewayService;
         }
 
-        public async Task<bool> ChangeRecommendedCategory(string category)
+        public Task<List<RecommendedCategories>> GetRecommendation(Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> UpdateRecommendation(Recommendations recommendationCategory)
         {
             Guid userId = await _authService.GetUserIdByToken();
+            List<RecommendedCategories> RecommendationCategory = recommendationCategory.RecommendationCategory;
 
-            ServiceChangeRecommendedCategoryRequestDto requestDto = new ServiceChangeRecommendedCategoryRequestDto(userId, category);
+            ServiceChangeRecommendedCategoryRequestDto requestDto = new ServiceChangeRecommendedCategoryRequestDto(userId, RecommendationCategory);
             string targetUrl = $"{RecommendationsMicroServiceBaseUrl}/update";
 
             BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceChangeRecommendedCategoryRequestDto, ServiceChangeRecommendedCategoryResponseDto>(requestDto, targetUrl, HttpMethod.Put);

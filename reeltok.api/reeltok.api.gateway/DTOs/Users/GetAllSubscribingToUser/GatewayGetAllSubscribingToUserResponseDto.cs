@@ -7,6 +7,8 @@ namespace reeltok.api.gateway.DTOs.Users
     public class GatewayGetAllSubscribingToUserResponseDto : BaseResponseDto
     {
         [XmlElement("Users")]
+        [XmlArray("Users")]
+        [XmlArrayItem("UserDetails")]
         public List<UserDetails> Users { get; set; }
 
         public GatewayGetAllSubscribingToUserResponseDto(List<UserDetails> users, bool success = true) : base(success)

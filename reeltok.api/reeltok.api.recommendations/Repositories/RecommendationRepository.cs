@@ -18,7 +18,7 @@ namespace reeltok.api.recommendations.Repositories
             _Context = recommendationDbContext;
         }
 
-        public Task<List<RecommendationsEnum>> GetRecommendationAsync(Guid userId)
+        public Task<List<RecommendedCategories>> GetRecommendationAsync(Guid userId)
         {
             throw new NotImplementedException();
         }

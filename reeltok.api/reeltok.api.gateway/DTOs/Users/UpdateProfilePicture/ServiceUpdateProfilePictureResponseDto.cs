@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 
 namespace reeltok.api.gateway.DTOs.Users
@@ -6,6 +7,7 @@ namespace reeltok.api.gateway.DTOs.Users
     public class ServiceUpdateProfilePictureResponseDto : BaseResponseDto
     {
         [XmlElement("ProfilePictureUrl")]
+        [StringLength(50)]
         public string ProfilePictureUrl { get; set; }
 
         public ServiceUpdateProfilePictureResponseDto(string profilePictureUrl, bool success = true) : base(success)

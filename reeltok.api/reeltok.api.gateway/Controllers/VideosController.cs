@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using reeltok.api.gateway.ActionFilters;
 using reeltok.api.gateway.DTOs.Videos.DeleteVideo;
 using reeltok.api.gateway.DTOs.Videos.GetVideosForFeed;
+using reeltok.api.gateway.DTOs.Videos.GetVideosForProfile;
 using reeltok.api.gateway.DTOs.Videos.LikeVideo;
 using reeltok.api.gateway.DTOs.Videos.RemoveLike;
 using reeltok.api.gateway.DTOs.Videos.UploadVideo;
@@ -74,5 +75,17 @@ namespace reeltok.api.gateway.Controllers
 
             return Ok(responseDto);
         }
+
+
+        [HttpGet]
+        [Route("GetVideoForProfile")]
+        internal async Task<IActionResult> GetVideosForProfile([FromBody] GatewayGetVideosForProfileRequestDto gatewayGetVideosForProfileRequestDto)
+        {
+            List<Video> videos = await _videosService.GetVideosForProfile(gatewayGetVideosForProfileRequestDto.UserId, gatewayGetVideosForProfileRequestDto.Amount, gatewayGetVideosForProfileRequestDto.AmountReceived);
+            GatewayGetVideosForProfileResponseDto responseDto = new GatewayGetVideosForProfileResponseDto(videos);
+
+            return Ok(responseDto);
+        }
+
     }
 }

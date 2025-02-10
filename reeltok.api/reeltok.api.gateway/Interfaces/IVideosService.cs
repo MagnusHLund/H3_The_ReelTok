@@ -10,5 +10,7 @@ namespace reeltok.api.gateway.Interfaces
         public Task<List<Video>> GetVideosForFeed(byte amount);
         public Task<Video> UploadVideo(VideoUpload video);
         public Task<bool> DeleteVideo(Guid videoId);
+        Task<List<Video>> GetVideosForProfile(Guid userId, byte amountToReturn, uint amountReceived);
+
     }
 }

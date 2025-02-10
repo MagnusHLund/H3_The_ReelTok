@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 
 namespace reeltok.api.gateway.DTOs.Recommendations
@@ -6,8 +7,12 @@ namespace reeltok.api.gateway.DTOs.Recommendations
     public class ServiceGetRecommendationsRequestDto
     {
         [XmlElement(elementName: "UserId")]
+        [Required]
         public Guid UserId { get; set; }
         [XmlElement(elementName: "Category")]
+        [Required]
+        [XmlArray]
+        [XmlArrayItem("Category")]
         public string Category { get; set; }
         public ServiceGetRecommendationsRequestDto(Guid userId, string category)
         {

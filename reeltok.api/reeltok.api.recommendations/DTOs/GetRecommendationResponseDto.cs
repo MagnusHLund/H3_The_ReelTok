@@ -11,9 +11,9 @@ namespace reeltok.api.recommendations.DTOs
     public class GetRecommendationResponseDto : BaseResponseDto
     {
         [Required]
-        public List<RecommendationsEnum> Recommendations;
+        public List<RecommendedCategories> Recommendations;
 
-        public GetRecommendationResponseDto(List<RecommendationsEnum> recommendations, bool success) : base(success)
+        public GetRecommendationResponseDto(List<RecommendedCategories> recommendations, bool success) : base(success)
         {
             Recommendations = recommendations;
         }
