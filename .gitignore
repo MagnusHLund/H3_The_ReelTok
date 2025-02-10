@@ -237,4 +237,4 @@ _Pvt_Extensions
 **/Migrations/
 
 # Production appsettings
-*/appsettings.json
+**/appsettings.json
