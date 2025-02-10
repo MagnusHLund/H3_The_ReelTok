@@ -2,14 +2,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.auth.DTOs
 {
-    public class LoginUserRequestDto
+    public class CreateUserRequestDto
     {
         [Required]
-        public Guid UserId { get; set; }
+        public Guid UserId { get; private set; }
         [Required]
-        public string PlainTextPassword { get; set; }
+        public string PlainTextPassword { get; private set; }
 
-        public LoginUserRequestDto(Guid userId, string plainTextPassword)
+        public CreateUserRequestDto(Guid userId, string plainTextPassword)
         {
             UserId = userId;
             PlainTextPassword = plainTextPassword;

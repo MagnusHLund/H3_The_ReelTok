@@ -1,10 +1,8 @@
-
-
 namespace reeltok.api.auth.DTOs
 {
-    internal class LogoutUserRequestDto
+    public class LogoutUserRequestDto
     {
 
-        internal LogoutUserRequestDto() { }
+        public LogoutUserRequestDto() { }
     }
 }

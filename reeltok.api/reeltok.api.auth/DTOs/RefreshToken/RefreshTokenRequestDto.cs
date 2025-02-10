@@ -1,9 +1,7 @@
-
-
 namespace reeltok.api.auth.DTOs
 {
-    internal class RefreshTokenRequestDto
+    public class RefreshTokenRequestDto
     {
-        internal RefreshTokenRequestDto() { }
+        public RefreshTokenRequestDto() { }
     }
 }

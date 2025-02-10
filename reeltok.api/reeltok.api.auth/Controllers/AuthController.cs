@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using reeltok.api.auth.DTOs;
 using reeltok.api.auth.ValueObjects;
@@ -21,15 +18,15 @@ namespace reeltok.api.auth.Controllers
 
 
       [HttpPost]
-      [Route("RegisterUser")]
-      public async Task<IActionResult> RegisterUser([FromBody] RegisterUserRequestDto request)
+      [Route("CreateUser")]
+      public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDto request)
       {
 
-        RegisterDetails registerDetails = new RegisterDetails(request.UserId, request.PlainTextPassword);
+        CreateDetails CreateDetails = new CreateDetails(request.UserId, request.PlainTextPassword);
 
-        await _authService.RegisterUser(registerDetails);
+        await _authService.CreateUser(CreateDetails).ConfigureAwait(false);
 
-        return Ok(new RegisterUserResponseDto(true));
+        return Ok(new CreateUserResponseDto(true));
       }
 
       [HttpPost]

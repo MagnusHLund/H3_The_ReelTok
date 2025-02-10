@@ -1,4 +1,4 @@
-using reeltok.api.auth.Entites;
+using reeltok.api.auth.Entities;
 using reeltok.api.auth.ValueObjects;
 using System.Security.Cryptography;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,8 +17,8 @@ namespace reeltok.api.auth.Utils
     /// <returns>A Base64-encoded refresh token string.</returns>
     public static RefreshToken GenerateRefreshToken(Guid userId)
     {
-        var randomBytes = new byte[32];
-        using (var rng = RandomNumberGenerator.Create())
+            byte[] randomBytes = new byte[32];
+        using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
         {
             rng.GetBytes(randomBytes);
         }
@@ -38,19 +38,19 @@ namespace reeltok.api.auth.Utils
             throw new InvalidOperationException("JWT SecretKey is not provided.");
         }
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         DateTime createDate = DateTime.UtcNow;
         DateTime expireDate = createDate.AddHours(1);
 
-        var claims = new[]
+            Claim[] claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-        var tokenDescriptor = new SecurityTokenDescriptor
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
             Expires = expireDate,
@@ -59,8 +59,8 @@ namespace reeltok.api.auth.Utils
             SigningCredentials = credentials
         };
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
         return new AccessToken(tokenHandler.WriteToken(token), createDate, expireDate);
     }

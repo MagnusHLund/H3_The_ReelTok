@@ -1,9 +1,7 @@
-
-
 namespace reeltok.api.auth.DTOs
 {
-    internal class GetUserIdByTokenRequestDto
+    public class GetUserIdByTokenRequestDto
     {
-        internal GetUserIdByTokenRequestDto() { }
+        public GetUserIdByTokenRequestDto() { }
     }
 }

@@ -1,11 +1,10 @@
 using Moq;
 using Xunit;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Authentication;
 using reeltok.api.auth.Exceptions;
 using reeltok.api.auth.Interfaces;
-using reeltok.api.auth.Entites;
+using reeltok.api.auth.Entities;
 using reeltok.api.auth.ValueObjects;
 using reeltok.api.auth.Services;
 
@@ -13,7 +12,6 @@ namespace reeltok.api.auth.Tests
 {
   public class AuthServiceTests
   {
-    private const string BaseTestUrl = "http://localhost:5003/auth";
     private readonly Mock<IAuthRepository> _mockAuthRepository;
     private readonly Mock<IConfiguration> _mockConfiguration;
     private readonly IAuthService _authService;
@@ -26,45 +24,45 @@ namespace reeltok.api.auth.Tests
     }
 
     [Fact]
-    public async Task RegisterUser_WithExistingUser_ShouldThrowUserAlreadyExistsException()
+    public async Task CreateUser_WithExistingUser_ShouldThrowUserAlreadyExistsException()
     {
-      // Arrange
-      var existingUserId = Guid.NewGuid();
-      var existingAuth = new Auth(existingUserId, "hashedPassword123", "randomSalt");
+            // Arrange
+            Guid existingUserId = Guid.NewGuid();
+            Auth existingAuth = new Auth(existingUserId, "hashedPassword123", "randomSalt");
 
       _mockAuthRepository
         .Setup(repo => repo.GetAuthByUserId(existingUserId))
         .ReturnsAsync(existingAuth);
 
-      RegisterDetails registerDetails = new RegisterDetails(existingUserId, "password123");
+      CreateDetails CreateDetails = new CreateDetails(existingUserId, "password123");
 
       // Act & Assert
-      await Assert.ThrowsAsync<UserAlreadyExistsException>(() => _authService.RegisterUser(registerDetails));
+      await Assert.ThrowsAsync<UserAlreadyExistsException>(() => _authService.CreateUser(CreateDetails));
 
       _mockAuthRepository.Verify(repo => repo.GetAuthByUserId(existingUserId), Times.Once);
-      _mockAuthRepository.Verify(repo => repo.RegisterUser(It.IsAny<Auth>()), Times.Never);
+      _mockAuthRepository.Verify(repo => repo.CreateUser(It.IsAny<Auth>()), Times.Never);
     }
 
     [Fact]
-    public async Task RegisterUser_WithWeakPassword_ShouldThrowValidationException()
+    public async Task CreateUser_WithWeakPassword_ShouldThrowValidationException()
     {
       // Arrange
-      RegisterDetails registerDetails = new RegisterDetails(Guid.NewGuid(), "weakpassword");
+      CreateDetails CreateDetails = new CreateDetails(Guid.NewGuid(), "weakpassword");
 
       // Act & Assert
-      await Assert.ThrowsAsync<ValidationException>(() => _authService.RegisterUser(registerDetails));
+      await Assert.ThrowsAsync<ValidationException>(() => _authService.CreateUser(CreateDetails));
 
-      _mockAuthRepository.Verify(repo => repo.RegisterUser(It.IsAny<Auth>()), Times.Never);
+      _mockAuthRepository.Verify(repo => repo.CreateUser(It.IsAny<Auth>()), Times.Never);
     }
 
     [Fact]
-    public async Task RegisterUser_WithValidUser_ShouldReturnSuccess()
+    public async Task CreateUser_WithValidUser_ShouldReturnSuccess()
     {
       // Arrange
-      RegisterDetails registerDetails = new RegisterDetails(Guid.NewGuid(), "VeryStroongPassword566");
+      CreateDetails CreateDetails = new CreateDetails(Guid.NewGuid(), "VeryStroongPassword566");
 
       // Act
-      await _authService.RegisterUser(registerDetails);
+      await _authService.CreateUser(CreateDetails);
 
       // Assert (implicit): If no exception is thrown, the test passes.
       await Task.CompletedTask;
@@ -74,7 +72,7 @@ namespace reeltok.api.auth.Tests
     public async Task LoginUser_WithIncorrectPassword_ShouldThrowInvalidCredentialException()
     {
       // Arrange
-      var (hashedPassword, salt) = PasswordUtils.HashPassword("DifferentPassword555");
+      (string hashedPassword, string salt) = PasswordUtils.HashPassword("DifferentPassword555");
       LoginCredentials loginCredentials = new LoginCredentials(Guid.NewGuid(), "password");
       Auth userAuth = new Auth(loginCredentials.UserId, hashedPassword, salt);
 
@@ -106,7 +104,7 @@ namespace reeltok.api.auth.Tests
     {
       // Arrange
       LoginCredentials loginCredentials = new LoginCredentials(Guid.NewGuid(), "VeryStroongPassword566");
-      var (hashedPassword, salt) = PasswordUtils.HashPassword(loginCredentials.PlainTextPassword);
+      (string hashedPassword, string salt) = PasswordUtils.HashPassword(loginCredentials.PlainTextPassword);
       Auth userAuth = new Auth(loginCredentials.UserId, hashedPassword, salt);
 
       _mockAuthRepository

@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace reeltok.api.auth.Entites
+namespace reeltok.api.auth.Entities
 {
     public class RefreshToken
     {
-        [Required]
+        [Key]
         public Guid UserId { get; set; }
 
         [Required]

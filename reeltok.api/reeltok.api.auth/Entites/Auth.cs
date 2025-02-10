@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace reeltok.api.auth.Entites
+namespace reeltok.api.auth.Entities
 {
     public class Auth
     {
-        [Required]
+        [Key]
         public Guid UserId { get; set; }
 
         [Required]

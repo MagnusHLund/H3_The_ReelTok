@@ -12,7 +12,7 @@ namespace AuthServiceApi
 	{
 		public static void Main(string[] args)
 		{
-			var builder = WebApplication.CreateBuilder(args);
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
             builder.Services.AddTransient<IAuthService, AuthService>();
@@ -24,7 +24,7 @@ namespace AuthServiceApi
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 
-			var app = builder.Build();
+            WebApplication app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
 

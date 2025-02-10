@@ -11,13 +11,13 @@ public static class PasswordUtils
 
     public static (string hashedPassword, string salt) HashPassword(string password)
     {
-        var saltBytes = new byte[SaltSize];
-        using (var rng = RandomNumberGenerator.Create())
+        byte[] saltBytes = new byte[SaltSize];
+        using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
         {
             rng.GetBytes(saltBytes);
         }
 
-        var hashedBytes = Rfc2898DeriveBytes.Pbkdf2(
+        byte[] hashedBytes = Rfc2898DeriveBytes.Pbkdf2(
             Encoding.UTF8.GetBytes(password),
             saltBytes,
             Iterations,
@@ -30,9 +30,9 @@ public static class PasswordUtils
 
     public static bool VerifyPassword(string password, string storedHash, string storedSalt)
     {
-        var saltBytes = Convert.FromBase64String(storedSalt);
+        byte[] saltBytes = Convert.FromBase64String(storedSalt);
 
-        var hashedBytes = Rfc2898DeriveBytes.Pbkdf2(
+        byte[] hashedBytes = Rfc2898DeriveBytes.Pbkdf2(
             Encoding.UTF8.GetBytes(password),
             saltBytes,
             Iterations,
