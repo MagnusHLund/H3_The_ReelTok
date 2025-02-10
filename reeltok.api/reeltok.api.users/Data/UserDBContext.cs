@@ -24,9 +24,35 @@ namespace reeltok.api.users.Data
                 ud.OwnsOne(u => u.HiddenDetails);  // Ensure HiddenDetails is also owned
             });
 
-            modelBuilder.Entity<LikedVideo>().OwnsOne(lv => lv.LikedVideoDetails);
+            modelBuilder.Entity<LikedVideo>().OwnsOne(lv => lv.LikedVideoDetails, lv =>
+            {
+                lv.WithOwner();
 
-            modelBuilder.Entity<Subscription>().OwnsOne(s => s.SubDetails);
+                lv.HasOne<UserProfileData>()
+                    .WithMany()
+                    .HasForeignKey(lv => lv.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // modelBuilder.Entity<Subscription>().OwnsOne(s => s.SubDetails);
+
+            modelBuilder.Entity<Subscription>().OwnsOne(s => s.SubDetails, sd =>
+            {
+                sd.WithOwner();
+
+                // Configure foreign keys without cascade delete
+                sd.HasOne<UserProfileData>()
+                    .WithMany()
+                    .HasForeignKey(s => s.SubscriberUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                sd.HasOne<UserProfileData>()
+                    .WithMany()
+                    .HasForeignKey(s => s.SubscribingToUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

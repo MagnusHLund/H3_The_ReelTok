@@ -10,7 +10,7 @@ namespace reeltok.api.users.ValueObjects
         [Required]
         [ForeignKey("User")]
         public Guid UserId { get; private set; } = Guid.Empty;
-        public UserProfileData? User { get; private set; } = null;
+        // public UserProfileData? User { get; private set; } = null;
 
         [Required]
         public Guid VideoId { get; private set; } = Guid.Empty;

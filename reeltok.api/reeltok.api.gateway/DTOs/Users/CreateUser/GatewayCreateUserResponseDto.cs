@@ -25,6 +25,6 @@ namespace reeltok.api.gateway.DTOs.Users
             ProfileUrl = profileUrl;
             ProfilePictureUrl = profilePictureUrl;
         }
-        public GatewayCreateUserResponseDto() { }
+    public GatewayCreateUserResponseDto() { }
     }
 }
