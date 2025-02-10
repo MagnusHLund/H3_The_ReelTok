@@ -22,13 +22,13 @@ namespace reeltok.api.users.Repositories
         #endregion
 
         #region User Methods
-        public async Task<Users> CreateUserAsync(Users user)
+        public async Task<User> CreateUserAsync(User user)
         {
-            Users DbUser = (await _context.Users.AddAsync(user).ConfigureAwait(false)).Entity;
+            User DbUser = (await _context.Users.AddAsync(user).ConfigureAwait(false)).Entity;
             await _context.SaveChangesAsync().ConfigureAwait(false);
             return DbUser;
         }
-        public async Task<Users?> GetUserByIdAsync(Guid id)
+        public async Task<User?> GetUserByIdAsync(Guid id)
         {
             return await _context.Users.FindAsync(id).ConfigureAwait(false);
         }
@@ -36,16 +36,16 @@ namespace reeltok.api.users.Repositories
         {
             throw new NotImplementedException();
         }
-        public async Task<Users?> UpdateUserAsync(Users user, Guid userId)
+        public async Task<User?> UpdateUserAsync(User user, Guid userId)
         {
-            Users? existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId).ConfigureAwait(false);
+            User? existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId).ConfigureAwait(false);
 
             if (existingUser == null)
             {
                 throw new KeyNotFoundException("User not found");
             }
 
-            Users updateUser = _context.Users.Update(user).Entity;
+            User updateUser = _context.Users.Update(user).Entity;
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return updateUser;
@@ -53,7 +53,7 @@ namespace reeltok.api.users.Repositories
 
         public async Task<bool> DeleteUserAsync(Guid userId)
         {
-            Users? userModel = await _context.Users.FindAsync(userId).ConfigureAwait(false);
+            User? userModel = await _context.Users.FindAsync(userId).ConfigureAwait(false);
 
             if (userModel == null)
             {

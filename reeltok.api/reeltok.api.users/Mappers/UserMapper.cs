@@ -11,9 +11,9 @@ namespace reeltok.api.users.Mappers
 {
     public static class UserMapper
     {
-        public static Users ToUsersFromCreateDTO(this CreateUserRequestDto dto)
+        public static User ToUsersFromCreateDTO(this CreateUserRequestDto dto)
         {
-            return new Users(
+            return new User(
                 Guid.Empty,
                 new UserDetails(
                     dto.UserName,
@@ -24,7 +24,7 @@ namespace reeltok.api.users.Mappers
             );
         }
 
-        public static ReturnCreateUserResponseDTO ToReturnCreateUserResponseDTO(this Users user)
+        public static ReturnCreateUserResponseDTO ToReturnCreateUserResponseDTO(this User user)
         {
             return new ReturnCreateUserResponseDTO(
                 user.UserId,
@@ -35,7 +35,7 @@ namespace reeltok.api.users.Mappers
             );
         }
 
-        public static UserDetails ToUserDetailsFromUpdateDTO(this UpdateUserRequestDto dto, Users existingUser)
+        public static UserDetails ToUserDetailsFromUpdateDTO(this UpdateUserRequestDto dto, User existingUser)
         {
             return new UserDetails(
                 dto.UserName,

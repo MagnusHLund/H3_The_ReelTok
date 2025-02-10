@@ -10,15 +10,15 @@ namespace reeltok.api.users.Data
 
         }
 
-        public DbSet<Users> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<LikedVideo> LikedVideos { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Users>().ToTable("Users");
+            modelBuilder.Entity<User>().ToTable("Users");
 
-            modelBuilder.Entity<Users>()
+            modelBuilder.Entity<User>()
             .OwnsOne(up => up.UserDetails, ud =>
             {
                 ud.OwnsOne(u => u.HiddenDetails);  // Ensure HiddenDetails is also owned
@@ -28,7 +28,7 @@ namespace reeltok.api.users.Data
             {
                 lv.WithOwner();
 
-                lv.HasOne<Users>()
+                lv.HasOne<User>()
                     .WithMany()
                     .HasForeignKey(lv => lv.UserId)
                     .OnDelete(DeleteBehavior.Restrict);
@@ -41,12 +41,12 @@ namespace reeltok.api.users.Data
                 sd.WithOwner();
 
                 // Configure foreign keys without cascade delete
-                sd.HasOne<Users>()
+                sd.HasOne<User>()
                     .WithMany()
                     .HasForeignKey(s => s.SubscriberUserId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                sd.HasOne<Users>()
+                sd.HasOne<User>()
                     .WithMany()
                     .HasForeignKey(s => s.SubscribingToUserId)
                     .OnDelete(DeleteBehavior.Restrict);

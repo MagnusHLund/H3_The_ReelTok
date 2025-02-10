@@ -32,12 +32,12 @@ namespace reeltok.api.users.Controllers
                 return BadRequest("User cannot be null");
             }
 
-            Users userModel = user.ToUsersFromCreateDTO();
+            User userModel = user.ToUsersFromCreateDTO();
 
             // Adding the leftover Properties
             userModel.UserId = Guid.NewGuid();
 
-            Users dbUser = await _usersService.CreateUserAsync(userModel).ConfigureAwait(false);
+            User dbUser = await _usersService.CreateUserAsync(userModel).ConfigureAwait(false);
             // Map the entity to DTO
             ReturnCreateUserResponseDTO responseDto = UserMapper.ToReturnCreateUserResponseDTO(dbUser);
 
@@ -57,7 +57,7 @@ namespace reeltok.api.users.Controllers
                 return BadRequest("User Id cannot be empty");
             }
 
-            Users? user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
+            User? user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
 
             if (user == null)
             {
@@ -82,7 +82,7 @@ namespace reeltok.api.users.Controllers
                 return BadRequest("User cannot be null");
             }
 
-            Users? existingUser = await _usersService.GetUserByIdAsync(user.UserId).ConfigureAwait(false);
+            User? existingUser = await _usersService.GetUserByIdAsync(user.UserId).ConfigureAwait(false);
 
             if (existingUser == null)
             {
@@ -92,7 +92,7 @@ namespace reeltok.api.users.Controllers
             UserDetails? updatedUserDetails = user.ToUserDetailsFromUpdateDTO(existingUser);
             existingUser.UserDetails = updatedUserDetails;
 
-            Users? dbUser = await _usersService.UpdateUserAsync(existingUser, user.UserId).ConfigureAwait(false);
+            User? dbUser = await _usersService.UpdateUserAsync(existingUser, user.UserId).ConfigureAwait(false);
 
             if (dbUser == null)
             {
@@ -117,7 +117,7 @@ namespace reeltok.api.users.Controllers
                 return BadRequest("User Id cannot be empty");
             }
 
-            Users? user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
+            User? user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
 
             if (user == null)
             {
