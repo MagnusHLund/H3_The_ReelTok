@@ -65,7 +65,7 @@ namespace reeltok.api.users.Services
         #region User Like Methods
         public async Task AddToLikedVideosAsync(Guid userId, Guid likedVideoId)
         {
-            var user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
+            Users? user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ArgumentException("User does not exist.");
@@ -81,7 +81,7 @@ namespace reeltok.api.users.Services
         }
         public async Task RemoveFromLikedVideosAsync(Guid userId, Guid likedVideoId)
         {
-            var user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
+            Users? user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ArgumentException("User does not exist.");
@@ -102,7 +102,7 @@ namespace reeltok.api.users.Services
         public async Task SubscribeAsync(Guid userId, Guid subscribeUserId)
         {
             // Check if the first user exists
-            var user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
+            Users? user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
 
             if (user == null)
             {
@@ -110,7 +110,7 @@ namespace reeltok.api.users.Services
             }
 
             // Check if the user to be subscribed to exists
-            var subscribeUser = await _userRepository.GetUserByIdAsync(subscribeUserId).ConfigureAwait(false);
+            Users? subscribeUser = await _userRepository.GetUserByIdAsync(subscribeUserId).ConfigureAwait(false);
 
             if (subscribeUser == null)
             {
@@ -123,13 +123,13 @@ namespace reeltok.api.users.Services
         public async Task UnsubscribeAsync(Guid userId, Guid subscribeUserId)
         {
             // Check if both users exist
-            var user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
+            Users? user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ArgumentException("User does not exist.");
             }
 
-            var subscribeUser = await _userRepository.GetUserByIdAsync(subscribeUserId).ConfigureAwait(false);
+            Users? subscribeUser = await _userRepository.GetUserByIdAsync(subscribeUserId).ConfigureAwait(false);
             if (subscribeUser == null)
             {
                 throw new ArgumentException("User to unsubscribe from does not exist.");

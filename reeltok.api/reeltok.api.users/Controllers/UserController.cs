@@ -89,8 +89,7 @@ namespace reeltok.api.users.Controllers
                 return NotFound("User not found");
             }
 
-            // UserDetails userModel = user.ToUsersFromUpdateDTO(existingUser);
-            UserDetails? updatedUserDetails = user.ToUserDetailsFromUpdateDTO();
+            UserDetails? updatedUserDetails = user.ToUserDetailsFromUpdateDTO(existingUser);
             existingUser.UserDetails = updatedUserDetails;
 
             Users? dbUser = await _usersService.UpdateUserAsync(existingUser, user.UserId).ConfigureAwait(false);

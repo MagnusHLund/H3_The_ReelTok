@@ -35,12 +35,12 @@ namespace reeltok.api.users.Mappers
             );
         }
 
-        public static UserDetails ToUserDetailsFromUpdateDTO(this UpdateUserRequestDto dto)
+        public static UserDetails ToUserDetailsFromUpdateDTO(this UpdateUserRequestDto dto, Users existingUser)
         {
             return new UserDetails(
                 dto.UserName,
-                "/UpdatedProfileUrl", // Update as needed
-                "/UpdatedProfilePictureUrl", // Update as needed
+                existingUser.UserDetails.ProfileUrl,
+                existingUser.UserDetails.ProfilePictureUrl,
                 new HiddenUserDetails(dto.Email)
             );
         }
