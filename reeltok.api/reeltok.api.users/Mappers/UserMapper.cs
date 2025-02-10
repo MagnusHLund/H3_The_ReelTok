@@ -17,8 +17,8 @@ namespace reeltok.api.users.Mappers
                 Guid.Empty,
                 new UserDetails(
                     dto.UserName,
-                    dto.ProfilePictureUrl,
-                    dto.ProfileUrl,
+                    string.Empty, // ProfileUrl placeholder
+                    string.Empty, // ProfilePictureUrl placeholder
                     new HiddenUserDetails(dto.Email)
                 )
             );
