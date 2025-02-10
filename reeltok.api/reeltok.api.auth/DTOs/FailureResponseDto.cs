@@ -1,10 +1,24 @@
 
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
+
 namespace reeltok.api.auth.DTOs
 {
-    internal class FailureResponseDto : BaseResponseDto
+    [XmlRoot("FailureResponseDto")]
+    public class FailureResponseDto : BaseResponseDto
     {
-        internal FailureResponseDto(bool success) : base(success)
+        [Required]
+        [XmlElement("Message")]
+        public string Message { get; set; }
+        [XmlElement("Success")]
+        public override bool Success { get; set; }
+
+        public FailureResponseDto(string message)
         {
+            Message = message;
+            Success = false;
         }
+
+        public FailureResponseDto() { }
     }
 }
