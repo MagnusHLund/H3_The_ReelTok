@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using reeltok.api.users.Data;
 using reeltok.api.users.Entities;
 using reeltok.api.users.Interfaces;
@@ -23,21 +24,31 @@ namespace reeltok.api.users.Repositories
         #region User Methods
         public async Task<Users> CreateUserAsync(Users user)
         {
-            Users DbUser = (await _context.Users.AddAsync(user)).Entity;
-            await _context.SaveChangesAsync();
+            Users DbUser = (await _context.Users.AddAsync(user).ConfigureAwait(false)).Entity;
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return DbUser;
         }
-        public Task<Users?> GetUserByIdAsync(Guid id)
+        public async Task<Users?> GetUserByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.Users.FindAsync(id).ConfigureAwait(false);
         }
         public Task<string> GetUserImageAsync(Guid userId)
         {
             throw new NotImplementedException();
         }
-        public Task UpdateUserAsync(Users user, Guid userId)
+        public async Task<Users?> UpdateUserAsync(Users user, Guid userId)
         {
-            throw new NotImplementedException();
+            Users? existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId).ConfigureAwait(false);
+
+            if (existingUser == null)
+            {
+                throw new KeyNotFoundException("User not found");
+            }
+
+            Users updateUser = _context.Users.Update(user).Entity;
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            return updateUser;
         }
 
         #endregion

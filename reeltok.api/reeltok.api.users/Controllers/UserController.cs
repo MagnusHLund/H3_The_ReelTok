@@ -4,6 +4,7 @@ using reeltok.api.users.DTOs.UserResponseDTO;
 using reeltok.api.users.Entities;
 using reeltok.api.users.Interfaces;
 using reeltok.api.users.Mappers;
+using reeltok.api.users.ValueObjects;
 
 namespace reeltok.api.users.Controllers
 {
@@ -21,13 +22,84 @@ namespace reeltok.api.users.Controllers
         [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequestDto user)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (user == null)
+            {
+                return BadRequest("User cannot be null");
+            }
+
             Users userModel = user.ToUsersFromCreateDTO();
 
-            userModel.UserId = Guid.NewGuid(); 
+            // Adding the leftover Properties
+            userModel.UserId = Guid.NewGuid();
 
-            Users dbUser = await _usersService.CreateUserAsync(userModel);
-
+            Users dbUser = await _usersService.CreateUserAsync(userModel).ConfigureAwait(false);
             // Map the entity to DTO
+            ReturnCreateUserResponseDTO responseDto = UserMapper.ToReturnCreateUserResponseDTO(dbUser);
+
+            return Ok(responseDto);
+        }
+
+        [HttpGet("GetUserById")]
+        public async Task<IActionResult> GetUserById([FromQuery] Guid userId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (userId == Guid.Empty)
+            {
+                return BadRequest("User Id cannot be empty");
+            }
+
+            Users? user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            ReturnCreateUserResponseDTO responseDto = UserMapper.ToReturnCreateUserResponseDTO(user);
+
+            return Ok(responseDto);
+        }
+
+        [HttpPut("UpdateUser")]
+        public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserRequestDto user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (user == null)
+            {
+                return BadRequest("User cannot be null");
+            }
+
+            Users? existingUser = await _usersService.GetUserByIdAsync(user.UserId).ConfigureAwait(false);
+
+            if (existingUser == null)
+            {
+                return NotFound("User not found");
+            }
+
+            // UserDetails userModel = user.ToUsersFromUpdateDTO(existingUser);
+            UserDetails? updatedUserDetails = user.ToUserDetailsFromUpdateDTO();
+            existingUser.UserDetails = updatedUserDetails;
+
+            Users? dbUser = await _usersService.UpdateUserAsync(existingUser, user.UserId).ConfigureAwait(false);
+
+            if (dbUser == null)
+            {
+                return NotFound("User not found");
+            }
+
             ReturnCreateUserResponseDTO responseDto = UserMapper.ToReturnCreateUserResponseDTO(dbUser);
 
             return Ok(responseDto);

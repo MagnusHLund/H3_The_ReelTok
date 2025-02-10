@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.users.DTOs.UserRequestDTO
@@ -8,8 +9,6 @@ namespace reeltok.api.users.DTOs.UserRequestDTO
         public string UserName { get; }
         [Required]
         public string Email { get; }
-
-
 
     public CreateUserRequestDto(string userName, string email)
         {

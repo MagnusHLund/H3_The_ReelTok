@@ -17,14 +17,14 @@ namespace reeltok.api.users.Mappers
                 Guid.Empty,
                 new UserDetails(
                     dto.UserName,
-                    string.Empty, // ProfileUrl placeholder
-                    string.Empty, // ProfilePictureUrl placeholder
+                    "/MOFOS",
+                    "/MOFOS",
                     new HiddenUserDetails(dto.Email)
                 )
             );
         }
 
-        public static ReturnCreateUserResponseDTO ToReturnCreateUserResponseDTO(Users user)
+        public static ReturnCreateUserResponseDTO ToReturnCreateUserResponseDTO(this Users user)
         {
             return new ReturnCreateUserResponseDTO(
                 user.UserId,
@@ -35,5 +35,14 @@ namespace reeltok.api.users.Mappers
             );
         }
 
+        public static UserDetails ToUserDetailsFromUpdateDTO(this UpdateUserRequestDto dto)
+        {
+            return new UserDetails(
+                dto.UserName,
+                "/UpdatedProfileUrl", // Update as needed
+                "/UpdatedProfilePictureUrl", // Update as needed
+                new HiddenUserDetails(dto.Email)
+            );
+        }
     }
 }
