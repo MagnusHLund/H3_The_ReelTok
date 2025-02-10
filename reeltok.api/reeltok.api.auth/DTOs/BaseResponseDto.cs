@@ -1,15 +1,19 @@
 using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 
 namespace reeltok.api.auth.DTOs
 {
-    internal abstract class BaseResponseDto
+    public abstract class BaseResponseDto
     {
         [Required]
-        internal bool Success { get; private set; }
+        [XmlElement("Success")]
+        public virtual bool Success { get; set; }
 
         private protected BaseResponseDto(bool success)
         {
             Success = success;
         }
+
+        private protected BaseResponseDto() { }
     }
 }
