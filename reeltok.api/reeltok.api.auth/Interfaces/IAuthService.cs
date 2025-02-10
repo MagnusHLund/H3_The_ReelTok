@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using reeltok.api.auth.ValueObjects;
 
 namespace reeltok.api.auth.Interfaces
 {
     public interface IAuthService
     {
-        Task CreateUser(CreateDetails CreateDetails);
+        Task<Tokens> CreateUser(CreateDetails CreateDetails);
         Task<Tokens> LoginUser(LoginCredentials loginCredentials);
         Task<AccessToken> RefreshAccessToken(string refreshToken);
         Task DeleteUser(Guid userId);

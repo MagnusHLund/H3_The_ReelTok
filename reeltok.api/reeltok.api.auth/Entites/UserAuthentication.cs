@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.auth.Entities
 {
-    public class Auth
+    public class UserAuthentication
     {
         [Key]
         public Guid UserId { get; set; }
@@ -13,7 +13,7 @@ namespace reeltok.api.auth.Entities
         [Required]
         public string Salt { get; set; }
 
-        public Auth(Guid userId, string hashedPassword, string salt)
+        public UserAuthentication(Guid userId, string hashedPassword, string salt)
         {
             UserId = userId;
             HashedPassword = hashedPassword;

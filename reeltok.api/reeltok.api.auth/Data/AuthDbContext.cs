@@ -10,7 +10,7 @@ namespace reeltok.api.auth.Data
 
        }
 
-       public DbSet<Auth> Auths { get; set; }
+       public DbSet<UserAuthentication> Auths { get; set; }
        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }
