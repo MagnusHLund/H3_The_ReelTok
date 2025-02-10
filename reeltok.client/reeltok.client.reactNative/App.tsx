@@ -19,7 +19,7 @@ export default function App() {
       <StatusBar style="auto" />
       
     
-      <CustomDropdown label="Category" categories={Categories} width={150} height={40}/>
+      <CustomDropdown label="Category" categories={Categories} placeholder="Categori"/>
     </View>
   );
 }

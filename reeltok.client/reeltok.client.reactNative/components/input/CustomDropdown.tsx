@@ -6,11 +6,10 @@ import { Text } from 'react-native';
 interface DropDownProps {
   label: string;
   categories: { label: string; value: string }[];
-  width?: number;
-  height?: number;
+  placeholder?: string;
 }
 
-const CustomDropdown: React.FC<DropDownProps> = ({ label, categories, width, height }) => {
+const CustomDropdown: React.FC<DropDownProps> = ({ label, categories, placeholder}) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string | null>(null);
 
@@ -24,9 +23,8 @@ const CustomDropdown: React.FC<DropDownProps> = ({ label, categories, width, hei
         setOpen={setOpen}
         setValue={setValue}
         setItems={() => {}}
-        placeholder='Select a category'
-        style={{ width: width, height: height,borderRadius: 10 }}
-        
+        placeholder={`${placeholder}`}
+        style={{borderRadius: 10}}
       />
     </>
   );
