@@ -103,5 +103,30 @@ namespace reeltok.api.users.Controllers
 
             return Ok(responseDto);
         }
+
+        [HttpDelete("DeleteUser")]
+        public async Task<IActionResult> DeleteUserAsync([FromQuery] Guid userId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (userId == Guid.Empty)
+            {
+                return BadRequest("User Id cannot be empty");
+            }
+
+            Users? user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            bool isDeleted = await _usersService.DeleteUserAsync(userId).ConfigureAwait(false);
+
+            return Ok(isDeleted);
+        }
     }
 }

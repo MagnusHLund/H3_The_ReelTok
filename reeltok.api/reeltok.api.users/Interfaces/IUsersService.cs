@@ -7,6 +7,7 @@ namespace reeltok.api.users.Interfaces
         Task<Users> CreateUserAsync(Users user);
         Task<Users?> GetUserByIdAsync(Guid userId);
         Task<Users?> UpdateUserAsync(Users user, Guid userId);
+        Task<bool> DeleteUserAsync(Guid userId);
 
         Task SaveUserImageAsync(Guid userId, IFormFile imageFile, string saveDirectory);
         Task<string> GetUserImageAsync(Guid userId);

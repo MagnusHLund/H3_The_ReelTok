@@ -51,6 +51,22 @@ namespace reeltok.api.users.Repositories
             return updateUser;
         }
 
+        public async Task<bool> DeleteUserAsync(Guid userId)
+        {
+            Users? userModel = await _context.Users.FindAsync(userId).ConfigureAwait(false);
+
+            if (userModel == null)
+            {
+                return false;
+            }
+
+            _context.Users.Remove(userModel);
+
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            return true;
+        }
+
         #endregion
 
         #region User Like Methods
@@ -88,6 +104,8 @@ namespace reeltok.api.users.Repositories
         {
             throw new NotImplementedException();
         }
+
+
 
         #endregion
     }

@@ -59,6 +59,22 @@ namespace reeltok.api.users.Services
 
             return updatedUser;
         }
+        public Task<bool> DeleteUserAsync(Guid userId)
+        {
+            bool IsUserDeleted;
+
+            try
+            {
+                IsUserDeleted = _userRepository.DeleteUserAsync(userId).Result;
+            }
+            catch (Exception ex)
+            {
+                // Handle the error, you can log it or throw a custom exception if needed
+                throw new InvalidOperationException("User deletion failed.", ex);
+            }
+
+            return Task.FromResult(IsUserDeleted);
+        }
 
         #endregion
 
@@ -158,6 +174,8 @@ namespace reeltok.api.users.Services
         {
             throw new NotImplementedException();
         }
+
+        
 
         #endregion
     }
