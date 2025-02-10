@@ -13,9 +13,9 @@ namespace reeltok.api.recommendations.Services
         {
             _recommendationsRepository = recommendationsRepository;
         }
-        public async Task<List<RecommendationsEnum>> GetRecommendation(Guid userId)
+        public async Task<List<RecommendedCategories>> GetRecommendation(Guid userId)
         {
-            List<RecommendationsEnum> recommendation = await _recommendationsRepository.GetRecommendationAsync(userId);
+            List<RecommendedCategories> recommendation = await _recommendationsRepository.GetRecommendationAsync(userId);
 
             if (recommendation.IsNullOrEmpty())
             {

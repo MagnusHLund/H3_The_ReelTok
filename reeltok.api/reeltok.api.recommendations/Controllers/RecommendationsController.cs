@@ -25,7 +25,7 @@ namespace reeltok.api.recommendations.RecommendationsServiceApi.Api.Controllers
         [HttpGet("GetRecommendations")]
         public async Task<IActionResult> GetRecommendation([FromBody] GetRecommendationRequestDto request)
         {
-            List<RecommendationsEnum> recommendations = await _recommendationsService.GetRecommendation(request.UserId);
+            List<RecommendedCategories> recommendations = await _recommendationsService.GetRecommendation(request.UserId);
 
             bool success = true;
             return Ok(new GetRecommendationResponseDto(recommendations, success));

@@ -131,7 +131,17 @@ namespace reeltok.api.gateway.Tests
 
             // Assert
             Assert.Equal(amountOfVideos, (byte)result.Count);
+
             // TODO: Assert each value of video and compare with the result videos
+            for (int i = 0; i < amountOfVideos; i++)
+            {
+                Assert.Equal(videos[i].VideoId, result[i].VideoId);
+                Assert.Equal(videos[i].VideoDetails, result[i].VideoDetails);
+                Assert.Equal(videos[i].Likes, result[i].Likes);
+                Assert.Equal(videos[i].HasLiked, result[i].HasLiked);
+                Assert.Equal(videos[i].CreatorDetails, result[i].CreatorDetails);
+                Assert.Equal(videos[i].StreamUrl, result[i].StreamUrl);
+            }
         }
 
         [Fact]

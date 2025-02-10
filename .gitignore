@@ -232,4 +232,9 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
-/reeltok.api/reeltok.api.users/Migrations
+
+# Entity framework migrations
+*/Migrations/
+
+# Production appsettings
+*/appsettings.json
