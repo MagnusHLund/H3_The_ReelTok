@@ -14,5 +14,7 @@ namespace reeltok.api.auth.DTOs
             UserId = userId;
             PlainTextPassword = plainTextPassword;
         }
+
+        public LoginUserRequestDto() { }
     }
 }

@@ -1,3 +1,6 @@
+using System.Xml;
+using System.Xml.Serialization;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using reeltok.api.auth.Data;
 using reeltok.api.auth.Interfaces;
@@ -20,8 +23,15 @@ namespace AuthServiceApi
             builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AuthDb")));
             builder.Services.AddSingleton(new AppSettingsUtils(builder.Configuration));
 
-			builder.Services.AddControllers()
-                .AddXmlSerializerFormatters();
+			builder.Services.AddControllers(
+                options => {
+                    options.InputFormatters.Add(new XmlSerializerInputFormatter(options));
+                    options.OutputFormatters.Insert(0, new XmlDataContractSerializerOutputFormatter()); // Prioritize XML Formatter
+                    options.RespectBrowserAcceptHeader = false; // Respect Accept header
+                    options.ReturnHttpNotAcceptable = false; // Return 406 if not acceptable
+                })
+                .AddXmlSerializerFormatters()
+                .AddXmlDataContractSerializerFormatters();
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();

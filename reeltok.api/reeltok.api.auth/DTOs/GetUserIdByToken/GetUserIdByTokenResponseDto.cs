@@ -8,5 +8,7 @@ namespace reeltok.api.auth.DTOs
         {
             UserId = userId;
         }
+
+        public GetUserIdByTokenResponseDto() { }
     }
 }

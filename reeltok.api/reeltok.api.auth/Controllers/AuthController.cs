@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using reeltok.api.auth.Utils;
 using reeltok.api.auth.Enums;
 using reeltok.api.auth.DTOs;
+using reeltok.api.auth.ActionFilters;
 
 namespace reeltok.api.auth.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Consumes("application/xml", "text/xml", "application/json")]
+    [Consumes("application/xml")]
+    [Produces("application/xml")]
+    [ValidateModel]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
