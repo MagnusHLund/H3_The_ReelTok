@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using reeltok.api.users.Entities;
 
-namespace reeltok.api.users.DTOs.SubscriptionResponseDTO
+namespace reeltok.api.users.DTOs.SubscriptionResponses
 {
     public class GetAllSubscribersResponseDto : BaseResponseDto
     {

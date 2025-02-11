@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace reeltok.api.users.DTOs.UserResponseDTO
+namespace reeltok.api.users.DTOs.UserResponses
 {
     [XmlRoot("ReturnCreatedUser")]
     public class ReturnCreateUserResponseDTO

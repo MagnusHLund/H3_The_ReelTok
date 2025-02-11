@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace reeltok.api.users.DTOs.LikeVideoRequestDTO
+namespace reeltok.api.users.DTOs.LikeVideoRequests
 {
     public class LikeVideoRequestDto
     {

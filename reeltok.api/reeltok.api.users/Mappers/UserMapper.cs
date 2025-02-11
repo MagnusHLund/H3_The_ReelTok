@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using reeltok.api.users.DTOs.UserRequestDTO;
+using reeltok.api.users.DTOs.UserRequests;
 using reeltok.api.users.ValueObjects;
 using reeltok.api.users.Entities;
-using reeltok.api.users.DTOs.UserResponseDTO;
+using reeltok.api.users.DTOs.UserResponses;
 
 namespace reeltok.api.users.Mappers
 {

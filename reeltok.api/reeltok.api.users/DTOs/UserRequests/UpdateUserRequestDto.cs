@@ -1,17 +1,21 @@
-using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
-namespace reeltok.api.users.DTOs.UserRequestDTO
+namespace reeltok.api.users.DTOs.UserRequests
 {
-    public class CreateUserRequestDto
+    public class UpdateUserRequestDto
     {
         [Required]
+        public Guid UserId { get; }
+
+        [Required]
         public string UserName { get; }
+
         [Required]
         public string Email { get; }
 
-    public CreateUserRequestDto(string userName, string email)
+        public UpdateUserRequestDto(Guid userId, string userName, string email)
         {
+            UserId = userId;
             UserName = userName;
             Email = email;
         }

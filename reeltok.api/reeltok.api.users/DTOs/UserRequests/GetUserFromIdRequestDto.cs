@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace reeltok.api.users.DTOs.UserRequestDTO
+namespace reeltok.api.users.DTOs.UserRequests
 {
     public class GetUserFromIdRequestDto
     {

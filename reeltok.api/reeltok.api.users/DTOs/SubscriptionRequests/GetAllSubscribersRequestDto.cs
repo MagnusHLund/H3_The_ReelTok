@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace reeltok.api.users.DTOs.SubscriptionRequestDTO
+namespace reeltok.api.users.DTOs.SubscriptionRequests
 {
     public class GetAllSubscribersRequestDto
     {
