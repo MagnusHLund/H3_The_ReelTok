@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace reeltok.api.users.Controllers
 {
-    [Route("api/user")]
+    [Route("api/subscriptions")]
     [ApiController]
-    public class SubscriptionController
+    public class SubscriptionController : ControllerBase
     {
 
     }

@@ -7,13 +7,12 @@ namespace reeltok.api.users.Entities
     public class LikedVideo
     {
         [Key]
-        public uint LikedVideoId { get; set; } = 0;
+        public uint LikedVideoId { get; set; }
 
         [Required]
         public LikedDetails LikedVideoDetails { get; set; }
-        public LikedVideo(uint likedVideoId, LikedDetails likedVideoDetails)
+        public LikedVideo(LikedDetails likedVideoDetails)
         {
-            LikedVideoId = likedVideoId;
             LikedVideoDetails = likedVideoDetails;
         }
 

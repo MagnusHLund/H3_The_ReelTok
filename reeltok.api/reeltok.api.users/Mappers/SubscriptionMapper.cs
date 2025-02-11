@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace reeltok.api.users.DTOs.SubscriptionResponses
+namespace reeltok.api.users.Mappers
 {
-    public class UnsubscribeResponseDto
+    public class SubscriptionMapper
     {
         
     }

@@ -12,7 +12,7 @@ using reeltok.api.users.Data;
 namespace UsersServiceApi.Migrations
 {
     [DbContext(typeof(UserDBContext))]
-    [Migration("20250210085348_Init")]
+    [Migration("20250211125810_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -51,7 +51,7 @@ namespace UsersServiceApi.Migrations
                     b.ToTable("Subscriptions");
                 });
 
-            modelBuilder.Entity("reeltok.api.users.Entities.Users", b =>
+            modelBuilder.Entity("reeltok.api.users.Entities.User", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
@@ -59,7 +59,7 @@ namespace UsersServiceApi.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users", (string) null);
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("reeltok.api.users.Entities.LikedVideo", b =>
@@ -84,7 +84,7 @@ namespace UsersServiceApi.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("LikedVideoId");
 
-                            b1.HasOne("reeltok.api.users.Entities.Users", null)
+                            b1.HasOne("reeltok.api.users.Entities.User", null)
                                 .WithMany()
                                 .HasForeignKey("UserId")
                                 .OnDelete(DeleteBehavior.Restrict)
@@ -116,13 +116,13 @@ namespace UsersServiceApi.Migrations
 
                             b1.ToTable("Subscriptions");
 
-                            b1.HasOne("reeltok.api.users.Entities.Users", null)
+                            b1.HasOne("reeltok.api.users.Entities.User", null)
                                 .WithMany()
                                 .HasForeignKey("SubscriberUserId")
                                 .OnDelete(DeleteBehavior.Restrict)
                                 .IsRequired();
 
-                            b1.HasOne("reeltok.api.users.Entities.Users", null)
+                            b1.HasOne("reeltok.api.users.Entities.User", null)
                                 .WithMany()
                                 .HasForeignKey("SubscribingToUserId")
                                 .OnDelete(DeleteBehavior.Restrict)
@@ -136,11 +136,11 @@ namespace UsersServiceApi.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("reeltok.api.users.Entities.Users", b =>
+            modelBuilder.Entity("reeltok.api.users.Entities.User", b =>
                 {
                     b.OwnsOne("reeltok.api.users.ValueObjects.UserDetails", "UserDetails", b1 =>
                         {
-                            b1.Property<Guid>("UsersUserId")
+                            b1.Property<Guid>("UserId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("ProfilePictureUrl")
@@ -155,16 +155,16 @@ namespace UsersServiceApi.Migrations
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.HasKey("UsersUserId");
+                            b1.HasKey("UserId");
 
                             b1.ToTable("Users");
 
                             b1.WithOwner()
-                                .HasForeignKey("UsersUserId");
+                                .HasForeignKey("UserId");
 
                             b1.OwnsOne("reeltok.api.users.ValueObjects.HiddenUserDetails", "HiddenDetails", b2 =>
                                 {
-                                    b2.Property<Guid>("UserDetailsUsersUserId")
+                                    b2.Property<Guid>("UserDetailsUserId")
                                         .HasColumnType("uniqueidentifier");
 
                                     b2.Property<string>("Email")
@@ -172,12 +172,12 @@ namespace UsersServiceApi.Migrations
                                         .HasColumnType("nvarchar(100)")
                                         .HasColumnName("Email");
 
-                                    b2.HasKey("UserDetailsUsersUserId");
+                                    b2.HasKey("UserDetailsUserId");
 
                                     b2.ToTable("Users");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("UserDetailsUsersUserId");
+                                        .HasForeignKey("UserDetailsUserId");
                                 });
 
                             b1.Navigation("HiddenDetails")
