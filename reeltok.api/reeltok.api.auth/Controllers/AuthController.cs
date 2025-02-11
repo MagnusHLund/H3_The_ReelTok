@@ -9,6 +9,7 @@ namespace reeltok.api.auth.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Consumes("application/xml", "text/xml", "application/json")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
