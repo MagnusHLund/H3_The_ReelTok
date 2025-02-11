@@ -1,5 +1,6 @@
 using reeltok.api.users.Repositories;
-using reeltok.api.users.Interfaces;
+using reeltok.api.users.Interfaces.Repositories;
+using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.Services;
 using reeltok.api.users.Data;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +13,14 @@ namespace UsersServiceApi
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
-			// Add services to the container.
+			// Repositories DI
 			builder.Services.AddTransient<IUsersRepository, UsersRepository>();
+			builder.Services.AddTransient<ILikeVideoRepository, LikeVideoRepository>();
+			builder.Services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
+			// Services DI
 			builder.Services.AddTransient<IUsersService, UsersService>();
+			builder.Services.AddTransient<ILikeVideoService, LikeVideoService>();
+			builder.Services.AddTransient<ISubscriptionService, SubscriptionService>();
 
 			builder.Services.AddDbContext<UserDBContext>(options =>
 			{

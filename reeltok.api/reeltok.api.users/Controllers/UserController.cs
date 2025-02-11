@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using reeltok.api.users.DTOs.UserRequestDTO;
 using reeltok.api.users.DTOs.UserResponseDTO;
 using reeltok.api.users.Entities;
-using reeltok.api.users.Interfaces;
+using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.Mappers;
 using reeltok.api.users.ValueObjects;
 
