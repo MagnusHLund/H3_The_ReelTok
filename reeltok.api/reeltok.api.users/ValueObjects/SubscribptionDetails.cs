@@ -19,4 +19,4 @@ namespace reeltok.api.users.ValueObjects
         }
         private SubscribptionDetails() { }
     }
-}
+} 

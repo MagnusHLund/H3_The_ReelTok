@@ -1,24 +1,58 @@
+using Microsoft.EntityFrameworkCore;
+using reeltok.api.users.Data;
+using reeltok.api.users.Entities;
 using reeltok.api.users.Interfaces.Repositories;
 
 namespace reeltok.api.users.Repositories
 {
     public class SubscriptionRepository : ISubscriptionRepository
     {
-        public Task<bool> AddUserToSubscriptionAsync(Guid userId, Guid subscriptionUserId)
+        private readonly UserDbContext _context;
+
+        public SubscriptionRepository(UserDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<List<Guid>> GetAllSubscribersIdAsync(Guid userId)
+        /// <summary>
+        /// This is to add a user into the list of people you are following
+        /// </summary>
+        /// <param name="subscription"></param>
+        /// <returns></returns>
+        public async Task<bool> AddUserToSubscriptionAsync(Subscription subscription)
         {
-            throw new NotImplementedException();
+            Subscription DbSubscription = (await _context.Subscriptions.AddAsync(subscription).ConfigureAwait(false)).Entity;
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            return DbSubscription != null;
         }
 
-        public Task<List<Guid>> GetAllSubscriptionIdAsync(Guid userId)
+        /// <summary>
+        /// This is for the people who are following a user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<List<Guid>> GetAllSubscribersIdAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            return await _context.Subscriptions.Where(s => s.SubDetails.SubscribingToUserId == userId).Select(s => s.SubDetails.SubscriberUserId).ToListAsync().ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// This is for the people who a user is following
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<List<Guid>> GetAllSubscriptionIdAsync(Guid userId)
+        {
+            return await _context.Subscriptions.Where(s => s.SubDetails.SubscriberUserId == userId).Select(s => s.SubDetails.SubscribingToUserId).ToListAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// This is to remove a user from the list of people you are following
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="subscriptionUserId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public Task<bool> RemoveUserFromSubscriptionAsync(Guid userId, Guid subscriptionUserId)
         {
             throw new NotImplementedException();

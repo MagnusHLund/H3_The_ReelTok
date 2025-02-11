@@ -11,9 +11,8 @@ namespace reeltok.api.users.Entities
         [Required]
         public SubscribptionDetails SubDetails { get; set; }
 
-        public Subscription(uint subscriptionId, SubscribptionDetails subDetails)
+        public Subscription(SubscribptionDetails subDetails)
         {
-            SubscriptionId = subscriptionId;
             SubDetails = subDetails;
         }
         private Subscription() { }

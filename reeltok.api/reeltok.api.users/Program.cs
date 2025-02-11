@@ -14,15 +14,24 @@ namespace UsersServiceApi
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Repositories DI
-			builder.Services.AddTransient<IUsersRepository, UsersRepository>();
-			builder.Services.AddTransient<ILikeVideoRepository, LikeVideoRepository>();
-			builder.Services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
-			// Services DI
-			builder.Services.AddTransient<IUsersService, UsersService>();
-			builder.Services.AddTransient<ILikeVideoService, LikeVideoService>();
-			builder.Services.AddTransient<ISubscriptionService, SubscriptionService>();
+			// builder.Services.AddTransient<IUsersRepository, UsersRepository>();
+			// builder.Services.AddTransient<ILikeVideoRepository, LikeVideoRepository>();
+			// builder.Services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
+			
+			builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+			builder.Services.AddScoped<ILikeVideoRepository, LikeVideoRepository>();
+			builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 
-			builder.Services.AddDbContext<UserDBContext>(options =>
+			// Services DI
+			// builder.Services.AddTransient<IUsersService, UsersService>();
+			// builder.Services.AddTransient<ILikeVideoService, LikeVideoService>();
+			// builder.Services.AddTransient<ISubscriptionService, SubscriptionService>();
+
+			builder.Services.AddScoped<IUsersService, UsersService>();
+			builder.Services.AddScoped<ILikeVideoService, LikeVideoService>();
+			builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+
+			builder.Services.AddDbContext<UserDbContext>(options =>
 			{
 				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 			});

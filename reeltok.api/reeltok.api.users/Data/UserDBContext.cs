@@ -3,9 +3,9 @@ using reeltok.api.users.Entities;
 
 namespace reeltok.api.users.Data
 {
-    public class UserDBContext : DbContext
+    public class UserDbContext : DbContext
     {
-        public UserDBContext(DbContextOptions<UserDBContext> options) : base(options)
+        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
         {
 
         }

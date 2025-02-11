@@ -20,7 +20,7 @@ namespace reeltok.api.users.Controllers
             _likeVideoService = likeVideoService;
         }
 
-        [HttpPost("LikeAVideo")]
+        [HttpPost("Like A Video")]
         public async Task<IActionResult> LikeVideoAsync([FromBody] LikeVideoRequestDto likeVideo)
         {
             if (!ModelState.IsValid)
@@ -54,7 +54,7 @@ namespace reeltok.api.users.Controllers
             return StatusCode(500, "Failed to like video.");
         }
 
-        [HttpDelete("UnlikeAVideo")]
+        [HttpDelete("Unlike A Video")]
         public async Task<IActionResult> UnlikeVideoAsync([FromBody] LikeVideoRequestDto likeVideo)
         {
             if (!ModelState.IsValid)

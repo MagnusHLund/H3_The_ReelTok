@@ -19,7 +19,7 @@ namespace reeltok.api.users.Controllers
             _usersService = usersService;
         }
 
-        [HttpPost("CreateUser")]
+        [HttpPost("Create A User")]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequestDto user)
         {
             if (!ModelState.IsValid)
@@ -44,7 +44,7 @@ namespace reeltok.api.users.Controllers
             return Ok(responseDto);
         }
 
-        [HttpGet("GetUserById")]
+        [HttpGet("Get User By Id")]
         public async Task<IActionResult> GetUserById([FromQuery] Guid userId)
         {
             if (!ModelState.IsValid)
@@ -69,7 +69,7 @@ namespace reeltok.api.users.Controllers
             return Ok(responseDto);
         }
 
-        [HttpPut("UpdateUser")]
+        [HttpPut("Update User")]
         public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserRequestDto user)
         {
             if (!ModelState.IsValid)
@@ -104,7 +104,7 @@ namespace reeltok.api.users.Controllers
             return Ok(responseDto);
         }
 
-        [HttpDelete("DeleteUser")]
+        [HttpDelete("Delete User")]
         public async Task<IActionResult> DeleteUserAsync([FromQuery] Guid userId)
         {
             if (!ModelState.IsValid)

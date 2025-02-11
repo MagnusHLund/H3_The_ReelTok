@@ -7,9 +7,9 @@ namespace reeltok.api.users.Repositories
 {
     public class LikeVideoRepository : ILikeVideoRepository
     {
-        private readonly UserDBContext _context;
+        private readonly UserDbContext _context;
 
-        public LikeVideoRepository(UserDBContext context)
+        public LikeVideoRepository(UserDbContext context)
         {
             _context = context;
         }

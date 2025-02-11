@@ -7,9 +7,9 @@ namespace reeltok.api.users.Repositories
 {
     public class UsersRepository : IUsersRepository
     {
-        private readonly UserDBContext _context;
+        private readonly UserDbContext _context;
 
-        public UsersRepository(UserDBContext context)
+        public UsersRepository(UserDbContext context)
         {
             _context = context;
         }
