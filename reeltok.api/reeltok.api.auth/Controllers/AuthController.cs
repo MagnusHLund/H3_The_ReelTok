@@ -1,10 +1,10 @@
+using reeltok.api.auth.ActionFilters;
 using reeltok.api.auth.ValueObjects;
 using reeltok.api.auth.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using reeltok.api.auth.Utils;
 using reeltok.api.auth.Enums;
 using reeltok.api.auth.DTOs;
-using reeltok.api.auth.ActionFilters;
 
 namespace reeltok.api.auth.Controllers
 {
@@ -79,19 +79,20 @@ namespace reeltok.api.auth.Controllers
 
         [HttpGet]
         [Route("GetUserIdByToken")]
-        public async Task<IActionResult> GetUserIdByToken()
+        public IActionResult GetUserIdByToken()
         {
-            string? accessToken = CookieUtils.GetCookieValue(HttpContext, TokenName.AccessToken);
+            string? accessTokenValue = CookieUtils.GetCookieValue(HttpContext, TokenName.AccessToken);
 
-            // Make this also refresh the tokens
-
-            if(string.IsNullOrEmpty(accessToken))
+            if(string.IsNullOrEmpty(accessTokenValue))
             {
                 FailureResponseDto failureResponseDto = new FailureResponseDto("No Access Token is present!");
                 return BadRequest(failureResponseDto);
             }
 
-            throw new NotImplementedException();
+            Guid userId = _authService.GetUserIdByToken(accessTokenValue);
+            GetUserIdByTokenResponseDto responseDto = new GetUserIdByTokenResponseDto(userId);
+
+            return Ok(responseDto);
         }
     }
 }

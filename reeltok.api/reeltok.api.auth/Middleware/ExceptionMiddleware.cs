@@ -19,12 +19,12 @@ namespace reeltok.api.auth.Middleware
         {
             try
             {
-                await _next(context);
+                await _next(context).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"An exception has occurred: {ex}");
-                await HandleExceptionAsync(context);
+                await HandleExceptionAsync(context).ConfigureAwait(false);
             }
         }
 

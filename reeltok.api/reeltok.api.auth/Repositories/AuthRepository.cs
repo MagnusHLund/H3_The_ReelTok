@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using reeltok.api.auth.Data;
 using reeltok.api.auth.Entities;
 using reeltok.api.auth.Interfaces;
+using reeltok.api.auth.ValueObjects;
 
 namespace reeltok.api.auth.Repositories
 {
@@ -16,24 +17,16 @@ namespace reeltok.api.auth.Repositories
 
         public async Task DeleteUser(Guid userId)
         {
-            UserAuthentication userToDelete = await _context.Auths.Where(e => e.UserId == userId).FirstOrDefaultAsync().ConfigureAwait(false)
+            UserCredentialsEntity userToDelete = await _context.UserCredentials.Where(e => e.UserId == userId).FirstOrDefaultAsync().ConfigureAwait(false)
                 ?? throw new KeyNotFoundException($"Unable to find user: {userId} in the database!");
 
-            _context.Remove<UserAuthentication>(userToDelete);
+            _context.Remove<UserCredentialsEntity>(userToDelete);
             await _context.SaveChangesAsync().ConfigureAwait(false);
-        }
-
-        public async Task<Guid> GetUserIdByToken(string refreshToken)
-        {
-            RefreshToken userRefreshToken = await _context.RefreshTokens.Where(e => e.Token == refreshToken).FirstOrDefaultAsync().ConfigureAwait(false)
-                ?? throw new KeyNotFoundException($"Unable to find the refresh token in the database!");
-
-            return userRefreshToken.UserId;
         }
 
         public async Task LogoutUser(string refreshToken)
         {
-            // TODO: Shouldn't it also invalidate JWTs? This is only refresh tokens...
+            // TODO: Shouldn't it also invalidate JWTs? This is only refresh tokens... Maybe change method to "InvalidateTokens"?
 
             RefreshToken refreshTokenToInvalidate = await _context.RefreshTokens.Where(e => e.Token == refreshToken).FirstOrDefaultAsync().ConfigureAwait(false)
                 ?? throw new KeyNotFoundException("Unable to find the refresh token in the database!");
@@ -42,16 +35,16 @@ namespace reeltok.api.auth.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<UserAuthentication> GetUserAuthenticationByUserId(Guid userId)
+        public async Task<UserCredentialsEntity> GetUserAuthenticationByUserId(Guid userId)
         {
-            UserAuthentication userCredentials = await _context.Auths.Where(a => a.UserId == userId).FirstOrDefaultAsync().ConfigureAwait(false)
+            UserCredentialsEntity userCredentials = await _context.UserCredentials.Where(a => a.UserId == userId).FirstOrDefaultAsync().ConfigureAwait(false)
                 ?? throw new KeyNotFoundException($"Unable to find user: {userId} in the database!");
 
             return userCredentials;
         }
 
         public async Task<bool> DoesUserExist(Guid userId) {
-            bool userExists = await _context.Auths.AnyAsync(a => a.UserId == userId).ConfigureAwait(false);
+            bool userExists = await _context.UserCredentials.AnyAsync(a => a.UserId == userId).ConfigureAwait(false);
             return userExists;
         }
 
@@ -64,11 +57,11 @@ namespace reeltok.api.auth.Repositories
             return refreshTokenToCheck;
         }
 
-        public async Task CreateUser(UserAuthentication authInfo)
+        public async Task<UserCredentialsEntity> CreateUser(UserCredentialsEntity userCredentials)
         {
-            UserAuthentication userAuthenticationResult = await _context.AddAsync<UserAuthentication>(authInfo);
+            UserCredentialsEntity userCredentialsDatabaseResult = await _context.AddAsync(userCredentials).ConfigureAwait(false);
             await _context.SaveChangesAsync();
-            // TODO: Finish this at home
+            return userCredentialsDatabaseResult;
         }
     }
 }

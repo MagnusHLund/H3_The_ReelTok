@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Authentication;
 using reeltok.api.auth.ValueObjects;
 using reeltok.api.auth.Interfaces;
 using reeltok.api.auth.Entities;
 using reeltok.api.auth.Utils;
-using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace reeltok.api.auth.Services
 {
@@ -12,33 +13,41 @@ namespace reeltok.api.auth.Services
     {
         // TODO: Maybe implement some session cache for tokens?
          private readonly IAuthRepository _authRepository;
+         private readonly ITokensService _tokensService;
 
-        public AuthService(IAuthRepository authRepository)
+        public AuthService(IAuthRepository authRepository, ITokensService tokensService)
         {
             _authRepository = authRepository;
+            _tokensService = tokensService;
         }
 
         public async Task DeleteUser(Guid userId)
         {
-           await _authRepository.DeleteUser(userId);
+           await _authRepository.DeleteUser(userId).ConfigureAwait(false);
         }
 
-        public async Task<Guid> GetUserIdByToken(string refreshToken)
+        public Guid GetUserIdByToken(string accessTokenValue)
         {
-            Guid userId = await _authRepository.GetUserIdByToken(refreshToken);
+            ClaimsPrincipal decodedAccessToken = _tokensService.DecodeAccessToken(accessTokenValue);
+            string? stringUserId = decodedAccessToken?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if(!Guid.TryParse(stringUserId, out Guid userId))
+            {
+                throw new FormatException("Invalid UserId!");
+            }
 
             return userId;
         }
 
         public async Task<Tokens> LoginUser(LoginCredentials loginCredentials)
         {
-            UserAuthentication existingAuth = await _authRepository.GetUserAuthenticationByUserId(loginCredentials.UserId).ConfigureAwait(false);
+            UserCredentialsEntity existingAuth = await _authRepository.GetUserAuthenticationByUserId(loginCredentials.UserId).ConfigureAwait(false);
 
             bool isPasswordValid = PasswordUtils.VerifyPassword(loginCredentials.PlainTextPassword, existingAuth.HashedPassword, existingAuth.Salt);
 
             if (!isPasswordValid)
             {
-              throw new InvalidCredentialException();
+              throw new InvalidCredentialException("Invalid credentials!");
             }
 
             Tokens tokens = GenerateTokens(existingAuth.UserId);
@@ -55,12 +64,12 @@ namespace reeltok.api.auth.Services
         {
             RefreshToken refreshTokenToCheck = await _authRepository.RefreshAccessToken(refreshToken);
 
-            if (refreshTokenToCheck.ExpireDate < DateTime.UtcNow)
+            if (refreshTokenToCheck.ExpireDate < DateTimeUtils.DateTimeToUnixTime(DateTime.UtcNow))
             {
                 throw new SecurityTokenExpiredException();
             }
 
-            AccessToken accessToken = GenerateTokenUtils.GenerateAccessToken(refreshTokenToCheck.UserId);
+            AccessToken accessToken = _tokensService.GenerateAccessToken(refreshTokenToCheck.UserId);
 
             return accessToken;
         }
@@ -80,17 +89,17 @@ namespace reeltok.api.auth.Services
 
             HashedPasswordData hashedPasswordData = PasswordUtils.HashPassword(CreateDetails.PlainTextPassword);
 
-            UserAuthentication authInfo = new UserAuthentication(CreateDetails.UserId, hashedPasswordData.Password, hashedPasswordData.Salt);
-            await _authRepository.CreateUser(authInfo);
+            UserCredentialsEntity userCredentials = new UserCredentialsEntity(CreateDetails.UserId, hashedPasswordData.Password, hashedPasswordData.Salt);
+            await _authRepository.CreateUser(userCredentials).ConfigureAwait(false);
 
-            Tokens tokens = GenerateTokens(authInfo.UserId);
+            Tokens tokens = GenerateTokens(userCredentials.UserId);
             return tokens;
         }
 
-        private Tokens GenerateTokens(Guid userId)
+        private Tokens GenerateTokens(Guid userId) // TODO: Remove this method
         {
-            AccessToken accessToken = GenerateTokenUtils.GenerateAccessToken(userId);
-            RefreshToken refreshToken = GenerateTokenUtils.GenerateRefreshToken(userId);
+            AccessToken accessToken = _tokensService.GenerateAccessToken(userId);
+            RefreshToken refreshToken = _tokensService.GenerateRefreshToken(userId);
 
             return new Tokens(accessToken, refreshToken);
         }

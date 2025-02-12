@@ -6,8 +6,12 @@ namespace reeltok.api.auth.ValueObjects
 {
     [Index(nameof(TokenValue), IsUnique = true, Name = "UX_AccessToken_TokenValue")]
     [Index(nameof(ExpiresAt), Name = "IX_AccessToken_ExpiresAt")]
-    public class AccessToken : IToken
+    [Index(nameof(UserId), Name = "IX_AccessToken_UserId")]
+    public class RefreshToken : IToken
     {
+        [Required]
+        public Guid UserId { get; private set; }
+
         [Required]
         public string TokenValue { get; private set; }
 
@@ -17,8 +21,9 @@ namespace reeltok.api.auth.ValueObjects
         [Required]
         public uint ExpiresAt { get; private set; }
 
-        public AccessToken(string tokenValue, uint createdAt, uint expiresAt)
+        public RefreshToken(Guid userId, string tokenValue, uint createdAt, uint expiresAt)
         {
+            UserId = userId;
             TokenValue = tokenValue;
             CreatedAt = createdAt;
             ExpiresAt = expiresAt;
