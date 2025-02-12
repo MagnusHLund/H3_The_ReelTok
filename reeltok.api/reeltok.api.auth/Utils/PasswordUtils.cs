@@ -1,54 +1,77 @@
-using System;
-using System.Security.Cryptography;
-using System.Text.RegularExpressions;
 using System.Text;
+using System.Security.Cryptography;
+using reeltok.api.auth.ValueObjects;
+using System.Text.RegularExpressions;
 
-public static class PasswordUtils
+namespace reeltok.api.auth.Utils
 {
-    private const int SaltSize = 16; // 16 bytes = 128 bits
-    private const int KeySize = 32;  // 32 bytes = 256 bits
-    private const int Iterations = 100000;
-
-    public static (string hashedPassword, string salt) HashPassword(string password)
+    internal static class PasswordUtils
     {
-        var saltBytes = new byte[SaltSize];
-        using (var rng = RandomNumberGenerator.Create())
+        private const int SaltSize = 16; // 16 bytes = 128 bits
+        private const int KeySize = 32;  // 32 bytes = 256 bits
+        private const int Iterations = 100000;
+
+        private static byte[] GenerateSalt()
         {
-            rng.GetBytes(saltBytes);
+            byte[] saltBytes = new byte[SaltSize];
+            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(saltBytes);
+            }
+
+            return saltBytes;
         }
 
-        var hashedBytes = Rfc2898DeriveBytes.Pbkdf2(
-            Encoding.UTF8.GetBytes(password),
-            saltBytes,
-            Iterations,
-            HashAlgorithmName.SHA256,
-            KeySize
-        );
+        internal static HashedPasswordData HashPassword(string password)
+        {
+            byte[] saltBytes = GenerateSalt();
 
-        return (Convert.ToBase64String(hashedBytes), Convert.ToBase64String(saltBytes));
-    }
+            byte[] hashedBytes = Rfc2898DeriveBytes.Pbkdf2(
+                Encoding.UTF8.GetBytes(password),
+                saltBytes,
+                Iterations,
+                HashAlgorithmName.SHA256,
+                KeySize
+            );
 
-    public static bool VerifyPassword(string password, string storedHash, string storedSalt)
-    {
-        var saltBytes = Convert.FromBase64String(storedSalt);
+            string hashedPassword = Convert.ToBase64String(hashedBytes);
+            string salt = Convert.ToBase64String(saltBytes);
 
-        var hashedBytes = Rfc2898DeriveBytes.Pbkdf2(
-            Encoding.UTF8.GetBytes(password),
-            saltBytes,
-            Iterations,
-            HashAlgorithmName.SHA256,
-            KeySize
-        );
+            return new HashedPasswordData(hashedPassword, salt);
+        }
 
-        return Convert.ToBase64String(hashedBytes) == storedHash;
-    }
+        internal static bool VerifyPassword(string password, string storedHash, string storedSalt)
+        {
+            byte[] saltBytes = Convert.FromBase64String(storedSalt);
 
-    public static bool IsValid(string password)
-    {
-       return password.Length >= 8 &&
-       Regex.IsMatch(password, @"\d") &&
-       Regex.IsMatch(password, @"[A-Z]") &&
-       Regex.IsMatch(password, @"[a-z]") &&
-       !Regex.IsMatch(password, @"(.)\1{2,}");
+            byte[] hashedBytes = Rfc2898DeriveBytes.Pbkdf2(
+                Encoding.UTF8.GetBytes(password),
+                saltBytes,
+                Iterations,
+                HashAlgorithmName.SHA256,
+                KeySize
+            );
+
+            return Convert.ToBase64String(hashedBytes) == storedHash;
+        }
+
+    /// <summary>
+    /// This method ensures that the passwords follow the minimum password requirements.
+    /// 1. Ensures length is minimum 8 characters long.
+    /// 2. Ensures that the password contains at least 1 number.
+    /// 3. Ensures that the password contains at least 1 uppercase character.
+    /// 4. Ensures that the password contains at least 1 lowercase character.
+    /// 5. Ensures that the password does not repeat the same character 3 or more times in a row.
+    /// </summary>
+    /// <param name="password">Plain text password, which gets validated, to ensure that the minimum password requirements are being followed</param>
+    /// <returns></returns>
+        internal static bool IsValid(string password)
+        {
+            return password.Length >= 8 &&
+            Regex.IsMatch(password, @"\d") &&
+            Regex.IsMatch(password, @"[A-Z]") &&
+            Regex.IsMatch(password, @"[a-z]") &&
+            !Regex.IsMatch(password, @"(.)\1{2,}");
+        }
     }
 }

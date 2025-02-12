@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using reeltok.api.auth.Entites;
+using reeltok.api.auth.Entities;
 
 namespace reeltok.api.auth.Data
 {
@@ -14,7 +10,7 @@ namespace reeltok.api.auth.Data
 
        }
 
-       public DbSet<Auth> Auths { get; set; }
+       public DbSet<UserAuthentication> Auths { get; set; }
        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

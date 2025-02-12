@@ -1,14 +1,17 @@
-
-
 using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.auth.DTOs
 {
-    internal class DeleteUserRequestDto
+    public class DeleteUserRequestDto
     {
         [Required]
-        internal Guid UserId { get; private set; }
+        public Guid UserId { get; set; }
 
-        internal DeleteUserRequestDto(Guid userId) { }
+        public DeleteUserRequestDto(Guid userId)
+        {
+            UserId = userId;
+        }
+
+        public DeleteUserRequestDto() { }
     }
 }

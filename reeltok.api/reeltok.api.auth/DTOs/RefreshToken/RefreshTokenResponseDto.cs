@@ -1,11 +1,8 @@
-
-
 namespace reeltok.api.auth.DTOs
 {
-    internal class RefreshTokenResponseDto : BaseResponseDto
+    public class RefreshTokenResponseDto : BaseResponseDto
     {
-        internal RefreshTokenResponseDto(bool success) : base(success)
-        {
-        }
+        public RefreshTokenResponseDto(bool success = true) : base(success) { }
+        public RefreshTokenResponseDto() { }
     }
 }

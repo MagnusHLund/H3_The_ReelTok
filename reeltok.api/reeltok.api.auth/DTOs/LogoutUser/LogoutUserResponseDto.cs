@@ -1,11 +1,8 @@
-
-
 namespace reeltok.api.auth.DTOs
 {
-    internal class LogoutUserResponseDto : BaseResponseDto
+    public class LogoutUserResponseDto : BaseResponseDto
     {
-        internal LogoutUserResponseDto(bool success) : base(success)
-        {
-        }
+        public LogoutUserResponseDto(bool success = true) : base(success) { }
+        public LogoutUserResponseDto() { }
     }
 }

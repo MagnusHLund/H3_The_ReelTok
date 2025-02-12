@@ -7,7 +7,7 @@ namespace reeltok.api.auth.DTOs
     {
         [Required]
         [XmlElement("Success")]
-        public virtual bool Success { get; set; }
+        public virtual bool Success { get; set; } = true;
 
         private protected BaseResponseDto(bool success)
         {

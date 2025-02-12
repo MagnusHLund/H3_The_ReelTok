@@ -1,10 +1,8 @@
-
 namespace reeltok.api.auth.DTOs
 {
-    internal class DeleteUserResponseDto : BaseResponseDto
+    public class DeleteUserResponseDto : BaseResponseDto
     {
-        internal DeleteUserResponseDto(bool success) : base(success)
-        {
-        }
+        public DeleteUserResponseDto(bool success =  true) : base(success) { }
+        public DeleteUserResponseDto() {}
     }
 }
