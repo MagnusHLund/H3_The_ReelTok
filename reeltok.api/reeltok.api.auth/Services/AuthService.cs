@@ -10,6 +10,7 @@ namespace reeltok.api.auth.Services
 {
     public class AuthService : IAuthService
     {
+        // TODO: Maybe implement some session cache for tokens?
          private readonly IAuthRepository _authRepository;
 
         public AuthService(IAuthRepository authRepository)
@@ -49,13 +50,14 @@ namespace reeltok.api.auth.Services
            await _authRepository.LogoutUser(refreshToken);
         }
 
+        // TODO: Rewrite this method
         public async Task<AccessToken> RefreshAccessToken(string refreshToken)
         {
             RefreshToken refreshTokenToCheck = await _authRepository.RefreshAccessToken(refreshToken);
 
             if (refreshTokenToCheck.ExpireDate < DateTime.UtcNow)
             {
-              throw new SecurityTokenExpiredException();
+                throw new SecurityTokenExpiredException();
             }
 
             AccessToken accessToken = GenerateTokenUtils.GenerateAccessToken(refreshTokenToCheck.UserId);

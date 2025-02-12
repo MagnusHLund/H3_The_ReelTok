@@ -10,7 +10,7 @@ namespace reeltok.api.auth.DTOs
         [XmlElement("UserId")]
         public Guid UserId { get; set; }
         [Required]
-        [XmlElement("PlainTextPassword")]
+        [XmlElement("Password")]
         public string PlainTextPassword { get; set; }
 
         public CreateUserRequestDto(Guid userId, string plainTextPassword)

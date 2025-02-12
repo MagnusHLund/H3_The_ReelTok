@@ -66,8 +66,9 @@ namespace reeltok.api.auth.Repositories
 
         public async Task CreateUser(UserAuthentication authInfo)
         {
-            await _context.AddAsync<UserAuthentication>(authInfo);
+            UserAuthentication userAuthenticationResult = await _context.AddAsync<UserAuthentication>(authInfo);
             await _context.SaveChangesAsync();
+            // TODO: Finish this at home
         }
     }
 }

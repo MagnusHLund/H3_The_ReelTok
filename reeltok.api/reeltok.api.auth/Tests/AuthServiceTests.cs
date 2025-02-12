@@ -68,15 +68,21 @@ namespace reeltok.api.auth.Tests
     {
         // Arrange
         Guid userId = Guid.NewGuid();
-        CreateDetails CreateDetails = new CreateDetails(userId, "VeryStroongPassword566");
+        CreateDetails createDetails = new CreateDetails(userId, "VeryStroongPassword566");
 
-        
+        _mockAuthRepository
+          .Setup(repo => repo.CreateUser(It.IsAny<UserAuthentication>()))
+          .ReturnsAsync(userAuth);
 
         // Act
-        Tokens tokens = await _authService.CreateUser(CreateDetails);
+        Tokens tokens = await _authService.CreateUser(createDetails);
 
         // Assert (implicit): If no exception is thrown, the test passes.
-        await Task.CompletedTask;
+        Assert.NotNull(tokens);
+        Assert.NotNull(tokens.AccessToken);
+        Assert.NotEmpty(tokens.AccessToken.Token);
+        Assert.NotNull(tokens.RefreshToken);
+        Assert.NotEmpty(tokens.RefreshToken.Token);
     }
 
     [Fact]

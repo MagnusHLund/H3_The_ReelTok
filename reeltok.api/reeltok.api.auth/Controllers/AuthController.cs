@@ -55,27 +55,6 @@ namespace reeltok.api.auth.Controllers
             return Ok(responseDto);
         }
 
-        [HttpGet]
-        [Route("RefreshAccessToken")]
-        public async Task<IActionResult> RefreshAccessToken()
-        {
-            string? refreshToken = CookieUtils.GetCookieValue(HttpContext, TokenName.RefreshToken);
-
-            if(string.IsNullOrEmpty(refreshToken))
-            {
-                FailureResponseDto failureResponseDto = new FailureResponseDto("No Refresh Token is present!");
-                return BadRequest(failureResponseDto);
-            }
-
-            AccessToken accessToken = await _authService.RefreshAccessToken(refreshToken).ConfigureAwait(false);
-
-            CookieUtils.AppendTokenToCookie(HttpContext, accessToken, TokenName.AccessToken);
-
-            RefreshTokenResponseDto responseDto = new RefreshTokenResponseDto();
-
-            return Ok(responseDto);
-        }
-
         [HttpDelete]
         [Route("DeleteUser")]
         public async Task<IActionResult> DeleteUser()
@@ -99,10 +78,12 @@ namespace reeltok.api.auth.Controllers
         }
 
         [HttpGet]
-        [Route("Logout")]
+        [Route("GetUserIdByToken")]
         public async Task<IActionResult> GetUserIdByToken()
         {
             string? accessToken = CookieUtils.GetCookieValue(HttpContext, TokenName.AccessToken);
+
+            // Make this also refresh the tokens
 
             if(string.IsNullOrEmpty(accessToken))
             {
