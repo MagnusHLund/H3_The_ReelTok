@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import CustomDropdown from "./components/input/CustomDropdown";
+import ImagePickerExample from "./components/Layout/common/MediaSelector";
 
 const Categories = [
   { label: 'Gaming', value: 'Gaming' },
@@ -20,6 +21,8 @@ export default function App() {
       
     
       <CustomDropdown label="Category" categories={Categories} placeholder="Categori"/>
+
+      <ImagePickerExample/>
     </View>
   );
 }
