@@ -4,10 +4,11 @@
 import { useFonts } from "expo-font";
 import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { Poppins_400Regular } from "@expo-google-fonts/poppins";
+import { ReactNode } from "react";
 
 interface ButtonProps {
   title?: string,
-  children?: React.ReactElement[],
+  children?: ReactNode,
   transparent?: boolean,
   borders?: boolean,
   onPress: () => void,
