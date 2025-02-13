@@ -1,9 +1,9 @@
-using reeltok.api.auth.ValueObjects;
-using reeltok.api.auth.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using reeltok.api.auth.Utils;
-using reeltok.api.auth.Enums;
 using reeltok.api.auth.DTOs;
+using reeltok.api.auth.Enums;
+using reeltok.api.auth.Utils;
+using Microsoft.AspNetCore.Mvc;
+using reeltok.api.auth.Interfaces;
+using reeltok.api.auth.ValueObjects;
 using reeltok.api.auth.ActionFilters;
 
 namespace reeltok.api.auth.Controllers
@@ -22,7 +22,30 @@ namespace reeltok.api.auth.Controllers
             _authService = authService;
         }
 
+        [HttpGet]
+        [Route("GetUserIdByToken")]
+        public IActionResult GetUserIdByToken()
+        {
+            string? accessTokenValue = CookieUtils.GetCookieValue(HttpContext, TokenName.AccessToken);
 
+            if (string.IsNullOrEmpty(accessTokenValue))
+            {
+                FailureResponseDto failureResponseDto = new FailureResponseDto("No Access Token is present!");
+                return BadRequest(failureResponseDto);
+            }
+
+            Guid userId = _authService.GetUserIdByToken(accessTokenValue);
+            GetUserIdByTokenResponseDto responseDto = new GetUserIdByTokenResponseDto(userId);
+
+            return Ok(responseDto);
+        }
+
+        // TODO: SQL to ensure tokens are invalidated, if expired.
+        // TODO: Ensure that tokens are revoked correctly, I think they are, but just make sure
+        // TODO: Ensure that DTOs have the correct xml attributes
+        // TODO: Optimize database (table lengths, and such)
+        // TODO: Ensure that all token usage checks if the token is expired!
+        // TODO: Create factory for tests
         [HttpPost]
         [Route("CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDto request)
@@ -55,24 +78,19 @@ namespace reeltok.api.auth.Controllers
             return Ok(responseDto);
         }
 
-        [HttpGet]
-        [Route("RefreshAccessToken")]
-        public async Task<IActionResult> RefreshAccessToken()
+        [HttpPost]
+        [Route("Logout")]
+        public async Task<IActionResult> LogoutUser()
         {
-            string? refreshToken = CookieUtils.GetCookieValue(HttpContext, TokenName.RefreshToken);
+            string accessToken = CookieUtils.GetCookieValue(HttpContext, TokenName.AccessToken);
+            string refreshToken = CookieUtils.GetCookieValue(HttpContext, TokenName.RefreshToken);
 
-            if(string.IsNullOrEmpty(refreshToken))
-            {
-                FailureResponseDto failureResponseDto = new FailureResponseDto("No Refresh Token is present!");
-                return BadRequest(failureResponseDto);
-            }
+            await _authService.LogoutUser(accessToken, refreshToken).ConfigureAwait(false);
 
-            AccessToken accessToken = await _authService.RefreshAccessToken(refreshToken).ConfigureAwait(false);
+            CookieUtils.DeleteCookie(HttpContext, TokenName.AccessToken);
+            CookieUtils.DeleteCookie(HttpContext, TokenName.RefreshToken);
 
-            CookieUtils.AppendTokenToCookie(HttpContext, accessToken, TokenName.AccessToken);
-
-            RefreshTokenResponseDto responseDto = new RefreshTokenResponseDto();
-
+            LogoutUserResponseDto responseDto = new LogoutUserResponseDto();
             return Ok(responseDto);
         }
 
@@ -80,37 +98,13 @@ namespace reeltok.api.auth.Controllers
         [Route("DeleteUser")]
         public async Task<IActionResult> DeleteUser()
         {
-            throw new NotImplementedException();
-        }
+            string accessToken = CookieUtils.GetCookieValue(HttpContext, TokenName.AccessToken);
 
-        [HttpPost]
-        [Route("Logout")]
-        public async Task<IActionResult> LogoutUser()
-        {
-            string? refreshToken = CookieUtils.GetCookieValue(HttpContext, TokenName.RefreshToken);
+            Guid userId = _authService.GetUserIdByToken(accessToken);
+            await _authService.DeleteUser(userId).ConfigureAwait(false);
 
-            if(string.IsNullOrEmpty(refreshToken))
-            {
-                FailureResponseDto failureResponseDto = new FailureResponseDto("No Refresh Token is present!");
-                return BadRequest(failureResponseDto);
-            }
-
-            throw new NotImplementedException();
-        }
-
-        [HttpGet]
-        [Route("Logout")]
-        public async Task<IActionResult> GetUserIdByToken()
-        {
-            string? accessToken = CookieUtils.GetCookieValue(HttpContext, TokenName.AccessToken);
-
-            if(string.IsNullOrEmpty(accessToken))
-            {
-                FailureResponseDto failureResponseDto = new FailureResponseDto("No Access Token is present!");
-                return BadRequest(failureResponseDto);
-            }
-
-            throw new NotImplementedException();
+            DeleteUserResponseDto responseDto = new DeleteUserResponseDto();
+            return Ok(responseDto);
         }
     }
 }

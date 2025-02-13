@@ -2,10 +2,8 @@ namespace reeltok.api.auth.Interfaces
 {
     public interface IToken
     {
-        string Token { get; }
+        string TokenValue { get; }
 
-        DateTime CreateDate { get; }
-
-        DateTime ExpireDate { get; }
+        uint ExpiresAt { get; }
     }
 }

@@ -1,7 +1,7 @@
-using Microsoft.EntityFrameworkCore;
 using reeltok.api.auth.Data;
 using reeltok.api.auth.Entities;
 using reeltok.api.auth.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace reeltok.api.auth.Repositories
 {
@@ -14,60 +14,34 @@ namespace reeltok.api.auth.Repositories
             _context = context;
         }
 
+        public async Task<UserCredentialsEntity> CreateUser(UserCredentialsEntity userCredentials)
+        {
+            UserCredentialsEntity userCredentialsDatabaseResult = (await _context.AddAsync(userCredentials).ConfigureAwait(false)).Entity;
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            return userCredentialsDatabaseResult;
+        }
+
         public async Task DeleteUser(Guid userId)
         {
-            UserAuthentication userToDelete = await _context.Auths.Where(e => e.UserId == userId).FirstOrDefaultAsync().ConfigureAwait(false)
+            UserCredentialsEntity userToDelete = await _context.UserCredentials.Where(e => e.UserId == userId).FirstOrDefaultAsync().ConfigureAwait(false)
                 ?? throw new KeyNotFoundException($"Unable to find user: {userId} in the database!");
 
-            _context.Remove<UserAuthentication>(userToDelete);
+            _context.Remove<UserCredentialsEntity>(userToDelete);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task<Guid> GetUserIdByToken(string refreshToken)
+        public async Task<UserCredentialsEntity> GetUserCredentialsByUserId(Guid userId)
         {
-            RefreshToken userRefreshToken = await _context.RefreshTokens.Where(e => e.Token == refreshToken).FirstOrDefaultAsync().ConfigureAwait(false)
-                ?? throw new KeyNotFoundException($"Unable to find the refresh token in the database!");
-
-            return userRefreshToken.UserId;
-        }
-
-        public async Task LogoutUser(string refreshToken)
-        {
-            // TODO: Shouldn't it also invalidate JWTs? This is only refresh tokens...
-
-            RefreshToken refreshTokenToInvalidate = await _context.RefreshTokens.Where(e => e.Token == refreshToken).FirstOrDefaultAsync().ConfigureAwait(false)
-                ?? throw new KeyNotFoundException("Unable to find the refresh token in the database!");
-
-            _context.Remove<RefreshToken>(refreshTokenToInvalidate);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<UserAuthentication> GetUserAuthenticationByUserId(Guid userId)
-        {
-            UserAuthentication userCredentials = await _context.Auths.Where(a => a.UserId == userId).FirstOrDefaultAsync().ConfigureAwait(false)
+            UserCredentialsEntity userCredentials = await _context.UserCredentials.Where(a => a.UserId == userId).FirstOrDefaultAsync().ConfigureAwait(false)
                 ?? throw new KeyNotFoundException($"Unable to find user: {userId} in the database!");
 
             return userCredentials;
         }
 
-        public async Task<bool> DoesUserExist(Guid userId) {
-            bool userExists = await _context.Auths.AnyAsync(a => a.UserId == userId).ConfigureAwait(false);
+        public async Task<bool> DoesUserExist(Guid userId)
+        {
+            bool userExists = await _context.UserCredentials.AnyAsync(a => a.UserId == userId).ConfigureAwait(false);
             return userExists;
-        }
-
-        public async Task<RefreshToken> RefreshAccessToken(string refreshToken)
-        {
-            // We're using this to check the expiry date so we can ensure that our token is still valid
-            RefreshToken refreshTokenToCheck = await _context.RefreshTokens.Where(e => e.Token == refreshToken).FirstOrDefaultAsync().ConfigureAwait(false)
-                ?? throw new KeyNotFoundException("Unable to find the refresh token in the database!");
-
-            return refreshTokenToCheck;
-        }
-
-        public async Task CreateUser(UserAuthentication authInfo)
-        {
-            await _context.AddAsync<UserAuthentication>(authInfo);
-            await _context.SaveChangesAsync();
         }
     }
 }

@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using reeltok.api.auth.Interfaces;
 
 namespace reeltok.api.auth.ValueObjects
 {
-    public class AccessToken : IToken
+    public class RefreshToken : IToken
     {
         [Required]
         public string TokenValue { get; private set; }
@@ -14,7 +15,7 @@ namespace reeltok.api.auth.ValueObjects
         [Required]
         public uint ExpiresAt { get; private set; }
 
-        public AccessToken(string tokenValue, uint createdAt, uint expiresAt)
+        public RefreshToken(string tokenValue, uint createdAt, uint expiresAt)
         {
             TokenValue = tokenValue;
             CreatedAt = createdAt;

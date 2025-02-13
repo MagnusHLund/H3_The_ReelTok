@@ -8,13 +8,15 @@ namespace reeltok.api.auth.Utils
         internal static void AppendTokenToCookie(HttpContext httpContext, IToken token, TokenName cookieNameEnum)
         {
             string cookieName = cookieNameEnum.ToString();
+            DateTime expireDateTime = DateTimeUtils.UnixTimeToDateTime(token.ExpiresAt);
 
             httpContext.Response.Cookies.Append(
-                cookieName, token.Token, new CookieOptions
+                cookieName, token.TokenValue, new CookieOptions
                 {
-                    Expires = token.ExpireDate,
+                    Expires = expireDateTime,
                     HttpOnly = true,
-                    Secure = true
+                    Secure = true,
+                    // TODO: Learn more about samesite
                 }
             );
         }
