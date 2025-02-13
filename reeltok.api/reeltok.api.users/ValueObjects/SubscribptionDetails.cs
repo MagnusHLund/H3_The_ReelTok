@@ -7,19 +7,16 @@ namespace reeltok.api.users.ValueObjects
     public class SubscribptionDetails
     {
         [Required]
-        [ForeignKey("User")]
-        public Guid UserId { get; } = Guid.Empty;
-        public UserProfileData? User { get; } = null;
+        public Guid SubscriberUserId { get; private set; }
 
         [Required]
-        [ForeignKey("SubscribeToUser")]
-        public Guid SubscriptionId { get; } = Guid.Empty;
-        public UserProfileData? SubscribeToUser { get; } = null;
+        public Guid SubscribingToUserId { get; private set; }
 
-        public SubscribptionDetails(Guid userId, Guid subscriptionId)
+        public SubscribptionDetails(Guid subscriberUserId, Guid subscribingToUserId)
         {
-            UserId = userId;
-            SubscriptionId = subscriptionId;
+            SubscriberUserId = subscriberUserId;
+            SubscribingToUserId = subscribingToUserId;
         }
+        private SubscribptionDetails() { }
     }
-}
+} 

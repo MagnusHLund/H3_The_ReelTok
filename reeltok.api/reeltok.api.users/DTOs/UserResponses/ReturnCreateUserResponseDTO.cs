@@ -1,30 +1,26 @@
-using System.ComponentModel.DataAnnotations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
-using reeltok.api.gateway.DTOs.Interfaces;
 
-namespace reeltok.api.gateway.DTOs.Users
+namespace reeltok.api.users.DTOs.UserResponses
 {
-    [XmlRoot("CreateUserResponseDto")]
-    public class GatewayCreateUserResponseDto : BaseResponseDto, IUserProfileDataDto
+    [XmlRoot("ReturnCreatedUser")]
+    public class ReturnCreateUserResponseDTO
     {
-
         [XmlElement("UserId")]
-        
         public Guid UserId { get; set; }
         [XmlElement("Email")]
-        [EmailAddress]
-        [Range(1, 320)]
         public string Email { get; set; }
         [XmlElement("Username")]
-        [StringLength(25)]
         public string Username { get; set; }
         [XmlElement("ProfileUrl")]
-        [StringLength(30)]
         public string ProfileUrl { get; set; }
         [XmlElement("ProfilePictureUrl")]
-        [StringLength(50)]
         public string ProfilePictureUrl { get; set; }
-        public GatewayCreateUserResponseDto(Guid userId, string email, string username, string profileUrl, string profilePictureUrl, bool success = true) : base(success)
+
+        public ReturnCreateUserResponseDTO( Guid userId, string email, string username, string profileUrl, string profilePictureUrl)
         {
             UserId = userId;
             Email = email;
@@ -32,6 +28,12 @@ namespace reeltok.api.gateway.DTOs.Users
             ProfileUrl = profileUrl;
             ProfilePictureUrl = profilePictureUrl;
         }
-    public GatewayCreateUserResponseDto() { }
+
+        public ReturnCreateUserResponseDTO()
+        {
+            
+        }
+
+
     }
 }

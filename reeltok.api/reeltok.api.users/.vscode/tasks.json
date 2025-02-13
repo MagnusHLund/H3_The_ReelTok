@@ -10,8 +10,7 @@
         "${workspaceFolder}/UsersServiceApi.sln",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary;ForceNoAlign"
-      ],
-      "problemMatcher": "$msCompile"
+      ]
     },
     {
       "label": "publish",
