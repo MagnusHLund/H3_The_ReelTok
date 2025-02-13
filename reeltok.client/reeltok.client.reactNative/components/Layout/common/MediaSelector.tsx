@@ -15,27 +15,16 @@ export default function ImagePickerExample() {
       aspect: [3, 4],
       quality: 1,
     });
-
     console.log(result);
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
   };
-  const pickCamera = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ['images', 'videos'],
-        allowsEditing: true,
-        aspect: [3, 4],
-        quality: 1,
-
-});
-    console.log(result);
   return (
     <View style={styles.container}>
       <Button title="Pick an image from camera roll" onPress={pickImage} />
       {image && <Image source={{ uri: image }} style={styles.image} />}
-      <Button title='BrugKamera' onPress={pickCamera}/>
+      
     </View>
   );
 }
@@ -51,4 +40,4 @@ const styles = StyleSheet.create({
     height: 200,
   },
 });
-}
+
