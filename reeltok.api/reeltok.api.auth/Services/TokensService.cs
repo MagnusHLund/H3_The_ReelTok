@@ -1,6 +1,7 @@
 using System.Text;
 using System.Security.Claims;
 using reeltok.api.auth.Utils;
+using reeltok.api.auth.Entities;
 using reeltok.api.auth.Interfaces;
 using System.Security.Cryptography;
 using reeltok.api.auth.ValueObjects;
@@ -16,33 +17,15 @@ namespace reeltok.api.auth.Services
         private const string IssuerConfig = "JWTSettings:Issuer";
 
         private readonly AppSettingsUtils _appSettingsUtils;
+        private readonly ITokensRepository _tokensRepository;
 
-        internal TokensService(AppSettingsUtils appSettingsUtils)
+        public TokensService(AppSettingsUtils appSettingsUtils, ITokensRepository tokensRepository)
         {
             _appSettingsUtils = appSettingsUtils;
+            _tokensRepository = tokensRepository;
         }
 
-        public RefreshToken GenerateRefreshToken(Guid userId)
-        {
-            byte[] randomBytes = new byte[32];
-            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomBytes);
-            }
-
-            string tokenString = Convert.ToBase64String(randomBytes);
-            DateTime createDate = DateTime.UtcNow;
-            DateTime expireDate = createDate.AddDays(7);
-
-            return new RefreshToken(
-                userId: userId,
-                tokenValue: tokenString,
-                createDate: createDate,
-                expireDate: expireDate
-            );
-        }
-
-        public AccessToken GenerateAccessToken(Guid userId)
+        public async Task<AccessToken> GenerateAccessToken(Guid userId)
         {
             string secretKey = _appSettingsUtils.GetConfigurationValue(SecretKeyConfig);
             string audience = _appSettingsUtils.GetConfigurationValue(AudienceConfig);
@@ -53,8 +36,9 @@ namespace reeltok.api.auth.Services
             SymmetricSecurityKey key = new SymmetricSecurityKey(encodedSecretKey);
             SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            DateTime createDate = DateTime.UtcNow;
-            DateTime expireDate = createDate.AddHours(1);
+            uint createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.UtcNow);
+            uint oneHourInSeconds = 3600;
+            uint expiresAt = createdAt + oneHourInSeconds;
 
             Claim[] claims = new Claim[]
             {
@@ -65,7 +49,7 @@ namespace reeltok.api.auth.Services
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = expireDate,
+                Expires = DateTimeUtils.UnixTimeToDateTime(expiresAt),
                 Issuer = issuer,
                 Audience = audience,
                 SigningCredentials = credentials
@@ -74,31 +58,20 @@ namespace reeltok.api.auth.Services
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return new AccessToken(
-                token: tokenHandler.WriteToken(token),
-                createDate: createDate,
-                expireDate: expireDate
+            AccessToken accessToken = new AccessToken(
+                tokenValue: tokenHandler.WriteToken(token),
+                createdAt: createdAt,
+                expiresAt: expiresAt
             );
-        }
 
-        public ClaimsPrincipal DecodeRefreshToken(string refreshTokenValue)
-        {
-            string secretKey = _appSettingsUtils.GetConfigurationValue(SecretKeyConfig);
-            byte[] key = Encoding.UTF8.GetBytes(secretKey); // Ensure you use your actual secret key
-
-            TokenValidationParameters validationParameters = new TokenValidationParameters
+            AccessTokenEntity accessTokenEntity = new AccessTokenEntity
             {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false, // Set to true if you need to validate the issuer
-                ValidateAudience = false, // Set to true if you need to validate the audience
-                ValidateLifetime = true, // Validate token expiration
-                ClockSkew = TimeSpan.Zero // Reduce clock skew
+                UserId = userId,
+                Token = accessToken
             };
 
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            ClaimsPrincipal principal = tokenHandler.ValidateToken(refreshTokenValue, validationParameters, out SecurityToken validatedToken);
-            return principal;
+            AccessTokenEntity accessTokenDatabaseResult = await _tokensRepository.SaveToken<AccessTokenEntity, AccessToken>(accessTokenEntity).ConfigureAwait(false);
+            return accessTokenDatabaseResult.Token;
         }
 
         public ClaimsPrincipal DecodeAccessToken(string accessTokenValue)
@@ -119,6 +92,48 @@ namespace reeltok.api.auth.Services
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             ClaimsPrincipal principal = tokenHandler.ValidateToken(accessTokenValue, validationParameters, out SecurityToken validatedToken);
             return principal;
+        }
+
+        public async Task<RefreshToken> GenerateRefreshToken(Guid userId)
+        {
+            byte[] randomBytes = new byte[32];
+            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomBytes);
+            }
+
+            string tokenString = Convert.ToBase64String(randomBytes);
+
+            uint createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.UtcNow);
+            uint sevenDaysInSeconds = 604800;
+            uint expiresAt = createdAt + sevenDaysInSeconds;
+
+            RefreshToken refreshToken = new RefreshToken(
+                tokenValue: tokenString,
+                createdAt: createdAt,
+                expiresAt: expiresAt
+            );
+
+            RefreshTokenEntity RefreshTokenEntity = new RefreshTokenEntity
+            {
+                UserId = userId,
+                Token = refreshToken
+            };
+
+            RefreshTokenEntity refreshTokenDatabaseResult = await _tokensRepository.SaveToken<RefreshTokenEntity, RefreshToken>(RefreshTokenEntity).ConfigureAwait(false);
+            return refreshTokenDatabaseResult.Token;
+        }
+
+        public async Task<Guid> GetUserIdByRefreshToken(string refreshTokenValue)
+        {
+            Guid userId = await _tokensRepository.GetUserIdByRefreshToken(refreshTokenValue).ConfigureAwait(false);
+            return userId;
+        }
+
+        public async Task RevokeTokens(string accessTokenValue, string refreshTokenValue)
+        {
+            await _tokensRepository.RevokeToken<AccessTokenEntity, AccessToken>(accessTokenValue).ConfigureAwait(false);
+            await _tokensRepository.RevokeToken<RefreshTokenEntity, RefreshToken>(refreshTokenValue).ConfigureAwait(false);
         }
     }
 }

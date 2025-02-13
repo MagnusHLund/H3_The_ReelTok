@@ -1,23 +1,30 @@
-using System.ComponentModel.DataAnnotations;
+using reeltok.api.auth.Interfaces;
 using reeltok.api.auth.ValueObjects;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.auth.Entities
 {
-    public class AccessTokenEntity
+    public class AccessTokenEntity : ITokenEntity<AccessToken>
     {
         [Key]
         public uint TokenId { get; set; }
 
         [Required]
-        public AccessToken AccessToken { get; set; }
+        public Guid UserId { get; set; }
 
-        public uint RevokedAt { get; set; }
+        [Required]
+        public AccessToken Token { get; set; }
 
-        public AccessTokenEntity(uint tokenId, AccessToken accessToken, uint revokedAt)
+        public uint? RevokedAt { get; set; }
+
+        public AccessTokenEntity(uint tokenId, Guid userId, AccessToken accessToken, uint? revokedAt)
         {
             TokenId = tokenId;
-            AccessToken = accessToken;
+            UserId = userId;
+            Token = accessToken;
             RevokedAt = revokedAt;
         }
+
+        public AccessTokenEntity() { }
     }
 }

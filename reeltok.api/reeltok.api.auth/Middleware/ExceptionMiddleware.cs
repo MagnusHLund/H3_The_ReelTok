@@ -1,6 +1,6 @@
 using System.Net;
-using System.Xml.Serialization;
 using reeltok.api.auth.DTOs;
+using System.Xml.Serialization;
 
 namespace reeltok.api.auth.Middleware
 {
@@ -31,7 +31,7 @@ namespace reeltok.api.auth.Middleware
         private static Task HandleExceptionAsync(HttpContext context)
         {
             context.Response.ContentType = "application/xml";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
 
             FailureResponseDto response = new FailureResponseDto("Internal server error!");
 

@@ -1,11 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
 using reeltok.api.auth.Interfaces;
 
 namespace reeltok.api.auth.ValueObjects
 {
-    [Index(nameof(TokenValue), IsUnique = true, Name = "UX_AccessToken_TokenValue")]
-    [Index(nameof(ExpiresAt), Name = "IX_AccessToken_ExpiresAt")]
     public class AccessToken : IToken
     {
         [Required]

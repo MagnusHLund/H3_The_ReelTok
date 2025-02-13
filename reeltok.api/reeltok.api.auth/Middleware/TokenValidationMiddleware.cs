@@ -1,8 +1,7 @@
 using System.Security.Claims;
-using reeltok.api.auth.Entities;
-using reeltok.api.auth.Enums;
-using reeltok.api.auth.Services;
 using reeltok.api.auth.Utils;
+using reeltok.api.auth.Enums;
+using reeltok.api.auth.Interfaces;
 using reeltok.api.auth.ValueObjects;
 
 namespace reeltok.api.auth.Middleware
@@ -10,41 +9,53 @@ namespace reeltok.api.auth.Middleware
     public class TokenValidationMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly TokensService _tokensService;
+        private ITokensService _tokensService;
 
         private readonly string[] _publicRoutes = new string[]
         {
-            "api/auth/CreateUser",
-            "api/auth/Login"
+            "/api/auth/createuser",
+            "/api/auth/login",
+            "/favicon.ico",
+            "/"
         };
 
-        public TokenValidationMiddleware(RequestDelegate next, TokensService tokensService)
+        public TokenValidationMiddleware(RequestDelegate next)
         {
             _next = next;
-            _tokensService = tokensService;
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if(_publicRoutes.Contains(context.Request.Path.ToString())) {
-                return;
-            }
-
-            if (IsValidAccessToken(context))
+            if (_publicRoutes.Contains(context.Request.Path.ToString().ToLower()))
             {
                 await _next(context).ConfigureAwait(false);
                 return;
             }
 
-            if (IsValidRefreshToken(context))
+            _tokensService = context.RequestServices.GetRequiredService<ITokensService>();
+            string? accessToken = CookieUtils.GetCookieValue(context, TokenName.AccessToken);
+
+            if (IsValidAccessToken(accessToken)) // TODO: Add exclamation mark here, when done testing
             {
-                
-                Tokens tokens = GenerateTokens();
+                await _next(context).ConfigureAwait(false);
+                return;
+            }
 
-                CookieUtils.AppendTokenToCookie(context, tokens.AccessToken, TokenName.AccessToken);
-                CookieUtils.AppendTokenToCookie(context, tokens.RefreshToken, TokenName.RefreshToken);
+            string? refreshToken = CookieUtils.GetCookieValue(context, TokenName.RefreshToken);
 
-                await _next(context);
+            if (!string.IsNullOrEmpty(refreshToken))
+            {
+                Guid userId = await _tokensService.GetUserIdByRefreshToken(refreshToken).ConfigureAwait(false);
+
+                AccessToken newAccessToken = await _tokensService.GenerateAccessToken(userId).ConfigureAwait(false);
+                RefreshToken newRefreshToken = await _tokensService.GenerateRefreshToken(userId).ConfigureAwait(false);
+
+                await _tokensService.RevokeTokens(accessToken, refreshToken).ConfigureAwait(false);
+
+                CookieUtils.AppendTokenToCookie(context, newAccessToken, TokenName.AccessToken);
+                CookieUtils.AppendTokenToCookie(context, newRefreshToken, TokenName.RefreshToken);
+
+                await _next(context).ConfigureAwait(false);
             }
             else
             {
@@ -52,26 +63,9 @@ namespace reeltok.api.auth.Middleware
             }
         }
 
-        private bool IsValidAccessToken(HttpContext httpContext)
+        private bool IsValidAccessToken(string? accessTokenValue)
         {
-            string? accessToken = CookieUtils.GetCookieValue(httpContext, TokenName.AccessToken);
-            return !string.IsNullOrEmpty(accessToken) && !string.IsNullOrEmpty(_tokensService.DecodeAccessToken(accessToken)?.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-        }
-
-        private bool IsValidRefreshToken(HttpContext httpContext)
-        {
-            string? refreshToken = CookieUtils.GetCookieValue(httpContext, TokenName.RefreshToken);
-            return !string.IsNullOrEmpty(refreshToken) && !string.IsNullOrEmpty(_tokensService.DecodeRefreshToken(refreshToken)?.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-        }
-
-        private Tokens GenerateTokens(Guid userId) {
-            AccessToken newAccessToken = _tokensService.GenerateAccessToken(userId);
-            RefreshToken newRefreshToken = _tokensService.GenerateRefreshToken(userId);
-
-            return new Tokens (
-                accessToken: newAccessToken,
-                refreshToken: newRefreshToken
-            );
+            return !string.IsNullOrEmpty(accessTokenValue) && !string.IsNullOrEmpty(_tokensService.DecodeAccessToken(accessTokenValue)?.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         }
     }
 }

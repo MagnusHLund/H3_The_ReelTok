@@ -1,11 +1,11 @@
 namespace reeltok.api.auth.Utils
 {
-    internal class AppSettingsUtils
+    public class AppSettingsUtils
     {
         private static IConfiguration _configuration;
 
         // This is a singleton class
-        internal AppSettingsUtils(IConfiguration configuration)
+        public AppSettingsUtils(IConfiguration configuration)
         {
             _configuration = configuration;
         }

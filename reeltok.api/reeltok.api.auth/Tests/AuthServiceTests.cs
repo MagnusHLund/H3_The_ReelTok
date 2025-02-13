@@ -19,9 +19,9 @@ namespace reeltok.api.auth.Tests
 
         public AuthServiceTests()
         {
-          _mockTokensService = new Mock<ITokensService>();
-          _mockAuthRepository = new Mock<IAuthRepository>();
-          _authService = new AuthService(_mockAuthRepository.Object, _mockTokensService.Object);
+            _mockTokensService = new Mock<ITokensService>();
+            _mockAuthRepository = new Mock<IAuthRepository>();
+            _authService = new AuthService(_mockAuthRepository.Object, _mockTokensService.Object);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace reeltok.api.auth.Tests
             string expectedExceptionMessage = "User already exists!";
 
             // Act & Assert
-            InvalidOperationException exception =  await Assert.ThrowsAsync<InvalidOperationException>(() => _authService.CreateUser(CreateDetails));
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _authService.CreateUser(CreateDetails));
             Assert.Equal(expectedExceptionMessage, exception.Message);
 
             _mockAuthRepository.Verify(repo => repo.DoesUserExist(existingUserId), Times.Once);
@@ -52,7 +52,7 @@ namespace reeltok.api.auth.Tests
         {
             // Arrange
             Guid userId = Guid.NewGuid();
-            CreateDetails CreateDetails = new CreateDetails(userId, "weakpassword");
+            CreateDetails CreateDetails = new CreateDetails(userId, "WeakPassword");
 
             string expectedExceptionMessage = "Password does not follow the minimum requirements!";
 
@@ -77,15 +77,23 @@ namespace reeltok.api.auth.Tests
               .Setup(repo => repo.CreateUser(It.IsAny<UserCredentialsEntity>()))
               .ReturnsAsync(userCredentials);
 
+            _mockTokensService
+                .Setup(service => service.GenerateAccessToken(It.IsAny<Guid>()))
+                .ReturnsAsync(); // Access token
+
+            _mockTokensService
+                .Setup(service => service.GenerateAccessToken(It.IsAny<Guid>()))
+                .ReturnsAsync(); // Refresh token
+
             // Act
             Tokens tokens = await _authService.CreateUser(createDetails);
 
             // Assert
             Assert.NotNull(tokens);
             Assert.NotNull(tokens.AccessToken);
-            Assert.NotEmpty(tokens.AccessToken.Token);
+            Assert.NotEmpty(tokens.AccessToken.TokenValue);
             Assert.NotNull(tokens.RefreshToken);
-            Assert.NotEmpty(tokens.RefreshToken.Token);
+            Assert.NotEmpty(tokens.RefreshToken.TokenValue);
         }
 
         [Fact]
@@ -100,7 +108,7 @@ namespace reeltok.api.auth.Tests
             string expectedExceptionMessage = "Invalid credentials!";
 
             _mockAuthRepository
-              .Setup(repo => repo.GetUserAuthenticationByUserId(loginCredentials.UserId))
+              .Setup(repo => repo.GetUserCredentialsByUserId(loginCredentials.UserId))
               .ReturnsAsync(userCredentials);
 
             // Act & Assert
@@ -111,43 +119,25 @@ namespace reeltok.api.auth.Tests
         [Fact]
         public async Task LoginUser_WithValidCredentials_ReturnTokens()
         {
-          // Arrange
-          Guid userId = Guid.NewGuid();
-          LoginCredentials loginCredentials = new LoginCredentials(userId, "VeryStroongPassword566");
-          HashedPasswordData hashedPasswordData = PasswordUtils.HashPassword(loginCredentials.PlainTextPassword);
-          UserCredentialsEntity userAuth = new UserCredentialsEntity(loginCredentials.UserId, hashedPasswordData.Password, hashedPasswordData.Salt);
+            // Arrange
+            Guid userId = Guid.NewGuid();
+            LoginCredentials loginCredentials = new LoginCredentials(userId, "VeryStroongPassword566");
+            HashedPasswordData hashedPasswordData = PasswordUtils.HashPassword(loginCredentials.PlainTextPassword);
+            UserCredentialsEntity userAuth = new UserCredentialsEntity(loginCredentials.UserId, hashedPasswordData.Password, hashedPasswordData.Salt);
 
-          _mockAuthRepository
-              .Setup(repo => repo.GetUserAuthenticationByUserId(loginCredentials.UserId))
-              .ReturnsAsync(userAuth);
+            _mockAuthRepository
+                .Setup(repo => repo.GetUserCredentialsByUserId(loginCredentials.UserId))
+                .ReturnsAsync(userAuth);
 
-          // Act
-          Tokens tokens = await _authService.LoginUser(loginCredentials);
+            // Act
+            Tokens tokens = await _authService.LoginUser(loginCredentials);
 
-          // Assert
-          Assert.NotNull(tokens);
-          Assert.NotNull(tokens.AccessToken);
-          Assert.NotEmpty(tokens.AccessToken.Token);
-          Assert.NotNull(tokens.RefreshToken);
-          Assert.NotEmpty(tokens.RefreshToken.Token);
-        }
-
-        [Fact]
-        public async Task RefreshAccessToken_WithInvalidRefreshToken_ThrowInvalidTokenException()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Fact]
-        public async Task RefreshAccessToken_WithExpiredToken_ThrowUnauthorizedException()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Fact]
-        public async Task RefreshAccessToken_WithValidToken_ReturnNewTokens()
-        {
-            throw new NotImplementedException();
+            // Assert
+            Assert.NotNull(tokens);
+            Assert.NotNull(tokens.AccessToken);
+            Assert.NotEmpty(tokens.AccessToken.TokenValue);
+            Assert.NotNull(tokens.RefreshToken);
+            Assert.NotEmpty(tokens.RefreshToken.TokenValue);
         }
 
         [Fact]
@@ -188,7 +178,7 @@ namespace reeltok.api.auth.Tests
             // Arrange
             string accessTokenValue = "Token";
             Guid expectedUserId = Guid.NewGuid();
-            var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, expectedUserId.ToString()) //TODO: Modify this
             }));

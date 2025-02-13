@@ -1,15 +1,14 @@
 using System.Security.Claims;
-using reeltok.api.auth.Entities;
 using reeltok.api.auth.ValueObjects;
 
 namespace reeltok.api.auth.Interfaces
 {
     public interface ITokensService
     {
-        RefreshToken GenerateRefreshToken(Guid userId);
-        AccessToken GenerateAccessToken(Guid userId);
-        ClaimsPrincipal DecodeRefreshToken(string refreshTokenValue);
+        Task<AccessToken> GenerateAccessToken(Guid userId);
         ClaimsPrincipal DecodeAccessToken(string accessTokenValue);
-
+        Task<RefreshToken> GenerateRefreshToken(Guid userId);
+        Task<Guid> GetUserIdByRefreshToken(string refreshTokenValue);
+        Task RevokeTokens(string accessTokenValue, string refreshTokenValue);
     }
 }

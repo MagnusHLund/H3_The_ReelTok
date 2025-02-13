@@ -1,23 +1,30 @@
-using System.ComponentModel.DataAnnotations;
+using reeltok.api.auth.Interfaces;
 using reeltok.api.auth.ValueObjects;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.auth.Entities
 {
-    public class RefreshTokenEntity
+    public class RefreshTokenEntity : ITokenEntity<RefreshToken>
     {
         [Key]
         public uint TokenId { get; set; }
 
         [Required]
-        public RefreshToken RefreshToken { get; set; }
+        public Guid UserId { get; set; }
 
-        public uint RevokedAt { get; set; }
+        [Required]
+        public RefreshToken Token { get; set; }
 
-        public RefreshTokenEntity(uint tokenId, RefreshToken refreshToken, uint revokedAt)
+        public uint? RevokedAt { get; set; }
+
+        public RefreshTokenEntity(uint tokenId, Guid userId, RefreshToken refreshToken, uint? revokedAt)
         {
             TokenId = tokenId;
-            RefreshToken = refreshToken;
+            UserId = userId;
+            Token = refreshToken;
             RevokedAt = revokedAt;
         }
+
+        public RefreshTokenEntity() { }
     }
 }

@@ -1,19 +1,18 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Authentication;
-using reeltok.api.auth.ValueObjects;
-using reeltok.api.auth.Interfaces;
-using reeltok.api.auth.Entities;
-using reeltok.api.auth.Utils;
 using System.Security.Claims;
+using reeltok.api.auth.Utils;
+using reeltok.api.auth.Entities;
+using reeltok.api.auth.Interfaces;
+using reeltok.api.auth.ValueObjects;
+using System.Security.Authentication;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.auth.Services
 {
     public class AuthService : IAuthService
     {
         // TODO: Maybe implement some session cache for tokens?
-         private readonly IAuthRepository _authRepository;
-         private readonly ITokensService _tokensService;
+        private readonly IAuthRepository _authRepository;
+        private readonly ITokensService _tokensService;
 
         public AuthService(IAuthRepository authRepository, ITokensService tokensService)
         {
@@ -23,7 +22,7 @@ namespace reeltok.api.auth.Services
 
         public async Task DeleteUser(Guid userId)
         {
-           await _authRepository.DeleteUser(userId).ConfigureAwait(false);
+            await _authRepository.DeleteUser(userId).ConfigureAwait(false);
         }
 
         public Guid GetUserIdByToken(string accessTokenValue)
@@ -31,7 +30,7 @@ namespace reeltok.api.auth.Services
             ClaimsPrincipal decodedAccessToken = _tokensService.DecodeAccessToken(accessTokenValue);
             string? stringUserId = decodedAccessToken?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if(!Guid.TryParse(stringUserId, out Guid userId))
+            if (!Guid.TryParse(stringUserId, out Guid userId))
             {
                 throw new FormatException("Invalid UserId!");
             }
@@ -41,44 +40,35 @@ namespace reeltok.api.auth.Services
 
         public async Task<Tokens> LoginUser(LoginCredentials loginCredentials)
         {
-            UserCredentialsEntity existingAuth = await _authRepository.GetUserAuthenticationByUserId(loginCredentials.UserId).ConfigureAwait(false);
+            UserCredentialsEntity existingUser = await _authRepository.GetUserCredentialsByUserId(loginCredentials.UserId).ConfigureAwait(false);
 
-            bool isPasswordValid = PasswordUtils.VerifyPassword(loginCredentials.PlainTextPassword, existingAuth.HashedPassword, existingAuth.Salt);
+            bool isPasswordValid = PasswordUtils.VerifyPassword(loginCredentials.PlainTextPassword, existingUser.HashedPassword, existingUser.Salt);
 
             if (!isPasswordValid)
             {
-              throw new InvalidCredentialException("Invalid credentials!");
+                throw new InvalidCredentialException("Invalid credentials!");
             }
 
-            Tokens tokens = GenerateTokens(existingAuth.UserId);
-            return tokens;
+            AccessToken accessToken = await _tokensService.GenerateAccessToken(existingUser.UserId).ConfigureAwait(false);
+            RefreshToken refreshToken = await _tokensService.GenerateRefreshToken(existingUser.UserId).ConfigureAwait(false);
+
+            return new Tokens(
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            );
         }
 
-        public async Task LogoutUser(string refreshToken)
+        public async Task LogoutUser(string accessTokenValue, string refreshTokenValue)
         {
-           await _authRepository.LogoutUser(refreshToken);
-        }
-
-        // TODO: Rewrite this method
-        public async Task<AccessToken> RefreshAccessToken(string refreshToken)
-        {
-            RefreshToken refreshTokenToCheck = await _authRepository.RefreshAccessToken(refreshToken);
-
-            if (refreshTokenToCheck.ExpireDate < DateTimeUtils.DateTimeToUnixTime(DateTime.UtcNow))
-            {
-                throw new SecurityTokenExpiredException();
-            }
-
-            AccessToken accessToken = _tokensService.GenerateAccessToken(refreshTokenToCheck.UserId);
-
-            return accessToken;
+            await _tokensService.RevokeTokens(accessTokenValue, refreshTokenValue).ConfigureAwait(false);
         }
 
         public async Task<Tokens> CreateUser(CreateDetails CreateDetails)
         {
             bool userExists = await _authRepository.DoesUserExist(CreateDetails.UserId).ConfigureAwait(false);
 
-            if (userExists) {
+            if (userExists)
+            {
                 throw new InvalidOperationException("User already exists!");
             }
 
@@ -92,16 +82,13 @@ namespace reeltok.api.auth.Services
             UserCredentialsEntity userCredentials = new UserCredentialsEntity(CreateDetails.UserId, hashedPasswordData.Password, hashedPasswordData.Salt);
             await _authRepository.CreateUser(userCredentials).ConfigureAwait(false);
 
-            Tokens tokens = GenerateTokens(userCredentials.UserId);
-            return tokens;
-        }
+            AccessToken accessToken = await _tokensService.GenerateAccessToken(userCredentials.UserId).ConfigureAwait(false);
+            RefreshToken refreshToken = await _tokensService.GenerateRefreshToken(userCredentials.UserId).ConfigureAwait(false);
 
-        private Tokens GenerateTokens(Guid userId) // TODO: Remove this method
-        {
-            AccessToken accessToken = _tokensService.GenerateAccessToken(userId);
-            RefreshToken refreshToken = _tokensService.GenerateRefreshToken(userId);
-
-            return new Tokens(accessToken, refreshToken);
+            return new Tokens(
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            );
         }
     }
 }
