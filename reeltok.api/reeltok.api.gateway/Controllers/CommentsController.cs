@@ -24,7 +24,7 @@ namespace reeltok.api.gateway.Controllers
         public async Task<IActionResult> AddComment([FromBody] GatewayAddCommentRequestDto request)
         {
 
-            CommentUsingDateTime comment = await _commentsService.AddComment(request.VideoId, request.CommentText);
+            CommentUsingDateTime comment = await _commentsService.AddComment(request.VideoId, request.CommentText).ConfigureAwait(false);
 
             GatewayAddCommentResponseDto responseDto = CommentMapper.ConvertToResponseDto<GatewayAddCommentResponseDto>(comment);
 
@@ -40,7 +40,7 @@ namespace reeltok.api.gateway.Controllers
                 return BadRequest(new FailureResponseDto("Amount should be greater than zero!"));
             }
 
-            List<CommentUsingDateTime> comments = await _commentsService.LoadComments(request.VideoId, request.Amount);
+            List<CommentUsingDateTime> comments = await _commentsService.LoadComments(request.VideoId, request.Amount).ConfigureAwait(false);
 
             if (comments.Count.Equals(0))
             {

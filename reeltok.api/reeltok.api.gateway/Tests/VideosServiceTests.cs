@@ -1,31 +1,32 @@
 using Moq;
 using Xunit;
-using reeltok.api.gateway.Services;
-using reeltok.api.gateway.Interfaces;
+using reeltok.api.gateway.DTOs;
+using reeltok.api.gateway.Enums;
 using reeltok.api.gateway.Entities;
+using reeltok.api.gateway.Services;
+using reeltok.api.gateway.Factories;
+using reeltok.api.gateway.Interfaces;
 using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.DTOs.Videos.LikeVideo;
-using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.DTOs.Videos.RemoveLike;
-using reeltok.api.gateway.DTOs.Videos.GetVideosForFeed;
-using reeltok.api.gateway.Enums;
 using reeltok.api.gateway.DTOs.Videos.UploadVideo;
 using reeltok.api.gateway.DTOs.Videos.DeleteVideo;
+using reeltok.api.gateway.DTOs.Videos.GetVideosForFeed;
 
 namespace reeltok.api.gateway.Tests
 {
     public class VideosServiceTests
     {
         private const string BaseTestUrl = "http://localhost:5002/videos";
-        private readonly Mock<IGatewayService> _mockGatewayService;
+        private readonly Mock<IHttpService> _mockHttpService;
         private readonly Mock<IAuthService> _mockAuthService;
         private readonly IVideosService _videosService;
 
         public VideosServiceTests()
         {
-            _mockGatewayService = new Mock<IGatewayService>();
+            _mockHttpService = new Mock<IHttpService>();
             _mockAuthService = new Mock<IAuthService>();
-            _videosService = new VideosService(_mockAuthService.Object, _mockGatewayService.Object);
+            _videosService = new VideosService(_mockAuthService.Object, _mockHttpService.Object);
         }
 
         [Fact]
@@ -33,10 +34,11 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             Guid invalidVideoId = Guid.Empty;
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid VideoId!");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Invalid VideoId!");
+            Uri targetUrl = TestDataFactory.CreateVideosMicroserviceTestUri("AddLike");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(
-                It.IsAny<ServiceAddLikeRequestDto>(), $"{BaseTestUrl}/AddLike", HttpMethod.Post))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(
+                It.IsAny<ServiceAddLikeRequestDto>(), targetUrl, HttpMethod.Post))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -48,11 +50,12 @@ namespace reeltok.api.gateway.Tests
         public async Task LikeVideo_ValidParameters_ReturnSuccess()
         {
             // Arrange
-            bool success = true;
-            ServiceAddLikeResponseDto successResponse = new ServiceAddLikeResponseDto(success);
             Guid validVideoId = Guid.NewGuid();
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(
-                It.IsAny<ServiceAddLikeRequestDto>(), $"{BaseTestUrl}/AddLike", HttpMethod.Post)).ReturnsAsync(successResponse);
+            ServiceAddLikeResponseDto successResponse = TestDataFactory.CreateAddLikeResponse();
+            Uri targetUrl = TestDataFactory.CreateVideosMicroserviceTestUri("AddLike");
+
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(
+                It.IsAny<ServiceAddLikeRequestDto>(), targetUrl, HttpMethod.Post)).ReturnsAsync(successResponse);
 
             // Act
             bool result = await _videosService.LikeVideo(validVideoId);
@@ -66,10 +69,11 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             Guid invalidVideoId = Guid.Empty;
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid VideoId!");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Invalid VideoId!");
+            Uri targetUrl = TestDataFactory.CreateVideosMicroserviceTestUri("RemoveLike");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceRemoveLikeRequestDto, ServiceRemoveLikeResponseDto>(
-                It.IsAny<ServiceRemoveLikeRequestDto>(), $"{BaseTestUrl}/RemoveLike", HttpMethod.Post))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceRemoveLikeRequestDto, ServiceRemoveLikeResponseDto>(
+                It.IsAny<ServiceRemoveLikeRequestDto>(), targetUrl, HttpMethod.Post))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -81,11 +85,12 @@ namespace reeltok.api.gateway.Tests
         public async Task RemoveLikeFromVideo_ValidParameters_ReturnSuccess()
         {
             // Arrange
-            bool success = true;
-            ServiceRemoveLikeResponseDto successResponse = new ServiceRemoveLikeResponseDto(success);
+            ServiceRemoveLikeResponseDto successResponse = TestDataFactory.CreateRemoveLikeResponse();
             Guid validVideoId = Guid.NewGuid();
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceRemoveLikeRequestDto, ServiceRemoveLikeResponseDto>(
-                It.IsAny<ServiceRemoveLikeRequestDto>(), $"{BaseTestUrl}/RemoveLike", HttpMethod.Post)).ReturnsAsync(successResponse);
+            Uri targetUrl = TestDataFactory.CreateVideosMicroserviceTestUri("RemoveLike");
+
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceRemoveLikeRequestDto, ServiceRemoveLikeResponseDto>(
+                It.IsAny<ServiceRemoveLikeRequestDto>(), targetUrl, HttpMethod.Post)).ReturnsAsync(successResponse);
 
             // Act
             bool result = await _videosService.RemoveLikeFromVideo(validVideoId);
@@ -99,10 +104,11 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             byte invalidAmount = 0;
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid amount of videos to fetch!");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Invalid amount of videos to fetch!");
+            Uri targetUrl = TestDataFactory.CreateVideosMicroserviceTestUri("GetVideoFeed");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetVideosForFeedRequestDto, ServiceGetVideosForFeedResponseDto>(
-                It.IsAny<ServiceGetVideosForFeedRequestDto>(), $"{BaseTestUrl}/GetVideoFeed", HttpMethod.Get))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetVideosForFeedRequestDto, ServiceGetVideosForFeedResponseDto>(
+                It.IsAny<ServiceGetVideosForFeedRequestDto>(), targetUrl, HttpMethod.Get))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -115,24 +121,19 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             byte amountOfVideos = 3;
-            var videos = new List<Video>
-            {
-                new Video(Guid.NewGuid(), new VideoDetails("Title1", "Description1", RecommendedCategories.Tech), 0, false, "url1", DateTime.UtcNow, new UserDetails("username1", "profilePictureUrl1", "profileUrl1")),
-                new Video(Guid.NewGuid(), new VideoDetails("Title2", "Description2", RecommendedCategories.Gaming), 0, false, "url2", DateTime.UtcNow, new UserDetails("username2", "profilePictureUrl2", "profileUrl2")),
-                new Video(Guid.NewGuid(), new VideoDetails("Title3", "Description3", RecommendedCategories.Sport), 0, false, "url3", DateTime.UtcNow, new UserDetails("username3", "profilePictureUrl3", "profileUrl3"))
-            };
-            ServiceGetVideosForFeedResponseDto successResponse = new ServiceGetVideosForFeedResponseDto(videos);
+            List<Video> videos = TestDataFactory.CreateVideoList();
+            ServiceGetVideosForFeedResponseDto successResponse = TestDataFactory.CreateGetVideosForFeedResponse(videos);
+            Uri targetUrl = TestDataFactory.CreateVideosMicroserviceTestUri("GetVideoFeed");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetVideosForFeedRequestDto, ServiceGetVideosForFeedResponseDto>(
-                It.IsAny<ServiceGetVideosForFeedRequestDto>(), $"{BaseTestUrl}/GetVideoFeed", HttpMethod.Get)).ReturnsAsync(successResponse);
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetVideosForFeedRequestDto, ServiceGetVideosForFeedResponseDto>(
+                It.IsAny<ServiceGetVideosForFeedRequestDto>(), targetUrl, HttpMethod.Get)).ReturnsAsync(successResponse);
 
             // Act
             List<Video> result = await _videosService.GetVideosForFeed(amountOfVideos);
 
             // Assert
-            Assert.Equal(amountOfVideos, (byte)result.Count);
+            Assert.Equal(amountOfVideos, (byte) result.Count);
 
-            // TODO: Assert each value of video and compare with the result videos
             for (int i = 0; i < amountOfVideos; i++)
             {
                 Assert.Equal(videos[i].VideoId, result[i].VideoId);
@@ -150,12 +151,12 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             VideoDetails videoDetails = new VideoDetails("test video", "description", RecommendedCategories.Comedy);
             IFormFile videoFile = null;
-            VideoUpload invalidVideoUpload = new VideoUpload(videoDetails, videoFile);
+            VideoUpload invalidVideoUpload = TestDataFactory.CreateVideoUpload(videoFile);
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Invalid video file!");
+            Uri targetUrl = TestDataFactory.CreateVideosMicroserviceTestUri("Upload");
 
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid video file!");
-
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUploadVideoRequestDto, ServiceUploadVideoResponseDto>(
-                It.IsAny<ServiceUploadVideoRequestDto>(), $"{BaseTestUrl}/Upload", HttpMethod.Post))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceUploadVideoRequestDto, ServiceUploadVideoResponseDto>(
+                It.IsAny<ServiceUploadVideoRequestDto>(), targetUrl, HttpMethod.Post))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -167,15 +168,14 @@ namespace reeltok.api.gateway.Tests
         public async Task UploadVideo_ValidParameters_ReturnVideo()
         {
             // Arrange
-            VideoDetails videoDetails = new VideoDetails("Title", "Description", RecommendedCategories.Tech);
             IFormFile videoFile = new Mock<IFormFile>().Object;
-            VideoUpload validVideoUpload = new VideoUpload(videoDetails, videoFile);
-            Video video = new Video(Guid.NewGuid(), videoDetails, 0, false, "url", DateTime.UtcNow, new UserDetails("username", "profilePictureUrl", "profileUrl"));
-            bool success = true;
-            ServiceUploadVideoResponseDto successResponse = new ServiceUploadVideoResponseDto(video, success);
+            VideoUpload validVideoUpload = TestDataFactory.CreateVideoUpload(videoFile);
+            Video video = TestDataFactory.CreateVideo();
+            ServiceUploadVideoResponseDto successResponse = TestDataFactory.CreateUploadVideoResponse(video);
+            Uri targetUrl = TestDataFactory.CreateVideosMicroserviceTestUri("Upload");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUploadVideoRequestDto, ServiceUploadVideoResponseDto>(
-                It.IsAny<ServiceUploadVideoRequestDto>(), $"{BaseTestUrl}/Upload", HttpMethod.Post)).ReturnsAsync(successResponse);
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceUploadVideoRequestDto, ServiceUploadVideoResponseDto>(
+                It.IsAny<ServiceUploadVideoRequestDto>(), targetUrl, HttpMethod.Post)).ReturnsAsync(successResponse);
 
             // Act
             Video result = await _videosService.UploadVideo(validVideoUpload);
@@ -190,10 +190,11 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             Guid invalidVideoId = Guid.Empty;
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid videoId!");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Invalid videoId!");
+            Uri targetUrl = TestDataFactory.CreateVideosMicroserviceTestUri("Delete");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceDeleteVideoRequestDto, ServiceDeleteVideoResponseDto>(
-                It.IsAny<ServiceDeleteVideoRequestDto>(), $"{BaseTestUrl}/Delete", HttpMethod.Delete))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceDeleteVideoRequestDto, ServiceDeleteVideoResponseDto>(
+                It.IsAny<ServiceDeleteVideoRequestDto>(), targetUrl, HttpMethod.Delete))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -206,10 +207,11 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             Guid videoId = Guid.NewGuid();
+            ServiceDeleteVideoResponseDto successResponse = TestDataFactory.CreateDeleteVideoResponse();
+            Uri targetUrl = TestDataFactory.CreateVideosMicroserviceTestUri("Delete");
 
-            bool success = true;
-            ServiceDeleteVideoResponseDto successResponse = new ServiceDeleteVideoResponseDto(success);
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceDeleteVideoRequestDto, ServiceDeleteVideoResponseDto>(It.IsAny<ServiceDeleteVideoRequestDto>(), $"{BaseTestUrl}/Delete", HttpMethod.Delete)).ReturnsAsync(successResponse);
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceDeleteVideoRequestDto, ServiceDeleteVideoResponseDto>(
+                It.IsAny<ServiceDeleteVideoRequestDto>(), targetUrl, HttpMethod.Delete)).ReturnsAsync(successResponse);
 
             // Act
             bool result = await _videosService.DeleteVideo(videoId);

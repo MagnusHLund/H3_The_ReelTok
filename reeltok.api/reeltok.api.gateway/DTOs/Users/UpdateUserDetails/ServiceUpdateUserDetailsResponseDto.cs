@@ -13,7 +13,7 @@ namespace reeltok.api.gateway.DTOs.Users
         [XmlElement("Email")]
         [EmailAddress]
         [Range(1, 320)]
-        
+
         public string Email { get; set; }
         public ServiceUpdateUserDetailsResponseDto(string username, string email, bool success = true) : base(success)
         {
