@@ -1,9 +1,10 @@
 import Router from './Router';
-import React from 'react';
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import CustomDropdown from "./components/input/CustomDropdown";
+import ImagePickerExample from "./components/Layout/common/MediaSelector";
+import CameraSelected from "./components/Layout/common/CameraSelected";
 
 const Categories = [
   { label: 'Gaming', value: 'Gaming' },
@@ -16,12 +17,8 @@ const Categories = [
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-      
-    
-      <CustomDropdown label="Category" categories={Categories} placeholder="Categori"/>
-    </View>
+ 
+    <Router />
+
   );
 }
