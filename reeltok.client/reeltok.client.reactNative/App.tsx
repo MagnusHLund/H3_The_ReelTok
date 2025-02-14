@@ -17,26 +17,8 @@ const Categories = [
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      
-    
-      <CameraSelected/>
-      {/* <CustomDropdown label="Category" categories={Categories} placeholder="Categori"/> */}
+ 
+    <Router />
 
-      {/* <ImagePickerExample/> */}
-
-    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    maxWidth: "80%",
-    maxHeight: "80%",
-  },
-});
