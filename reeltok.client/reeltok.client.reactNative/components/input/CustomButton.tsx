@@ -10,12 +10,13 @@ interface ButtonProps {
   title?: string,
   children?: ReactNode,
   transparent?: boolean,
+  flexDirection?: 'row' | 'column',
   borders?: boolean,
   onPress: () => void,
 }
 
 
-const CustomButton: React.FC<ButtonProps> = ({ children, title, transparent, borders, onPress }) => {
+const CustomButton: React.FC<ButtonProps> = ({ children, title, transparent, borders, flexDirection, onPress }) => {
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
   });
@@ -24,12 +25,11 @@ const CustomButton: React.FC<ButtonProps> = ({ children, title, transparent, bor
       borderWidth: borders ? 2 : 0,
       backgroundColor: transparent ? 'transparent' : '#ff0050',
       borderRadius: 10,
-      padding: 10,
+      padding: 5,
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      flexDirection: 'row',
-      gap: 3,
+      flexDirection: flexDirection,
     },
     buttonText: {
       fontSize: 20,
@@ -39,7 +39,7 @@ const CustomButton: React.FC<ButtonProps> = ({ children, title, transparent, bor
   });
 
   return(
-      <TouchableOpacity style={buttonStyling.button} onPress={onPress}>
+      <TouchableOpacity style={buttonStyling.button} activeOpacity={1} onPress={onPress}>
         { children }
         {title ? <Text style={buttonStyling.buttonText}>{title}</Text> : null}
       </TouchableOpacity>

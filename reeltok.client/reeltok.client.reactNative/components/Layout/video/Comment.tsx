@@ -1,3 +1,5 @@
-const Comment: React.FC = ({}) => {};
+const Comment: React.FC = ({}) => {
+
+};
 
 export default Comment;
