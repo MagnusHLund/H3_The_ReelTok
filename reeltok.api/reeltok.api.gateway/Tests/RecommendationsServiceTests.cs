@@ -12,14 +12,14 @@ namespace reeltok.api.gateway.Tests
     public class RecommendationsServiceTests
     {
         private const string BaseTestUrl = "http://localhost:5004/recommendations";
-        private readonly Mock<IGatewayService> _mockGatewayService;
+        private readonly Mock<IHttpService> _mockHttpService;
         private readonly Mock<IAuthService> _mockAuthService;
         private readonly IRecommendationsService _recommendationsService;
         public RecommendationsServiceTests()
         {
             _mockAuthService = new Mock<IAuthService>();
-            _mockGatewayService = new Mock<IGatewayService>();
-            _recommendationsService = new RecommendationsService(_mockAuthService.Object, _mockGatewayService.Object);
+            _mockHttpService = new Mock<IHttpService>();
+            _recommendationsService = new RecommendationsService(_mockAuthService.Object, _mockHttpService.Object);
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace reeltok.api.gateway.Tests
             bool success = true;
             ServiceChangeRecommendedCategoryResponseDto successResponse = new ServiceChangeRecommendedCategoryResponseDto(success);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceChangeRecommendedCategoryRequestDto, ServiceChangeRecommendedCategoryResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceChangeRecommendedCategoryRequestDto, ServiceChangeRecommendedCategoryResponseDto>(
                 It.IsAny<ServiceChangeRecommendedCategoryRequestDto>(), $"{BaseTestUrl}/update", HttpMethod.Put))
                 .ReturnsAsync(successResponse);
 
@@ -50,7 +50,7 @@ namespace reeltok.api.gateway.Tests
             Recommendations recommendations = new Recommendations(Guid.NewGuid(), testRecommendations);
             FailureResponseDto failureResponseDto = new FailureResponseDto("Unable to update users recommendations!");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceChangeRecommendedCategoryRequestDto, ServiceChangeRecommendedCategoryResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceChangeRecommendedCategoryRequestDto, ServiceChangeRecommendedCategoryResponseDto>(
                 It.IsAny<ServiceChangeRecommendedCategoryRequestDto>(), $"{BaseTestUrl}/update", HttpMethod.Put))
                 .ReturnsAsync(failureResponseDto);
 

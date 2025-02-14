@@ -7,7 +7,7 @@ namespace reeltok.api.gateway.DTOs.Comments
     [XmlRoot("AddCommentResponseDto")]
     public class ServiceAddCommentResponseDto : BaseResponseDto, ICommentUsingUnixTimeDto
     {
-       [XmlElement("CommentId")]
+        [XmlElement("CommentId")]
         public Guid CommentId { get; set; }
         [XmlElement("UserId")]
         public Guid UserId { get; set; }
@@ -17,7 +17,7 @@ namespace reeltok.api.gateway.DTOs.Comments
         [Range(1, 1024)]
         public string CommentText { get; set; }
         [XmlElement("CreatedAt")]
-        public DateTime CreatedAt { get; set; }
+        public uint CreatedAt { get; set; }
 
         public ServiceAddCommentResponseDto(Guid commentId, Guid userId, Guid videoId, string commentText, uint createdAt, bool success = true) : base(success)
         {

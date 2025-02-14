@@ -5,11 +5,11 @@ using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class GatewayService : BaseService, IGatewayService
+    internal class HttpService : BaseService, IHttpService
     {
         private readonly HttpClient _httpClient;
 
-        public GatewayService(HttpClient httpClient)
+        public HttpService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

@@ -10,13 +10,13 @@ namespace reeltok.api.gateway.Tests
     public class AuthServiceTests
     {
         private const string BaseTestUrl = "http://localhost:5003/auth";
-        private readonly Mock<IGatewayService> _mockGatewayService;
+        private readonly Mock<IHttpService> _mockHttpService;
         private readonly IAuthService _authService;
 
         public AuthServiceTests()
         {
-            _mockGatewayService = new Mock<IGatewayService>();
-            _authService = new AuthService(_mockGatewayService.Object);
+            _mockHttpService = new Mock<IHttpService>();
+            _authService = new AuthService(_mockHttpService.Object);
         }
 
         [Fact]
@@ -25,7 +25,7 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             FailureResponseDto failureResponseDto = new FailureResponseDto("Already logged out");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(
                 It.IsAny<ServiceLogOutUserRequestDto>(), $"{BaseTestUrl}/logout", HttpMethod.Post))
                 .ReturnsAsync(failureResponseDto);
 
@@ -41,7 +41,7 @@ namespace reeltok.api.gateway.Tests
             bool success = true;
             ServiceLogOutUserResponseDto successResponseDto = new ServiceLogOutUserResponseDto(success);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(
                 It.IsAny<ServiceLogOutUserRequestDto>(), $"{BaseTestUrl}/logout", HttpMethod.Post))
                 .ReturnsAsync(successResponseDto);
 
@@ -58,7 +58,7 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid authentication token");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(
                 It.IsAny<ServiceGetUserIdByTokenRequestDto>(), $"{BaseTestUrl}/getUserIdByToken", HttpMethod.Get))
                 .ReturnsAsync(failureResponseDto);
 
@@ -75,7 +75,7 @@ namespace reeltok.api.gateway.Tests
             Guid validUserId = Guid.NewGuid();
             ServiceGetUserIdByTokenResponseDto successResponseDto = new ServiceGetUserIdByTokenResponseDto(validUserId, success);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(
                 It.IsAny<ServiceGetUserIdByTokenRequestDto>(), $"{BaseTestUrl}/getUserIdByToken", HttpMethod.Get))
                 .ReturnsAsync(successResponseDto);
 

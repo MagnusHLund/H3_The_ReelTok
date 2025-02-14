@@ -14,11 +14,11 @@ namespace reeltok.api.gateway.Services
     {
         private const string VideosMicroServiceBaseUrl = "http://localhost:5002/videos";
         private readonly IAuthService _authService;
-        private readonly IGatewayService _gatewayService;
-        public VideosService(IAuthService authService, IGatewayService gatewayService)
+        private readonly IHttpService _httpService;
+        public VideosService(IAuthService authService, IHttpService httpService)
         {
             _authService = authService;
-            _gatewayService = gatewayService;
+            _httpService = httpService;
         }
         public async Task<bool> LikeVideo(Guid VideoId)
         {
@@ -27,7 +27,7 @@ namespace reeltok.api.gateway.Services
             ServiceAddLikeRequestDto requestDto = new ServiceAddLikeRequestDto(userId, VideoId);
             string targetUrl = $"{VideosMicroServiceBaseUrl}/AddLike";
 
-            BaseResponseDto request = await _gatewayService.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto request = await _httpService.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
             if (request.Success && request is ServiceAddLikeResponseDto responseDto)
             {
@@ -43,7 +43,7 @@ namespace reeltok.api.gateway.Services
             ServiceRemoveLikeRequestDto requestDto = new ServiceRemoveLikeRequestDto(userId, VideoId);
             string targetUrl = $"{VideosMicroServiceBaseUrl}/RemoveLike";
 
-            BaseResponseDto request = await _gatewayService.ProcessRequestAsync<ServiceRemoveLikeRequestDto, ServiceRemoveLikeResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto request = await _httpService.ProcessRequestAsync<ServiceRemoveLikeRequestDto, ServiceRemoveLikeResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
             if (request.Success && request is ServiceRemoveLikeResponseDto responseDto)
             {
@@ -60,7 +60,7 @@ namespace reeltok.api.gateway.Services
             ServiceGetVideosForFeedRequestDto requestDto = new ServiceGetVideosForFeedRequestDto(userId, amount);
             string targetUrl = $"{VideosMicroServiceBaseUrl}/GetVideoFeed";
 
-            BaseResponseDto request = await _gatewayService.ProcessRequestAsync<ServiceGetVideosForFeedRequestDto, ServiceGetVideosForFeedResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto request = await _httpService.ProcessRequestAsync<ServiceGetVideosForFeedRequestDto, ServiceGetVideosForFeedResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
             if (request.Success && request is ServiceGetVideosForFeedResponseDto responseDto)
             {
@@ -77,7 +77,7 @@ namespace reeltok.api.gateway.Services
             ServiceUploadVideoRequestDto requestDto = new ServiceUploadVideoRequestDto(userId, video);
             string targetUrl = $"{VideosMicroServiceBaseUrl}/Upload";
 
-            BaseResponseDto request = await _gatewayService.ProcessRequestAsync<ServiceUploadVideoRequestDto, ServiceUploadVideoResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto request = await _httpService.ProcessRequestAsync<ServiceUploadVideoRequestDto, ServiceUploadVideoResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
             if (request.Success && request is ServiceUploadVideoResponseDto responseDto)
             {
@@ -94,7 +94,7 @@ namespace reeltok.api.gateway.Services
             ServiceDeleteVideoRequestDto requestDto = new ServiceDeleteVideoRequestDto(userId, videoId);
             string targetUrl = $"{VideosMicroServiceBaseUrl}/Delete";
 
-            BaseResponseDto request = await _gatewayService.ProcessRequestAsync<ServiceDeleteVideoRequestDto, ServiceDeleteVideoResponseDto>(requestDto, targetUrl, HttpMethod.Delete);
+            BaseResponseDto request = await _httpService.ProcessRequestAsync<ServiceDeleteVideoRequestDto, ServiceDeleteVideoResponseDto>(requestDto, targetUrl, HttpMethod.Delete);
 
             if (request.Success && request is ServiceDeleteVideoResponseDto responseDto)
             {
@@ -102,6 +102,12 @@ namespace reeltok.api.gateway.Services
             }
 
             throw HandleExceptions(request);
+        }
+
+        // TODO: implement this method
+        public Task<List<Video>> GetVideosForProfile(Guid userId, byte amountToReturn, uint amountReceived)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -9,18 +9,18 @@ using reeltok.api.gateway.DTOs.Auth;
 
 namespace reeltok.api.gateway.Tests
 {
-    public class GatewayServiceTests
+    public class HttpServiceTests
     {
         private const string BaseTestUrl = "http://localhost:5003/auth/LogOut";
         private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
         private readonly HttpClient _httpClient;
-        private readonly GatewayService _gatewayService;
+        private readonly HttpService _httpService;
 
-        public GatewayServiceTests()
+        public HttpServiceTests()
         {
             _mockHttpMessageHandler = new Mock<HttpMessageHandler>();
             _httpClient = new HttpClient(_mockHttpMessageHandler.Object);
-            _gatewayService = new GatewayService(_httpClient);
+            _httpService = new HttpService(_httpClient);
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace reeltok.api.gateway.Tests
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
             // Assert
             Assert.True(response.Success);
@@ -72,7 +72,7 @@ namespace reeltok.api.gateway.Tests
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, FailureResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, FailureResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
             // Assert
             var failureResponse = response as FailureResponseDto;
@@ -89,7 +89,7 @@ namespace reeltok.api.gateway.Tests
 
             // Act & Assert
             ArgumentNullException exception = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-                _gatewayService.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceLogOutUserResponseDto>(null, targetUrl, HttpMethod.Get));
+                _httpService.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceLogOutUserResponseDto>(null, targetUrl, HttpMethod.Get));
 
             Assert.Equal("requestDto", exception.ParamName);
         }
@@ -116,7 +116,7 @@ namespace reeltok.api.gateway.Tests
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetUrl);
 
             // Act
-            BaseResponseDto response = await _gatewayService.RouteRequestAsync<ServiceLogOutUserResponseDto>(request);
+            BaseResponseDto response = await _httpService.RouteRequestAsync<ServiceLogOutUserResponseDto>(request);
 
             // Assert
             Assert.True(response.Success);
@@ -143,7 +143,7 @@ namespace reeltok.api.gateway.Tests
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetUrl);
 
             // Act
-            BaseResponseDto response = await _gatewayService.RouteRequestAsync<ServiceLogOutUserResponseDto>(request);
+            BaseResponseDto response = await _httpService.RouteRequestAsync<ServiceLogOutUserResponseDto>(request);
 
             // Assert
             FailureResponseDto failureResponse = response as FailureResponseDto;
@@ -166,7 +166,7 @@ namespace reeltok.api.gateway.Tests
                 .ThrowsAsync(new TaskCanceledException());
 
             // Act & Assert
-            await Assert.ThrowsAsync<TaskCanceledException>(() => _gatewayService.RouteRequestAsync<ServiceLogOutUserResponseDto>(request));
+            await Assert.ThrowsAsync<TaskCanceledException>(() => _httpService.RouteRequestAsync<ServiceLogOutUserResponseDto>(request));
         }
     }
 }

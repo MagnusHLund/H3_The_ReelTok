@@ -11,12 +11,12 @@ namespace reeltok.api.gateway.Services
     {
         private const string UsersMicroServiceBaseUrl = "http://localhost:5001/users";
         private readonly IAuthService _authService;
-        private readonly IGatewayService _gatewayService;
+        private readonly IHttpService _httpService;
 
-        internal UsersService(IAuthService authService, IGatewayService gatewayService)
+        internal UsersService(IAuthService authService, IHttpService httpService)
         {
             _authService = authService;
-            _gatewayService = gatewayService;
+            _httpService = httpService;
         }
 
         public async Task<UserProfileData> LoginUser(string email, string password)
@@ -24,7 +24,7 @@ namespace reeltok.api.gateway.Services
             ServiceLoginRequestDto requestDto = new ServiceLoginRequestDto(email, password);
             string targetUrl = $"{UsersMicroServiceBaseUrl}/Login";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
             if (response.Success && response is ServiceLoginResponseDto responseDto)
             {
@@ -38,7 +38,7 @@ namespace reeltok.api.gateway.Services
             ServiceCreateUserRequestDto requestDto = new ServiceCreateUserRequestDto(email, username, password);
             string targetUrl = $"{UsersMicroServiceBaseUrl}/Create";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceCreateUserRequestDto, ServiceCreateUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceCreateUserRequestDto, ServiceCreateUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
             if (response.Success && response is ServiceCreateUserResponseDto responseDto)
             {
@@ -52,7 +52,7 @@ namespace reeltok.api.gateway.Services
             ServiceGetUserProfileDataRequestDto requestDto = new ServiceGetUserProfileDataRequestDto(userId);
             string targetUrl = $"{UsersMicroServiceBaseUrl}/GetProfileData";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
             if (response.Success && response is ServiceGetUserProfileDataResponseDto responseDto)
             {
@@ -68,7 +68,7 @@ namespace reeltok.api.gateway.Services
             ServiceUpdateUserDetailsRequestDto requestDto = new ServiceUpdateUserDetailsRequestDto(userId, username, email);
             string targetUrl = $"{UsersMicroServiceBaseUrl}/UpdateDetails";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(requestDto, targetUrl, HttpMethod.Put);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(requestDto, targetUrl, HttpMethod.Put);
 
             if (response.Success && response is ServiceUpdateUserDetailsResponseDto responseDto)
             {
@@ -85,7 +85,7 @@ namespace reeltok.api.gateway.Services
             ServiceUpdateProfilePictureRequestDto requestDto = new ServiceUpdateProfilePictureRequestDto(userId, image);
             string targetUrl = $"{UsersMicroServiceBaseUrl}/UpdateProfilePicture";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(requestDto, targetUrl, HttpMethod.Put);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(requestDto, targetUrl, HttpMethod.Put);
 
             if (response.Success && response is ServiceUpdateProfilePictureResponseDto responseDto)
             {
@@ -100,7 +100,7 @@ namespace reeltok.api.gateway.Services
             ServiceGetAllSubscriptionsForUserRequestDto requestDto = new ServiceGetAllSubscriptionsForUserRequestDto(userId);
             string targetUrl = $"{UsersMicroServiceBaseUrl}/GetSubscriptions";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
             if (response.Success && response is ServiceGetAllSubscriptionsForUserResponseDto responseDto)
             {
@@ -114,7 +114,7 @@ namespace reeltok.api.gateway.Services
             ServiceGetAllSubscribingToUserRequestDto requestDto = new ServiceGetAllSubscribingToUserRequestDto(userId);
             string targetUrl = $"{UsersMicroServiceBaseUrl}/GetSubscribers";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
             if (response.Success && response is ServiceGetAllSubscribingToUserResponseDto responseDto)
             {

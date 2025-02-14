@@ -7,11 +7,11 @@ namespace reeltok.api.gateway.Services
     internal class AuthService : BaseService, IAuthService
     {
         private const string AuthMicroServiceBaseUrl = "http://localhost:5003/auth";
-        private readonly IGatewayService _gatewayService;
+        private readonly IHttpService _httpService;
 
-        public AuthService(IGatewayService gatewayService)
+        public AuthService(IHttpService httpService)
         {
-            _gatewayService = gatewayService;
+            _httpService = httpService;
         }
 
         public async Task<bool> LogOutUser()
@@ -19,7 +19,7 @@ namespace reeltok.api.gateway.Services
             ServiceLogOutUserRequestDto requestDto = new ServiceLogOutUserRequestDto();
             string targetUrl = $"{AuthMicroServiceBaseUrl}/logout";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
 
             if (response.Success && response is ServiceLogOutUserResponseDto responseDto)
             {
@@ -34,7 +34,7 @@ namespace reeltok.api.gateway.Services
             ServiceGetUserIdByTokenRequestDto requestDto = new ServiceGetUserIdByTokenRequestDto();
             string targetUrl = $"{AuthMicroServiceBaseUrl}/getUserIdByToken";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
             if (response.Success && response is ServiceGetUserIdByTokenResponseDto responseDto)
             {

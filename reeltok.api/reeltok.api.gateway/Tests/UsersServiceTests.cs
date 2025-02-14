@@ -12,15 +12,15 @@ namespace reeltok.api.gateway.Tests
     public class UsersServiceTests
     {
         private const string BaseTestUrl = "http://localhost:5001/users";
-        private readonly Mock<IGatewayService> _mockGatewayService;
+        private readonly Mock<IHttpService> _mockHttpService;
         private readonly Mock<IAuthService> _mockAuthService;
         private readonly IUsersService _usersService;
 
         public UsersServiceTests()
         {
-            _mockGatewayService = new Mock<IGatewayService>();
+            _mockHttpService = new Mock<IHttpService>();
             _mockAuthService = new Mock<IAuthService>();
-            _usersService = new UsersService(_mockAuthService.Object, _mockGatewayService.Object);
+            _usersService = new UsersService(_mockAuthService.Object, _mockHttpService.Object);
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace reeltok.api.gateway.Tests
             string password = "Test";
             FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid credentials!");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(
                 It.IsAny<ServiceLoginRequestDto>(), $"{BaseTestUrl}/Login", HttpMethod.Post))
                 .ReturnsAsync(failureResponseDto);
 
@@ -54,7 +54,7 @@ namespace reeltok.api.gateway.Tests
 
             string password = "Sup3rSecur3Passw0rd";
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(
                 It.IsAny<ServiceLoginRequestDto>(), $"{BaseTestUrl}/Login", HttpMethod.Post))
                 .ReturnsAsync(successResponseDto);
 
@@ -78,7 +78,7 @@ namespace reeltok.api.gateway.Tests
             string password = "Test";
             FailureResponseDto failureResponseDto = new FailureResponseDto("Password does not meet minimum requirements!");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceCreateUserRequestDto, ServiceCreateUserResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceCreateUserRequestDto, ServiceCreateUserResponseDto>(
                 It.IsAny<ServiceCreateUserRequestDto>(), $"{BaseTestUrl}/Create", HttpMethod.Post))
                 .ReturnsAsync(failureResponseDto);
 
@@ -101,7 +101,7 @@ namespace reeltok.api.gateway.Tests
 
             string password = "Sup3rSecur3Passw0rd";
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceCreateUserRequestDto, ServiceCreateUserResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceCreateUserRequestDto, ServiceCreateUserResponseDto>(
                 It.IsAny<ServiceCreateUserRequestDto>(), $"{BaseTestUrl}/Create", HttpMethod.Post))
                 .ReturnsAsync(successResponseDto);
 
@@ -123,7 +123,7 @@ namespace reeltok.api.gateway.Tests
             Guid userId = Guid.NewGuid();
             FailureResponseDto failureResponseDto = new FailureResponseDto("User does not exist!");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(
                 It.IsAny<ServiceGetUserProfileDataRequestDto>(), $"{BaseTestUrl}/GetProfileData", HttpMethod.Get))
                 .ReturnsAsync(failureResponseDto);
 
@@ -143,7 +143,7 @@ namespace reeltok.api.gateway.Tests
 
             ServiceGetUserProfileDataResponseDto successResponseDto = new ServiceGetUserProfileDataResponseDto(userId, username, profileUrl, profilePictureUrl);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(
                 It.IsAny<ServiceGetUserProfileDataRequestDto>(), $"{BaseTestUrl}/GetProfileData", HttpMethod.Get))
                 .ReturnsAsync(successResponseDto);
 
@@ -166,7 +166,7 @@ namespace reeltok.api.gateway.Tests
 
             FailureResponseDto failureResponseDto = new FailureResponseDto("User does not exist!");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(
                 It.IsAny<ServiceUpdateUserDetailsRequestDto>(), $"{BaseTestUrl}/UpdateDetails", HttpMethod.Put))
                 .ReturnsAsync(failureResponseDto);
 
@@ -184,7 +184,7 @@ namespace reeltok.api.gateway.Tests
 
             ServiceUpdateUserDetailsResponseDto successResponseDto = new ServiceUpdateUserDetailsResponseDto(username, email);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(
                 It.IsAny<ServiceUpdateUserDetailsRequestDto>(), $"{BaseTestUrl}/UpdateDetails", HttpMethod.Put))
                 .ReturnsAsync(successResponseDto);
 
@@ -204,7 +204,7 @@ namespace reeltok.api.gateway.Tests
 
             FailureResponseDto failureResponseDto = new FailureResponseDto("Error uploading profile picture!");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(
                 It.IsAny<ServiceUpdateProfilePictureRequestDto>(), $"{BaseTestUrl}/UpdateProfilePicture", HttpMethod.Put))
                 .ReturnsAsync(failureResponseDto);
 
@@ -223,7 +223,7 @@ namespace reeltok.api.gateway.Tests
 
             ServiceUpdateProfilePictureResponseDto successResponseDto = new ServiceUpdateProfilePictureResponseDto(profilePictureUrl);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(
                 It.IsAny<ServiceUpdateProfilePictureRequestDto>(), $"{BaseTestUrl}/UpdateProfilePicture", HttpMethod.Put))
                 .ReturnsAsync(successResponseDto);
 
@@ -242,7 +242,7 @@ namespace reeltok.api.gateway.Tests
 
             FailureResponseDto failureResponseDto = new FailureResponseDto("Unable to retrieve subscriptions!");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(
                 It.IsAny<ServiceGetAllSubscriptionsForUserRequestDto>(), $"{BaseTestUrl}/GetSubscriptions", HttpMethod.Get))
                 .ReturnsAsync(failureResponseDto);
 
@@ -264,7 +264,7 @@ namespace reeltok.api.gateway.Tests
             };
             ServiceGetAllSubscriptionsForUserResponseDto successResponseDto = new ServiceGetAllSubscriptionsForUserResponseDto(usersDetails);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(
                 It.IsAny<ServiceGetAllSubscriptionsForUserRequestDto>(), $"{BaseTestUrl}/GetSubscriptions", HttpMethod.Get))
                 .ReturnsAsync(successResponseDto);
 
@@ -290,7 +290,7 @@ namespace reeltok.api.gateway.Tests
 
             FailureResponseDto failureResponseDto = new FailureResponseDto("Unable to retrieve subscribers!");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(
                 It.IsAny<ServiceGetAllSubscribingToUserRequestDto>(), $"{BaseTestUrl}/GetSubscribers", HttpMethod.Get))
                 .ReturnsAsync(failureResponseDto);
 
@@ -312,7 +312,7 @@ namespace reeltok.api.gateway.Tests
             };
             ServiceGetAllSubscribingToUserResponseDto successResponseDto = new ServiceGetAllSubscribingToUserResponseDto(usersDetails);
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(
                 It.IsAny<ServiceGetAllSubscribingToUserRequestDto>(), $"{BaseTestUrl}/GetSubscribers", HttpMethod.Get))
                 .ReturnsAsync(successResponseDto);
 

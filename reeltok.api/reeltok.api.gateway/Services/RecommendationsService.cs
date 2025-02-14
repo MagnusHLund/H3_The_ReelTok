@@ -10,12 +10,12 @@ namespace reeltok.api.gateway.Services
     {
         private const string RecommendationsMicroServiceBaseUrl = "http://localhost:5004/recommendations";
         private readonly IAuthService _authService;
-        private readonly IGatewayService _gatewayService;
+        private readonly IHttpService _httpService;
 
-        internal RecommendationsService(IAuthService authService, IGatewayService gatewayService)
+        internal RecommendationsService(IAuthService authService, IHttpService httpService)
         {
             _authService = authService;
-            _gatewayService = gatewayService;
+            _httpService = httpService;
         }
 
         public Task<List<RecommendedCategories>> GetRecommendation(Guid userId)
@@ -31,7 +31,7 @@ namespace reeltok.api.gateway.Services
             ServiceChangeRecommendedCategoryRequestDto requestDto = new ServiceChangeRecommendedCategoryRequestDto(userId, RecommendationCategory);
             string targetUrl = $"{RecommendationsMicroServiceBaseUrl}/update";
 
-            BaseResponseDto response = await _gatewayService.ProcessRequestAsync<ServiceChangeRecommendedCategoryRequestDto, ServiceChangeRecommendedCategoryResponseDto>(requestDto, targetUrl, HttpMethod.Put);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceChangeRecommendedCategoryRequestDto, ServiceChangeRecommendedCategoryResponseDto>(requestDto, targetUrl, HttpMethod.Put);
 
             if (response.Success && response is ServiceChangeRecommendedCategoryResponseDto responseDto)
             {
