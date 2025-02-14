@@ -3,13 +3,13 @@ using Xunit;
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.Services;
 using reeltok.api.gateway.DTOs.Auth;
+using reeltok.api.gateway.Factories;
 using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Tests
 {
     public class AuthServiceTests
     {
-        private const string BaseTestUrl = "http://localhost:5003/auth";
         private readonly Mock<IHttpService> _mockHttpService;
         private readonly IAuthService _authService;
 
@@ -23,10 +23,11 @@ namespace reeltok.api.gateway.Tests
         public async Task LogOutUser_WithBadResponse_ThrowInvalidOperationException()
         {
             // Arrange
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Already logged out");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Already logged out");
+            Uri targetUrl = TestDataFactory.CreateAuthMicroserviceTestUri("logout");
 
             _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(
-                It.IsAny<ServiceLogOutUserRequestDto>(), $"{BaseTestUrl}/logout", HttpMethod.Post))
+                It.IsAny<ServiceLogOutUserRequestDto>(), targetUrl, HttpMethod.Post))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -38,11 +39,11 @@ namespace reeltok.api.gateway.Tests
         public async Task LogOutUser_WithLoggedInUser_ReturnsSuccess()
         {
             // Arrange
-            bool success = true;
-            ServiceLogOutUserResponseDto successResponseDto = new ServiceLogOutUserResponseDto(success);
+            ServiceLogOutUserResponseDto successResponseDto = TestDataFactory.CreateLogOutUserResponse();
+            Uri targetUrl = TestDataFactory.CreateAuthMicroserviceTestUri("logout");
 
             _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(
-                It.IsAny<ServiceLogOutUserRequestDto>(), $"{BaseTestUrl}/logout", HttpMethod.Post))
+                It.IsAny<ServiceLogOutUserRequestDto>(), targetUrl, HttpMethod.Post))
                 .ReturnsAsync(successResponseDto);
 
             // Act
@@ -56,10 +57,11 @@ namespace reeltok.api.gateway.Tests
         public async Task GetUserIdByToken_WithBadResponse_ThrowsInvalidOperationException()
         {
             // Arrange
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid authentication token");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Invalid authentication token");
+            Uri targetUrl = TestDataFactory.CreateAuthMicroserviceTestUri("getUserIdByToken");
 
             _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(
-                It.IsAny<ServiceGetUserIdByTokenRequestDto>(), $"{BaseTestUrl}/getUserIdByToken", HttpMethod.Get))
+                It.IsAny<ServiceGetUserIdByTokenRequestDto>(), targetUrl, HttpMethod.Get))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -71,19 +73,18 @@ namespace reeltok.api.gateway.Tests
         public async Task GetUserIdByToken_WithValidToken_ReturnsUserId()
         {
             // Arrange
-            bool success = true;
-            Guid validUserId = Guid.NewGuid();
-            ServiceGetUserIdByTokenResponseDto successResponseDto = new ServiceGetUserIdByTokenResponseDto(validUserId, success);
+            ServiceGetUserIdByTokenResponseDto successResponseDto = TestDataFactory.CreateGetUserIdByTokenResponse();
+            Uri targetUrl = TestDataFactory.CreateAuthMicroserviceTestUri("getUserIdByToken");
 
             _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(
-                It.IsAny<ServiceGetUserIdByTokenRequestDto>(), $"{BaseTestUrl}/getUserIdByToken", HttpMethod.Get))
+                It.IsAny<ServiceGetUserIdByTokenRequestDto>(), targetUrl, HttpMethod.Get))
                 .ReturnsAsync(successResponseDto);
 
             // Act
             Guid result = await _authService.GetUserIdByToken();
 
             // Assert
-            Assert.Equal(validUserId, result);
+            Assert.Equal(successResponseDto.UserId, result);
         }
     }
 }

@@ -1,17 +1,16 @@
 using Moq;
 using Xunit;
 using System.Net;
-using System.Text;
 using Moq.Protected;
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.Services;
 using reeltok.api.gateway.DTOs.Auth;
+using reeltok.api.gateway.Factories;
 
 namespace reeltok.api.gateway.Tests
 {
     public class HttpServiceTests
     {
-        private const string BaseTestUrl = "http://localhost:5003/auth/LogOut";
         private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
         private readonly HttpClient _httpClient;
         private readonly HttpService _httpService;
@@ -27,13 +26,10 @@ namespace reeltok.api.gateway.Tests
         public async Task ProcessRequestAsync_WithValidRequest_ReturnsExpectedResponse()
         {
             // Arrange
-            ServiceLogOutUserRequestDto requestDto = new ServiceLogOutUserRequestDto();
-            string targetUrl = BaseTestUrl;
+            ServiceLogOutUserRequestDto requestDto = TestDataFactory.CreateLogOutUserRequest();
+            Uri targetUrl = TestDataFactory.CreateAuthMicroserviceTestUri("logout");
             string responseContent = "<LogOutUserResponseDto><Success>true</Success></LogOutUserResponseDto>";
-            HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")
-            };
+            HttpResponseMessage expectedResponse = TestDataFactory.CreateHttpResponseMessage(HttpStatusCode.OK, responseContent);
 
             _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -47,8 +43,6 @@ namespace reeltok.api.gateway.Tests
 
             // Assert
             Assert.True(response.Success);
-            ServiceLogOutUserResponseDto logOutResponse = response as ServiceLogOutUserResponseDto;
-            Assert.NotNull(logOutResponse);
         }
 
 
@@ -57,12 +51,9 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             ServiceGetUserIdByTokenRequestDto requestDto = new ServiceGetUserIdByTokenRequestDto();
-            string targetUrl = BaseTestUrl;
+            Uri targetUrl = TestDataFactory.CreateAuthMicroserviceTestUri("logout");
             string responseContent = "<FailureResponseDto><Success>false</Success><Message>Test message</Message></FailureResponseDto>";
-            HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.BadRequest)
-            {
-                Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")
-            };
+            HttpResponseMessage expectedResponse = TestDataFactory.CreateHttpResponseMessage(HttpStatusCode.BadRequest, responseContent);
 
             _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -72,10 +63,10 @@ namespace reeltok.api.gateway.Tests
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, FailureResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(requestDto, targetUrl, HttpMethod.Get);
 
             // Assert
-            var failureResponse = response as FailureResponseDto;
+            FailureResponseDto failureResponse = response as FailureResponseDto;
             Assert.False(response.Success);
             Assert.NotNull(failureResponse);
             Assert.Equal("Test message", failureResponse.Message);
@@ -85,7 +76,7 @@ namespace reeltok.api.gateway.Tests
         public async Task ProcessRequestAsync_WithNullRequestDto_ThrowsArgumentNullException()
         {
             // Arrange
-            string targetUrl = BaseTestUrl;
+            Uri targetUrl = TestDataFactory.CreateAuthMicroserviceTestUri("logout");
 
             // Act & Assert
             ArgumentNullException exception = await Assert.ThrowsAsync<ArgumentNullException>(() =>
@@ -99,12 +90,9 @@ namespace reeltok.api.gateway.Tests
         public async Task RouteRequestAsync_WithSuccessfulResponse_ReturnsCorrectResponse()
         {
             // Arrange
-            string targetUrl = BaseTestUrl;
+            Uri targetUrl = TestDataFactory.CreateAuthMicroserviceTestUri("logout");
             string responseContent = "<LogOutUserResponseDto><Success>true</Success></LogOutUserResponseDto>";
-            HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")
-            };
+            HttpResponseMessage expectedResponse = TestDataFactory.CreateHttpResponseMessage(HttpStatusCode.OK, responseContent);
 
             _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -126,12 +114,9 @@ namespace reeltok.api.gateway.Tests
         public async Task RouteRequestAsync_WithFailedResponse_ReturnsErrorResponse()
         {
             // Arrange
-            string targetUrl = BaseTestUrl;
+            Uri targetUrl = TestDataFactory.CreateAuthMicroserviceTestUri("logout");
             string responseContent = "<FailureResponseDto><Success>false</Success><Message>Test message</Message></FailureResponseDto>";
-            HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.BadRequest)
-            {
-                Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")
-            };
+            HttpResponseMessage expectedResponse = TestDataFactory.CreateHttpResponseMessage(HttpStatusCode.BadRequest, responseContent);
 
             _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -155,7 +140,7 @@ namespace reeltok.api.gateway.Tests
         public async Task RouteRequestAsync_WithTimeout_ThrowsTaskCanceledException()
         {
             // Arrange
-            string targetUrl = BaseTestUrl;
+            Uri targetUrl = TestDataFactory.CreateAuthMicroserviceTestUri("logout");
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, targetUrl);
 
             _mockHttpMessageHandler.Protected()

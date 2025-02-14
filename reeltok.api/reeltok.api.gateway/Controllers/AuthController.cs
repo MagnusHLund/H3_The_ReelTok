@@ -21,7 +21,7 @@ namespace reeltok.api.gateway.Controllers
         [Route("Logout")]
         public async Task<IActionResult> LogOutUser()
         {
-            bool success = await _authService.LogOutUser();
+            bool success = await _authService.LogOutUser().ConfigureAwait(false);
             GatewayLogOutUserResponseDto responseDto = new GatewayLogOutUserResponseDto(success);
 
             return Ok(responseDto);

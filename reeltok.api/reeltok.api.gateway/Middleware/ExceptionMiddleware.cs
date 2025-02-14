@@ -19,19 +19,19 @@ namespace reeltok.api.gateway.Middleware
         {
             try
             {
-                await _next(context);
+                await _next(context).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"An exception has occurred: {ex}");
-                await HandleExceptionAsync(context);
+                await HandleExceptionAsync(context).ConfigureAwait(false);
             }
         }
 
         private static Task HandleExceptionAsync(HttpContext context)
         {
             context.Response.ContentType = "application/xml";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
 
             FailureResponseDto response = new FailureResponseDto("Internal server error!");
 

@@ -6,7 +6,7 @@ namespace reeltok.api.gateway.Services
 {
     internal class AuthService : BaseService, IAuthService
     {
-        private const string AuthMicroServiceBaseUrl = "http://localhost:5003/auth";
+        private const string AuthMicroServiceBaseUrl = "http://localhost:5003/api/auth";
         private readonly IHttpService _httpService;
 
         public AuthService(IHttpService httpService)
@@ -17,9 +17,9 @@ namespace reeltok.api.gateway.Services
         public async Task<bool> LogOutUser()
         {
             ServiceLogOutUserRequestDto requestDto = new ServiceLogOutUserRequestDto();
-            string targetUrl = $"{AuthMicroServiceBaseUrl}/logout";
+            Uri targetUrl = new Uri($"{AuthMicroServiceBaseUrl}/logout");
 
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post).ConfigureAwait(false);
 
             if (response.Success && response is ServiceLogOutUserResponseDto responseDto)
             {
@@ -32,9 +32,9 @@ namespace reeltok.api.gateway.Services
         public async Task<Guid> GetUserIdByToken()
         {
             ServiceGetUserIdByTokenRequestDto requestDto = new ServiceGetUserIdByTokenRequestDto();
-            string targetUrl = $"{AuthMicroServiceBaseUrl}/getUserIdByToken";
+            Uri targetUrl = new Uri($"{AuthMicroServiceBaseUrl}/getUserIdByToken");
 
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetUserIdByTokenRequestDto, ServiceGetUserIdByTokenResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 
             if (response.Success && response is ServiceGetUserIdByTokenResponseDto responseDto)
             {

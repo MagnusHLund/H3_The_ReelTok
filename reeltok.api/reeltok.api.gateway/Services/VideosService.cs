@@ -1,18 +1,18 @@
 using reeltok.api.gateway.DTOs;
-using reeltok.api.gateway.DTOs.Videos.DeleteVideo;
-using reeltok.api.gateway.DTOs.Videos.GetVideosForFeed;
-using reeltok.api.gateway.DTOs.Videos.LikeVideo;
-using reeltok.api.gateway.DTOs.Videos.RemoveLike;
-using reeltok.api.gateway.DTOs.Videos.UploadVideo;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Interfaces;
 using reeltok.api.gateway.ValueObjects;
+using reeltok.api.gateway.DTOs.Videos.LikeVideo;
+using reeltok.api.gateway.DTOs.Videos.RemoveLike;
+using reeltok.api.gateway.DTOs.Videos.DeleteVideo;
+using reeltok.api.gateway.DTOs.Videos.UploadVideo;
+using reeltok.api.gateway.DTOs.Videos.GetVideosForFeed;
 
 namespace reeltok.api.gateway.Services
 {
     internal class VideosService : BaseService, IVideosService
     {
-        private const string VideosMicroServiceBaseUrl = "http://localhost:5002/videos";
+        private const string VideosMicroServiceBaseUrl = "http://localhost:5002/api/videos";
         private readonly IAuthService _authService;
         private readonly IHttpService _httpService;
         public VideosService(IAuthService authService, IHttpService httpService)
@@ -22,92 +22,102 @@ namespace reeltok.api.gateway.Services
         }
         public async Task<bool> LikeVideo(Guid VideoId)
         {
-            Guid userId = await _authService.GetUserIdByToken();
+            Guid userId = await _authService.GetUserIdByToken().ConfigureAwait(false);
 
             ServiceAddLikeRequestDto requestDto = new ServiceAddLikeRequestDto(userId, VideoId);
-            string targetUrl = $"{VideosMicroServiceBaseUrl}/AddLike";
+            Uri targetUrl = new Uri($"{VideosMicroServiceBaseUrl}/AddLike");
 
-            BaseResponseDto request = await _httpService.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(requestDto, targetUrl, HttpMethod.Post).ConfigureAwait(false);
 
-            if (request.Success && request is ServiceAddLikeResponseDto responseDto)
+            if (response.Success && response is ServiceAddLikeResponseDto responseDto)
             {
                 return responseDto.Success;
             }
 
-            throw HandleExceptions(request);
+            throw HandleExceptions(response);
         }
         public async Task<bool> RemoveLikeFromVideo(Guid VideoId)
         {
-            Guid userId = await _authService.GetUserIdByToken();
+            Guid userId = await _authService.GetUserIdByToken().ConfigureAwait(false);
 
             ServiceRemoveLikeRequestDto requestDto = new ServiceRemoveLikeRequestDto(userId, VideoId);
-            string targetUrl = $"{VideosMicroServiceBaseUrl}/RemoveLike";
+            Uri targetUrl = new Uri($"{VideosMicroServiceBaseUrl}/RemoveLike");
 
-            BaseResponseDto request = await _httpService.ProcessRequestAsync<ServiceRemoveLikeRequestDto, ServiceRemoveLikeResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceRemoveLikeRequestDto, ServiceRemoveLikeResponseDto>(requestDto, targetUrl, HttpMethod.Post).ConfigureAwait(false);
 
-            if (request.Success && request is ServiceRemoveLikeResponseDto responseDto)
+            if (response.Success && response is ServiceRemoveLikeResponseDto responseDto)
             {
                 return responseDto.Success;
             }
 
-            throw HandleExceptions(request);
+            throw HandleExceptions(response);
         }
 
         public async Task<List<Video>> GetVideosForFeed(byte amount)
         {
-            Guid userId = await _authService.GetUserIdByToken();
+            Guid userId = await _authService.GetUserIdByToken().ConfigureAwait(false);
 
             ServiceGetVideosForFeedRequestDto requestDto = new ServiceGetVideosForFeedRequestDto(userId, amount);
-            string targetUrl = $"{VideosMicroServiceBaseUrl}/GetVideoFeed";
+            Uri targetUrl = new Uri($"{VideosMicroServiceBaseUrl}/GetVideoFeed");
 
-            BaseResponseDto request = await _httpService.ProcessRequestAsync<ServiceGetVideosForFeedRequestDto, ServiceGetVideosForFeedResponseDto>(requestDto, targetUrl, HttpMethod.Get);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetVideosForFeedRequestDto, ServiceGetVideosForFeedResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 
-            if (request.Success && request is ServiceGetVideosForFeedResponseDto responseDto)
+            if (response.Success && response is ServiceGetVideosForFeedResponseDto responseDto)
             {
                 return responseDto.Videos;
             }
 
-            throw HandleExceptions(request);
+            throw HandleExceptions(response);
         }
 
         public async Task<Video> UploadVideo(VideoUpload video)
         {
-            Guid userId = await _authService.GetUserIdByToken();
+            Guid userId = await _authService.GetUserIdByToken().ConfigureAwait(false);
 
             ServiceUploadVideoRequestDto requestDto = new ServiceUploadVideoRequestDto(userId, video);
-            string targetUrl = $"{VideosMicroServiceBaseUrl}/Upload";
+            Uri targetUrl = new Uri($"{VideosMicroServiceBaseUrl}/Upload");
 
-            BaseResponseDto request = await _httpService.ProcessRequestAsync<ServiceUploadVideoRequestDto, ServiceUploadVideoResponseDto>(requestDto, targetUrl, HttpMethod.Post);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceUploadVideoRequestDto, ServiceUploadVideoResponseDto>(requestDto, targetUrl, HttpMethod.Post).ConfigureAwait(false);
 
-            if (request.Success && request is ServiceUploadVideoResponseDto responseDto)
+            if (response.Success && response is ServiceUploadVideoResponseDto responseDto)
             {
                 return responseDto.Video;
             }
 
-            throw HandleExceptions(request);
+            throw HandleExceptions(response);
         }
 
         public async Task<bool> DeleteVideo(Guid videoId)
         {
-            Guid userId = await _authService.GetUserIdByToken();
+            Guid userId = await _authService.GetUserIdByToken().ConfigureAwait(false);
 
             ServiceDeleteVideoRequestDto requestDto = new ServiceDeleteVideoRequestDto(userId, videoId);
-            string targetUrl = $"{VideosMicroServiceBaseUrl}/Delete";
+            Uri targetUrl = new Uri($"{VideosMicroServiceBaseUrl}/Delete");
 
-            BaseResponseDto request = await _httpService.ProcessRequestAsync<ServiceDeleteVideoRequestDto, ServiceDeleteVideoResponseDto>(requestDto, targetUrl, HttpMethod.Delete);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceDeleteVideoRequestDto, ServiceDeleteVideoResponseDto>(requestDto, targetUrl, HttpMethod.Delete).ConfigureAwait(false);
 
-            if (request.Success && request is ServiceDeleteVideoResponseDto responseDto)
+            if (response.Success && response is ServiceDeleteVideoResponseDto responseDto)
             {
                 return responseDto.Success;
             }
 
-            throw HandleExceptions(request);
+            throw HandleExceptions(response);
         }
 
-        // TODO: implement this method
-        public Task<List<Video>> GetVideosForProfile(Guid userId, byte amountToReturn, uint amountReceived)
+        // TODO: implement lazy loading for this request, and also some others. Also add tests for this
+        public async Task<List<Video>> GetVideosForProfile(Guid userId, byte amountToReturn, uint amountReceived)
         {
-            throw new NotImplementedException();
+            ServiceGetVideosForFeedRequestDto requestDto = new ServiceGetVideosForFeedRequestDto(userId, amountToReturn);
+            Uri targetUrl = new Uri($"{VideosMicroServiceBaseUrl}/GetVideosForProfile");
+
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetVideosForFeedRequestDto, ServiceGetVideosForFeedResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
+
+            if (response.Success && response is ServiceGetVideosForFeedResponseDto responseDto)
+            {
+                return responseDto.Videos;
+            }
+
+            throw HandleExceptions(response);
         }
     }
 }
