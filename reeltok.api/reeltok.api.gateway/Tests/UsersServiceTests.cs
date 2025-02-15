@@ -30,7 +30,7 @@ namespace reeltok.api.gateway.Tests
             string email = "test@reeltok.com";
             string password = "Test";
             FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Invalid credentials!");
-            Uri targetUrl = TestDataFactory.CreateRecommendationsMicroserviceTestUri("login");
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("login");
 
             _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(
                 It.IsAny<ServiceLoginRequestDto>(), targetUrl, HttpMethod.Post))

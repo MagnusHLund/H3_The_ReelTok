@@ -22,7 +22,7 @@ namespace reeltok.api.gateway.Services
             Guid userId = await _authService.GetUserIdByToken().ConfigureAwait(false);
 
             ServiceAddCommentRequestDto requestDto = new ServiceAddCommentRequestDto(userId, videoId, commentText);
-            Uri targetUrl = new Uri($"{CommentsMicroServiceBaseUrl}/Add");
+            Uri targetUrl = new Uri($"{CommentsMicroServiceBaseUrl}/add");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceAddCommentRequestDto, ServiceAddCommentResponseDto>(requestDto, targetUrl, HttpMethod.Post).ConfigureAwait(false);
 
@@ -37,7 +37,7 @@ namespace reeltok.api.gateway.Services
         public async Task<List<CommentUsingDateTime>> LoadComments(Guid videoId, byte amount)
         {
             ServiceLoadCommentsRequestDto requestDto = new ServiceLoadCommentsRequestDto(videoId, amount);
-            Uri targetUrl = new Uri($"{CommentsMicroServiceBaseUrl}/Load)");
+            Uri targetUrl = new Uri($"{CommentsMicroServiceBaseUrl}/load");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceLoadCommentsRequestDto, ServiceLoadCommentsResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 

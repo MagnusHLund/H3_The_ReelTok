@@ -96,7 +96,7 @@ namespace reeltok.api.gateway.Factories
 
         public static ServiceLoadCommentsResponseDto CreateLoadCommentsResponse(Guid videoId)
         {
-            uint createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.ParseExact("2025-14-02 14:30:00", "yyyy-MM-dd HH:mm:ss", null));
+            uint createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.Now);
 
             List<CommentUsingUnixTime> comments = new List<CommentUsingUnixTime>
             {
