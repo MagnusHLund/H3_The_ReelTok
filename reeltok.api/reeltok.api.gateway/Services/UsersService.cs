@@ -22,7 +22,7 @@ namespace reeltok.api.gateway.Services
         public async Task<UserProfileData> LoginUser(string email, string password)
         {
             ServiceLoginRequestDto requestDto = new ServiceLoginRequestDto(email, password);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/Login");
+            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/login");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(requestDto, targetUrl, HttpMethod.Post).ConfigureAwait(false);
 
@@ -36,7 +36,7 @@ namespace reeltok.api.gateway.Services
         public async Task<UserProfileData> CreateUser(string email, string username, string password)
         {
             ServiceCreateUserRequestDto requestDto = new ServiceCreateUserRequestDto(email, username, password);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/Create");
+            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/create");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceCreateUserRequestDto, ServiceCreateUserResponseDto>(requestDto, targetUrl, HttpMethod.Post).ConfigureAwait(false);
 
@@ -50,7 +50,7 @@ namespace reeltok.api.gateway.Services
         public async Task<UserProfileData> GetUserProfileData(Guid userId)
         {
             ServiceGetUserProfileDataRequestDto requestDto = new ServiceGetUserProfileDataRequestDto(userId);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/GetProfileData");
+            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/getProfileData");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 
@@ -66,7 +66,7 @@ namespace reeltok.api.gateway.Services
             Guid userId = await _authService.GetUserIdByToken().ConfigureAwait(false);
 
             ServiceUpdateUserDetailsRequestDto requestDto = new ServiceUpdateUserDetailsRequestDto(userId, username, email);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/UpdateDetails");
+            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/updateDetails");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(requestDto, targetUrl, HttpMethod.Put).ConfigureAwait(false);
 
@@ -83,7 +83,7 @@ namespace reeltok.api.gateway.Services
             Guid userId = await _authService.GetUserIdByToken().ConfigureAwait(false);
 
             ServiceUpdateProfilePictureRequestDto requestDto = new ServiceUpdateProfilePictureRequestDto(userId, image);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/UpdateProfilePicture");
+            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/updateProfilePicture");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(requestDto, targetUrl, HttpMethod.Put).ConfigureAwait(false);
 
@@ -98,7 +98,7 @@ namespace reeltok.api.gateway.Services
         public async Task<List<UserDetails>> GetAllSubscriptionsForUser(Guid userId)
         {
             ServiceGetAllSubscriptionsForUserRequestDto requestDto = new ServiceGetAllSubscriptionsForUserRequestDto(userId);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/GetSubscriptions");
+            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/getSubscriptions");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 
@@ -112,7 +112,7 @@ namespace reeltok.api.gateway.Services
         public async Task<List<UserDetails>> GetAllSubscribingToUser(Guid userId)
         {
             ServiceGetAllSubscribingToUserRequestDto requestDto = new ServiceGetAllSubscribingToUserRequestDto(userId);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/GetSubscribers");
+            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/getSubscribers");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 

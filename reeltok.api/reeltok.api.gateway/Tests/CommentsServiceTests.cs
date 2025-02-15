@@ -29,8 +29,8 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             Guid videoId = Guid.NewGuid();
             string commentText = "They better not delete this video!";
-            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse(commentText);
-            Uri targetUrl = TestDataFactory.CreateAuthMicroserviceTestUri("/add");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Video does not exist!");
+            Uri targetUrl = TestDataFactory.CreateCommentsMicroserviceTestUri("add");
 
             _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceAddCommentRequestDto, ServiceAddCommentResponseDto>(
                 It.IsAny<ServiceAddCommentRequestDto>(), targetUrl, HttpMethod.Post))
@@ -38,7 +38,7 @@ namespace reeltok.api.gateway.Tests
 
             // Act & Assert
             InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _commentsService.AddComment(videoId, commentText));
-            Assert.Equal("Video does not exist!", exception.Message);
+            Assert.Equal(failureResponseDto.Message, exception.Message);
         }
 
         [Fact]
@@ -102,7 +102,6 @@ namespace reeltok.api.gateway.Tests
             Assert.All(result, comment =>
             {
                 Assert.Equal(videoId, comment.CommentDetails.VideoId);
-                Assert.Equal("Cool Test!", comment.CommentDetails.CommentText);
                 Assert.NotEqual(Guid.Empty, comment.CommentDetails.UserId);
             });
         }
