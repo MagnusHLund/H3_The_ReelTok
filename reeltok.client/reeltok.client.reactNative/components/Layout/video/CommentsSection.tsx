@@ -1,66 +1,66 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import CustomButton from '../../input/CustomButton';
 
 interface CommentSectionProps {
   comments?: React.ReactNode,
-  showComments: boolean, 
+  commentsAmount?: number,
+  showComments: boolean,
+  onClose: () => void,
 }
 
-const CommentsSection: React.FC<CommentSectionProps> = ({comments, showComments}) => {
+const CommentSection: React.FC<CommentSectionProps> = ({comments, commentsAmount, showComments, onClose}) => {
   
   const styles = StyleSheet.create({
-      commentsContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
       modalOverlay: {
         display: 'flex',
-        justifyContent: 'flex-end', // aligns modal content at the bottom
-        backgroundColor: 'rgba(0,0,0,0.5)', // semi-transparent background
+        justifyContent: 'flex-end',
+        flexDirection: 'column',
+        backgroundColor: 'transparent',
+        height: '100%',
       },
       modalContent: {
-        backgroundColor: 'white',
+        backgroundColor: '#262626',
         padding: 20,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
+        height: '50%',
+        overflow: 'scroll',
       },
-      modalTitle: {
-        fontSize: 20,
-        marginBottom: 10,
-      },
-      closeButton: {
-        fontSize: 18,
-        color: 'blue',
-        marginTop: 10,
-      },
+      commentsDetailsAndControls: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderColor: 'white',
+        color: 'white',
+      }
   });  
   
-  const [modalVisible, setModalVisible] = useState(showComments);
-
   return (
     <>
-      <View style={styles.commentsContainer}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Comments</Text>
-              {/* Add your comment content here */}
-              <CustomButton onPress={() => setModalVisible(false)}>
-                <Text style={styles.closeButton}>Close Comments</Text>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showComments}
+        onRequestClose={onClose}
+      >
+        <View style={styles.modalOverlay}> 
+          <View style={styles.modalContent}>
+            <View style={styles.commentsDetailsAndControls}>
+              <Text style={{ color: 'white' }}> Comments: {commentsAmount} </Text>
+              <CustomButton transparent={true}  borders={false} onPress={onClose}>
+                <Ionicons name="close" size={32} color="white" />
               </CustomButton>
             </View>
+            {comments} 
           </View>
-        </Modal>
-      </View>
+        </View>
+      </Modal>
     </>
   )
 };
 
-export default CommentsSection;
+export default CommentSection;

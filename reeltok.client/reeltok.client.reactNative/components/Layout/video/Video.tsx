@@ -3,16 +3,16 @@ import { StyleSheet, View, Dimensions, Pressable, Text } from 'react-native';
 import CustomButton from '../../input/CustomButton';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState, useEffect } from 'react';
-import CommentsSection from './CommentsSection';
 
 interface VideoProps {
   source: string,
   isFocused: boolean,
+  onShowComments: () => void;
 }
 
 const { width, height } = Dimensions.get("window");
 
-const Video: React.FC<VideoProps> = ({ source, isFocused }) => {
+const Video: React.FC<VideoProps> = ({ source, isFocused, onShowComments }) => {
   
   const player = useVideoPlayer(source, player => {
     player.loop = true;
@@ -41,7 +41,6 @@ const Video: React.FC<VideoProps> = ({ source, isFocused }) => {
   };
 
   const [likedVideo, setLikedVideo] = useState(false);
-  const [showComments, setShowComments] = useState<boolean>(false);
   const likesAmount = 50;
   const commentsAmount = 10;
 
@@ -56,12 +55,11 @@ const Video: React.FC<VideoProps> = ({ source, isFocused }) => {
           <Ionicons name={likedVideo ? 'heart' : 'heart-outline'} size={32} color={likedVideo ? 'red' : 'white'} />
           <Text style={styles.socialFontSettings}> {likesAmount} </Text>
         </CustomButton>
-        <CustomButton transparent={true} borders={false} flexDirection='column' onPress={() => setShowComments}>
+        <CustomButton transparent={true} borders={false} flexDirection='column' onPress={onShowComments}>
           <Ionicons name="chatbubble-outline" size={32} color="white" />
           <Text style={styles.socialFontSettings}> {commentsAmount} </Text>
         </CustomButton>
-      </View>
-      <CommentsSection showComments={showComments} />
+      </View> 
     </>
   );
 };
