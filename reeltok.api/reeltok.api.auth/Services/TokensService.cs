@@ -91,6 +91,9 @@ namespace reeltok.api.auth.Services
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             ClaimsPrincipal principal = tokenHandler.ValidateToken(accessTokenValue, validationParameters, out SecurityToken validatedToken);
+
+            // TODO: Check database, to ensure the token is not invalidated!
+
             return principal;
         }
 

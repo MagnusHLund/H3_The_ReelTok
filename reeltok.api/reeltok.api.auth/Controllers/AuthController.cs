@@ -40,12 +40,13 @@ namespace reeltok.api.auth.Controllers
             return Ok(responseDto);
         }
 
-        // TODO: SQL to ensure tokens are invalidated, if expired.
+        // TODO: Make logic to update tokens "RevokedAt", when they are past their "ExpiresAt" time.
         // TODO: Ensure that tokens are revoked correctly, I think they are, but just make sure
         // TODO: Ensure that DTOs have the correct xml attributes
         // TODO: Optimize database (table lengths, and such)
         // TODO: Ensure that all token usage checks if the token is expired!
         // TODO: Create factory for tests
+        // TODO: change async functions to be named ASYNC in the end
         [HttpPost]
         [Route("CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDto request)

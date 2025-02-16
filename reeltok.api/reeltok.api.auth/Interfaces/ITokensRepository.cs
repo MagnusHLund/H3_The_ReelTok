@@ -2,7 +2,7 @@ namespace reeltok.api.auth.Interfaces
 {
     public interface ITokensRepository
     {
-        Task RevokeToken<TTokenEntity, TToken>(string tokenValue)
+        Task<TTokenEntity> RevokeToken<TTokenEntity, TToken>(string tokenValue)
             where TTokenEntity : class, ITokenEntity<TToken>
             where TToken : IToken;
         Task<TTokenEntity> SaveToken<TTokenEntity, TToken>(TTokenEntity tokenEntity)

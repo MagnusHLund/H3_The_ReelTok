@@ -23,23 +23,23 @@ namespace reeltok.api.auth.Data
             // Configure value objects within entities
             modelBuilder.Entity<RefreshTokenEntity>().OwnsOne(rt => rt.Token, rt =>
             {
-                rt.Property(p => p.TokenValue).HasColumnName("RefreshTokenValue").IsRequired();
-                rt.Property(p => p.CreatedAt).HasColumnName("RefreshTokenCreatedAt").IsRequired();
-                rt.Property(p => p.ExpiresAt).HasColumnName("RefreshTokenExpiresAt").IsRequired();
+                rt.Property(p => p.TokenValue).HasColumnName("TokenValue").IsRequired();
+                rt.Property(p => p.CreatedAt).HasColumnName("CreatedAt").IsRequired();
+                rt.Property(p => p.ExpiresAt).HasColumnName("ExpiresAt").IsRequired();
             });
 
             modelBuilder.Entity<AccessTokenEntity>().OwnsOne(at => at.Token, at =>
             {
-                at.Property(p => p.TokenValue).HasColumnName("AccessTokenValue").IsRequired();
-                at.Property(p => p.CreatedAt).HasColumnName("AccessTokenCreatedAt").IsRequired();
-                at.Property(p => p.ExpiresAt).HasColumnName("AccessTokenExpiresAt").IsRequired();
+                at.Property(p => p.TokenValue).HasColumnName("TokenValue").IsRequired();
+                at.Property(p => p.CreatedAt).HasColumnName("CreatedAt").IsRequired();
+                at.Property(p => p.ExpiresAt).HasColumnName("ExpiresAt").IsRequired();
             });
 
             modelBuilder.Entity<AccessTokenEntity>().OwnsOne(at => at.Token, at =>
             {
-                at.Property(p => p.TokenValue).HasColumnName("AccessTokenValue").IsRequired();
-                at.Property(p => p.CreatedAt).HasColumnName("AccessTokenCreatedAt").IsRequired();
-                at.Property(p => p.ExpiresAt).HasColumnName("AccessTokenExpiresAt").IsRequired();
+                at.Property(p => p.TokenValue).HasColumnName("TokenValue").IsRequired();
+                at.Property(p => p.CreatedAt).HasColumnName("CreatedAt").IsRequired();
+                at.Property(p => p.ExpiresAt).HasColumnName("ExpiresAt").IsRequired();
 
                 at.HasIndex(p => p.TokenValue).IsUnique().HasDatabaseName("UX_AccessToken_TokenValue");
                 at.HasIndex(p => p.ExpiresAt).HasDatabaseName("IX_AccessToken_ExpiresAt");
