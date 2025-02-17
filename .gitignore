@@ -234,4 +234,7 @@ _Pvt_Extensions
 .fake/
 
 # Entity framework migrations
-*/Migrations/
+**/Migrations/
+
+# Production appsettings
+**/appsettings.json

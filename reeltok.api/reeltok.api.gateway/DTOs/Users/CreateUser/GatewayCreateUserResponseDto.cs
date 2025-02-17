@@ -9,7 +9,7 @@ namespace reeltok.api.gateway.DTOs.Users
     {
 
         [XmlElement("UserId")]
-        
+
         public Guid UserId { get; set; }
         [XmlElement("Email")]
         [EmailAddress]
@@ -32,6 +32,6 @@ namespace reeltok.api.gateway.DTOs.Users
             ProfileUrl = profileUrl;
             ProfilePictureUrl = profilePictureUrl;
         }
-        public GatewayCreateUserResponseDto() { }
+    public GatewayCreateUserResponseDto() { }
     }
 }

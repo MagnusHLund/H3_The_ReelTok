@@ -1,7 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
-using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.ValueObjects;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.gateway.DTOs.Videos.UploadVideo
 {
