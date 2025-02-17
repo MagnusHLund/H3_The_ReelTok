@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CommentsService.Interface;
+using reeltok.api.comments.Interface;
 
-namespace CommentsService.Repositories
+namespace reeltok.api.comments.Repositories
 {
     public class CommentRepository : ICommentRepository
     {
-        
+
     }
 }

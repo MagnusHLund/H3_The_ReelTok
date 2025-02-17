@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CommentsService.DTOs
+namespace reeltok.api.comments.DTOs
 {
     public class CreateDTO
     {
-        
+
     }
 }

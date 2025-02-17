@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using reeltok.api.comments.ValueObjects;
 
-namespace CommentsService.Entities
+namespace reeltok.api.comments.Entities
 {
     public class Comment
     {

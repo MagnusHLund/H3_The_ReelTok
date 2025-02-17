@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CommentsService.Interface;
+using reeltok.api.comments.Interface;
 
-namespace CommentsService.Services
+namespace reeltok.api.comments.Services
 {
     public class CommentService : ICommentService
     {
-        
+
     }
 }

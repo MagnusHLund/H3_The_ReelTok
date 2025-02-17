@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CommentsService.Interface
+namespace reeltok.api.comments.Interface
 {
     public interface ICommentService
     {
-        
+
     }
 }
