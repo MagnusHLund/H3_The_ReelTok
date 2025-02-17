@@ -19,6 +19,13 @@ namespace reeltok.api.users.Controllers
             _usersService = usersService;
         }
 
+        //Shazil TODOs on discord:
+        // TODO: Call video API to verify video id
+        // TODO: Call auth API when creating user
+        // TODO: Delete subscription and subscriber when user is deleted
+        // TODO: Change name of columns in database using EF
+        // TODO: Add Login in User API
+
         // TODO: CALL AUTH SERVICE TO ADD OTHER USER INFO THERE
         [HttpPost("Create A User")]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequestDto user)
