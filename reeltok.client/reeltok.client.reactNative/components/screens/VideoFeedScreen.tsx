@@ -17,17 +17,34 @@ const VideoFeedScreen = () => {
     "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
   ];
 
+  const videoComments = {
+    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4": [
+      { text: "Amazing view!", profilePictureUrl: "https://i.pinimg.com/236x/2d/c7/b9/2dc7b9725100be062bc9b9e8276d84bd.jpg", username: "NatureLover" },
+      { text: "Epic escape!", profilePictureUrl: "https://i.pinimg.com/236x/2d/c7/b9/2dc7b9725100be062bc9b9e8276d84bd.jpg", username: "Explorer99" }
+    ],
+    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4": [
+      { text: "Love this car!", profilePictureUrl: "https://i.pinimg.com/236x/2d/c7/b9/2dc7b9725100be062bc9b9e8276d84bd.jpg", username: "CarFanatic" },
+      { text: "Great commercial!", profilePictureUrl: "https://i.pinimg.com/236x/2d/c7/b9/2dc7b9725100be062bc9b9e8276d84bd.jpg", username: "AutoGeek" }, 
+    ],
+    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4": [
+      { text: "So artistic!", profilePictureUrl: "https://i.pinimg.com/236x/2d/c7/b9/2dc7b9725100be062bc9b9e8276d84bd.jpg", username: "FilmBuff" },
+      { text: "Beautiful animation!", profilePictureUrl: "https://i.pinimg.com/236x/2d/c7/b9/2dc7b9725100be062bc9b9e8276d84bd.jpg", username: "Cinephile" }
+    ]
+  };
+
   const handleViewableItemsChanged = useRef(({ viewableItems }) => {
     if (viewableItems.length > 0) {
       setCurrentIndex(viewableItems[0].index);
     }
   }).current;
 
+  const commentsAmount = 10;
+
   return (
     <>
       <FlatList
         data={videoSources}
-        renderItem={({ item, index }) => 
+        renderItem={({ item, index }) =>
           <Video source={item} isFocused={index === currentIndex} onShowComments={() => setShowComments(true)} />
         }
         keyExtractor={(_, index) => index.toString()}
@@ -45,7 +62,7 @@ const VideoFeedScreen = () => {
           index,
         })}
       />
-      <CommentSection showComments={showComments} onClose={() => setShowComments(false)}/>
+      <CommentSection comments={videoComments[videoSources[currentIndex]] || []} commentsAmount={commentsAmount} showComments={showComments} onClose={() => setShowComments(false)}/>
       <Navbar/>
     </>
   );
