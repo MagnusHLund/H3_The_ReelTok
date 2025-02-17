@@ -6,7 +6,7 @@ namespace reeltok.api.gateway.DTOs.Videos.GetVideosForFeed
     [XmlRoot("GetVideosForFeedRequestDto")]
     public class ServiceGetVideosForFeedRequestDto
     {
-        
+
         [XmlElement("UserId")]
         [Required]
         public Guid UserId { get; set; }

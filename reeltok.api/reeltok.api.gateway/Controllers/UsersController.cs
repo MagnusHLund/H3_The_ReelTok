@@ -25,7 +25,7 @@ namespace reeltok.api.gateway.Controllers
         [Route("Login")]
         public async Task<IActionResult> LoginUser([FromBody] GatewayLoginRequestDto request)
         {
-            UserProfileData userProfileData = await _usersService.LoginUser(request.Email, request.Password);
+            UserProfileData userProfileData = await _usersService.LoginUser(request.Email, request.Password).ConfigureAwait(false);
             GatewayLoginResponseDto responseDto = UserMapper.ConvertUserProfileDataToResponseDto<GatewayLoginResponseDto>(userProfileData);
 
             return Ok(responseDto);
@@ -35,7 +35,7 @@ namespace reeltok.api.gateway.Controllers
         [Route("Create")]
         public async Task<IActionResult> CreateUser([FromBody] GatewayCreateUserRequestDto request)
         {
-            UserProfileData userProfileData = await _usersService.CreateUser(request.Email, request.Username, request.Password);
+            UserProfileData userProfileData = await _usersService.CreateUser(request.Email, request.Username, request.Password).ConfigureAwait(false);
             GatewayCreateUserResponseDto responseDto = UserMapper.ConvertUserProfileDataToResponseDto<GatewayCreateUserResponseDto>(userProfileData);
 
             return Ok(responseDto);
@@ -45,7 +45,7 @@ namespace reeltok.api.gateway.Controllers
         [Route("GetUserProfileData/{userId}")]
         public async Task<IActionResult> GetUserProfileData([FromRoute] Guid userId)
         {
-            UserProfileData userProfileData = await _usersService.GetUserProfileData(userId);
+            UserProfileData userProfileData = await _usersService.GetUserProfileData(userId).ConfigureAwait(false);
             GatewayGetUserProfileDataResponseDto responseDto = UserMapper.ConvertUserProfileDataToResponseDto<GatewayGetUserProfileDataResponseDto>(userProfileData);
 
             return Ok(responseDto);
@@ -55,7 +55,7 @@ namespace reeltok.api.gateway.Controllers
         [Route("UpdateUserDetails")]
         public async Task<IActionResult> UpdateUserDetails([FromBody] GatewayUpdateUserDetailsRequestDto request)
         {
-            EditableUserDetails userProfileData = await _usersService.UpdateUserDetails(request.Username, request.Email);
+            EditableUserDetails userProfileData = await _usersService.UpdateUserDetails(request.Username, request.Email).ConfigureAwait(false);
             GatewayUpdateUserDetailsResponseDto responseDto = UserMapper.ConvertEditableUserDetailsToDto<GatewayUpdateUserDetailsResponseDto>(userProfileData);
 
             return Ok(responseDto);
@@ -65,7 +65,7 @@ namespace reeltok.api.gateway.Controllers
         [Route("UpdateProfilePicture")]
         public async Task<IActionResult> UpdateProfilePicture([FromBody] GatewayUpdateProfilePictureRequestDto request)
         {
-            string profilePictureUrl = await _usersService.UpdateProfilePicture(request.ProfilePicture);
+            string profilePictureUrl = await _usersService.UpdateProfilePicture(request.ProfilePicture).ConfigureAwait(false);
             GatewayUpdateProfilePictureResponseDto responseDto = new GatewayUpdateProfilePictureResponseDto(profilePictureUrl);
 
             return Ok(responseDto);
@@ -75,7 +75,7 @@ namespace reeltok.api.gateway.Controllers
         [Route("GetAllSubscriptionsForUser")]
         public async Task<IActionResult> GetAllSubscriptionsForUser([FromRoute] Guid userId)
         {
-            List<UserDetails> users = await _usersService.GetAllSubscriptionsForUser(userId);
+            List<UserDetails> users = await _usersService.GetAllSubscriptionsForUser(userId).ConfigureAwait(false);
             GatewayGetAllSubscriptionsForUserResponseDto responseDto = new GatewayGetAllSubscriptionsForUserResponseDto(users);
 
             if (users.IsNullOrEmpty())
@@ -90,7 +90,7 @@ namespace reeltok.api.gateway.Controllers
         [Route("GetAllSubscribingToUser")]
         public async Task<IActionResult> GetAllSubscribingToUser([FromBody] Guid userId)
         {
-            List<UserDetails> users = await _usersService.GetAllSubscribingToUser(userId);
+            List<UserDetails> users = await _usersService.GetAllSubscribingToUser(userId).ConfigureAwait(false);
             GatewayGetAllSubscribingToUserResponseDto responseDto = new GatewayGetAllSubscribingToUserResponseDto(users);
 
             if (users.IsNullOrEmpty())

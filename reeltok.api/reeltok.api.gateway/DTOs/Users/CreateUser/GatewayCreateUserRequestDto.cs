@@ -10,7 +10,7 @@ namespace reeltok.api.gateway.DTOs.Users
         [Required]
         [EmailAddress]
         [Range(1, 320)]
-        
+
         public string Email { get; set; }
         [XmlElement(elementName: "Username")]
         [Required]

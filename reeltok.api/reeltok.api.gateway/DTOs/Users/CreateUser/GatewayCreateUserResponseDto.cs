@@ -9,7 +9,7 @@ namespace reeltok.api.gateway.DTOs.Users
     {
 
         [XmlElement("UserId")]
-        
+
         public Guid UserId { get; set; }
         [XmlElement("Email")]
         [EmailAddress]

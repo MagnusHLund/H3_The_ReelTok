@@ -4,24 +4,23 @@ using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.Utils;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Services;
+using reeltok.api.gateway.Factories;
 using reeltok.api.gateway.Interfaces;
-using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.DTOs.Comments;
 
 namespace reeltok.api.gateway.Tests
 {
     public class CommentsServiceTests
     {
-        private const string BaseTestUrl = "http://localhost:5005/comments";
-        private readonly Mock<IGatewayService> _mockGatewayService;
+        private readonly Mock<IHttpService> _mockHttpService;
         private readonly Mock<IAuthService> _mockAuthService;
         private readonly ICommentsService _commentsService;
 
         public CommentsServiceTests()
         {
             _mockAuthService = new Mock<IAuthService>();
-            _mockGatewayService = new Mock<IGatewayService>();
-            _commentsService = new CommentsService(_mockAuthService.Object, _mockGatewayService.Object);
+            _mockHttpService = new Mock<IHttpService>();
+            _commentsService = new CommentsService(_mockAuthService.Object, _mockHttpService.Object);
         }
 
         [Fact]
@@ -30,40 +29,38 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             Guid videoId = Guid.NewGuid();
             string commentText = "They better not delete this video!";
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Video does not exist!");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Video does not exist!");
+            Uri targetUrl = TestDataFactory.CreateCommentsMicroserviceTestUri("add");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceAddCommentRequestDto, ServiceAddCommentResponseDto>(
-                It.IsAny<ServiceAddCommentRequestDto>(), $"{BaseTestUrl}/Add", HttpMethod.Post))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceAddCommentRequestDto, ServiceAddCommentResponseDto>(
+                It.IsAny<ServiceAddCommentRequestDto>(), targetUrl, HttpMethod.Post))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
             InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _commentsService.AddComment(videoId, commentText));
-            Assert.Equal("Video does not exist!", exception.Message);
+            Assert.Equal(failureResponseDto.Message, exception.Message);
         }
 
         [Fact]
         public async Task AddComment_WithValidParameters_ReturnNewlyCreatedComment()
         {
             // Arrange
-            Guid videoId = Guid.NewGuid();
-            Guid commentId = Guid.NewGuid();
-            Guid userId = Guid.NewGuid();
-            string commentText = "Amazing test!";
-            uint createdAt = (uint)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
-            bool success = true;
+            ServiceAddCommentResponseDto successResponse = TestDataFactory.CreateAddCommentResponse();
+            Uri targetUrl = TestDataFactory.CreateCommentsMicroserviceTestUri("add");
 
-            ServiceAddCommentResponseDto successResponse = new ServiceAddCommentResponseDto(commentId, userId, videoId, commentText, createdAt, success);
-
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceAddCommentRequestDto, ServiceAddCommentResponseDto>(
-                It.IsAny<ServiceAddCommentRequestDto>(), $"{BaseTestUrl}/Add", HttpMethod.Post))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceAddCommentRequestDto, ServiceAddCommentResponseDto>(
+                It.IsAny<ServiceAddCommentRequestDto>(), targetUrl, HttpMethod.Post))
                 .ReturnsAsync(successResponse);
 
             // Act
-            CommentUsingDateTime result = await _commentsService.AddComment(videoId, "Valid Comment");
+            CommentUsingDateTime result = await _commentsService.AddComment(successResponse.VideoId, "Valid Comment");
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(commentId, result.CommentId);
+            Assert.Equal(successResponse.CommentId, result.CommentId);
+            Assert.Equal(successResponse.VideoId, result.CommentDetails.VideoId);
+            Assert.Equal(successResponse.CommentText, result.CommentDetails.CommentText);
+            Assert.Equal(DateTimeUtils.UnixTimeToDateTime(successResponse.CreatedAt), result.CommentDetails.CreatedAt);
         }
 
         [Fact]
@@ -72,10 +69,11 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             Guid videoId = Guid.NewGuid();
             byte amount = 2;
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Video does not exist!");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Video does not exist!");
+            Uri targetUrl = TestDataFactory.CreateCommentsMicroserviceTestUri("load");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceLoadCommentsRequestDto, ServiceLoadCommentsResponseDto>(
-                It.IsAny<ServiceLoadCommentsRequestDto>(), $"{BaseTestUrl}/Load", HttpMethod.Get))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceLoadCommentsRequestDto, ServiceLoadCommentsResponseDto>(
+                It.IsAny<ServiceLoadCommentsRequestDto>(), targetUrl, HttpMethod.Get))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -88,17 +86,11 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             Guid videoId = Guid.NewGuid();
-            uint createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.Now);
-            List<CommentUsingUnixTime> comments = new List<CommentUsingUnixTime>
-            {
-                new CommentUsingUnixTime(Guid.NewGuid(), new CommentDetailsUsingUnixTime(Guid.NewGuid(), videoId, "Cool Test!", createdAt)),
-                new CommentUsingUnixTime(Guid.NewGuid(), new CommentDetailsUsingUnixTime(Guid.NewGuid(), videoId, "I Agree with the previous comment", createdAt))
-            };
-            bool success = true;
-            ServiceLoadCommentsResponseDto successResponse = new ServiceLoadCommentsResponseDto(comments, success);
+            ServiceLoadCommentsResponseDto successResponse = TestDataFactory.CreateLoadCommentsResponse(videoId);
+            Uri targetUrl = TestDataFactory.CreateCommentsMicroserviceTestUri("load");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceLoadCommentsRequestDto, ServiceLoadCommentsResponseDto>(
-                It.IsAny<ServiceLoadCommentsRequestDto>(), $"{BaseTestUrl}/Load", HttpMethod.Get))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceLoadCommentsRequestDto, ServiceLoadCommentsResponseDto>(
+                It.IsAny<ServiceLoadCommentsRequestDto>(), targetUrl, HttpMethod.Get))
                 .ReturnsAsync(successResponse);
 
             // Act
@@ -107,7 +99,11 @@ namespace reeltok.api.gateway.Tests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(2, result.Count);
-            Assert.All(result, comment => Assert.Equal(videoId, comment.CommentDetails.VideoId));
+            Assert.All(result, comment =>
+            {
+                Assert.Equal(videoId, comment.CommentDetails.VideoId);
+                Assert.NotEqual(Guid.Empty, comment.CommentDetails.UserId);
+            });
         }
     }
 }
