@@ -10,6 +10,11 @@ namespace reeltok.api.comments
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddDbContextFactory<CommentDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
