@@ -1,7 +1,7 @@
-using Microsoft.EntityFrameworkCore;
 using reeltok.api.videos.Data;
 using reeltok.api.videos.Entities;
 using reeltok.api.videos.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace reeltok.api.videos.Repositories
 {

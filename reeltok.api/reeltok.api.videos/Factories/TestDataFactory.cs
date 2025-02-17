@@ -5,6 +5,10 @@ using reeltok.api.videos.ValueObjects;
 using reeltok.api.videos.DTOs.LikeVideo;
 using reeltok.api.videos.DTOs.RemoveLike;
 using reeltok.api.videos.DTOs.UserLikedVideo;
+using reeltok.api.videos.Entities;
+using reeltok.api.videos.Enums;
+using Microsoft.IdentityModel.Tokens;
+using Moq;
 
 namespace reeltok.api.videos.Factories
 {
@@ -69,6 +73,28 @@ namespace reeltok.api.videos.Factories
             (
                 totalLikes: totalLikes,
                 userHasLikedVideo: userHasLikedVideo
+            );
+        }
+
+        public static VideoEntity CreateVideoEntity()
+        {
+            Guid videoId = Guid.NewGuid();
+            Guid userId = Guid.NewGuid();
+            string title = "Test video";
+            string description = "Test description";
+            RecommendedCategories tag = RecommendedCategories.Tech;
+            string streamUrl = "/some/test/uri.mp4";
+            uint uploadedAt = 1739803271;
+
+            return new VideoEntity
+            (
+                videoId: videoId,
+                userId: userId,
+                title: title,
+                description: description,
+                tag: tag,
+                streamUrl: streamUrl,
+                uploadedAt: uploadedAt
             );
         }
 

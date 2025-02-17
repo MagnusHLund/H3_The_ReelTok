@@ -2,7 +2,7 @@ namespace reeltok.api.videos.Interfaces
 {
     public interface IStorageService
     {
-        Task UploadVideoToFileServerAsync(IFormFile video, Guid userId, Guid videoId);
-        Task RemoveVideoFromFileServerAsync(Guid userId, Guid videoId);
+        Task<Uri> UploadVideoToFileServerAsync(IFormFile videoFile, Guid videoId, Guid userId);
+        Task RemoveVideoFromFileServerAsync(string streamUri);
     }
 }

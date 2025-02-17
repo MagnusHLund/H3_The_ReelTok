@@ -7,7 +7,7 @@ namespace reeltok.api.videos.Data
     {
         public DbSet<VideoEntity> Videos { get; set; }
         public DbSet<VideoLikesEntity> VideosLikes { get; set; }
-
+        // TODO: ensure proper keys in the database
         public VideosDbContext(DbContextOptions<VideosDbContext> options) : base(options) { }
     }
 }

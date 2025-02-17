@@ -7,9 +7,9 @@ namespace reeltok.api.videos.DTOs.GetVideosForFeed
     public class GetVideosForFeedResponseDto : BaseResponseDto
     {
         [XmlElement("Videos")]
-        public List<Video> Videos { get; set; }
+        public List<VideoEntity> Videos { get; set; }
 
-        public GetVideosForFeedResponseDto(List<Video> videos, bool success = true) : base(success)
+        public GetVideosForFeedResponseDto(List<VideoEntity> videos, bool success = true) : base(success)
         {
             Videos = videos;
         }

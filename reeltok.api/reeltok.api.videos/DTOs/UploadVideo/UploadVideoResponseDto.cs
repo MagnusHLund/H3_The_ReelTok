@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using System.Xml.Serialization;
 using reeltok.api.videos.Entities;
 
@@ -11,9 +8,9 @@ namespace reeltok.api.videos.DTOs.UploadVideo
     public class UploadVideoResponseDto : BaseResponseDto
     {
         [XmlElement("Video")]
-        public Video Video;
+        public VideoEntity Video;
 
-        public UploadVideoResponseDto(Video video, bool success)
+        public UploadVideoResponseDto(VideoEntity video, bool success)
         {
             Video = video;
         }
