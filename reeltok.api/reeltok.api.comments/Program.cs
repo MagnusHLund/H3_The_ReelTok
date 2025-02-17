@@ -1,6 +1,9 @@
 
 using Microsoft.EntityFrameworkCore;
 using reeltok.api.comments.Data;
+using reeltok.api.comments.Interface;
+using reeltok.api.comments.Repositories;
+using reeltok.api.comments.Services;
 
 namespace reeltok.api.comments
 {
@@ -9,6 +12,9 @@ namespace reeltok.api.comments
         public static void Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+            builder.Services.AddScoped<ICommentService, CommentService>();
 
             builder.Services.AddDbContextFactory<CommentDbContext>(options =>
             {
