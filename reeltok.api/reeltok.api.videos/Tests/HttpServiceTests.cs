@@ -1,17 +1,16 @@
-using Xunit;
 using Moq;
-using reeltok.api.videos.Services;
+using Xunit;
+using System.Net;
 using Moq.Protected;
 using reeltok.api.videos.DTOs;
-using System.Text;
+using reeltok.api.videos.Services;
+using reeltok.api.videos.Factories;
 using reeltok.api.videos.DTOs.LikeVideo;
-using System.Net;
 
 namespace reeltok.api.videos.Tests
 {
     public class HttpServiceTests
     {
-        private const string BaseTestUrl = "http://localhost:5001/users/addLike";
         private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
         private readonly HttpClient _httpClient;
         private readonly HttpService _httpService;
@@ -27,15 +26,10 @@ namespace reeltok.api.videos.Tests
         public async Task ProcessRequestAsync_WithValidRequest_ReturnsExpectedResponse()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            Guid videoId = Guid.NewGuid();
-            ServiceAddLikeRequestDto requestDto = new ServiceAddLikeRequestDto(userId, videoId);
-            Uri targetUrl = new Uri(BaseTestUrl);
+            ServiceAddLikeRequestDto requestDto = TestDataFactory.CreateAddLikeRequest();
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("addLike");
             string responseContent = "<AddLikeResponseDto><Success>true</Success></AddLikeResponseDto>";
-            HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")
-            };
+            HttpResponseMessage expectedResponse = TestDataFactory.CreateHttpResponseMessage(HttpStatusCode.OK, responseContent);
 
             _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -58,15 +52,10 @@ namespace reeltok.api.videos.Tests
         public async Task ProcessRequestAsync_WithInvalidRequest_ReturnsErrorResponse()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            Guid videoId = Guid.NewGuid();
-            ServiceAddLikeRequestDto requestDto = new ServiceAddLikeRequestDto(userId, videoId);
-            Uri targetUrl = new Uri(BaseTestUrl);
+            ServiceAddLikeRequestDto requestDto = TestDataFactory.CreateAddLikeRequest();
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("addLike");
             string responseContent = "<FailureResponseDto><Success>false</Success><Message>Test message</Message></FailureResponseDto>";
-            HttpResponseMessage expectedResponse = new HttpResponseMessage(HttpStatusCode.BadRequest)
-            {
-                Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")
-            };
+            HttpResponseMessage expectedResponse = TestDataFactory.CreateHttpResponseMessage(HttpStatusCode.BadRequest, responseContent);
 
             _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>(
@@ -89,7 +78,7 @@ namespace reeltok.api.videos.Tests
         public async Task ProcessRequestAsync_WithNullRequestDto_ThrowsArgumentNullException()
         {
             // Arrange
-            Uri targetUrl = new Uri(BaseTestUrl);
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("addLike");
 
             // Act & Assert
             ArgumentNullException exception = await Assert.ThrowsAsync<ArgumentNullException>(() =>

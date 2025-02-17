@@ -7,20 +7,21 @@ namespace reeltok.api.videos.Repositories
 {
     public class LikesRepository : ILikesRepository
     {
-        private readonly VideoDbContext _context;
-        public LikesRepository(VideoDbContext context)
+        private readonly VideosDbContext _context;
+        public LikesRepository(VideosDbContext context)
         {
             _context = context;
         }
 
-        public async Task<uint> GetTotalVideoLikesAsync(Guid videoId) {
-            Video? video = await _context.Videos
+        public async Task<uint> GetTotalVideoLikesAsync(Guid videoId)
+        {
+            VideoLikesEntity video = await _context.VideosLikes
                 .AsNoTracking()
                 .FirstOrDefaultAsync(v => v.VideoId == videoId)
                 .ConfigureAwait(false)
                 ?? throw new InvalidOperationException("Unable to find video!");
 
-            return video.Likes;
+            return video.TotalLikes;
         }
     }
 }

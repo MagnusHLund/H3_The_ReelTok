@@ -13,7 +13,7 @@ namespace reeltok.api.videos.Utils
         // Public method to validate video length
         public static async Task<bool> IsVideoMinimumLength(IFormFile video)
         {
-            MediaFile media = await GetMediaFileAsync(video);
+            MediaFile media = await GetMediaFileAsync(video).ConfigureAwait(false);
             TimeSpan minimumDuration = TimeSpan.FromSeconds(1);
             return media.Metadata.Duration >= minimumDuration;
         }
@@ -21,11 +21,6 @@ namespace reeltok.api.videos.Utils
         // Public method to validate file extension
         public static bool IsValidFileExtension(IFormFile video)
         {
-            if (video.Length == 0)
-            {
-                throw new ArgumentException("Invalid video file!");
-            }
-
             string[] allowedFileExtensions = { ".MP4", ".MKV" };
             string fileExtension = Path.GetExtension(video.FileName).ToUpperInvariant();
             return allowedFileExtensions.Contains(fileExtension);

@@ -1,11 +1,11 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
 using reeltok.api.videos.Enums;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.Entities
 {
     [Index(nameof(UserId), nameof(Tag))]
-    public class Video
+    public class VideoEntity
     {
         // TODO: Update properties to follow the same rules as the DTOs in gateway allow (For example minimum length of the title)
 
@@ -23,10 +23,19 @@ namespace reeltok.api.videos.Entities
         public RecommendedCategories Tag { get; set; }
         [Required]
         [MaxLength(50)]
-        public string StreamUrl { get; set; }
-        [Required]
-        public uint Likes { get; set; }
+        public Uri StreamUrl { get; set; }
         [Required]
         public uint UploadedAt { get; set; }
+
+        public VideoEntity(Guid videoId, Guid userId, string title, string description, RecommendedCategories tag, Uri streamUrl, uint uploadedAt)
+        {
+            VideoId = videoId;
+            UserId = userId;
+            Title = title;
+            Description = description;
+            Tag = tag;
+            StreamUrl = streamUrl;
+            UploadedAt = uploadedAt;
+        }
     }
 }
