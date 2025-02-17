@@ -27,6 +27,5 @@ namespace reeltok.api.comments.ValueObjects
         private CommentDetails()
         {
         }
-
     }
 }
