@@ -13,14 +13,38 @@ namespace reeltok.api.users.Services
             _subscriptionRepository = subscriptionRepository;
         }
 
-        public Task<List<Guid>> GetAllSubscribersIdAsync(Guid userId)
+        public async Task<List<Guid>> GetAllSubscribersIdAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            List<Guid> SubscribersId;
+
+            try
+            {
+                SubscribersId = await _subscriptionRepository.GetAllSubscribersIdAsync(userId).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                // Handle the error, you can log it or throw a custom exception if needed
+                throw new InvalidOperationException("Failed to get all subscribers.", ex);
+            }
+
+            return SubscribersId;
         }
 
-        public Task<List<Guid>> GetAllSubscriptionIdAsync(Guid userId)
+        public async Task<List<Guid>> GetAllSubscriptionIdAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            List<Guid> SubscriptionId;
+
+            try
+            {
+                SubscriptionId = await _subscriptionRepository.GetAllSubscriptionIdAsync(userId).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                // Handle the error, you can log it or throw a custom exception if needed
+                throw new InvalidOperationException("Failed to get all subscriptions.", ex);
+            }
+
+            return SubscriptionId;
         }
 
         public async Task<bool> SubscribeAsync(Subscription subscription)

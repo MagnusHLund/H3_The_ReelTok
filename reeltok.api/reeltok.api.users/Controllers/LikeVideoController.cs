@@ -20,6 +20,7 @@ namespace reeltok.api.users.Controllers
             _likeVideoService = likeVideoService;
         }
 
+        // TODO: CALL VIDEO SERVICE TO VERIFY VIDEO BY ID
         [HttpPost("Like A Video")]
         public async Task<IActionResult> LikeVideoAsync([FromBody] LikeVideoRequestDto likeVideo)
         {
@@ -60,6 +61,11 @@ namespace reeltok.api.users.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            if (likeVideo == null)
+            {
+                throw new ArgumentNullException(nameof(likeVideo));
             }
 
             if (likeVideo.UserId == Guid.Empty || likeVideo.VideoId == Guid.Empty)

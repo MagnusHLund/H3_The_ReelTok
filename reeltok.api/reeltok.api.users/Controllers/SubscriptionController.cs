@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using reeltok.api.users.DTOs.SubscriptionRequests;
-using reeltok.api.users.Entities;
-using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.Mappers;
+using reeltok.api.users.Entities;
 using reeltok.api.users.ValueObjects;
+using reeltok.api.users.Interfaces.Services;
+using reeltok.api.users.DTOs.SubscriptionRequests;
+using reeltok.api.users.DTOs.SubscriptionResponses;
 
 namespace reeltok.api.users.Controllers
 {
@@ -20,6 +21,7 @@ namespace reeltok.api.users.Controllers
             _subscriptionService = subscriptionService;
         }
 
+        // TODO: Check that both user id are not the same
         [HttpPost("Follow A User")]
         public async Task<IActionResult> CreateSubscriptionAsync([FromBody] SubscribeRequestDto subscription)
         {
@@ -61,6 +63,7 @@ namespace reeltok.api.users.Controllers
             return StatusCode(500, "Failed to follow user.");
         }
 
+
         [HttpDelete("Unfollow A User")]
         public async Task<IActionResult> UnsubscribeAsync([FromBody] UnsubscribeRequestDto unSubscription)
         {
@@ -96,6 +99,119 @@ namespace reeltok.api.users.Controllers
             }
 
             return StatusCode(500, "Failed to unfollow user.");
+        }
+
+
+        [HttpGet("User Followers")]
+        public async Task<IActionResult> GetAllSubscribersAsync([FromQuery] Guid request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (request == Guid.Empty) // Check for empty GUID
+            {
+                return BadRequest("Request cannot be null or empty");
+            }
+
+            // Check if the user exists
+            User? existingUser = await _usersService.GetUserByIdAsync(request).ConfigureAwait(false);
+            if (existingUser == null)
+            {
+                return BadRequest("User Id does not exist.");
+            }
+
+            // Get list of subscriber IDs
+            List<Guid> subscriberIds = await _subscriptionService.GetAllSubscribersIdAsync(request).ConfigureAwait(false);
+            if (subscriberIds == null || subscriberIds.Count == 0)
+            {
+                return NotFound("No subscriptions found.");
+            }
+
+            // Fetch users one by one to avoid DbContext concurrency issues
+            List<User> users = new();
+            foreach (Guid id in subscriberIds)
+            {
+                User? user = await _usersService.GetUserByIdAsync(id).ConfigureAwait(false);
+                if (user != null)
+                {
+                    users.Add(user);
+                }
+            }
+
+            // Map users to DTOs
+            List<UserDetails> userDetailsList = users
+                .Select(user =>
+                {
+                    DTOs.UserResponses.ReturnCreateUserResponseDTO userDetailsDto = user.ToReturnCreateUserResponseDTO();
+                    return new UserDetails(
+                        userName: userDetailsDto.UserName,
+                        profileUrl: userDetailsDto.ProfileUrl,
+                        profilePictureUrl: userDetailsDto.ProfilePictureUrl,
+                        new HiddenUserDetails(email: userDetailsDto.Email)
+                    );
+                })
+                .ToList();
+
+            ServiceGetAllSubscribingToUserResponseDto responseDto = new ServiceGetAllSubscribingToUserResponseDto(userDetailsList);
+            return Ok(responseDto);
+        }
+
+
+        [HttpGet("User Following")]
+        public async Task<IActionResult> GetAllSubscriptionsAsync([FromQuery] Guid request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (request == Guid.Empty) // Fix: Use Guid.Empty instead of null check
+            {
+                return BadRequest("Request cannot be null or empty");
+            }
+
+            // Check if the user exists
+            User? existingUser = await _usersService.GetUserByIdAsync(request).ConfigureAwait(false);
+            if (existingUser == null)
+            {
+                return BadRequest("User Id does not exist.");
+            }
+
+            // Get list of subscribing to IDs
+            List<Guid> subscribingToIds = await _subscriptionService.GetAllSubscriptionIdAsync(request).ConfigureAwait(false);
+            if (subscribingToIds == null || subscribingToIds.Count == 0)
+            {
+                return NotFound("No subscriptions found.");
+            }
+
+            List<User> users = new();
+            foreach (Guid id in subscribingToIds)
+            {
+                User? user = await _usersService.GetUserByIdAsync(id).ConfigureAwait(false);
+                if (user != null)
+                {
+                    users.Add(user);
+                }
+            }
+
+            // Map users to DTOs
+            List<UserDetails> userDetailsList = users
+                .Select(user =>
+                {
+                    DTOs.UserResponses.ReturnCreateUserResponseDTO userDetailsDto = user.ToReturnCreateUserResponseDTO();
+                    return new UserDetails(
+                        userName: userDetailsDto.UserName,
+                        profileUrl: userDetailsDto.ProfileUrl,
+                        profilePictureUrl: userDetailsDto.ProfilePictureUrl,
+                        new HiddenUserDetails(email: userDetailsDto.Email)
+                    );
+                })
+                .ToList();
+
+            ServiceGetAllSubscribingToUserResponseDto responseDto = new ServiceGetAllSubscribingToUserResponseDto(userDetailsList);
+            return Ok(responseDto);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace reeltok.api.users.Repositories
         /// <returns></returns>
         public async Task<List<Guid>> GetAllSubscribersIdAsync(Guid userId)
         {
-            return await _context.Subscriptions.Where(s => s.SubDetails.SubscribingToUserId == userId).Select(s => s.SubDetails.SubscriberUserId).ToListAsync().ConfigureAwait(false);
+            return await _context.Subscriptions.Where(s => s.SubDetails.SubscriberUserId == userId).Select(s => s.SubDetails.SubscribingToUserId).ToListAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace reeltok.api.users.Repositories
         /// <returns></returns>
         public async Task<List<Guid>> GetAllSubscriptionIdAsync(Guid userId)
         {
-            return await _context.Subscriptions.Where(s => s.SubDetails.SubscriberUserId == userId).Select(s => s.SubDetails.SubscribingToUserId).ToListAsync().ConfigureAwait(false);
+            return await _context.Subscriptions.Where(s => s.SubDetails.SubscribingToUserId == userId).Select(s => s.SubDetails.SubscriberUserId).ToListAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -53,9 +53,20 @@ namespace reeltok.api.users.Repositories
         /// <param name="subscriptionUserId"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Task<bool> RemoveUserFromSubscriptionAsync(Guid userId, Guid subscriptionUserId)
+        public async Task<bool> RemoveUserFromSubscriptionAsync(Guid userId, Guid subscriptionUserId)
         {
-            throw new NotImplementedException();
+            Subscription? subscription = _context.Subscriptions.FirstOrDefault(s => s.SubDetails.SubscriberUserId == userId && s.SubDetails.SubscribingToUserId == subscriptionUserId);
+
+            if (subscription == null)
+            {
+                return false;
+            }
+
+            _context.Subscriptions.Remove(subscription);
+
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            return true;
         }
     }
 }

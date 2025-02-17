@@ -19,6 +19,7 @@ namespace reeltok.api.users.Controllers
             _usersService = usersService;
         }
 
+        // TODO: CALL AUTH SERVICE TO ADD OTHER USER INFO THERE
         [HttpPost("Create A User")]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequestDto user)
         {
@@ -104,6 +105,7 @@ namespace reeltok.api.users.Controllers
             return Ok(responseDto);
         }
 
+        // TODO: DELETE USER FROM AUTH SERVICE AND ALSO DELETE ALL USER RELATED DATA LIKE SUBSCRIPTION AND LIKES
         [HttpDelete("Delete User")]
         public async Task<IActionResult> DeleteUserAsync([FromQuery] Guid userId)
         {

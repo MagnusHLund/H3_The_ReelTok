@@ -26,13 +26,14 @@ namespace reeltok.api.users.Mappers
 
         public static ReturnCreateUserResponseDTO ToReturnCreateUserResponseDTO(this User user)
         {
-            return new ReturnCreateUserResponseDTO(
-                user.UserId,
-                user.UserDetails.UserName,
-                user.UserDetails.ProfilePictureUrl,
-                user.UserDetails.ProfileUrl,
-                user.UserDetails.HiddenDetails.Email
-            );
+            return new ReturnCreateUserResponseDTO
+            {
+                UserId = user.UserId,
+                UserName = user.UserDetails.UserName,
+                ProfileUrl = user.UserDetails.ProfilePictureUrl,
+                ProfilePictureUrl = user.UserDetails.ProfileUrl,
+                Email = user.UserDetails.HiddenDetails.Email
+            };
         }
 
         public static UserDetails ToUserDetailsFromUpdateDTO(this UpdateUserRequestDto dto, User existingUser)
