@@ -2,7 +2,7 @@
 // It also needs to allow children inside it, like a user, which is clickable (like on the subscribing/subscribers screens).
 // Otherwise, its just a standard button that follows an app standard design.
 import { useFonts } from "expo-font";
-import { TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, useWindowDimensions } from 'react-native';
 import { Poppins_400Regular } from "@expo-google-fonts/poppins";
 import { ReactNode } from "react";
 
@@ -10,26 +10,29 @@ interface ButtonProps {
   title?: string,
   children?: ReactNode,
   transparent?: boolean,
+  widthPercentage?: number,
+  flexDirection?: 'row' | 'column',
   borders?: boolean,
   onPress: () => void,
 }
 
-
-const CustomButton: React.FC<ButtonProps> = ({ children, title, transparent, borders, onPress }) => {
-  const [fontsLoaded] = useFonts({
+const CustomButton: React.FC<ButtonProps> = ({ children, title, transparent, widthPercentage=0.33, flexDirection, borders, onPress }) => {
+  useFonts({
     Poppins_400Regular,
   });
+  const {width} = useWindowDimensions();
   const buttonStyling = StyleSheet.create({
     button: {
       borderWidth: borders ? 2 : 0,
       backgroundColor: transparent ? 'transparent' : '#ff0050',
       borderRadius: 10,
-      padding: 10,
+      padding: 5,
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      flexDirection: 'row',
       gap: 3,
+      width: width * widthPercentage,
+      flexDirection: flexDirection,
     },
     buttonText: {
       fontSize: 20,
@@ -39,7 +42,7 @@ const CustomButton: React.FC<ButtonProps> = ({ children, title, transparent, bor
   });
 
   return(
-      <TouchableOpacity style={buttonStyling.button} onPress={onPress}>
+      <TouchableOpacity style={buttonStyling.button} activeOpacity={1} onPress={onPress}>
         { children }
         {title ? <Text style={buttonStyling.buttonText}>{title}</Text> : null}
       </TouchableOpacity>

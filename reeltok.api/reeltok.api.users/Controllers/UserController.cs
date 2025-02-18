@@ -12,12 +12,20 @@ namespace reeltok.api.users.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        // TODO: MAKE A LOGIN CONTROLLER 
         private readonly IUsersService _usersService;
 
         public UserController(IUsersService usersService)
         {
             _usersService = usersService;
         }
+
+        //Shazil TODOs on discord:
+        // TODO: Call video API to verify video id
+        // TODO: Call auth API when creating user
+        // TODO: Delete subscription and subscriber when user is deleted
+        // TODO: Change name of columns in database using EF
+        // TODO: Add Login in User API
 
         // TODO: CALL AUTH SERVICE TO ADD OTHER USER INFO THERE
         [HttpPost("Create A User")]
