@@ -33,7 +33,7 @@ namespace reeltok.api.gateway.Controllers
                 return BadRequest(new FailureResponseDto("Invalid recommendations category!"));
             }
 
-            bool success = await _recommendationsService.UpdateRecommendation(new Recommendations(request.UserId, request.Category));
+            bool success = await _recommendationsService.UpdateRecommendation(new Recommendations(request.UserId, request.Category)).ConfigureAwait(false);
             GatewayChangeRecommendedCategoryResponseDto requestDto = new GatewayChangeRecommendedCategoryResponseDto(success);
 
             return Ok(requestDto);
@@ -44,7 +44,7 @@ namespace reeltok.api.gateway.Controllers
         [HttpGet("GetRecommendations")]
         public async Task<IActionResult> GetRecommendation([FromBody] GatewayChangeRecommendedCategoryRequestDto request)
         {
-            List<RecommendedCategories> recommendations = await _recommendationsService.GetRecommendation(request.UserId);
+            List<RecommendedCategories> recommendations = await _recommendationsService.GetRecommendation(request.UserId).ConfigureAwait(false);
 
             if (Equals(recommendations.Count, 0))
             {

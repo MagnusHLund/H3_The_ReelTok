@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using reeltok.api.auth.Data;
-using reeltok.api.auth.Entites;
+using reeltok.api.auth.Entities;
 using reeltok.api.auth.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace reeltok.api.auth.Repositories
 {
@@ -17,46 +14,34 @@ namespace reeltok.api.auth.Repositories
             _context = context;
         }
 
+        public async Task<UserCredentialsEntity> CreateUser(UserCredentialsEntity userCredentials)
+        {
+            UserCredentialsEntity userCredentialsDatabaseResult = (await _context.AddAsync(userCredentials).ConfigureAwait(false)).Entity;
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            return userCredentialsDatabaseResult;
+        }
+
         public async Task DeleteUser(Guid userId)
         {
-            var userToDelete = await _context.Auths.Where(e => e.UserId == userId).FirstOrDefaultAsync();
+            UserCredentialsEntity userToDelete = await _context.UserCredentials.Where(e => e.UserId == userId).FirstOrDefaultAsync().ConfigureAwait(false)
+                ?? throw new KeyNotFoundException($"Unable to find user: {userId} in the database!");
 
-            _context.Remove<Auth>(userToDelete);
-            await _context.SaveChangesAsync();
+            _context.Remove<UserCredentialsEntity>(userToDelete);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task<Guid> GetUserIdByToken(string refreshToken)
+        public async Task<UserCredentialsEntity> GetUserCredentialsByUserId(Guid userId)
         {
-            var userRefreshToken = await _context.RefreshTokens.Where(e => e.Token == refreshToken).FirstOrDefaultAsync();
+            UserCredentialsEntity userCredentials = await _context.UserCredentials.Where(a => a.UserId == userId).FirstOrDefaultAsync().ConfigureAwait(false)
+                ?? throw new KeyNotFoundException($"Unable to find user: {userId} in the database!");
 
-            return userRefreshToken.UserId;
+            return userCredentials;
         }
 
-        public async Task LogoutUser(string refreshToken)
+        public async Task<bool> DoesUserExist(Guid userId)
         {
-            var refreshTokenToInvalidate = await _context.RefreshTokens.Where(e => e.Token == refreshToken).FirstOrDefaultAsync();
-
-            _context.Remove<RefreshToken>(refreshTokenToInvalidate);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<Auth?> GetAuthByUserId(Guid userId)
-        {
-            var auth = await _context.FindAsync<Auth>(userId);
-            return auth;
-        }
-
-        public async Task<RefreshToken> RefreshAccessToken(string refreshToken)
-        {
-            // We're using this to check the expiry date so we can assure that our token is still valid
-            var refreshTokenToCheck = await _context.RefreshTokens.Where(e => e.Token == refreshToken).FirstOrDefaultAsync();
-
-            return refreshTokenToCheck;
-        }
-
-        public async Task RegisterUser(Auth authInfo)
-        {
-            await _context.AddAsync<Auth>(authInfo);
+            bool userExists = await _context.UserCredentials.AnyAsync(a => a.UserId == userId).ConfigureAwait(false);
+            return userExists;
         }
     }
 }

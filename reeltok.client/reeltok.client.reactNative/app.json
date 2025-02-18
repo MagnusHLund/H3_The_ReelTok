@@ -1,5 +1,10 @@
 {
   "expo": {
+    "plugin": [
+      "expo-image-picker",{
+        "photosPermission": "The app accesses your photos to let you upload videos."
+      }
+    ],
     "name": "the_reeltok_client",
     "slug": "the_reeltok_client",
     "version": "1.0.0",
@@ -20,9 +25,14 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
+    
     },
+    
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-video"
+    ]
   }
 }

@@ -1,18 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using reeltok.api.auth.Entites;
+using reeltok.api.auth.Entities;
 
 namespace reeltok.api.auth.Interfaces
 {
     public interface IAuthRepository
     {
-        Task RegisterUser(Auth authInfo);
-        Task<RefreshToken> RefreshAccessToken(string refreshToken);
+        Task<UserCredentialsEntity> CreateUser(UserCredentialsEntity userCredentials);
         Task DeleteUser(Guid userId);
-        Task<Guid> GetUserIdByToken(string refreshToken);
-        Task<Auth?> GetAuthByUserId(Guid userId);
-        Task LogoutUser(string refreshToken);
+        Task<UserCredentialsEntity> GetUserCredentialsByUserId(Guid userId);
+        Task<bool> DoesUserExist(Guid userId);
     }
 }

@@ -1,110 +1,94 @@
-using System.ComponentModel.DataAnnotations;
-using System.Security.Authentication;
-using reeltok.api.auth.Exceptions;
+using System.Security.Claims;
+using reeltok.api.auth.Utils;
+using reeltok.api.auth.Entities;
 using reeltok.api.auth.Interfaces;
 using reeltok.api.auth.ValueObjects;
-using reeltok.api.auth.Entites;
-using reeltok.api.auth.Utils;
+using System.Security.Authentication;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.auth.Services
 {
     public class AuthService : IAuthService
     {
- private readonly IAuthRepository _authRepository;
-        private readonly IConfiguration _configuration;
+        // TODO: Maybe implement some session cache for tokens?
+        private readonly IAuthRepository _authRepository;
+        private readonly ITokensService _tokensService;
 
-        public AuthService(IAuthRepository authRepository, IConfiguration configuration)
+        public AuthService(IAuthRepository authRepository, ITokensService tokensService)
         {
             _authRepository = authRepository;
-            _configuration = configuration;
+            _tokensService = tokensService;
         }
 
         public async Task DeleteUser(Guid userId)
         {
-           await _authRepository.DeleteUser(userId);
-           //TODO: add some sort of check either in repo or here somehow to see if our user even exists
+            await _authRepository.DeleteUser(userId).ConfigureAwait(false);
         }
 
-        public async Task<Guid> GetUserIdByToken(string refreshToken)
+        public Guid GetUserIdByToken(string accessTokenValue)
         {
-            Guid userId = await _authRepository.GetUserIdByToken(refreshToken);
+            ClaimsPrincipal decodedAccessToken = _tokensService.DecodeAccessToken(accessTokenValue);
+            string? stringUserId = decodedAccessToken?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!Guid.TryParse(stringUserId, out Guid userId))
+            {
+                throw new FormatException("Invalid UserId!");
+            }
 
             return userId;
         }
 
         public async Task<Tokens> LoginUser(LoginCredentials loginCredentials)
         {
-            var existingAuth = await _authRepository.GetAuthByUserId(loginCredentials.UserId);
+            UserCredentialsEntity existingUser = await _authRepository.GetUserCredentialsByUserId(loginCredentials.UserId).ConfigureAwait(false);
 
-            if (existingAuth == null)
-            {
-              throw new UserDoesNotExistException("User does not exist.");
-            }
-
-            bool isPasswordValid = PasswordUtils.VerifyPassword(loginCredentials.PlainTextPassword, existingAuth.HashedPassword, existingAuth.Salt);
+            bool isPasswordValid = PasswordUtils.VerifyPassword(loginCredentials.PlainTextPassword, existingUser.HashedPassword, existingUser.Salt);
 
             if (!isPasswordValid)
             {
-              throw new InvalidCredentialException();
+                throw new InvalidCredentialException("Invalid credentials!");
             }
 
-            string secretKey = _configuration["JWTSettings:SecretKey"];
-            string issuer = _configuration["JWTSettings:Issuer"];
-            string audience = _configuration["JWTSettings:Audience"];
+            AccessToken accessToken = await _tokensService.GenerateAccessToken(existingUser.UserId).ConfigureAwait(false);
+            RefreshToken refreshToken = await _tokensService.GenerateRefreshToken(existingUser.UserId).ConfigureAwait(false);
 
-            AccessToken accessToken = GenerateTokenUtils.GenerateAccessToken(existingAuth.UserId, secretKey, issuer, audience);
-            RefreshToken refreshToken = GenerateTokenUtils.GenerateRefreshToken(existingAuth.UserId);
-
-            return new Tokens(accessToken, refreshToken);
-
+            return new Tokens(
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            );
         }
 
-        public async Task LogoutUser(string refreshToken)
+        public async Task LogoutUser(string accessTokenValue, string refreshTokenValue)
         {
-           if (refreshToken == null)
-           {
-             throw new TokenIsNullException("Provided token is null.");
-           }
-
-           await _authRepository.LogoutUser(refreshToken);
+            await _tokensService.RevokeTokens(accessTokenValue, refreshTokenValue).ConfigureAwait(false);
         }
 
-        public async Task<AccessToken> RefreshAccessToken(string refreshToken)
+        public async Task<Tokens> CreateUser(CreateDetails CreateDetails)
         {
-            RefreshToken refreshTokenToCheck = await _authRepository.RefreshAccessToken(refreshToken);
+            bool userExists = await _authRepository.DoesUserExist(CreateDetails.UserId).ConfigureAwait(false);
 
-            if (refreshTokenToCheck.ExpireDate < DateTime.UtcNow)
+            if (userExists)
             {
-              throw new TokenExpiredException();
+                throw new InvalidOperationException("User already exists!");
             }
 
-            string secretKey = _configuration["JWTSettings:SecretKey"];
-            string issuer = _configuration["JWTSettings:Issuer"];
-            string audience = _configuration["JWTSettings:Audience"];
-
-            AccessToken accessToken = GenerateTokenUtils.GenerateAccessToken(refreshTokenToCheck.UserId, secretKey, issuer, audience);
-
-            return accessToken;
-        }
-
-        public async Task RegisterUser(RegisterDetails registerDetails)
-        {
-            var existingAuth = await _authRepository.GetAuthByUserId(registerDetails.UserId);
-            if (existingAuth != null)
+            if (!PasswordUtils.IsValid(CreateDetails.PlainTextPassword))
             {
-              throw new UserAlreadyExistsException("User already exists.");
+                throw new ValidationException("Password does not follow the minimum requirements!");
             }
 
-            if (PasswordUtils.IsValid(registerDetails.PlainTextPassword) == false)
-            {
-              throw new ValidationException();
-            }
+            HashedPasswordData hashedPasswordData = PasswordUtils.HashPassword(CreateDetails.PlainTextPassword);
 
-            var (hashedPassword, salt) = PasswordUtils.HashPassword(registerDetails.PlainTextPassword);
+            UserCredentialsEntity userCredentials = new UserCredentialsEntity(CreateDetails.UserId, hashedPasswordData.Password, hashedPasswordData.Salt);
+            await _authRepository.CreateUser(userCredentials).ConfigureAwait(false);
 
-            Auth authInfo = new Auth(registerDetails.UserId, hashedPassword, salt);
+            AccessToken accessToken = await _tokensService.GenerateAccessToken(userCredentials.UserId).ConfigureAwait(false);
+            RefreshToken refreshToken = await _tokensService.GenerateRefreshToken(userCredentials.UserId).ConfigureAwait(false);
 
-            await _authRepository.RegisterUser(authInfo);
+            return new Tokens(
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            );
         }
     }
 }

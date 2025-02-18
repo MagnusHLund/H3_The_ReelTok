@@ -1,24 +1,24 @@
 using System.ComponentModel.DataAnnotations;
+using reeltok.api.auth.Interfaces;
 
 namespace reeltok.api.auth.ValueObjects
 {
-  public class AccessToken
-  {
-    [Required]
-    public string Token { get; private set; }
-
-    [Required]
-    public DateTime CreateDate { get; private set; }
-
-    [Required]
-    public DateTime ExpireTime { get; private set; }
-
-
-    public AccessToken(string token, DateTime createDate, DateTime expireTime)
+    public class AccessToken : IToken
     {
-      Token = token;
-      CreateDate = createDate;
-      ExpireTime = expireTime;
+        [Required]
+        public string TokenValue { get; private set; }
+
+        [Required]
+        public uint CreatedAt { get; private set; }
+
+        [Required]
+        public uint ExpiresAt { get; private set; }
+
+        public AccessToken(string tokenValue, uint createdAt, uint expiresAt)
+        {
+            TokenValue = tokenValue;
+            CreatedAt = createdAt;
+            ExpiresAt = expiresAt;
+        }
     }
-  }
-} 
+}

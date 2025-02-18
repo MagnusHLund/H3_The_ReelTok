@@ -1,19 +1,24 @@
-
 using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 
 namespace reeltok.api.auth.DTOs
 {
+    [XmlRoot("CreateUserRequestDto")]
     public class LoginUserRequestDto
     {
         [Required]
-        public Guid UserId { get; private set; }
+        [XmlElement("UserId")]
+        public Guid UserId { get; set; }
         [Required]
-        public string PlainTextPassword { get; private set; }
+        [XmlElement("Password")]
+        public string PlainTextPassword { get; set; }
 
         public LoginUserRequestDto(Guid userId, string plainTextPassword)
         {
             UserId = userId;
             PlainTextPassword = plainTextPassword;
         }
+
+        public LoginUserRequestDto() { }
     }
 }

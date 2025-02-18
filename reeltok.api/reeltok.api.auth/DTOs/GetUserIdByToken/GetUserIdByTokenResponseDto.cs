@@ -1,11 +1,14 @@
-
-
 namespace reeltok.api.auth.DTOs
 {
-    internal class GetUserIdByTokenResponseDto : BaseResponseDto
+    public class GetUserIdByTokenResponseDto : BaseResponseDto
     {
-        internal GetUserIdByTokenResponseDto(bool success) : base(success)
+        public Guid UserId { get; set; }
+
+        public GetUserIdByTokenResponseDto(Guid userId, bool success = true) : base(success)
         {
+            UserId = userId;
         }
+
+        public GetUserIdByTokenResponseDto() { }
     }
 }
