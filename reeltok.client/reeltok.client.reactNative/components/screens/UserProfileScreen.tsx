@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet, ScrollView } from 'react-native';
 import CustomButton from '../input/CustomButton';
+import Navbar from '../Layout/common/Navbar';
 
 interface UserProfileScreenProps {
     Username: string;
@@ -90,6 +91,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ Username }) => {
                     </View>
                 ))}
             </ScrollView>
+            <Navbar/>
         </>
     );
 };
@@ -120,6 +122,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
+        paddingTop: 60,
     },
     VideoContainer: {
         flexDirection: 'row',

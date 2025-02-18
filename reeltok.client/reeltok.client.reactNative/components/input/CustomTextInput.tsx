@@ -5,6 +5,7 @@ interface CustomTextInputProps {
     password?: boolean;
     email?: boolean;
     placeholder: string;
+    borders?: boolean;
 
 }
 
@@ -13,7 +14,19 @@ interface CustomTextInputProps {
 import React from 'react';
 import { TextInput, StyleSheet } from 'react-native';
 
-const CustomTextInput: React.FC<CustomTextInputProps> = ({ password, email, placeholder }) => {
+const CustomTextInput: React.FC<CustomTextInputProps> = ({ password, email, placeholder, borders }) => {
+    const styles = StyleSheet.create({
+        input: {
+            height: 40,
+            width: 300,
+            borderColor: 'gray',
+            borderWidth: borders ? 1 : 0,
+            paddingLeft: 10,
+            borderRadius: 10,
+            color:'white',
+            backgroundColor:'#565656'
+        },
+    });
     return (
         <>
             {password && !email ? (
@@ -41,15 +54,5 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({ password, email, plac
     );
 };
 
-const styles = StyleSheet.create({
-    input: {
-        height: 40,
-        width: 300,
-        borderColor: 'gray',
-        borderWidth: 1,
-        paddingLeft: 10,
-        borderRadius: 10,
-    },
-});
 
 export default CustomTextInput;
