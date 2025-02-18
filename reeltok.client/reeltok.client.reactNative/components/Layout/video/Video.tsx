@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '50%',
     bottom: '50%',
-    left: '85%',
+    left: '78%',
     right: 0,
     margin: 0,
     display: 'flex',

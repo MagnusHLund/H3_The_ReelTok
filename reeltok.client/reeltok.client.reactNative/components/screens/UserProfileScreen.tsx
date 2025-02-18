@@ -77,9 +77,9 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ Username }) => {
                 <Text style={styles.ProfileName}>{Username}</Text>
             </View>
             <View style={styles.mainContainer}>
-                <CustomButton onPress={() => {}} transparent><Text>posts</Text></CustomButton>
-                <CustomButton onPress={() => {}} transparent><Text>Followers</Text></CustomButton>
-                <CustomButton onPress={() => {}} transparent><Text>Following</Text></CustomButton>
+                <CustomButton widthPercentage={0.22} onPress={() => {}} transparent><Text>posts</Text></CustomButton>
+                <CustomButton widthPercentage={0.22} onPress={() => {}} transparent><Text>Followers</Text></CustomButton>
+                <CustomButton widthPercentage={0.22} onPress={() => {}} transparent><Text>Following</Text></CustomButton>
             </View>
             <ScrollView contentContainerStyle={styles.VideoContainer}>
                 {videos.map((video, index) => (
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         top: -70,
-        left: 15,
+        left: 40,
     },
     ProfilePicture: {
         width: 80,
