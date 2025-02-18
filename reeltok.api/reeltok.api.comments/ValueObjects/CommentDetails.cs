@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace reeltok.api.comments.DTOs
+namespace reeltok.api.comments.ValueObjects
 {
-    public class CreateDTO
+    public class CommentDetails
     {
         [Required]
         public Guid UserId { get; private set; } = Guid.Empty;
@@ -20,12 +16,16 @@ namespace reeltok.api.comments.DTOs
         [Required]
         public uint CreatedAt { get; private set; } = 0;
 
-        public CreateDTO(Guid userId, Guid videoId, string message, uint createdAt)
+        public CommentDetails(Guid userId, Guid videoId, string message, uint createdAt)
         {
             UserId = userId;
             VideoId = videoId;
             Message = message;
             CreatedAt = createdAt;
+        }
+
+        private CommentDetails()
+        {
         }
     }
 }

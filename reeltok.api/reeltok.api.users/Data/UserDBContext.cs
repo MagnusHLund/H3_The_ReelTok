@@ -5,6 +5,7 @@ namespace reeltok.api.users.Data
 {
     public class UserDbContext : DbContext
     {
+        // TODO: CHANGE THE NAME OF THE COLUMNS IN DATABASE
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
         {
 

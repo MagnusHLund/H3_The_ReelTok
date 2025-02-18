@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using reeltok.api.comments.Entities;
 
-namespace CommentsService.Interface
+namespace reeltok.api.comments.Interface
 {
     public interface ICommentService
     {
-        
+        Task<Comment> CreateCommentAsync(Comment comment);
+        Task<List<Comment>> GetAllCommentByVideoId(Guid videoId);
+
     }
 }
