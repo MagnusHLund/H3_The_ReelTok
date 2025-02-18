@@ -1,60 +1,65 @@
 import { useVideoPlayer, VideoView } from 'expo-video';
-import { useEvent } from 'expo';
-import { StyleSheet, View, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, Dimensions, Pressable, Text } from 'react-native';
 import CustomButton from '../../input/CustomButton';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface VideoProps {
   source: string,
   isFocused: boolean,
+  onShowComments: () => void;
 }
 
 const { width, height } = Dimensions.get("window");
 
-const Video: React.FC<VideoProps> = ({ source, isFocused }) => {
+const Video: React.FC<VideoProps> = ({ source, isFocused, onShowComments }) => {
+  
   const player = useVideoPlayer(source, player => {
     player.loop = true;
   });
 
-  const isPlaying = useEvent(player, 'playingChange');
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  if (isFocused) {
-    player.play();
-  } else {
-    player.pause();
-  }
+  useEffect(() => {
+    if (isFocused) {
+      player.play();
+      setIsPlaying(true);
+    } else {
+      player.pause();
+      setIsPlaying(false);
+    }
+  }, [isFocused]);
 
   const togglePlayPause = () => {
     if (isPlaying) {
       player.pause();
+      setIsPlaying(false);
     } else {
       player.play();
+      setIsPlaying(true);
     }
   };
 
   const [likedVideo, setLikedVideo] = useState(false);
+  const likesAmount = 50;
+  const commentsAmount = 10;
 
   return (
     <>
-      <TouchableWithoutFeedback style={{ zIndex: 120 }} onPress={() => togglePlayPause}>
-      <View style={styles.contentContainer}>
+      <View style={styles.contentContainer} onStartShouldSetResponder={() => true} onResponderRelease={togglePlayPause}>
         <VideoView style={styles.video} player={player} contentFit="contain" nativeControls={false} />
-        <View style={styles.playButton}>
-          {isPlaying ? (
-            null
-          ) : (
-            <Ionicons name="play" size={64} color="white" />
-          )}
-        </View>
+        <Pressable style={StyleSheet.absoluteFill} onPress={togglePlayPause} />
       </View>
-      </TouchableWithoutFeedback>
-      
       <View style={styles.socialControls}>
-        <CustomButton transparent={true} borders={false} onPress={() => setLikedVideo(!likedVideo)}>
+        <CustomButton transparent={true} borders={false} flexDirection='column' onPress={() => setLikedVideo(!likedVideo)}>
           <Ionicons name={likedVideo ? 'heart' : 'heart-outline'} size={32} color={likedVideo ? 'red' : 'white'} />
+          <Text style={styles.socialFontSettings}> {likesAmount} </Text>
         </CustomButton>
-      </View>
+        <CustomButton transparent={true} borders={false} flexDirection='column' onPress={onShowComments}>
+          <Ionicons name="chatbubble-outline" size={32} color="white" />
+          <Text style={styles.socialFontSettings}> {commentsAmount} </Text>
+        </CustomButton>
+      </View> 
     </>
   );
 };
@@ -68,20 +73,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 50,
     margin: 0,
+    zIndex: 110,
   },
   video: {
     width: width,
     height: height,
-  },
-  playButton: {
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    top: '50%',
-    bottom: '50%',
-    left: '55%',
-    right: '50%',
-    zIndex: 110,
   },
   socialControls: {
     position: 'absolute',
@@ -96,6 +92,10 @@ const styles = StyleSheet.create({
     width: '12.5%',
     zIndex: 110,
   },
+  socialFontSettings: {
+    color: 'white',
+    fontSize: 15,
+  } 
 });
 
 export default Video;

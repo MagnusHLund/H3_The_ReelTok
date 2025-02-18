@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
         flexDirection: 'row',
         width: '100%',
         height: '6%',
-        backgroundColor: '#1f1f1f',
+        backgroundColor: 'black',
         zIndex: 110,
       },
   });
