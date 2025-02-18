@@ -10,7 +10,7 @@ namespace reeltok.api.videos.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<VideoEntity> CreateVideoAsync()
+        public Task<VideoEntity> UpdateVideoStreamUrl(Guid videoId, string streamUrl)
         {
             throw new NotImplementedException();
         }
@@ -20,7 +20,12 @@ namespace reeltok.api.videos.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<List<VideoEntity>> GetVideosForFeedAsync(Guid userId, byte amount)
+        public Task<List<VideoEntity>> GetVideosForFeedAsync(List<Guid> videoIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<VideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize)
         {
             throw new NotImplementedException();
         }

@@ -10,6 +10,12 @@ namespace reeltok.api.videos.Utils
 {
     public static class VideoUtils
     {
+        public static Uri GetStreamUrl(string streamUriPath)
+        {
+
+            return new Uri($"{streamUriResource}");
+        }
+
         // Public method to validate video length
         public static async Task<bool> IsVideoMinimumLength(IFormFile video)
         {

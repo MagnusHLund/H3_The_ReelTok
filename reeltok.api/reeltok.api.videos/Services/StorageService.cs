@@ -19,7 +19,7 @@ namespace reeltok.api.videos.Services
             _appSettingsUtils = appSettingsUtils;
         }
 
-        public async Task<Uri> UploadVideoToFileServerAsync(IFormFile videoFile, Guid videoId, Guid userId)
+        public async Task<string> UploadVideoToFileServerAsync(IFormFile videoFile, Guid videoId, Guid userId)
         {
             string smbHostname = _appSettingsUtils.GetConfigurationValue(HostnameConfig);
             string smbDirectory = _appSettingsUtils.GetConfigurationValue(DirectoryConfig);
@@ -49,10 +49,10 @@ namespace reeltok.api.videos.Services
                 throw new IOException("Unable to connect to the file server!");
             }
 
-            return new Uri(fullPath);
+            return filePath;
         }
 
-        // TODO: maybe streamUrl isn't the best name here
+        // TODO: maybe streamUrl isn't the best name here. Should probably be changed elsewhere too.
         public async Task RemoveVideoFromFileServerAsync(string streamUrl)
         {
             string smbHostname = _appSettingsUtils.GetConfigurationValue(HostnameConfig);

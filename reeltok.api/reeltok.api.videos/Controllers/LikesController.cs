@@ -19,14 +19,16 @@ namespace reeltok.api.videos.Controllers
 
         [HttpPost]
         [Route("AddLike")]
-        public async Task<IActionResult> LikeVideoAsync([FromBody] AddLikeRequestDto request)
+        public async Task<IActionResult> LikeVideoAsync(
+            [FromBody] AddLikeRequestDto request)
         {
             return Ok();
         }
 
         [HttpPost]
         [Route("RemoveLike")]
-        public async Task<IActionResult> RemoveLikeFromVideoAsync([FromBody] RemoveLikeRequestDto request)
+        public async Task<IActionResult> RemoveLikeFromVideoAsync(
+            [FromBody] RemoveLikeRequestDto request)
         {
             return Ok();
         }

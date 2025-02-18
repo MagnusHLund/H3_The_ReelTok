@@ -4,9 +4,10 @@ namespace reeltok.api.videos.Interfaces
 {
     public interface IVideosRepository
     {
-        Task<List<VideoEntity>> GetVideosForFeedAsync(Guid userId, byte amount);
+        Task<List<VideoEntity>> GetVideosForFeedAsync(List<Guid> videoIds);
         Task<VideoEntity> CreateVideoAsync(VideoEntity video);
         Task<string> DeleteVideoAsync(Guid userId, Guid videosId);
-        Task<VideoEntity> CreateVideoAsync();
+        Task<List<VideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize);
+        Task<VideoEntity> UpdateVideoStreamUrl(Guid videoId, string streamUrl);
     }
 }

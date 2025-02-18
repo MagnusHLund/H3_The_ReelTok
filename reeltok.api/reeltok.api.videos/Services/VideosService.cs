@@ -22,27 +22,38 @@ namespace reeltok.api.videos.Services
             await _storageService.RemoveVideoFromFileServerAsync(streamUri).ConfigureAwait(false);
         }
 
-        public Task<List<VideoEntity>> GetVideosForFeedAsync(Guid userId, uint pageNumber, byte pageSize)
+        public Task<List<VideoEntity>> GetVideosForFeedAsync(Guid userId, byte amount)
         {
             // Calls recommendations API, receives users preferred category.
             throw new NotImplementedException();
         }
 
-        public Task<List<VideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize)
+        public async Task<List<VideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize)
         {
             // Gets videos uploaded by the user that you're currently on
-            throw new NotImplementedException();
+            List<VideoEntity> videosUploadedByUser = await _videosRepository
+                .GetVideosForProfileAsync(userId, pageNumber, pageSize)
+                .ConfigureAwait(false);
+
+            
+
+            return videosUploadedByUser;
         }
 
         public async Task<VideoEntity> UploadVideoAsync(VideoUpload video, Guid userId)
         {
             await StorageService.EnsureValidFileUploadAsync(video.VideoFile).ConfigureAwait(false);
-
             VideoEntity videoEntity = await _videosRepository.CreateVideoAsync().ConfigureAwait(false);
 
-            await _storageService.UploadVideoToFileServerAsync(video.VideoFile, videoEntity.VideoId, videoEntity.UserId).ConfigureAwait(false);
+            string streamUrlResource = await _storageService.UploadVideoToFileServerAsync(
+                video.VideoFile, videoEntity.VideoId, videoEntity.UserId)
+                .ConfigureAwait(false);
 
-            
+            videoEntity = await _videosRepository.UpdateVideoStreamUrl(
+                videoEntity.VideoId, streamUrlResource)
+                .ConfigureAwait(false);
+
+            return videoEntity;
         }
     }
 }
