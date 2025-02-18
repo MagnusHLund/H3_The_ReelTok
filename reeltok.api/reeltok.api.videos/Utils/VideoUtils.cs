@@ -10,10 +10,15 @@ namespace reeltok.api.videos.Utils
 {
     public static class VideoUtils
     {
-        public static Uri GetStreamUrl(string streamUriPath)
+        public static Uri GetStreamUrl(string streamPath)
         {
+            string baseStreamUrl = "http://localhost:5006";
+            return new Uri($"{baseStreamUrl}/{streamPath}");
+        }
 
-            return new Uri($"{streamUriResource}");
+        public static string CreateStreamPath(Guid userId, Guid videoId)
+        {
+            return $"{userId}/{videoId}";
         }
 
         // Public method to validate video length

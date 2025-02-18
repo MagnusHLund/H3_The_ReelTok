@@ -23,18 +23,18 @@ namespace reeltok.api.videos.Entities
         public RecommendedCategories Tag { get; set; }
         [Required]
         [MaxLength(50)]
-        public string StreamUrl { get; set; }
+        public string StreamPath { get; set; }
         [Required]
         public uint UploadedAt { get; set; }
 
-        public VideoEntity(Guid videoId, Guid userId, string title, string description, RecommendedCategories tag, string streamUrl, uint uploadedAt)
+        public VideoEntity(Guid videoId, Guid userId, string title, string description, RecommendedCategories tag, string streamPath, uint uploadedAt)
         {
             VideoId = videoId;
             UserId = userId;
             Title = title;
             Description = description;
             Tag = tag;
-            StreamUrl = streamUrl;
+            StreamPath = streamPath;
             UploadedAt = uploadedAt;
         }
     }

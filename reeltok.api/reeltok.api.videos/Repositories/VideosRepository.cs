@@ -10,12 +10,12 @@ namespace reeltok.api.videos.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<VideoEntity> UpdateVideoStreamUrl(Guid videoId, string streamUrl)
+        public Task<VideoEntity> UpdateVideoStreamPathAsync(Guid videoId, string streamPath)
         {
             throw new NotImplementedException();
         }
 
-        public Task<string> DeleteVideoAsync(Guid userId, Guid videosId)
+        public Task DeleteVideoAsync(Guid userId, Guid videosId)
         {
             throw new NotImplementedException();
         }

@@ -7,12 +7,7 @@ namespace reeltok.api.videos.DTOs.UploadVideo
     [XmlRoot("UploadVideoResponseDto")]
     public class UploadVideoResponseDto : BaseResponseDto
     {
-        [XmlElement("Video")]
-        public VideoEntity Video;
-
-        public UploadVideoResponseDto(VideoEntity video, bool success)
-        {
-            Video = video;
-        }
+        public UploadVideoResponseDto(bool success = true) : base(success) { }
+        public UploadVideoResponseDto() { }
     }
 }

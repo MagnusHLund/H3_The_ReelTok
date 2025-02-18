@@ -4,13 +4,13 @@ namespace reeltok.api.videos.DTOs.GetVideosForProfile
     {
         public Guid VideoId { get; set; }
         public Uri StreamUrl { get; set; }
-        public uint UploadDate { get; set; }
+        public uint UploadedAt { get; set; }
 
-        public GetVideosForProfileResponseDto(Guid videoId, Uri streamUrl, uint uploadDate)
+        public GetVideosForProfileResponseDto(Guid videoId, Uri streamUrl, uint uploadedAt)
         {
             VideoId = videoId;
             StreamUrl = streamUrl;
-            UploadDate = uploadDate;
+            UploadedAt = uploadedAt;
         }
     }
 }

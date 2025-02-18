@@ -83,7 +83,7 @@ namespace reeltok.api.videos.Factories
             string title = "Test video";
             string description = "Test description";
             RecommendedCategories tag = RecommendedCategories.Tech;
-            string streamUrl = "/some/test/uri.mp4";
+            string streamPath = "/some/test/uri.mp4";
             uint uploadedAt = 1739803271;
 
             return new VideoEntity
@@ -93,7 +93,7 @@ namespace reeltok.api.videos.Factories
                 title: title,
                 description: description,
                 tag: tag,
-                streamUrl: streamUrl,
+                streamPath: streamPath,
                 uploadedAt: uploadedAt
             );
         }

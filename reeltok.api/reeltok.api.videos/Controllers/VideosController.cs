@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using reeltok.api.videos.Interfaces;
 using reeltok.api.videos.ActionFilters;
 using reeltok.api.videos.DTOs.DeleteVideo;
+using reeltok.api.videos.Entities;
+using reeltok.api.videos.DTOs.UploadVideo;
 
 namespace reeltok.api.videos.Controllers
 {
@@ -12,6 +14,7 @@ namespace reeltok.api.videos.Controllers
     public class VideosController : ControllerBase
     {
         // TODO: Remove unused DTOs
+        // TODO: Add additional attributes to DTOs and types used within DTOs (value objects / entities)
         private readonly IVideosService _videosService;
 
         public VideosController(IVideosService videosService)
@@ -25,7 +28,8 @@ namespace reeltok.api.videos.Controllers
             [FromQuery] Guid userId,
             [FromQuery] byte amount)
         {
-            return Ok();
+            List<VideoEntity> videos = await _videosService.GetVideosForFeedAsync(userId, amount).ConfigureAwait(false);
+
         }
 
         [HttpGet]
@@ -45,7 +49,10 @@ namespace reeltok.api.videos.Controllers
         public async Task<IActionResult> UploadVideoAsync(
             [FromBody] UploadVideoRequestDto request)
         {
-            return Ok();
+            await _videosService.UploadVideoAsync(request.Video, request.UserId).ConfigureAwait(false);
+
+            UploadVideoResponseDto responseDto = new UploadVideoResponseDto();
+            return Ok(responseDto);
         }
 
         [HttpDelete]

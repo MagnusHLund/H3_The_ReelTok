@@ -13,7 +13,8 @@ namespace reeltok.api.videos.Repositories
             _context = context;
         }
 
-        public async Task<uint> GetTotalVideoLikesAsync(Guid videoId)
+        // TODO: This return type is kinda bad. Should include video id as well, for easier management
+        public async Task<List<uint>> GetTotalLikesForVideosAsync(Guid videoId)
         {
             VideoLikesEntity video = await _context.VideosLikes
                 .AsNoTracking()

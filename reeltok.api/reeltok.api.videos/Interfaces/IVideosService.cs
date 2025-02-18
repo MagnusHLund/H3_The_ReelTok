@@ -8,6 +8,6 @@ namespace reeltok.api.videos.Interfaces
         Task<List<VideoEntity>> GetVideosForFeedAsync(Guid userId, byte amount);
         Task<List<VideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize);
         Task<VideoEntity> UploadVideoAsync(VideoUpload video, Guid userId);
-        Task DeleteVideoAsync(Guid userId, Guid videosId);
+        Task DeleteVideoAsync(Guid userId, Guid videoId);
     }
 }

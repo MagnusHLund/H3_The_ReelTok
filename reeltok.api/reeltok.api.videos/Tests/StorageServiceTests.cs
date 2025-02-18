@@ -56,20 +56,20 @@ namespace reeltok.api.videos.Tests
         public async Task DeleteVideoFromFileServerAsync_UnableToFindVideo_ThrowFileNotFoundException()
         {
             // Arrange
-            string streamUrl = TestDataFactory.CreateVideoEntity().StreamUrl;
+            string streamPath = TestDataFactory.CreateVideoEntity().StreamPath;
 
             _mockConfiguration.Setup(x => x[It.IsAny<string>()])
                 .Throws<FileNotFoundException>();
 
             // Act & Assert
-            await Assert.ThrowsAsync<FileNotFoundException>(() => _storageService.RemoveVideoFromFileServerAsync(streamUrl));
+            await Assert.ThrowsAsync<FileNotFoundException>(() => _storageService.RemoveVideoFromFileServerAsync(streamPath));
         }
 
         [Fact]
         public async Task DeleteVideoFromFileServerAsync_WithValidParameters_SuccessfullyUploadVideo()
         {
             // Arrange
-            string streamUrl = TestDataFactory.CreateVideoEntity().StreamUrl;
+            string streamPath = TestDataFactory.CreateVideoEntity().StreamPath;
 
             _mockConfiguration.Setup(x => x["FileServer:Hostname"])
                 .Returns("127.0.0.1");
@@ -84,7 +84,7 @@ namespace reeltok.api.videos.Tests
                 .Returns("VerySecurePassword");
 
             // Act
-            await _storageService.RemoveVideoFromFileServerAsync(streamUrl);
+            await _storageService.RemoveVideoFromFileServerAsync(streamPath);
 
             // Assert
             // No exceptions should be thrown, implying success

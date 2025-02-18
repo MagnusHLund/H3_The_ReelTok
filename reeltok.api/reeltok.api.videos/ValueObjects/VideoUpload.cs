@@ -2,7 +2,7 @@ using System.Xml.Serialization;
 
 namespace reeltok.api.videos.ValueObjects
 {
-    [XmlRoot("VideoDetails")]
+    [XmlRoot("VideoUpload")]
     public class VideoUpload
     {
         [XmlElement("VideoDetails")]

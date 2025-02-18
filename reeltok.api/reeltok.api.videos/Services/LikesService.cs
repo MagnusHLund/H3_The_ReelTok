@@ -4,6 +4,7 @@ using reeltok.api.videos.ValueObjects;
 using reeltok.api.videos.DTOs.LikeVideo;
 using reeltok.api.videos.DTOs.RemoveLike;
 using reeltok.api.videos.DTOs.UserLikedVideo;
+using reeltok.api.videos.Entities;
 
 namespace reeltok.api.videos.Services
 {
@@ -50,17 +51,17 @@ namespace reeltok.api.videos.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<VideoLikes> GetVideoLikesAsync(Guid userId, Guid videoId)
+        public async Task<VideoLikesEntity> GetLikesForVideos(Guid userId, List<Guid> videoIds)
         {
-            bool hasUserLikedVideo = await HasUserLikedVideoAsync(userId, videoId).ConfigureAwait(false);
-            uint videoTotalLikes = await _likesRepository.GetTotalVideoLikesAsync(videoId).ConfigureAwait(false);
+            bool hasUserLikedVideo = await HasUserLikedVideoAsync(userId, videoIds).ConfigureAwait(false);
+            uint videoTotalLikes = await _likesRepository.GetTotalLikesForVideosAsync(videoIds).ConfigureAwait(false);
 
-            return new VideoLikes(videoTotalLikes, hasUserLikedVideo);
+            return new VideoLikesEntity(videoTotalLikes, hasUserLikedVideo);
         }
 
-        private async Task<bool> HasUserLikedVideoAsync(Guid userId, Guid videoId)
+        private async Task<bool> HasUserLikedVideoAsync(Guid userId, List<Guid> videoIds)
         {
-            ServiceUserLikedVideoRequestDto requestDto = new ServiceUserLikedVideoRequestDto(userId, videoId);
+            ServiceUserLikedVideoRequestDto requestDto = new ServiceUserLikedVideoRequestDto(userId, videoIds);
             Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/userLikedVideo");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceUserLikedVideoRequestDto, ServiceUserLikedVideoResponseDto>(requestDto, targetUrl, HttpMethod.Get)

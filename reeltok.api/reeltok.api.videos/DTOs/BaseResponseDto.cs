@@ -6,7 +6,7 @@ namespace reeltok.api.videos.DTOs
     public abstract class BaseResponseDto
     {
         [XmlElement(elementName: "Success")]
-        public virtual bool Success { get; set; }
+        public virtual bool Success { get; set; } = true;
 
         protected BaseResponseDto(bool success)
         {

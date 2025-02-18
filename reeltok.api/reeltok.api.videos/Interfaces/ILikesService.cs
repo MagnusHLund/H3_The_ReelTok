@@ -1,4 +1,4 @@
-using reeltok.api.videos.ValueObjects;
+using reeltok.api.videos.Entities;
 
 namespace reeltok.api.videos.Interfaces
 {
@@ -6,6 +6,6 @@ namespace reeltok.api.videos.Interfaces
     {
         Task<bool> LikeVideoAsync(Guid userId, Guid videoId);
         Task<bool> RemoveLikeFromVideoAsync(Guid userId, Guid videoId);
-        Task<VideoLikes> GetVideoLikesAsync(Guid userId, Guid videoId);
+        Task<List<VideoLikesEntity>> GetVideoLikesAsync(Guid userId, List<Guid> videoIds);
     }
 }

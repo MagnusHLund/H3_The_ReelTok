@@ -2,10 +2,11 @@ namespace reeltok.api.videos.ValueObjects
 {
     public class VideoLikes
     {
-        public uint TotalLikes { get; set; }
-        public bool UserHasLikedVideo { get; set; }
+        public uint TotalLikes { get; }
+        public bool UserHasLikedVideo { get; }
 
-        public VideoLikes (uint totalLikes, bool userHasLikedVideo) {
+        public VideoLikes(uint totalLikes, bool userHasLikedVideo)
+        {
             TotalLikes = totalLikes;
             UserHasLikedVideo = userHasLikedVideo;
         }
