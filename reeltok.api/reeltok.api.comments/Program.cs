@@ -36,7 +36,6 @@ namespace reeltok.api.comments
 
             app.UseAuthorization();
 
-
             app.MapControllers();
 
             app.Run();
