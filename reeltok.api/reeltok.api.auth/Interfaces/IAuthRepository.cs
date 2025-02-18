@@ -4,12 +4,9 @@ namespace reeltok.api.auth.Interfaces
 {
     public interface IAuthRepository
     {
-        Task CreateUser(UserAuthentication userAuthentication);
-        Task<RefreshToken> RefreshAccessToken(string refreshToken);
+        Task<UserCredentialsEntity> CreateUser(UserCredentialsEntity userCredentials);
         Task DeleteUser(Guid userId);
-        Task<Guid> GetUserIdByToken(string refreshToken);
-        Task<UserAuthentication> GetUserAuthenticationByUserId(Guid userId);
+        Task<UserCredentialsEntity> GetUserCredentialsByUserId(Guid userId);
         Task<bool> DoesUserExist(Guid userId);
-        Task LogoutUser(string refreshToken);
     }
 }

@@ -5,6 +5,5 @@ namespace reeltok.api.gateway.DTOs.Auth
     [XmlRoot("GetUserIdByTokenRequestDto")]
     public class ServiceGetUserIdByTokenRequestDto
     {
-
     }
 }

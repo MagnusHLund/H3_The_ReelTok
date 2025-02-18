@@ -11,7 +11,6 @@ namespace reeltok.api.gateway.DTOs.Users
         public Guid UserId { get; set; }
         [XmlElement("ProfilePicture")]
         [Required]
-        
         public IFormFile ProfilePicture { get; set; }
 
         public ServiceUpdateProfilePictureRequestDto(Guid userId, IFormFile profilePicture)

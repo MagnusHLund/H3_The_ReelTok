@@ -1,26 +1,26 @@
 using Moq;
-using reeltok.api.gateway.DTOs;
-using reeltok.api.gateway.DTOs.Users;
-using reeltok.api.gateway.Entities;
-using reeltok.api.gateway.Interfaces;
-using reeltok.api.gateway.Services;
-using reeltok.api.gateway.ValueObjects;
 using Xunit;
+using reeltok.api.gateway.DTOs;
+using reeltok.api.gateway.Services;
+using reeltok.api.gateway.Entities;
+using reeltok.api.gateway.Factories;
+using reeltok.api.gateway.Interfaces;
+using reeltok.api.gateway.DTOs.Users;
+using reeltok.api.gateway.ValueObjects;
 
 namespace reeltok.api.gateway.Tests
 {
     public class UsersServiceTests
     {
-        private const string BaseTestUrl = "http://localhost:5001/users";
-        private readonly Mock<IGatewayService> _mockGatewayService;
+        private readonly Mock<IHttpService> _mockHttpService;
         private readonly Mock<IAuthService> _mockAuthService;
         private readonly IUsersService _usersService;
 
         public UsersServiceTests()
         {
-            _mockGatewayService = new Mock<IGatewayService>();
+            _mockHttpService = new Mock<IHttpService>();
             _mockAuthService = new Mock<IAuthService>();
-            _usersService = new UsersService(_mockAuthService.Object, _mockGatewayService.Object);
+            _usersService = new UsersService(_mockAuthService.Object, _mockHttpService.Object);
         }
 
         [Fact]
@@ -29,10 +29,11 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             string email = "test@reeltok.com";
             string password = "Test";
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Invalid credentials!");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Invalid credentials!");
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("login");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(
-                It.IsAny<ServiceLoginRequestDto>(), $"{BaseTestUrl}/Login", HttpMethod.Post))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(
+                It.IsAny<ServiceLoginRequestDto>(), targetUrl, HttpMethod.Post))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -44,29 +45,24 @@ namespace reeltok.api.gateway.Tests
         public async Task LoginUser_WithValidParameters_ReturnUserProfileData()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            string username = "xX_TestName_Xx";
-            string email = "test@reeltok.com";
-            string profileUrl = "testUrl.com";
-            string profilePictureUrl = "testurl.com";
-
-            ServiceLoginResponseDto successResponseDto = new ServiceLoginResponseDto(userId, email, username, profileUrl, profilePictureUrl);
+            ServiceLoginResponseDto successResponseDto = TestDataFactory.CreateServiceLoginResponseDto();
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("login");
 
             string password = "Sup3rSecur3Passw0rd";
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(
-                It.IsAny<ServiceLoginRequestDto>(), $"{BaseTestUrl}/Login", HttpMethod.Post))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(
+                It.IsAny<ServiceLoginRequestDto>(), targetUrl, HttpMethod.Post))
                 .ReturnsAsync(successResponseDto);
 
             // Act
-            UserProfileData result = await _usersService.LoginUser(email, password);
+            UserProfileData result = await _usersService.LoginUser(successResponseDto.Email, password);
 
             // Assert
-            Assert.Equal(userId, result.UserId);
-            Assert.Equal(username, result.UserDetails.Username);
-            Assert.Equal(email, result.HiddenUserDetails.Email);
-            Assert.Equal(profileUrl, result.UserDetails.ProfileUrl);
-            Assert.Equal(profilePictureUrl, result.UserDetails.ProfilePictureUrl);
+            Assert.Equal(successResponseDto.UserId, result.UserId);
+            Assert.Equal(successResponseDto.Username, result.UserDetails.Username);
+            Assert.Equal(successResponseDto.Email, result.HiddenUserDetails.Email);
+            Assert.Equal(successResponseDto.ProfileUrl, result.UserDetails.ProfileUrl);
+            Assert.Equal(successResponseDto.ProfilePictureUrl, result.UserDetails.ProfilePictureUrl);
         }
 
         [Fact]
@@ -76,10 +72,11 @@ namespace reeltok.api.gateway.Tests
             string email = "test@reeltok.com";
             string username = "xX_TestName_Xx";
             string password = "Test";
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Password does not meet minimum requirements!");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Password does not meet minimum requirements!");
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("create");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceCreateUserRequestDto, ServiceCreateUserResponseDto>(
-                It.IsAny<ServiceCreateUserRequestDto>(), $"{BaseTestUrl}/Create", HttpMethod.Post))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceCreateUserRequestDto, ServiceCreateUserResponseDto>(
+                It.IsAny<ServiceCreateUserRequestDto>(), targetUrl, HttpMethod.Post))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -91,29 +88,24 @@ namespace reeltok.api.gateway.Tests
         public async Task CreateUser_WithValidParameters_ReturnUserProfileData()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            string username = "xX_TestName_Xx";
-            string email = "test@reeltok.com";
-            string profileUrl = "testUrl.com";
-            string profilePictureUrl = "testurl.com";
-
-            ServiceCreateUserResponseDto successResponseDto = new ServiceCreateUserResponseDto(userId, email, username, profileUrl, profilePictureUrl);
+            ServiceCreateUserResponseDto successResponseDto = TestDataFactory.CreateServiceCreateUserResponseDto();
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("create");
 
             string password = "Sup3rSecur3Passw0rd";
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceCreateUserRequestDto, ServiceCreateUserResponseDto>(
-                It.IsAny<ServiceCreateUserRequestDto>(), $"{BaseTestUrl}/Create", HttpMethod.Post))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceCreateUserRequestDto, ServiceCreateUserResponseDto>(
+                It.IsAny<ServiceCreateUserRequestDto>(), targetUrl, HttpMethod.Post))
                 .ReturnsAsync(successResponseDto);
 
             // Act
-            UserProfileData result = await _usersService.CreateUser(email, username, password);
+            UserProfileData result = await _usersService.CreateUser(successResponseDto.Email, successResponseDto.Username, password);
 
             // Assert
-            Assert.Equal(userId, result.UserId);
-            Assert.Equal(username, result.UserDetails.Username);
-            Assert.Equal(email, result.HiddenUserDetails.Email);
-            Assert.Equal(profileUrl, result.UserDetails.ProfileUrl);
-            Assert.Equal(profilePictureUrl, result.UserDetails.ProfilePictureUrl);
+            Assert.Equal(successResponseDto.UserId, result.UserId);
+            Assert.Equal(successResponseDto.Username, result.UserDetails.Username);
+            Assert.Equal(successResponseDto.Email, result.HiddenUserDetails.Email);
+            Assert.Equal(successResponseDto.ProfileUrl, result.UserDetails.ProfileUrl);
+            Assert.Equal(successResponseDto.ProfilePictureUrl, result.UserDetails.ProfilePictureUrl);
         }
 
         [Fact]
@@ -121,10 +113,11 @@ namespace reeltok.api.gateway.Tests
         {
             // Arrange
             Guid userId = Guid.NewGuid();
-            FailureResponseDto failureResponseDto = new FailureResponseDto("User does not exist!");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("User does not exist!");
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("getProfileData");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(
-                It.IsAny<ServiceGetUserProfileDataRequestDto>(), $"{BaseTestUrl}/GetProfileData", HttpMethod.Get))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(
+                It.IsAny<ServiceGetUserProfileDataRequestDto>(), targetUrl, HttpMethod.Get))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -136,25 +129,22 @@ namespace reeltok.api.gateway.Tests
         public async Task GetUserProfileData_WithValidParameters_ReturnUserProfileData()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            string username = "xX_TestName_Xx";
-            string profileUrl = "testUrl.com";
-            string profilePictureUrl = "testurl.com";
+            ServiceGetUserProfileDataResponseDto successResponseDto = TestDataFactory.CreateGetUserProfileDataResponse();
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("getProfileData");
 
-            ServiceGetUserProfileDataResponseDto successResponseDto = new ServiceGetUserProfileDataResponseDto(userId, username, profileUrl, profilePictureUrl);
-
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(
-                It.IsAny<ServiceGetUserProfileDataRequestDto>(), $"{BaseTestUrl}/GetProfileData", HttpMethod.Get))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(
+                It.IsAny<ServiceGetUserProfileDataRequestDto>(), targetUrl, HttpMethod.Get))
                 .ReturnsAsync(successResponseDto);
 
             // Act
-            UserProfileData result = await _usersService.GetUserProfileData(userId);
+            UserProfileData result = await _usersService.GetUserProfileData(successResponseDto.UserId);
 
             // Assert
-            Assert.Equal(userId, result.UserId);
-            Assert.Equal(username, result.UserDetails.Username);
-            Assert.Equal(profileUrl, result.UserDetails.ProfileUrl);
-            Assert.Equal(profilePictureUrl, result.UserDetails.ProfilePictureUrl);
+            Assert.Equal(successResponseDto.UserId, result.UserId);
+            Assert.Equal(successResponseDto.Username, result.UserDetails.Username);
+            Assert.Equal(successResponseDto.Email, result.HiddenUserDetails.Email);
+            Assert.Equal(successResponseDto.ProfileUrl, result.UserDetails.ProfileUrl);
+            Assert.Equal(successResponseDto.ProfilePictureUrl, result.UserDetails.ProfilePictureUrl);
         }
 
         [Fact]
@@ -164,10 +154,11 @@ namespace reeltok.api.gateway.Tests
             string email = "test@reeltok.com";
             string username = "xX_TestName_Xx";
 
-            FailureResponseDto failureResponseDto = new FailureResponseDto("User does not exist!");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("User does not exist!");
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("updateDetails");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(
-                It.IsAny<ServiceUpdateUserDetailsRequestDto>(), $"{BaseTestUrl}/UpdateDetails", HttpMethod.Put))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(
+                It.IsAny<ServiceUpdateUserDetailsRequestDto>(), targetUrl, HttpMethod.Put))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -179,21 +170,19 @@ namespace reeltok.api.gateway.Tests
         public async Task UpdateUserDetails_WithValidParameters_ReturnUserDetails()
         {
             // Arrange
-            string email = "test@reeltok.com";
-            string username = "xX_TestName_Xx";
+            ServiceUpdateUserDetailsResponseDto successResponseDto = TestDataFactory.CreateUpdateUserDetailsResponse();
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("updateDetails");
 
-            ServiceUpdateUserDetailsResponseDto successResponseDto = new ServiceUpdateUserDetailsResponseDto(username, email);
-
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(
-                It.IsAny<ServiceUpdateUserDetailsRequestDto>(), $"{BaseTestUrl}/UpdateDetails", HttpMethod.Put))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(
+                It.IsAny<ServiceUpdateUserDetailsRequestDto>(), targetUrl, HttpMethod.Put))
                 .ReturnsAsync(successResponseDto);
 
             // Act
-            EditableUserDetails result = await _usersService.UpdateUserDetails(username, email);
+            EditableUserDetails result = await _usersService.UpdateUserDetails(successResponseDto.Email, successResponseDto.Username);
 
             // Assert
-            Assert.Equal(username, result.Username);
-            Assert.Equal(email, result.Email);
+            Assert.Equal(successResponseDto.Username, result.Username);
+            Assert.Equal(successResponseDto.Email, result.Email);
         }
 
         [Fact]
@@ -202,10 +191,11 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             IFormFile image = new Mock<IFormFile>().Object;
 
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Error uploading profile picture!");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Error uploading profile picture!");
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("updateProfilePicture");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(
-                It.IsAny<ServiceUpdateProfilePictureRequestDto>(), $"{BaseTestUrl}/UpdateProfilePicture", HttpMethod.Put))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(
+                It.IsAny<ServiceUpdateProfilePictureRequestDto>(), targetUrl, HttpMethod.Put))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -217,21 +207,21 @@ namespace reeltok.api.gateway.Tests
         public async Task UpdateProfilePicture_WithValidParameters_ReturnProfilePicture()
         {
             // Arrange
-            string profilePictureUrl = "pictureUrl";
             Stream stream = new MemoryStream();
             IFormFile image = new FormFile(stream, 0, 0, "file", "file name");
 
-            ServiceUpdateProfilePictureResponseDto successResponseDto = new ServiceUpdateProfilePictureResponseDto(profilePictureUrl);
+            ServiceUpdateProfilePictureResponseDto successResponseDto = TestDataFactory.CreateUpdateProfilePictureResponse();
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("updateProfilePicture");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(
-                It.IsAny<ServiceUpdateProfilePictureRequestDto>(), $"{BaseTestUrl}/UpdateProfilePicture", HttpMethod.Put))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(
+                It.IsAny<ServiceUpdateProfilePictureRequestDto>(), targetUrl, HttpMethod.Put))
                 .ReturnsAsync(successResponseDto);
 
             // Act
             string result = await _usersService.UpdateProfilePicture(image);
 
             // Assert
-            Assert.Equal(profilePictureUrl, result);
+            Assert.Equal(successResponseDto.ProfilePictureUrl, result);
         }
 
         [Fact]
@@ -240,10 +230,11 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             Guid userId = Guid.NewGuid();
 
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Unable to retrieve subscriptions!");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Unable to retrieve subscriptions!");
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("getSubscriptions");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(
-                It.IsAny<ServiceGetAllSubscriptionsForUserRequestDto>(), $"{BaseTestUrl}/GetSubscriptions", HttpMethod.Get))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(
+                It.IsAny<ServiceGetAllSubscriptionsForUserRequestDto>(), targetUrl, HttpMethod.Get))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -257,15 +248,12 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             Guid userId = Guid.NewGuid();
 
-            List<UserDetails> usersDetails = new List<UserDetails>()
-            {
-                new UserDetails( "username1", "profilePictureUrl1", "profileUrl1"),
-                new UserDetails( "username2", "profilePictureUrl2", "profileUrl2")
-            };
-            ServiceGetAllSubscriptionsForUserResponseDto successResponseDto = new ServiceGetAllSubscriptionsForUserResponseDto(usersDetails);
+            List<UserDetails> usersDetails = TestDataFactory.CreateUserDetailsList();
+            ServiceGetAllSubscriptionsForUserResponseDto successResponseDto = TestDataFactory.CreateGetAllSubscriptionsForUserResponse(usersDetails);
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("getSubscriptions");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(
-                It.IsAny<ServiceGetAllSubscriptionsForUserRequestDto>(), $"{BaseTestUrl}/GetSubscriptions", HttpMethod.Get))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(
+                It.IsAny<ServiceGetAllSubscriptionsForUserRequestDto>(), targetUrl, HttpMethod.Get))
                 .ReturnsAsync(successResponseDto);
 
             // Act
@@ -278,7 +266,6 @@ namespace reeltok.api.gateway.Tests
                 Assert.Equal(usersDetails[i].Username, result[i].Username);
                 Assert.Equal(usersDetails[i].ProfilePictureUrl, result[i].ProfilePictureUrl);
                 Assert.Equal(usersDetails[i].ProfileUrl, result[i].ProfileUrl);
-
             }
         }
 
@@ -288,10 +275,11 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             Guid userId = Guid.NewGuid();
 
-            FailureResponseDto failureResponseDto = new FailureResponseDto("Unable to retrieve subscribers!");
+            FailureResponseDto failureResponseDto = TestDataFactory.CreateFailureResponse("Unable to retrieve subscribers!");
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("getSubscribers");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(
-                It.IsAny<ServiceGetAllSubscribingToUserRequestDto>(), $"{BaseTestUrl}/GetSubscribers", HttpMethod.Get))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(
+                It.IsAny<ServiceGetAllSubscribingToUserRequestDto>(), targetUrl, HttpMethod.Get))
                 .ReturnsAsync(failureResponseDto);
 
             // Act & Assert
@@ -305,15 +293,12 @@ namespace reeltok.api.gateway.Tests
             // Arrange
             Guid userId = Guid.NewGuid();
 
-            List<UserDetails> usersDetails = new List<UserDetails>()
-            {
-                new UserDetails( "username1", "profilePictureUrl1", "profileUrl1"),
-                new UserDetails( "username2", "profilePictureUrl2", "profileUrl2")
-            };
-            ServiceGetAllSubscribingToUserResponseDto successResponseDto = new ServiceGetAllSubscribingToUserResponseDto(usersDetails);
+            List<UserDetails> usersDetails = TestDataFactory.CreateUserDetailsList();
+            ServiceGetAllSubscribingToUserResponseDto successResponseDto = TestDataFactory.CreateGetAllSubscribingToUserResponse(usersDetails);
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("getSubscribers");
 
-            _mockGatewayService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(
-                It.IsAny<ServiceGetAllSubscribingToUserRequestDto>(), $"{BaseTestUrl}/GetSubscribers", HttpMethod.Get))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(
+                It.IsAny<ServiceGetAllSubscribingToUserRequestDto>(), targetUrl, HttpMethod.Get))
                 .ReturnsAsync(successResponseDto);
 
             // Act
@@ -326,7 +311,6 @@ namespace reeltok.api.gateway.Tests
                 Assert.Equal(usersDetails[i].Username, result[i].Username);
                 Assert.Equal(usersDetails[i].ProfilePictureUrl, result[i].ProfilePictureUrl);
                 Assert.Equal(usersDetails[i].ProfileUrl, result[i].ProfileUrl);
-
             }
         }
     }

@@ -6,9 +6,8 @@ namespace reeltok.api.auth.Interfaces
     {
         Task<Tokens> CreateUser(CreateDetails CreateDetails);
         Task<Tokens> LoginUser(LoginCredentials loginCredentials);
-        Task<AccessToken> RefreshAccessToken(string refreshToken);
         Task DeleteUser(Guid userId);
-        Task<Guid> GetUserIdByToken(string refreshToken);
-        Task LogoutUser(string refreshToken);
+        Guid GetUserIdByToken(string accessTokenValue);
+        Task LogoutUser(string accessToken, string refreshToken);
     }
 }
