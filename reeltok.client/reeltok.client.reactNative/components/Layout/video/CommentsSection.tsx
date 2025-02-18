@@ -5,6 +5,7 @@ import CustomButton from '../../input/CustomButton';
 import Comment from './Comment';
 import ProfilePicture from '../profile/ProfilePicture';
 import CustomTextInput from '../../input/CustomTextInput';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 interface CommentSectionProps {
   comments: { text: string; profilePictureUrl: string; username: string }[];
@@ -43,11 +44,17 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments, commentsAmoun
       text: {
         color: 'white',
         fontSize: 15,
+      },
+      commentInput:{
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        backgroundColor: '',
+        borderRadius: 5,
       }
   });
   
   return (
-    <>
+    
       <Modal
         animationType="slide"
         transparent={true}
@@ -58,7 +65,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments, commentsAmoun
           <View style={styles.modalContent}>
             <View style={styles.commentsDetailsAndControls}>
               <Text style={styles.text}> Comments: {commentsAmount} </Text>
-              <CustomButton transparent={true}  borders={false} onPress={onClose}>
+              <CustomButton transparent={true} widthPercentage={0.10}  borders={false} onPress={onClose}>
                 <Ionicons name="close" size={32} color="white" />
               </CustomButton>
             </View>
@@ -74,10 +81,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments, commentsAmoun
               />
             )}
           />
+          <View style={styles.commentInput}>
+            <CustomTextInput placeholder='comment..'></CustomTextInput>
+            <CustomButton transparent onPress={()=>console.log('test pepepepepe')} widthPercentage={0.15}><FontAwesome name="send" size={24} color="white" /></CustomButton>
+          </View>
           </View>
         </View>
       </Modal>
-    </>
   )
 };
 

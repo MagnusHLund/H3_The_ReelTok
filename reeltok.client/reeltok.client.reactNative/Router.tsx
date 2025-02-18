@@ -14,7 +14,7 @@ const Router = () => {
       <Stack.Navigator>
         <Stack.Screen name="VideoFeed" component={VideoFeedScreen} options={{ headerShown: false }} />
         <Stack.Screen name="UploadVideo" component={UploadVideoScreen} />
-        <Stack.Screen name="Profile" component={UserProfileScreen} />
+        <Stack.Screen name="Profile" component={UserProfileScreen} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
