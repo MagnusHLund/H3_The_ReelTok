@@ -7,7 +7,7 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web --port 4000"
   },
   "dependencies": {
     "@expo-google-fonts/poppins": "^0.2.3",
@@ -33,7 +33,8 @@
     "react-native-screens": "~4.4.0",
     "react-native-web": "^0.19.13",
     "react-native-xml2js": "^1.0.3",
-    "react-query": "^3.39.3"
+    "react-query": "^3.39.3",
+    "@expo/metro-runtime": "~4.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
