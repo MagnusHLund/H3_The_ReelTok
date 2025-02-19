@@ -43,6 +43,8 @@ namespace reeltok.api.videos.Services
                 .ConfigureAwait(false);
 
             List<VideoLikesEntity> videoLikes = await _likesService.GetVideoLikesAsync(userId, videoIds).ConfigureAwait(false);
+
+            List<VideoForFeedEntity> videosForFeed = 
         }
 
         public async Task<List<VideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize)
