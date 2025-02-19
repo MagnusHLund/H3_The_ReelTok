@@ -1,3 +1,4 @@
+import LoginScreen from './components/screens/LoginScreen';
 import Router from './Router';
 import React from "react";
 
@@ -12,6 +13,7 @@ const Categories = [
 
 export default function App() {
   return (
-    <Router />
+    // <Router />
+    <LoginScreen/>
   );
 }
