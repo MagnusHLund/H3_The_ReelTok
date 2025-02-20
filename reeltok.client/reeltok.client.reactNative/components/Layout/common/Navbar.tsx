@@ -33,9 +33,9 @@ const Navbar: React.FC = () => {
     <>
     {showComponent && <MediaSelector/>}
       <View style={styles.container}>
-        <CustomButton transparent={true} onPress={() => navigation.navigate('VideoFeed')}> <Ionicons name="play" size={32} color="white" /></CustomButton>
+        <CustomButton transparent={true} onPress={() => navigation.replace('VideoFeed')}> <Ionicons name="play" size={32} color="white" /></CustomButton>
         <CustomButton transparent={true} onPress={() => setShowComponent(!showComponent)}> <Ionicons name="add" size={32} color="white" /> </CustomButton>
-        <CustomButton transparent={true} onPress={() => navigation.navigate('Profile')} > <Ionicons name="person-circle-sharp" size={32} color="white" /></CustomButton>
+        <CustomButton transparent={true} onPress={() => navigation.replace('Profile')} > <Ionicons name="person-circle-sharp" size={32} color="white" /></CustomButton>
       </View>
     </>
   );
