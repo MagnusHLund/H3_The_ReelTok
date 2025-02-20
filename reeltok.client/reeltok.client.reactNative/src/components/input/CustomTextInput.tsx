@@ -6,24 +6,28 @@ interface CustomTextInputProps {
     email?: boolean;
     placeholder: string;
     borders?: boolean;
+    widthProcentage?: number
 
 }
 
 
 
 import React from 'react';
-import { TextInput, StyleSheet } from 'react-native';
+import { TextInput, StyleSheet, useWindowDimensions } from 'react-native';
 
-const CustomTextInput: React.FC<CustomTextInputProps> = ({ password, email, placeholder, borders }) => {
+
+const CustomTextInput: React.FC<CustomTextInputProps> = ({ password, email, placeholder, borders, widthProcentage=0.8 }) => {
+    const {width} = useWindowDimensions();
     const styles = StyleSheet.create({
         input: {
             height: 40,
-            width: 300,
+            width: width * widthProcentage,
             borderColor: 'gray',
             borderWidth: borders ? 1 : 0,
             paddingLeft: 10,
             borderRadius: 10,
             color:'white',
+            
             backgroundColor:'#565656'
         },
     });
