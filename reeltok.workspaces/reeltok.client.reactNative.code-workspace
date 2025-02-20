@@ -5,10 +5,6 @@
       "name": "ReelTok client React-native"
     },
     {
-      "path": "./../reeltok.client/reeltok.client.common",
-      "name": "ReelTok client common"
-    },
-    {
       "path": "./../.git"
     }
   ],
@@ -23,6 +19,8 @@
     ],
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "cSpell.words": ["reeltok"]
+    "cSpell.words": ["reeltok"],
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "javascript.preferences.importModuleSpecifier": "relative"
   }
 }
