@@ -1,5 +1,6 @@
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { StyleSheet, View, Dimensions, Pressable, Text } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import CustomButton from '../../input/CustomButton';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState, useEffect } from 'react';
@@ -19,16 +20,17 @@ const Video: React.FC<VideoProps> = ({ source, isFocused, onShowComments }) => {
   });
 
   const [isPlaying, setIsPlaying] = useState(false);
+  const isScreenFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused) {
+    if (isFocused && isScreenFocused) {
       player.play();
       setIsPlaying(true);
     } else {
       player.pause();
       setIsPlaying(false);
     }
-  }, [isFocused]);
+  }, [isFocused, isScreenFocused]);
 
   const togglePlayPause = () => {
     if (isPlaying) {
