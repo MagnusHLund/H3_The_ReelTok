@@ -7,6 +7,7 @@ interface CustomTextInputProps {
     placeholder: string;
     borders?: boolean;
     widthProcentage?: number
+    backgroundColor?: string
 
 }
 
@@ -16,7 +17,7 @@ import React from 'react';
 import { TextInput, StyleSheet, useWindowDimensions } from 'react-native';
 
 
-const CustomTextInput: React.FC<CustomTextInputProps> = ({ password, email, placeholder, borders, widthProcentage=0.8 }) => {
+const CustomTextInput: React.FC<CustomTextInputProps> = ({ password, email, placeholder, borders, widthProcentage=0.8, backgroundColor='#565656'}) => {
     const {width} = useWindowDimensions();
     const styles = StyleSheet.create({
         input: {
@@ -28,7 +29,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({ password, email, plac
             borderRadius: 10,
             color:'white',
             
-            backgroundColor:'#565656'
+            backgroundColor:backgroundColor
         },
     });
     return (
