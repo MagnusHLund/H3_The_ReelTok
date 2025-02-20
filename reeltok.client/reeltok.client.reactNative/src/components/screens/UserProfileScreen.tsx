@@ -11,195 +11,195 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ Username }) => {
   const videos = [
     {
       id: 1,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 2,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 3,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 4,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 5,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 6,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 7,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 8,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 9,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 10,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 11,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 12,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 13,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 14,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 5,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 6,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 7,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 8,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 9,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 10,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 11,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 12,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 13,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 14,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 1,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 2,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 3,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 4,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 5,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 6,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 7,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 8,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 9,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 10,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 11,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 12,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 13,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 14,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 5,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 6,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 7,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 8,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 9,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 10,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 11,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 12,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 13,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
     {
       id: 14,
-      source: require("./../../../../reeltok.client.commonassets/Oskarotto3.jpg"),
+      source: require("./../../../assets/images/placeholders/Oskarotto3.jpg"),
     },
   ];
 
@@ -210,7 +210,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ Username }) => {
           <CustomButton onPress={() => {}} transparent>
             <Image
               style={[styles.ProfilePicture, { resizeMode: "cover" }]}
-              source={require("./../../../../reeltok.client.commonassets/profile-default-img.png")}
+              source={require("./../../../assets/images/placeholders/profile-default-img.png")}
             />
           </CustomButton>
         </View>

@@ -26,7 +26,7 @@ const LoginScreen = () => {
       <View style={styles.logocontainer}>
         <Image
           style={styles.logo}
-          source={require("./../../../../reeltok.client.common/assets/images/icons/ReelTok_3.png")}
+          source={require("./../../../assets/images/icons/ReelTok_3.png")}
         />
       </View>
       <View style={styles.container}>
