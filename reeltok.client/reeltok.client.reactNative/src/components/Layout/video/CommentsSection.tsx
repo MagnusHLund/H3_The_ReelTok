@@ -50,6 +50,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments, commentsAmoun
         justifyContent: 'space-evenly',
         backgroundColor: '',
         borderRadius: 5,
+      },
+      send:{
+        left: '-20%',
       }
   });
   
@@ -82,8 +85,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments, commentsAmoun
             )}
           />
           <View style={styles.commentInput}>
-            <CustomTextInput placeholder='comment..'></CustomTextInput>
-            <CustomButton transparent onPress={()=>console.log('test pepepepepe')} widthPercentage={0.15}><FontAwesome name="send" size={24} color="white" /></CustomButton>
+            <CustomTextInput placeholder='comment..' widthProcentage={0.8}></CustomTextInput>
+            <CustomButton style={styles.send} transparent onPress={()=>console.log('test pepepepepe')} widthPercentage={0.1}><FontAwesome name="send" size={20} color="white" /></CustomButton>
           </View>
           </View>
         </View>

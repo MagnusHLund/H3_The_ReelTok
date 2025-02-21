@@ -48,7 +48,7 @@ const VideoFeedScreen = () => {
           <Video source={item} isFocused={index === currentIndex} onShowComments={() => setShowComments(true)} />
         }
         keyExtractor={(_, index) => index.toString()}
-        decelerationRate="normal"
+        decelerationRate='fast'
         disableIntervalMomentum={true}
         style={{ backgroundColor: 'black' }}
         showsVerticalScrollIndicator={false}
