@@ -4,6 +4,7 @@ import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/
 import VideoFeedScreen from './components/screens/VideoFeedScreen'
 import UploadVideoScreen from './components/screens/UploadVideoScreen'
 import UserProfileScreen from './components/screens/UserProfileScreen'
+import SettingsScreen from './components/screens/SettingsScreen'
 
 const Stack = createStackNavigator()
 
@@ -29,6 +30,14 @@ const Router = () => {
         <Stack.Screen
           name="Profile"
           component={UserProfileScreen}
+          options={{
+            headerShown: false,
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          }}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={SettingsScreen}
           options={{
             headerShown: false,
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

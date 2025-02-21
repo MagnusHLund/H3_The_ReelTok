@@ -2,12 +2,17 @@ import React from 'react'
 import { View, Image, Text, StyleSheet, ScrollView } from 'react-native'
 import CustomButton from '../input/CustomButton'
 import Navbar from '../Layout/common/Navbar'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { Ionicons } from '@expo/vector-icons'
 
 interface UserProfileScreenProps {
   Username: string
 }
 
 const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ Username }) => {
+  const navigation = useNavigation<NativeStackNavigationProp<any>>()
+
   const videos = [
     {
       id: 1,
@@ -214,7 +219,6 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ Username }) => {
             />
           </CustomButton>
         </View>
-        <Text style={styles.ProfileName}>{Username}</Text>
       </View>
       <View style={styles.mainContainer}>
         <CustomButton widthPercentage={0.22} onPress={() => {}} transparent>
@@ -225,6 +229,13 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ Username }) => {
         </CustomButton>
         <CustomButton widthPercentage={0.22} onPress={() => {}} transparent>
           <Text>Following</Text>
+        </CustomButton>
+        <CustomButton
+          widthPercentage={0.07}
+          onPress={() => navigation.replace('Settings')}
+          transparent
+        >
+          <Ionicons name="cog" size={24} color="black" />
         </CustomButton>
       </View>
       <ScrollView contentContainerStyle={styles.VideoContainer}>

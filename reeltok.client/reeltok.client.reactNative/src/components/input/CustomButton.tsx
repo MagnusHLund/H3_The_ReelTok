@@ -46,6 +46,7 @@ const CustomButton: React.FC<ButtonProps> = ({
       fontSize: 20,
       fontFamily: 'Poppins_400Regular',
       color: transparent ? 'black' : 'white',
+      textAlign: 'center', 
     },
   })
 
