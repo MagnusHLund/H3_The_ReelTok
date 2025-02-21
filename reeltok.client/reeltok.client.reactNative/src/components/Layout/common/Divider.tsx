@@ -7,7 +7,7 @@ const Divider = ({ height = 4, color = 'black' }) => {
 
 const styles = StyleSheet.create({
   divider: {
-    width: '100%', // Ensures it spans the full width
+    width: '80%', // Ensures it spans the full width
   },
 })
 

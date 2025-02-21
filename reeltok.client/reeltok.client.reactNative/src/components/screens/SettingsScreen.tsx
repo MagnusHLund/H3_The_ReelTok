@@ -13,34 +13,35 @@ const SettingsScreen = () => {
     { label: 'Bulgarian', value: 'Bulgarian' },
   ]
 
+  const InputField = ({ label, placeholder }: { label: string; placeholder: string }) => (
+    <View>
+      <Text style={{ fontSize: 20, fontWeight: '600' }}>{label}</Text>
+      <View style={{ height: 50 }}>
+        <CustomTextInput placeholder={placeholder} />
+      </View>
+    </View>
+  )
+
   return (
     <View>
       <Text style={styles.ScreenName}>Settings</Text>
-      <View style={{ gap: 10, padding: 20 }}>
+      <View style={{ gap: 10, alignItems: 'center' }}>
         <Divider />
-        <Text style={{ fontSize: 25, fontWeight: '900' }}>Change user details</Text>
         <View>
-          <Text style={{ fontSize: 20, fontWeight: '600' }}>Username</Text>
-          <View style={{ height: 50 }}>
-            <CustomTextInput placeholder="Username"></CustomTextInput>
-          </View>
-        </View>
-        <View>
-          <Text style={{ fontSize: 20, fontWeight: '600' }}>Username</Text>
-          <View style={{ height: 50 }}>
-            <CustomTextInput placeholder="Username" />
-          </View>
+          <Text style={{ fontSize: 25, fontWeight: '900' }}>Change user details</Text>
+          <InputField label="Username" placeholder="Username" />
+          <InputField label="Email" placeholder="Email" />
         </View>
         <Divider />
-        <Text style={{ fontSize: 25, fontWeight: '900' }}>Language</Text>
         <View>
+          <Text style={{ fontSize: 25, fontWeight: '900' }}>Language</Text>
           <Text style={{ fontSize: 20, fontWeight: '600' }}>Select Language</Text>
           <CustomDropdown label="" categories={Categories} placeholder="English" />
         </View>
         <Divider />
-        <Text style={{ fontSize: 25, fontWeight: '900' }}>Logout</Text>
         <View>
-          <CustomButton onPress={() => {}} />
+          <Text style={{ fontSize: 25, fontWeight: '900' }}>Logout</Text>
+          <CustomButton widthPercentage={0.8} title="LOGOUT" onPress={() => {}} />
         </View>
       </View>
     </View>
@@ -53,6 +54,7 @@ const styles = StyleSheet.create({
   ScreenName: {
     textAlign: 'center',
     marginTop: 50,
+    marginBottom: 20,
     fontWeight: '500',
     fontSize: 30,
   },
