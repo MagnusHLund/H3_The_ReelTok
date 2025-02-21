@@ -1,25 +1,42 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
+import VideoFeedScreen from './components/screens/VideoFeedScreen'
+import UploadVideoScreen from './components/screens/UploadVideoScreen'
+import UserProfileScreen from './components/screens/UserProfileScreen'
 
-import VideoFeedScreen from './components/screens/VideoFeedScreen';
-import UploadVideoScreen from './components/screens/UploadVideoScreen';
-import UserProfileScreen from './components/screens/UserProfileScreen';
-
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator()
 
 const Router = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="VideoFeed" component={VideoFeedScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="UploadVideo" component={UploadVideoScreen} />
-        <Stack.Screen name="Profile" component={UserProfileScreen} options={{ headerShown: false }}/>
+      <Stack.Navigator initialRouteName="VideoFeed">
+        <Stack.Screen
+          name="VideoFeed"
+          component={VideoFeedScreen}
+          options={{
+            headerShown: false,
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOSInverted,
+          }}
+        />
+        <Stack.Screen
+          name="UploadVideo"
+          component={UploadVideoScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={UserProfileScreen}
+          options={{
+            headerShown: false,
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
-  );
-};
+  )
+}
 
-export default Router;
-
-
+export default Router
