@@ -10,7 +10,8 @@ const SettingsScreen = () => {
     { label: 'English', value: 'English' },
     { label: 'Danish', value: 'Danish' },
     { label: 'Chinese', value: 'Chinese' },
-    { label: 'Bulgarian', value: 'Bulgarian' },
+    { label: 'Bulgarian', value: 'Bulgaran' },
+    { label: 'Gaming', value: 'Gaming' },
   ]
 
   const InputField = ({ label, placeholder }: { label: string; placeholder: string }) => (
@@ -22,26 +23,31 @@ const SettingsScreen = () => {
     </View>
   )
 
+  const logout = "LOGOUT";
+
   return (
     <View>
       <Text style={styles.ScreenName}>Settings</Text>
       <View style={{ gap: 10, alignItems: 'center' }}>
         <Divider />
         <View>
-          <Text style={{ fontSize: 25, fontWeight: '900' }}>Change user details</Text>
+          <Text style={{ fontSize: 25, fontWeight: '900' }}>User details</Text>
           <InputField label="Username" placeholder="Username" />
           <InputField label="Email" placeholder="Email" />
         </View>
         <Divider />
         <View>
           <Text style={{ fontSize: 25, fontWeight: '900' }}>Language</Text>
-          <Text style={{ fontSize: 20, fontWeight: '600' }}>Select Language</Text>
           <CustomDropdown categories={Categories} placeholder="English" />
         </View>
         <Divider />
         <View>
-          <Text style={{ fontSize: 25, fontWeight: '900' }}>Logout</Text>
-          <CustomButton widthPercentage={0.8} title="LOGOUT" onPress={() => {}} />
+          <Text style={{ fontSize: 25, fontWeight: '900' }}>Recommendation</Text>
+          <CustomDropdown categories={Categories} placeholder="English" />
+        </View>
+        <Divider />
+        <View>
+          <CustomButton widthPercentage={0.8} title={logout} onPress={() => {console.log(logout)}} />
         </View>
       </View>
     </View>
