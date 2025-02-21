@@ -208,6 +208,8 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ Username }) => {
     },
   ]
 
+  // TODO: @MarcusL00 refactor this please. The component has to be broken down into smaller components.
+
   return (
     <>
       <View style={styles.ProfileContainer}>

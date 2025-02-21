@@ -3,7 +3,7 @@ interface CustomTextInputProps {
   email?: boolean
   placeholder: string
   borders?: boolean
-  widthProcentage?: number
+  widthPercentage?: number
   backgroundColor?: string
 }
 
@@ -15,36 +15,22 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
   email,
   placeholder,
   borders,
-  widthProcentage = 0.8,
+  widthPercentage = 0.8,
   backgroundColor = '#565656',
 }) => {
   const { width } = useWindowDimensions()
   const [isFocused, setIsFocused] = useState(false)
-
-  const styles = StyleSheet.create({
-    input: {
-      height: 40,
-      borderColor: 'gray',
-      borderWidth: borders ? 1 : 0,
-      paddingLeft: 10,
-      borderRadius: 10,
-      color: 'white',
-      width: width * widthProcentage,
-      backgroundColor: backgroundColor,
-    },
-    blurredText: {
-      color: 'transparent',
-      textShadowColor: 'rgba(255, 255, 255, 0.5)',
-      textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: 5,
-    },
-  })
 
   return (
     <View>
       <TextInput
         style={[
           styles.input,
+          {
+            width: width * widthPercentage,
+            borderWidth: borders ? 1 : 0,
+            backgroundColor: backgroundColor,
+          },
           email && !isFocused ? styles.blurredText : null,
         ]}
         placeholder={placeholder}
@@ -57,5 +43,21 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    paddingLeft: 10,
+    borderRadius: 10,
+    color: 'white',
+  },
+  blurredText: {
+    color: 'transparent',
+    textShadowColor: 'rgba(255, 255, 255, 0.5)',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 5,
+  },
+})
 
 export default CustomTextInput

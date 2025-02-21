@@ -4,63 +4,71 @@ import { StyleSheet, useWindowDimensions } from 'react-native'
 import Entypo from '@expo/vector-icons/Entypo'
 
 interface DropDownProps {
-  categories: { label: string; value: string }[]
+  options: { label: string; value: string }[]
   placeholder?: string
-  widthProcentage?: number
+  widthPercentage?: number
+  onChange: () => void
 }
 
 const CustomDropdown: React.FC<DropDownProps> = ({
-  categories,
+  options,
   placeholder,
-  widthProcentage = 0.8,
+  widthPercentage = 0.8,
+  onChange,
 }) => {
   const { width } = useWindowDimensions()
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState<string | null>(null)
+
+  const calculatedWidth = width * widthPercentage
+
   return (
     <DropDownPicker
       open={open}
       value={value}
-      items={categories}
+      items={options}
       setOpen={setOpen}
       setValue={setValue}
       setItems={() => {}}
       placeholder={placeholder}
-      ArrowDownIconComponent={({ style }) => <Entypo name="chevron-down" size={24} color="white" />}
-      ArrowUpIconComponent={({ style }) => <Entypo name="chevron-up" size={24} color="white" />}
-      style={{
-        backgroundColor: '#565656',
-        borderRadius: 10,
-        width: width * widthProcentage,
-        // borderColor: 'white',
-      }}
-      textStyle={{
-        fontSize: 15,
-        color: 'white',
-      }}
-      containerStyle={{
-        backgroundColor: '#565656',
-        borderRadius: 10,
-        width: width * widthProcentage,
-      }}
-      listChildContainerStyle={{
-        backgroundColor: '#565656',
-      }}
-      arrowIconStyle={{
-        width: 20,
-        height: 20,
-      }}
-      tickIconStyle={{
-        width: 20,
-        height: 20,
-      }}
-      dropDownContainerStyle={{
-        backgroundColor: '#696969',
-        borderBlockColor: 'transparent',
-        width: width * widthProcentage,
-      }}
+      ArrowDownIconComponent={() => <Entypo name="chevron-down" size={24} color="white" />}
+      ArrowUpIconComponent={() => <Entypo name="chevron-up" size={24} color="white" />}
+      style={[styles.dropdown, { width: calculatedWidth }]}
+      textStyle={styles.text}
+      containerStyle={[styles.container, { width: calculatedWidth }]}
+      listChildContainerStyle={styles.listChildContainer}
+      arrowIconStyle={styles.icon}
+      tickIconStyle={styles.icon}
+      dropDownContainerStyle={[styles.dropdownContainer, { width: calculatedWidth }]}
+      onChangeValue={onChange}
     />
   )
 }
+
+const styles = StyleSheet.create({
+  dropdown: {
+    backgroundColor: '#565656',
+    borderRadius: 10,
+  },
+  text: {
+    fontSize: 15,
+    color: 'white',
+  },
+  container: {
+    backgroundColor: '#565656',
+    borderRadius: 10,
+  },
+  listChildContainer: {
+    backgroundColor: '#565656',
+  },
+  icon: {
+    width: 20,
+    height: 20,
+  },
+  dropdownContainer: {
+    backgroundColor: '#696969',
+    borderBlockColor: 'transparent',
+  },
+})
 
 export default CustomDropdown
