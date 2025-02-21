@@ -46,6 +46,7 @@ const Video: React.FC<VideoProps> = ({ source, creator, description, isFocused, 
   };
 
   const [likedVideo, setLikedVideo] = useState(false);
+  const [followedCreator, setFollowedCreator] = useState(false);
   const likesAmount = 50;
   const commentsAmount = 10;
 
@@ -57,7 +58,10 @@ const Video: React.FC<VideoProps> = ({ source, creator, description, isFocused, 
       </View>
       <View style={styles.profileOverlay}>
         <ProfilePicture pictureUrl={creator.profilePictureUrl} />
+        <Text style={styles.socialFontSettings}> {creator.username} </Text>
+        <CustomButton transparent={false} title={followedCreator ? 'Following' : 'Follow'} onPress={() => setFollowedCreator(!followedCreator)}/>
       </View>
+      
       <View style={styles.socialControls}>
         <CustomButton transparent={true} borders={false} flexDirection='column' onPress={() => setLikedVideo(!likedVideo)}>
           <Ionicons name={likedVideo ? 'heart' : 'heart-outline'} size={32} color={likedVideo ? 'red' : 'white'} />
@@ -89,10 +93,16 @@ const styles = StyleSheet.create({
   },
   profileOverlay: {
     position: 'absolute',
-    top: (height / 2) - 25, // 25 is half of 50, so it centers the 50x50 image
-    left: 20, // or whatever horizontal position you prefer
-    width: 50,
-    height: 50,
+    bottom: '67.5%',
+    right: 0,
+    left: 25,
+    margin: 0,
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '15%',
+    height: '100%',
+    gap: 7.5,
     zIndex: 110,
   },
   socialControls: {

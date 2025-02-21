@@ -57,9 +57,8 @@ const VideoFeedScreen = () => {
       <FlatList
         data={videoSources}
         renderItem={({ item, index }) =>
-          <Video source={item} creator={videoCreators[videoSources[currentIndex]] || []} isFocused={index === currentIndex} onShowComments={() => setShowComments(true)} />
+          <Video source={item} creator={videoCreators[item] ? videoCreators[item][0] : null} isFocused={index === currentIndex} onShowComments={() => setShowComments(true)} />
         }
-        keyExtractor={(_, index) => index.toString()}
         decelerationRate="normal"
         disableIntervalMomentum={true}
         style={{ backgroundColor: 'black' }}
