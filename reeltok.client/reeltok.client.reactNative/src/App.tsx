@@ -13,7 +13,7 @@ const Categories = [
 
 export default function App() {
   return (
-    <Router />
-    // <LoginScreen />
-  );
+    // <Router />
+    <LoginScreen />
+  )
 }
