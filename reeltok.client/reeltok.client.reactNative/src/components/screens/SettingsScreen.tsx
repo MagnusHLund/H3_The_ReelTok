@@ -36,7 +36,7 @@ const SettingsScreen = () => {
         <View>
           <Text style={{ fontSize: 25, fontWeight: '900' }}>Language</Text>
           <Text style={{ fontSize: 20, fontWeight: '600' }}>Select Language</Text>
-          <CustomDropdown label="" categories={Categories} placeholder="English" />
+          <CustomDropdown categories={Categories} placeholder="English" />
         </View>
         <Divider />
         <View>

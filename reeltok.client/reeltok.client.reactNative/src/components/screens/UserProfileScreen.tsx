@@ -1,10 +1,10 @@
 import React from 'react'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { View, Image, Text, StyleSheet, ScrollView } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
-import Ionicons from '@expo/vector-icons/Ionicons'
 import CustomButton from '../input/CustomButton'
 import Navbar from '../Layout/common/Navbar'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { Ionicons } from '@expo/vector-icons'
 
 interface UserProfileScreenProps {
   Username: string
@@ -250,10 +250,6 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ Username }) => {
       <Navbar />
     </>
   )
-}
-
-UserProfileScreen.defaultProps = {
-  Username: 'username',
 }
 
 const styles = StyleSheet.create({
