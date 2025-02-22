@@ -45,6 +45,8 @@ const CustomDropdown: React.FC<DropDownProps> = ({
   )
 }
 
+// TODO: Fix the styling for the dropdown. make it the same size as input fields.
+
 const styles = StyleSheet.create({
   dropdown: {
     backgroundColor: '#565656',
