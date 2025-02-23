@@ -1,8 +1,8 @@
 import { View, StyleSheet, Image, useWindowDimensions } from 'react-native'
-import React from 'react'
 import CustomTextInput from '../input/CustomTextInput'
-import CustomButton from '../input/CustomButton'
 import CustomDropdown from '../input/CustomDropdown'
+import CustomButton from '../input/CustomButton'
+import React from 'react'
 
 const Categories = [
   { label: 'Gaming', value: 'Gaming' },
@@ -20,7 +20,7 @@ const SignUpScreen = () => {
       height: height,
       width: width,
     },
-    inputcontainer: {
+    inputContainer: {
       flexDirection: 'column',
       marginLeft: '10%',
       top: '20%',
@@ -29,7 +29,7 @@ const SignUpScreen = () => {
       marginBottom: '-30%',
       maxHeight: '50%',
     },
-    logocontainer: {
+    logoContainer: {
       display: 'flex',
       alignItems: 'center',
       marginTop: '20%',
@@ -42,16 +42,16 @@ const SignUpScreen = () => {
   })
   return (
     <View style={styles.container}>
-      <View style={styles.logocontainer}>
+      <View style={styles.logoContainer}>
         <Image
           style={styles.logo}
           source={require('./../../../assets/images/icons/ReelTok_3.png')}
         />
       </View>
-      <View style={styles.inputcontainer}>
+      <View style={styles.inputContainer}>
         <CustomTextInput placeholder="Email.."></CustomTextInput>
         <CustomTextInput placeholder="password.." password></CustomTextInput>
-        <CustomDropdown placeholder="Vælg en kategori" categories={Categories}></CustomDropdown>
+        <CustomDropdown options={Categories} onChange={() => {}} />
         <CustomButton
           widthPercentage={0.8}
           onPress={() => console.log('Create user')}

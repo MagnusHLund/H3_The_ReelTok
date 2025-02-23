@@ -4,11 +4,14 @@
     <password>Password</password>
   </common>
   <login>
-      <login>Login</login>
+    <login>Login</login>
     <orSignUpIfYouAreNew>... or sign up if you are new!</orSignUpIfYouAreNew>
   </login>
   <signUp>
     <signUp>Sign up</signUp>
     <orLoginIfYouArentNew>... or login if you aren't new!</orLoginIfYouArentNew>
   </signUp>
+  <settings>
+    <settings>Settings</settings>
+  </settings>
 </translations>

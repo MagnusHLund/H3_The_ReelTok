@@ -1,67 +1,35 @@
-import { StyleSheet, Text, View } from 'react-native'
+import RecommendationsSettingsSection from '../Layout/settings/sections/RecommendationsSettingsSection'
+import UserDetailsSettingsSection from '../Layout/settings/sections/UserDetailsSettingsSection'
+import LanguageSettingsSection from '../Layout/settings/sections/LanguageSettingsSection'
+import LogOutSettingsSection from '../Layout/settings/sections/LogOutSettingsSection'
+import useTranslation from '../../hooks/useTranslations'
+import { FlatList, View } from 'react-native'
+import Header from '../Layout/common/Header'
 import React from 'react'
-import CustomTextInput from '../input/CustomTextInput'
-import Divider from '../Layout/common/Divider'
-import CustomDropdown from '../input/CustomDropdown'
-import CustomButton from '../input/CustomButton'
 
-const SettingsScreen = () => {
-  const Categories = [
-    { label: 'English', value: 'English' },
-    { label: 'Danish', value: 'Danish' },
-    { label: 'Chinese', value: 'Chinese' },
-    { label: 'Bulgarian', value: 'Bulgaran' },
-    { label: 'Gaming', value: 'Gaming' },
+const SettingsScreen: React.FC = () => {
+  const t = useTranslation()
+
+  const sections = [
+    { key: 'UserDetails', component: <UserDetailsSettingsSection /> },
+    { key: 'Language', component: <LanguageSettingsSection /> },
+    { key: 'Recommendations', component: <RecommendationsSettingsSection /> },
+    { key: 'LogOut', component: <LogOutSettingsSection /> },
   ]
 
-  const InputField = ({ label, placeholder }: { label: string; placeholder: string }) => (
-    <View>
-      <Text style={{ fontSize: 20, fontWeight: '600' }}>{label}</Text>
-      <View style={{ height: 50 }}>
-        <CustomTextInput placeholder={placeholder} />
-      </View>
-    </View>
-  )
-
-  const logout = "LOGOUT";
-
+  // TODO: The message below is not true anymore, due to creating our own dropdown. I think its most fitting to revert back to ScrollView
+  // We are forced to use the FlatList here, because the dropdown we use, uses scroll view.
+  // You should not use 2 scroll views inside each other.
   return (
-    <View>
-      <Text style={styles.ScreenName}>Settings</Text>
-      <View style={{ gap: 10, alignItems: 'center' }}>
-        <Divider />
-        <View>
-          <Text style={{ fontSize: 25, fontWeight: '900' }}>User details</Text>
-          <InputField label="Username" placeholder="Username" />
-          <InputField label="Email" placeholder="Email" />
-        </View>
-        <Divider />
-        <View>
-          <Text style={{ fontSize: 25, fontWeight: '900' }}>Language</Text>
-          <CustomDropdown categories={Categories} placeholder="English" />
-        </View>
-        <Divider />
-        <View>
-          <Text style={{ fontSize: 25, fontWeight: '900' }}>Recommendation</Text>
-          <CustomDropdown categories={Categories} placeholder="English" />
-        </View>
-        <Divider />
-        <View>
-          <CustomButton widthPercentage={0.8} title={logout} onPress={() => {console.log(logout)}} />
-        </View>
-      </View>
+    <View style={{ flex: 1 }}>
+      <Header title={t('settings.settings')} />
+      <FlatList
+        data={sections}
+        renderItem={({ item }) => item.component}
+        keyExtractor={(item) => item.key}
+      />
     </View>
   )
 }
 
 export default SettingsScreen
-
-const styles = StyleSheet.create({
-  ScreenName: {
-    textAlign: 'center',
-    marginTop: 50,
-    marginBottom: 20,
-    fontWeight: '500',
-    fontSize: 30,
-  },
-})

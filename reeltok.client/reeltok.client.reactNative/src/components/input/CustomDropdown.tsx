@@ -1,66 +1,106 @@
-import DropDownPicker from 'react-native-dropdown-picker'
 import React, { useState } from 'react'
-import { StyleSheet, useWindowDimensions } from 'react-native'
-import Entypo from '@expo/vector-icons/Entypo'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native'
 
-interface DropDownProps {
-  categories: { label: string; value: string }[]
-  placeholder?: string
-  widthProcentage?: number
+// TODO: Clean up this mess. I have been working on this garbage for so long, that it might not all be needed. Specifically styling
+
+export type DropdownOption = {
+  label: string
+  value: string
 }
 
-const CustomDropdown: React.FC<DropDownProps> = ({
-  categories,
-  placeholder,
-  widthProcentage = 0.8,
+interface DropdownProps {
+  options: DropdownOption[]
+  defaultOption?: DropdownOption
+  widthPercentage?: number
+  onChange: (selectedOption: DropdownOption) => void
+}
+
+const CustomPicker: React.FC<DropdownProps> = ({
+  options,
+  defaultOption = options[0],
+  widthPercentage = 80,
+  onChange,
 }) => {
   const { width } = useWindowDimensions()
-  const [open, setOpen] = useState(false)
-  const [value, setValue] = useState<string | null>(null)
+  const [selectedValue, setSelectedValue] = useState<DropdownOption>(defaultOption)
+  const [listVisible, setListVisible] = useState(false)
+
+  const handleSelect = (selectedOption: DropdownOption) => {
+    setSelectedValue(selectedOption)
+    setListVisible(false)
+    onChange(selectedOption)
+  }
+
+  const calculatedWidth = width * widthPercentage
+
   return (
-    <DropDownPicker
-      open={open}
-      value={value}
-      items={categories}
-      setOpen={setOpen}
-      setValue={setValue}
-      setItems={() => {}}
-      placeholder={placeholder}
-      ArrowDownIconComponent={({ style }) => <Entypo name="chevron-down" size={24} color="white" />}
-      ArrowUpIconComponent={({ style }) => <Entypo name="chevron-up" size={24} color="white" />}
-      style={{
-        backgroundColor: '#565656',
-        borderRadius: 10,
-        width: width * widthProcentage,
-        // borderColor: 'white',
-      }}
-      textStyle={{
-        fontSize: 15,
-        color: 'white',
-      }}
-      containerStyle={{
-        backgroundColor: '#565656',
-        borderRadius: 10,
-        width: width * widthProcentage,
-      }}
-      listChildContainerStyle={{
-        backgroundColor: '#565656',
-      }}
-      arrowIconStyle={{
-        width: 20,
-        height: 20,
-      }}
-      tickIconStyle={{
-        width: 20,
-        height: 20,
-      }}
-      dropDownContainerStyle={{
-        backgroundColor: '#696969',
-        borderBlockColor: 'transparent',
-        width: width * widthProcentage,
-      }}
-    />
+    <View style={[styles.container, { width: calculatedWidth / 100 }]}>
+      <TouchableOpacity onPress={() => setListVisible(!listVisible)} style={styles.picker}>
+        <Text style={styles.pickerText}>{selectedValue.label}</Text>
+      </TouchableOpacity>
+      {listVisible && (
+        <View style={[styles.optionContainer, { width: calculatedWidth / 100 }]}>
+          <FlatList
+            data={options}
+            keyExtractor={(item) => item.value}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleSelect(item)} style={styles.option}>
+                <Text style={styles.optionText}>{item.label}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      )}
+    </View>
   )
 }
 
-export default CustomDropdown
+const styles = StyleSheet.create({
+  container: {
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 10,
+    justifyContent: 'flex-start',
+    backgroundColor: 'white',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  picker: {
+    height: 40,
+    justifyContent: 'center',
+    paddingLeft: 10,
+  },
+  pickerText: {
+    color: 'black',
+    fontSize: 14,
+  },
+  optionContainer: {
+    position: 'absolute',
+    top: 40,
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    zIndex: 10,
+  },
+  option: {
+    backgroundColor: 'gray',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  optionText: {
+    color: 'black',
+    fontSize: 14,
+  },
+})
+export default CustomPicker

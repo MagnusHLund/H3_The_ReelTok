@@ -1,13 +1,23 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, ColorValue } from 'react-native'
 
-const Divider = ({ height = 4, color = 'black' }) => {
-  return <View style={[styles.divider, { height, backgroundColor: color }]} />
+interface DividerProps {
+  height?: number
+  color?: ColorValue
+  widthPercentage?: number
+}
+
+const Divider: React.FC<DividerProps> = ({ height = 4, color = 'black', widthPercentage = 80 }) => {
+  return (
+    <View
+      style={[styles.divider, { height, backgroundColor: color, width: `${widthPercentage}%` }]}
+    />
+  )
 }
 
 const styles = StyleSheet.create({
   divider: {
-    width: '80%', // Ensures it spans the full width
+    alignSelf: 'center',
   },
 })
 

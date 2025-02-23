@@ -4,12 +4,13 @@
     "jsx": "react-native",
     "module": "commonjs",
     "target": "es6",
-    "lib": ["es6"],
+    "lib": ["es6", "dom"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "strict": true,
     "noImplicitAny": true,
-    "types": ["node"]
+    "resolveJsonModule": true,
+    "moduleResolution": "node"
   }
 }
