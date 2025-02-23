@@ -1,8 +1,8 @@
 import { View, StyleSheet, Image, useWindowDimensions } from 'react-native'
-import React from 'react'
 import CustomTextInput from '../input/CustomTextInput'
-import CustomButton from '../input/CustomButton'
 import CustomDropdown from '../input/CustomDropdown'
+import CustomButton from '../input/CustomButton'
+import React from 'react'
 
 const Categories = [
   { label: 'Gaming', value: 'Gaming' },
@@ -51,7 +51,7 @@ const SignUpScreen = () => {
       <View style={styles.inputContainer}>
         <CustomTextInput placeholder="Email.."></CustomTextInput>
         <CustomTextInput placeholder="password.." password></CustomTextInput>
-        <CustomDropdown placeholder="Vælg en kategori" categories={Categories}></CustomDropdown>
+        <CustomDropdown options={Categories} onChange={() => {}} />
         <CustomButton
           widthPercentage={0.8}
           onPress={() => console.log('Create user')}

@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import React, { ReactNode } from 'react'
 import Divider from '../common/Divider'
 
 interface SettingsSectionProps {

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
 import { DeviceMotion, DeviceMotionMeasurement } from 'expo-sensors'
+import { useState, useEffect } from 'react'
 import { Platform } from 'react-native'
 
 type Orientation = 'up' | 'down' | 'left' | 'right'
@@ -37,7 +37,7 @@ const UseOrientation = (): Orientation => {
 
   useEffect(() => {
     if (Platform.OS == 'web') {
-      // TODO: At orientation support for web?
+      // TODO: Add orientation support for web?
       return
     }
 

@@ -1,7 +1,7 @@
-import React from 'react'
-import SettingsSection from '../SettingsSection'
 import CustomDropdown from '../../../input/CustomDropdown'
+import SettingsSection from '../SettingsSection'
 import Setting from '../Setting'
+import React from 'react'
 
 const categories = [
   { label: 'Gaming', value: 'Gaming' },
@@ -13,10 +13,11 @@ const categories = [
 ]
 
 const RecommendationsSettingsSection: React.FC = () => {
+  // TODO: Hook up to global state
   return (
     <SettingsSection title="Recommendation">
       <Setting>
-        <CustomDropdown options={categories} placeholder="Gaming" onChange={() => {}} />
+        <CustomDropdown options={categories} onChange={() => {}} />
       </Setting>
     </SettingsSection>
   )

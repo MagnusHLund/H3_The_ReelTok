@@ -1,7 +1,7 @@
-import React from 'react'
-import SettingsSection from '../SettingsSection'
 import CustomButton from '../../../input/CustomButton'
+import SettingsSection from '../SettingsSection'
 import Setting from '../Setting'
+import React from 'react'
 
 const RecommendationsSettingsSection: React.FC = () => {
   return (
