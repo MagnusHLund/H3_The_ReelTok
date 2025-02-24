@@ -7,10 +7,12 @@ export type Language = { LanguageName: LanguageName; locale: LocaleCode }
 
 export interface SettingsProps {
   language: Language
+  selectedCategory: string
 }
 
 const initialState: SettingsProps = {
   language: { LanguageName: 'English', locale: 'en_GB' },
+  selectedCategory: '',
 }
 
 const settingsSlice = createSlice({
@@ -20,8 +22,12 @@ const settingsSlice = createSlice({
     changeLanguage: (state, action: PayloadAction<Language>) => {
       state.language = action.payload
     },
+    changeCategory: (state, action: PayloadAction<string>) => {
+      state.selectedCategory = action.payload
+    },
   },
 })
 
-export const { changeLanguage } = settingsSlice.actions
+export const { changeLanguage, changeCategory } = settingsSlice.actions
 export default settingsSlice.reducer
+
