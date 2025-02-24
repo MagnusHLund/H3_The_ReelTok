@@ -1,45 +1,41 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
 import CustomButton from '../../input/CustomButton'
-import Entypo from '@expo/vector-icons/Entypo';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import CameraSelected from './CameraSelected';
+import Entypo from '@expo/vector-icons/Entypo'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { useNavigation } from '@react-navigation/native'
+import { useCameraPermissions } from 'expo-camera';
 
 export default function MediaSelector() {
-  const [showCamera, setShowCamera] = useState(false);
+  const navigation = useNavigation<NativeStackNavigationProp<any>>()
+  const [, requestPermission] = useCameraPermissions();
   return (
-    
-    <>
-    
-      {showCamera && <CameraSelected/>}
     <View style={styles.container}>
-      <CustomButton widthPercentage={0.45} onPress={() => { console.log('test');
-        setShowCamera(!showCamera); }}><Entypo name="camera" size={24} color="white" /></CustomButton>
-      <CustomButton widthPercentage={0.45} onPress={console.log}><MaterialIcons name="photo-library" size={24} color="white" /></CustomButton>
-      
+      <CustomButton widthPercentage={0.45} onPress={async () => { await requestPermission(); navigation.replace('Camera'); }}>
+        <Entypo name="camera" size={24} color="white" />
+      </CustomButton>
+      <CustomButton widthPercentage={0.45} onPress={console.log}>
+        <MaterialIcons name="photo-library" size={24} color="white" />
+      </CustomButton>
     </View>
-    </>
   )
 }
 
 const styles = StyleSheet.create({
-
-
-  container:{
-    flexDirection:'row',
+  container: {
+    flexDirection: 'row',
     justifyContent: 'space-around',
     top: -40,
     backgroundColor: '#262626',
     width: '100%',
     paddingTop: 10,
-    
+
     borderRadius: 5,
-    marginBottom:5,   
-    paddingLeft:5,
-    paddingRight:5,
-    paddingBottom:15,
-
-
+    marginBottom: 5,
+    paddingLeft: 5,
+    paddingRight: 5,
+    paddingBottom: 15,
   },
 })
