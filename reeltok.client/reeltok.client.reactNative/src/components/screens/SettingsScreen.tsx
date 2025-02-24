@@ -1,5 +1,6 @@
 import RecommendationsSettingsSection from '../Layout/settings/sections/RecommendationsSettingsSection'
 import UserDetailsSettingsSection from '../Layout/settings/sections/UserDetailsSettingsSection'
+import BackButtonSettingsSection from '../Layout/settings/sections/BackButtonSettingsSection'
 import LanguageSettingsSection from '../Layout/settings/sections/LanguageSettingsSection'
 import LogOutSettingsSection from '../Layout/settings/sections/LogOutSettingsSection'
 import useTranslation from '../../hooks/useTranslations'
@@ -11,9 +12,10 @@ const SettingsScreen: React.FC = () => {
   const t = useTranslation()
 
   const sections = [
+    // { key: 'BackButton', component: <BackButtonSettingsSection /> },
+    { key: 'Recommendations', component: <RecommendationsSettingsSection /> },
     { key: 'UserDetails', component: <UserDetailsSettingsSection /> },
     { key: 'Language', component: <LanguageSettingsSection /> },
-    { key: 'Recommendations', component: <RecommendationsSettingsSection /> },
     { key: 'LogOut', component: <LogOutSettingsSection /> },
   ]
 
@@ -22,6 +24,7 @@ const SettingsScreen: React.FC = () => {
   // You should not use 2 scroll views inside each other.
   return (
     <View style={{ flex: 1 }}>
+      <BackButtonSettingsSection />
       <Header title={t('settings.settings')} />
       <FlatList
         data={sections}
