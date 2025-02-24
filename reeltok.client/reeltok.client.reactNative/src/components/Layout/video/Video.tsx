@@ -59,7 +59,7 @@ const Video: React.FC<VideoProps> = ({ source, creator, description, isFocused, 
       <View style={styles.profileOverlay}>
         <ProfilePicture pictureUrl={creator.profilePictureUrl} />
         <Text style={styles.socialFontSettings}> {creator.username} </Text>
-        <CustomButton transparent={false} title={followedCreator ? 'Following' : 'Follow'} onPress={() => setFollowedCreator(!followedCreator)}/>
+        <CustomButton transparent={false} widthPercentage={0.25} title={followedCreator ? 'Following' : 'Follow'} onPress={() => setFollowedCreator(!followedCreator)}/>
       </View>
       
       <View style={styles.socialControls}>
@@ -93,16 +93,14 @@ const styles = StyleSheet.create({
   },
   profileOverlay: {
     position: 'absolute',
-    bottom: '67.5%',
-    right: 0,
-    left: 25,
-    margin: 0,
-    display: 'flex',
+    bottom: 130,
+    left: '25.5%',
+    width: 75,
+    height: 30,
     alignItems: 'center',
+    justifyContent: 'center',
     flexDirection: 'row',
-    width: '15%',
-    height: '100%',
-    gap: 7.5,
+    gap: 15,
     zIndex: 110,
   },
   socialControls: {
