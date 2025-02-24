@@ -2,11 +2,13 @@ import { rootPersistConfig, settingsPersistConfig } from './config/persistConfig
 import { configureStore, combineReducers, Reducer } from '@reduxjs/toolkit'
 import settingsReducer, { SettingsProps } from './slices/settingsSlice'
 import storeMiddlewareConfig from './config/storeMiddlewareConfig'
+import videosReducer, { VideosProps } from './slices/videosSlice'
 import { PersistPartial } from 'redux-persist/lib/persistReducer'
 import { persistStore, persistReducer } from 'redux-persist'
 
 interface RootState {
   settings: SettingsProps & PersistPartial
+  videos: VideosProps
 }
 
 const persistedReducers = {
@@ -14,9 +16,7 @@ const persistedReducers = {
 }
 
 const nonPersistedReducers = {
-  // TODO: Once a reducer, which should not be stored on disk, is created add it here.
-  // Example:
-  // videos: videosReducer,
+  videos: videosReducer,
 }
 
 const rootReducer = combineReducers({
