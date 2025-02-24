@@ -40,8 +40,6 @@ const loadTranslations = async () => {
 
     translations['da_DK'] = parseXML(da_DK_Content)
     translations['en_GB'] = parseXML(en_GB_Content)
-
-    console.log('Translations loaded:', translations)
   } catch (error) {
     console.error('Error loading translations:', error)
   }
