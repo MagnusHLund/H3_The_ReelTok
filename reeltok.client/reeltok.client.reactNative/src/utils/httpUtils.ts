@@ -1,6 +1,6 @@
 import { HttpMethod, PayloadType } from '../services/httpService'
 
-export function prepareHttpRequestBody<T>(body: T) {
+export function prepareHttpRequestBody<TBody>(body: TBody) {
   if (body === undefined) {
     return undefined
   }

@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 
 // TODO: Clean up this mess. I have been working on this garbage for so long, that it might not all be needed. Specifically styling
+// TODO: Add arrow icon to dropdown
 
 export type DropdownOption = {
   label: string
