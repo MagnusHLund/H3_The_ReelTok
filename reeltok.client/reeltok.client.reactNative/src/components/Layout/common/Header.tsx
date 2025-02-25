@@ -1,14 +1,16 @@
 import React from 'react'
-import { StyleSheet, Text } from 'react-native'
 import Divider from './Divider'
-
+import BackButton from './BackButton'
+import { StyleSheet, Text } from 'react-native'
 interface HeaderProps {
   title: string
+  showBackButton?: boolean
 }
 
-const Header: React.FC<HeaderProps> = ({ title }) => {
+const Header: React.FC<HeaderProps> = ({ title, showBackButton }) => {
   return (
     <>
+      {showBackButton && <BackButton />}
       <Text style={styles.title}>{title}</Text>
       <Divider />
     </>

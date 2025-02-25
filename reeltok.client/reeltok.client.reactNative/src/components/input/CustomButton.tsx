@@ -13,6 +13,7 @@ interface ButtonProps {
   widthPercentage?: number
   flexDirection?: 'row' | 'column'
   borders?: boolean
+  justifyPosition?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around'
   onPress: () => void
 }
 
@@ -23,6 +24,7 @@ const CustomButton: React.FC<ButtonProps> = ({
   widthPercentage = 0.33,
   flexDirection,
   borders,
+  justifyPosition = 'center',
   onPress,
 }) => {
   useFonts({
@@ -36,7 +38,7 @@ const CustomButton: React.FC<ButtonProps> = ({
       borderRadius: 10,
       padding: 5,
       display: 'flex',
-      justifyContent: 'center',
+      justifyContent: justifyPosition,
       alignItems: 'center',
       gap: 3,
       width: width * widthPercentage,
@@ -46,7 +48,7 @@ const CustomButton: React.FC<ButtonProps> = ({
       fontSize: 20,
       fontFamily: 'Poppins_400Regular',
       color: transparent ? 'black' : 'white',
-      textAlign: 'center', 
+      textAlign: 'center',
     },
   })
 

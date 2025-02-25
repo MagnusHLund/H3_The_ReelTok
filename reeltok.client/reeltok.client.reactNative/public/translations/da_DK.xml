@@ -14,4 +14,10 @@
   <settings>
     <settings>Indstillinger</settings>
   </settings>
+  <subscribers>
+    <subscribers>Abonnenter</subscribers>
+  </subscribers>
+  <subscriptions>
+    <subscriptions>Abonnementer</subscriptions>
+  </subscriptions>
 </translations>

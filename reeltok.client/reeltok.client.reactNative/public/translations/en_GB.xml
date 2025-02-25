@@ -14,4 +14,10 @@
   <settings>
     <settings>Settings</settings>
   </settings>
+  <subscribers>
+    <subscribers>Subscribers</subscribers>
+  </subscribers>
+  <subscriptions>
+    <subscriptions>Subscriptions</subscriptions>
+  </subscriptions>
 </translations>
