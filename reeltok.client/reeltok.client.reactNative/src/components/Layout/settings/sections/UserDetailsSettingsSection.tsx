@@ -23,7 +23,7 @@ const UserDetailsSettingsSection: React.FC = () => {
   }
 
   return (
-    <SettingsSection title="User Details" displayDivider={false}>
+    <SettingsSection title="User details" displayDivider={false}>
       <Setting title="Username">
         <CustomTextInput
           placeholder={newUsername} // Placeholder is used, will update based on input
