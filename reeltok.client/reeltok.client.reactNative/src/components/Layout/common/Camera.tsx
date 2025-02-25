@@ -1,10 +1,16 @@
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera'
-import { useState } from 'react'
+import { CameraView, CameraType, CameraMode, useCameraPermissions } from 'expo-camera'
+import { useState, useRef } from 'react'
 import { Button, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native'
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import CustomButton from '../../input/CustomButton';
 
 export const Camera = () => {
+  const ref = useRef<CameraView>(null)
+  const [uri, setUri] = useState<string | null>(null)
+  const [cameraMode, setCameraMode] = useState<CameraMode>('picture')
   const [facing, setFacing] = useState<CameraType>('back')
   const [permission, requestPermission] = useCameraPermissions()
+  const [recording, setRecording] = useState<boolean>(false)
   const { height, width } = useWindowDimensions()
 
   if (!permission) {
@@ -21,9 +27,26 @@ export const Camera = () => {
       </View>
     )
   }
+  // function setCameraMode(){
+
+  // }
 
   function toggleCameraFacing() {
     setFacing((current) => (current === 'back' ? 'front' : 'back'))
+  }
+
+  const takePicture = async () => {
+    const photo = await ref.current?.takePictureAsync();
+    if (photo?.uri) {
+      setUri(photo.uri);
+    }
+  };
+
+  const recordVideo = async () => {
+    if (recording) {
+      setRecording(false);
+      ref.current?.stopRecording();
+    }
   }
 
   return (
@@ -32,6 +55,12 @@ export const Camera = () => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
             <Text style={styles.text}>Flip Camera</Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <CustomButton onPress={cameraMode ==="picture"? takePicture : recordVideo}><FontAwesome name="video-camera" size={24} color="black" /></CustomButton>
+          </TouchableOpacity>
+          <TouchableOpacity>
+
           </TouchableOpacity>
         </View>
       </CameraView>
