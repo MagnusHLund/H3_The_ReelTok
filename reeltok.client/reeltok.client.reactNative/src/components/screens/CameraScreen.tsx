@@ -1,13 +1,12 @@
-import { View } from 'react-native'
+import { View, useWindowDimensions } from 'react-native'
 import React from 'react'
-import CameraSelected from '../Layout/common/CameraSelected'
-import Navbar from '../Layout/common/Navbar'
+import Camera from '../Layout/common/Camera'
 
 const CameraScreen = () => {
+  const { width, height } = useWindowDimensions()
   return (
-    <View>
-      <CameraSelected />
-      <Navbar />
+    <View style={{ height: height, width: width }}>
+      <Camera />
     </View>
   )
 }
