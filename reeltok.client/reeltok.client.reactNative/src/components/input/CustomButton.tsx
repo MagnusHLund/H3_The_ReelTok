@@ -10,7 +10,7 @@ interface ButtonProps {
   title?: string
   children?: ReactNode
   transparent?: boolean
-  widthPercentage?: number
+  widthPercentage?: number | 'auto'
   flexDirection?: 'row' | 'column'
   borders?: boolean
   onPress: () => void
@@ -29,33 +29,46 @@ const CustomButton: React.FC<ButtonProps> = ({
     Poppins_400Regular,
   })
   const { width } = useWindowDimensions()
-  const buttonStyling = StyleSheet.create({
-    button: {
-      borderWidth: borders ? 2 : 0,
-      backgroundColor: transparent ? 'transparent' : '#ff0050',
-      borderRadius: 10,
-      padding: 5,
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: 3,
-      width: width * widthPercentage,
-      flexDirection: flexDirection,
-    },
-    buttonText: {
-      fontSize: 20,
-      fontFamily: 'Poppins_400Regular',
-      color: transparent ? 'black' : 'white',
-      textAlign: 'center',
-    },
-  })
+  const calculatedWidth = widthPercentage === 'auto' ? 'auto' : width * widthPercentage
 
   return (
-    <TouchableOpacity style={buttonStyling.button} activeOpacity={1} onPress={onPress}>
+    <TouchableOpacity
+      style={[
+        buttonStyling.button,
+        {
+          borderWidth: borders ? 2 : 0,
+          backgroundColor: transparent ? 'transparent' : '#ff0050',
+          width: calculatedWidth,
+          flexDirection: flexDirection,
+        },
+      ]}
+      activeOpacity={1}
+      onPress={onPress}
+    >
       {children}
-      {title ? <Text style={buttonStyling.buttonText}>{title}</Text> : null}
+      {title ? (
+        <Text style={[buttonStyling.buttonText, { color: transparent ? 'black' : 'white' }]}>
+          {title}
+        </Text>
+      ) : null}
     </TouchableOpacity>
   )
 }
+
+const buttonStyling = StyleSheet.create({
+  button: {
+    borderRadius: 10,
+    padding: 5,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 3,
+  },
+  buttonText: {
+    fontSize: 20,
+    fontFamily: 'Poppins_400Regular',
+    textAlign: 'center',
+  },
+})
 
 export default CustomButton

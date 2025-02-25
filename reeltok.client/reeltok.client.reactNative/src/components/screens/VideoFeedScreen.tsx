@@ -7,17 +7,16 @@ import { StyleSheet, View, FlatList } from 'react-native'
 import VideoPlayer from '../Layout/video/VideoPlayer'
 import Navbar from '../Layout/common/Navbar'
 
-const VideoFeedScreen = () => {
+const VideoFeedScreen: React.FC = () => {
   const videos = useAppSelector((state) => state.videos.videos)
   const dispatch = useAppDispatch()
   const { contentHeight } = useAppDimensions()
-
   const [currentIndex, setCurrentIndex] = useState(0)
-  const viewabilityConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current
+  const videoFeedRef = useRef<FlatList>(null)
 
   useEffect(() => {
-    if (videos === undefined || videos.length === 0) {
-      dispatch(addVideoToFeedThunk(videos))
+    if (!videos || videos.length === 0) {
+      dispatch(addVideoToFeedThunk())
     }
   }, [videos, dispatch])
 
@@ -28,29 +27,45 @@ const VideoFeedScreen = () => {
   }).current
 
   const handleNextVideo = () => {
-    dispatch(addVideoToFeedThunk(videos))
+    dispatch(addVideoToFeedThunk())
   }
 
-  const renderedVideo = ({ item, index }: any) => (
+  const handleAutoScroll = () => {
+    if (videoFeedRef.current) {
+      const nextIndex = currentIndex + 1
+
+      if (videos && nextIndex < videos.length) {
+        setCurrentIndex(nextIndex)
+        videoFeedRef.current.scrollToIndex({ index: nextIndex, animated: true })
+      }
+
+      handleNextVideo()
+    }
+  }
+
+  const renderItem = ({ item, index }: any) => (
     <View style={styles.videoContainer}>
       <VideoPlayer
-        videoDetails={videos?.[currentIndex] ?? undefined}
-        onNextVideo={handleNextVideo}
+        videoDetails={videos?.[index]}
+        onNextVideo={handleAutoScroll}
+        isDisplayed={currentIndex === index}
       />
     </View>
   )
+
   return (
     <View style={styles.container}>
       <FlatList
+        ref={videoFeedRef}
         data={videos}
-        renderItem={renderedVideo}
+        renderItem={renderItem}
         keyExtractor={(item) => item.videoId}
         pagingEnabled
         showsVerticalScrollIndicator={false}
-        onScroll={() => dispatch(addVideoToFeedThunk(videos))}
+        onScroll={handleNextVideo}
         style={[styles.videoFeed, { height: contentHeight }]}
         decelerationRate={'fast'}
-        disableIntervalMomentum={true}
+        disableIntervalMomentum
         snapToInterval={contentHeight}
         snapToAlignment={'center'}
         onViewableItemsChanged={handleViewableItemsChanged}

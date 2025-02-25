@@ -1,6 +1,11 @@
 import { getRandomNumber } from './../../../node_modules/react-native-svg/src/lib/util'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { addVideoToFeed, Video, videoRecommendationCategories } from '../slices/videosSlice'
+import {
+  addVideoToFeed,
+  hasLikedVideo,
+  Video,
+  videoRecommendationCategories,
+} from '../slices/videosSlice'
 
 // TODO: Update this to use our APIs
 // TODO: Handle more than one videos being returned and overall fix shit code inside the thunk
@@ -52,5 +57,19 @@ export const addVideoToFeedThunk = createAsyncThunk(
     newVideoFeed.push(newVideos[1])
 
     dispatch(addVideoToFeed(newVideoFeed))
+  }
+)
+
+// TODO: Call api to add/remove the like
+export const hasLikedVideoThunk = createAsyncThunk(
+  'videos/hasLikedVideo',
+  async (video: Video, { dispatch }) => {
+    const updatedVideo = {
+      ...video,
+      hasLiked: !video.hasLiked,
+      likes: video.hasLiked ? video.likes - 1 : video.likes + 1,
+    }
+
+    dispatch(hasLikedVideo(updatedVideo))
   }
 )

@@ -42,8 +42,16 @@ const videosSlice = createSlice({
     addVideoToFeed: (state, action: PayloadAction<Video[]>) => {
       state.videos = action.payload
     },
+    hasLikedVideo: (state, action: PayloadAction<Video>) => {
+      state.videos?.find((video) => {
+        if (video.videoId === action.payload.videoId) {
+          video.hasLiked = action.payload.hasLiked
+          video.likes = action.payload.likes
+        }
+      })
+    },
   },
 })
 
-export const { addVideoToFeed } = videosSlice.actions
+export const { addVideoToFeed, hasLikedVideo } = videosSlice.actions
 export default videosSlice.reducer
