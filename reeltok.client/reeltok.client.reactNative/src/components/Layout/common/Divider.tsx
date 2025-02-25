@@ -3,20 +3,20 @@ import { View, StyleSheet } from 'react-native'
 
 interface DividerProps {
   height?: number
-  grayColor?: boolean
+  isGray?: boolean
   widthPercentage?: number
 }
 
 const Divider: React.FC<DividerProps> = ({
   height = 4,
-  grayColor = 'black',
+  isGray = 'black',
   widthPercentage = 80,
 }) => {
   return (
     <View
       style={[
         styles.divider,
-        { height, backgroundColor: grayColor ? '#D3D3D3' : '#000', width: `${widthPercentage}%` },
+        { height, backgroundColor: isGray ? '#D3D3D3' : '#000', width: `${widthPercentage}%` },
       ]}
     />
   )

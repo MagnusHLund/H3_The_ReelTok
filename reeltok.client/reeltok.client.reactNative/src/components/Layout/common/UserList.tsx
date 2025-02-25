@@ -20,7 +20,7 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
         <>
           <CustomButton
             key={user.GuidId}
-            // transparent
+            transparent
             justifyPosition="space-between"
             flexDirection="row"
             widthPercentage={0.95}
@@ -28,7 +28,7 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
           >
             <UserCard user={[{ PictureUrl: user.PictureUrl, Username: user.Username }]} />
           </CustomButton>
-          <Divider widthPercentage={100} grayColor />
+          <Divider widthPercentage={100} isGray />
         </>
       ))}
     </View>
