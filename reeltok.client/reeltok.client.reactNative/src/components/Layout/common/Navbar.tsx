@@ -1,4 +1,5 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import useAppDimensions from '../../../hooks/useAppDimensions'
 import { useNavigation } from '@react-navigation/native'
 import CustomButton from '../../input/CustomButton'
 import { View, StyleSheet } from 'react-native'
@@ -10,6 +11,7 @@ import React, { useState } from 'react'
 const Navbar: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
   const [displayMediaSelector, setDisplayMediaSelector] = useState(false)
+  const { navbarHeight } = useAppDimensions()
 
   const toggleMediaSelectorForVideoUpload = () => {
     setDisplayMediaSelector(!displayMediaSelector)
@@ -22,7 +24,7 @@ const Navbar: React.FC = () => {
   return (
     <>
       {displayMediaSelector && <MediaSelector />}
-      <View style={styles.container}>
+      <View style={[styles.container, { height: navbarHeight }]}>
         <CustomButton transparent={true} onPress={() => handleNavigation('VideoFeed')}>
           <RotatingIcon name="play" size={32} color="white" />
         </CustomButton>

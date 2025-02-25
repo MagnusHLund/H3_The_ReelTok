@@ -1,33 +1,35 @@
-import { StyleSheet, View, FlatList, Dimensions } from 'react-native'
 import { addVideoToFeedThunk } from '../../redux/thunks/videosThunks'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
-import React, { useState, useRef, useEffect } from 'react'
+import useAppDimensions from '../../hooks/useAppDimensions'
+import React, { useState, useEffect, useRef } from 'react'
+import { StyleSheet, View, FlatList } from 'react-native'
 import VideoPlayer from '../Layout/video/VideoPlayer'
 import Navbar from '../Layout/common/Navbar'
 
 const VideoFeedScreen = () => {
   const videos = useAppSelector((state) => state.videos.videos)
   const dispatch = useAppDispatch()
+  const { contentHeight } = useAppDimensions()
 
   const [currentIndex, setCurrentIndex] = useState(0)
-  const viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 }
+  const viewabilityConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current
 
   useEffect(() => {
-    // Effect to run when videos state updates
     if (videos === undefined || videos.length === 0) {
       dispatch(addVideoToFeedThunk(videos))
     }
-    console.log('Videos state has updated:', videos)
   }, [videos, dispatch])
 
-  const onViewableItemsChanged = ({ viewableItems }: any) => {
+  const handleViewableItemsChanged = useRef(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
       setCurrentIndex(viewableItems[0].index)
     }
-  }
+  }).current
 
-  const handleNextVideo = () => {}
+  const handleNextVideo = () => {
+    dispatch(addVideoToFeedThunk(videos))
+  }
 
   const renderedVideo = ({ item, index }: any) => (
     <View style={styles.videoContainer}>
@@ -46,7 +48,17 @@ const VideoFeedScreen = () => {
         pagingEnabled
         showsVerticalScrollIndicator={false}
         onScroll={() => dispatch(addVideoToFeedThunk(videos))}
-        style={styles.video}
+        style={[styles.videoFeed, { height: contentHeight }]}
+        decelerationRate={'fast'}
+        disableIntervalMomentum={true}
+        snapToInterval={contentHeight}
+        snapToAlignment={'center'}
+        onViewableItemsChanged={handleViewableItemsChanged}
+        getItemLayout={(_, index) => ({
+          length: contentHeight,
+          offset: contentHeight * index,
+          index,
+        })}
       />
       <Navbar />
     </View>
@@ -59,12 +71,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   videoContainer: {
-    height: Dimensions.get('window').height - 60, // Adjust height to leave space for navbar (assuming navbar is 60px)
     justifyContent: 'center',
   },
-  video: {
+  videoFeed: {
     width: '100%',
     height: '100%',
+    backgroundColor: 'black',
   },
 })
 

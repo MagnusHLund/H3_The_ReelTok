@@ -17,7 +17,7 @@ export type Video = {
   likes: number
   hasLiked: boolean
   streamUrl: string
-  uploadedAt: Date
+  uploadedAt: string
   creator: creator
 }
 

@@ -10,32 +10,32 @@ export const addVideoToFeedThunk = createAsyncThunk(
     const newVideos: Video[] = [
       {
         videoId: getRandomNumber().toString(),
-        title: 'Mock video',
-        description: 'Mock description',
+        title: 'Mock video 1',
+        description: 'Mock description 1',
         likes: 123,
         hasLiked: true,
         category: videoRecommendationCategories.Gaming,
         streamUrl:
           'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-        uploadedAt: new Date(Date.now()),
+        uploadedAt: new Date(Date.now()).toDateString(),
         creator: {
-          username: 'Mock user',
+          username: 'Mock user1',
           profileUrl: 'http://local.profile.com',
           profilePictureUrl: 'http://profilePicture.profile.com',
         },
       },
       {
         videoId: getRandomNumber().toString(),
-        title: 'Mock video',
-        description: 'Mock description',
-        likes: 123,
-        hasLiked: true,
+        title: 'Mock video 2',
+        description: 'Mock description 2',
+        likes: 321,
+        hasLiked: false,
         category: videoRecommendationCategories.Gaming,
         streamUrl:
           'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-        uploadedAt: new Date(Date.now()),
+        uploadedAt: new Date(Date.now()).toDateString(),
         creator: {
-          username: 'Mock user',
+          username: 'Mock user 2',
           profileUrl: 'http://local.profile.com',
           profilePictureUrl: 'http://profilePicture.profile.com',
         },
