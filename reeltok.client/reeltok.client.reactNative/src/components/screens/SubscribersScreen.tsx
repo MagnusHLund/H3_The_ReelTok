@@ -2,7 +2,6 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Header from '../Layout/common/Header'
 import useTranslation from '../../hooks/useTranslations'
-import ProfilePicture from '../Layout/profile/ProfilePicture'
 import UserList from '../Layout/common/UserList'
 
 const SubscribersScreen = () => {
