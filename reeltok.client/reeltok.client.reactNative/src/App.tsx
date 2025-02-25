@@ -1,18 +1,15 @@
-import LoginScreen from "./components/screens/LoginScreen";
-import Router from "./Router";
-import React from "react";
-
-const Categories = [
-  { label: "Gaming", value: "Gaming" },
-  { label: "Tech", value: "Tech" },
-  { label: "Dance", value: "Dance" },
-  { label: "Fight", value: "Fight" },
-  { label: "Sport", value: "Sport" },
-  { label: "Comedy", value: "Comedy" },
-];
+import { PersistGate } from 'redux-persist/integration/react'
+import { persistor, store } from './redux/store'
+import { Provider } from 'react-redux'
+import Router from './Router'
+import React from 'react'
 
 export default function App() {
   return (
-    <Router />
-  );
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Router />
+      </PersistGate>
+    </Provider>
+  )
 }
