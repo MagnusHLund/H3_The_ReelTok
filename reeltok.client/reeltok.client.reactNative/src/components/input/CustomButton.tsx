@@ -1,9 +1,6 @@
-// The button needs functionality to have no borders, nor background color (transparent), to allow for an image inside it.
-// It also needs to allow children inside it, like a user, which is clickable (like on the subscribing/subscribers screens).
-// Otherwise, its just a standard button that follows an app standard design.
-import { useFonts } from 'expo-font'
 import { TouchableOpacity, StyleSheet, Text, useWindowDimensions } from 'react-native'
 import { Poppins_400Regular } from '@expo-google-fonts/poppins'
+import { useFonts } from 'expo-font'
 import { ReactNode } from 'react'
 
 interface ButtonProps {
@@ -13,6 +10,7 @@ interface ButtonProps {
   widthPercentage?: number | 'auto'
   flexDirection?: 'row' | 'column'
   borders?: boolean
+  justifyPosition?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around'
   onPress: () => void
 }
 
@@ -23,6 +21,7 @@ const CustomButton: React.FC<ButtonProps> = ({
   widthPercentage = 0.33,
   flexDirection,
   borders,
+  justifyPosition = 'center',
   onPress,
 }) => {
   useFonts({
@@ -40,6 +39,7 @@ const CustomButton: React.FC<ButtonProps> = ({
           backgroundColor: transparent ? 'transparent' : '#ff0050',
           width: calculatedWidth,
           flexDirection: flexDirection,
+          justifyContent: justifyPosition,
         },
       ]}
       activeOpacity={1}
@@ -60,7 +60,6 @@ const buttonStyling = StyleSheet.create({
     borderRadius: 10,
     padding: 5,
     display: 'flex',
-    justifyContent: 'center',
     alignItems: 'center',
     gap: 3,
   },
