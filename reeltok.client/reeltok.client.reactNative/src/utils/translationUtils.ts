@@ -10,6 +10,8 @@ interface Translations {
 
 const translations: { [lang: string]: Translations } = {}
 
+// TODO: Add Await for this so that it loads before the app starts
+
 const loadXMLFile = async (assetUri: string): Promise<string> => {
   if (Platform.OS === 'web') {
     const response = await fetch(assetUri)
