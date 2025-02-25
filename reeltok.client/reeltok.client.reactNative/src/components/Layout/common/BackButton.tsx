@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
-import CustomButton from '../../../input/CustomButton'
+import { StyleSheet, View } from 'react-native'
+import CustomButton from '../../input/CustomButton'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
-const BackButtonSettingsSection = () => {
+const BackButton = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
 
   return (
@@ -17,7 +17,7 @@ const BackButtonSettingsSection = () => {
   )
 }
 
-export default BackButtonSettingsSection
+export default BackButton
 
 const styles = StyleSheet.create({
   backButton: {
