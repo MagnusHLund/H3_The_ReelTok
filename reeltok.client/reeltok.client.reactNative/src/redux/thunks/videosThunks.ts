@@ -4,7 +4,7 @@ import {
   addVideoToFeed,
   hasLikedVideo,
   Video,
-  videoRecommendationCategories,
+  VideoRecommendationCategories,
 } from '../slices/videosSlice'
 
 // TODO: Update this to use our APIs
@@ -19,7 +19,7 @@ export const addVideoToFeedThunk = createAsyncThunk(
         description: 'Mock description 1',
         likes: 123,
         hasLiked: true,
-        category: videoRecommendationCategories.Gaming,
+        category: VideoRecommendationCategories.Gaming,
         streamUrl:
           'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
         uploadedAt: new Date(Date.now()).toDateString(),
@@ -35,7 +35,7 @@ export const addVideoToFeedThunk = createAsyncThunk(
         description: 'Mock description 2',
         likes: 321,
         hasLiked: false,
-        category: videoRecommendationCategories.Gaming,
+        category: VideoRecommendationCategories.Gaming,
         streamUrl:
           'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
         uploadedAt: new Date(Date.now()).toDateString(),

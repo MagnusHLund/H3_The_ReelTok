@@ -1,13 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
-import { ReactNode } from "react";
+import { StyleSheet, Text, View } from 'react-native'
+import { ReactNode } from 'react'
+
+// TODO: Put comments related stuff into layout/video/comments/ directory
 
 interface CommentProps {
-  username: string,
-  profilePicture: ReactNode,
-  commentText: string,
+  username: string
+  profilePicture: ReactNode
+  commentText: string
 }
 
-const Comment: React.FC<CommentProps> = ({ username, profilePicture, commentText  }) => {
+const Comment: React.FC<CommentProps> = ({ username, profilePicture, commentText }) => {
   const styles = StyleSheet.create({
     commentContainer: {
       display: 'flex',
@@ -29,26 +31,18 @@ const Comment: React.FC<CommentProps> = ({ username, profilePicture, commentText
     commentText: {
       color: 'white',
       fontSize: 14.5,
-    }
-  });  
+    },
+  })
 
   return (
-      <>
-        <View style={styles.commentContainer}>
-          <View style={styles.commentPicture}>
-            {profilePicture}
-          </View>
-          <View style={styles.commentDetails}>
-            <Text style={styles.usernameText}>
-              {username} 
-            </Text>
-            <Text style={styles.commentText}>
-              {commentText}
-            </Text>
-          </View>
-        </View> 
-      </>
-  ); 
-};
+    <View style={styles.commentContainer}>
+      <View style={styles.commentPicture}>{profilePicture}</View>
+      <View style={styles.commentDetails}>
+        <Text style={styles.usernameText}>{username}</Text>
+        <Text style={styles.commentText}>{commentText}</Text>
+      </View>
+    </View>
+  )
+}
 
-export default Comment;
+export default Comment

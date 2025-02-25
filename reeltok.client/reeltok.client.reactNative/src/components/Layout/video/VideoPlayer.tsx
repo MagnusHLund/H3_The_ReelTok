@@ -6,6 +6,7 @@ import { useVideoPlayer, VideoView } from 'expo-video'
 import { useEffect, useState } from 'react'
 import VideoOverlay from './VideoOverlay'
 import User from './User'
+import CommentsSection from './CommentsSection'
 
 interface VideoPlayerProps {
   videoDetails?: Video
@@ -24,6 +25,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [playCount, setPlayCount] = useState(0)
   const { contentHeight } = useAppDimensions()
   const isVideoFocused = useIsFocused()
+  const [showCommentsSection, setShowCommentsSection] = useState(false)
 
   const player = useVideoPlayer(videoDetails?.streamUrl ?? '', (player) => {
     player.loop = true
@@ -48,7 +50,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   useEffect(() => {
     const handlePlayToEnd = () => {
-      setPlayCount((prevCount) => prevCount + 1)
+      if (!showCommentsSection) {
+        setPlayCount((prevCount) => prevCount + 1)
+      }
     }
 
     player.addListener('playToEnd', handlePlayToEnd)
@@ -72,7 +76,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   return (
     <View style={[styles.container, { height: contentHeight }]}>
-      <VideoOverlay videoDetails={videoDetails} />
+      <VideoOverlay
+        videoDetails={videoDetails}
+        onCommentsOpen={() => setShowCommentsSection(true)}
+      />
       <TouchableOpacity onPress={handlePress} style={styles.touchableArea} activeOpacity={1}>
         <View style={styles.videoContainer}>
           <VideoView
@@ -83,7 +90,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           />
         </View>
       </TouchableOpacity>
-      <User />
+      {showCommentsSection && (
+        <CommentsSection
+          videoId={videoDetails.videoId}
+          onClose={() => setShowCommentsSection(false)}
+        />
+      )}
     </View>
   )
 }

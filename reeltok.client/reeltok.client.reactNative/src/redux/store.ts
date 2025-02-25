@@ -1,6 +1,7 @@
 import { rootPersistConfig, settingsPersistConfig } from './config/persistConfig'
 import { configureStore, combineReducers, Reducer } from '@reduxjs/toolkit'
 import settingsReducer, { SettingsProps } from './slices/settingsSlice'
+import commentsReducer, { CommentsProps } from './slices/commentsSlice'
 import storeMiddlewareConfig from './config/storeMiddlewareConfig'
 import videosReducer, { VideosProps } from './slices/videosSlice'
 import { PersistPartial } from 'redux-persist/lib/persistReducer'
@@ -8,6 +9,7 @@ import { persistStore, persistReducer } from 'redux-persist'
 
 interface RootState {
   settings: SettingsProps & PersistPartial
+  comments: CommentsProps
   videos: VideosProps
 }
 
@@ -16,6 +18,7 @@ const persistedReducers = {
 }
 
 const nonPersistedReducers = {
+  comments: commentsReducer,
   videos: videosReducer,
 }
 

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export enum videoRecommendationCategories {
+export enum VideoRecommendationCategories {
   Gaming,
   Tech,
   Dance,
@@ -13,15 +13,15 @@ export type Video = {
   videoId: string
   title: string
   description: string
-  category: videoRecommendationCategories
+  category: VideoRecommendationCategories
   likes: number
   hasLiked: boolean
   streamUrl: string
   uploadedAt: string
-  creator: creator
+  creator: Creator
 }
 
-export type creator = {
+export type Creator = {
   username: string
   profileUrl: string
   profilePictureUrl: string
@@ -31,6 +31,8 @@ export interface VideosProps {
   videos: Video[] | undefined
 }
 
+// TODO: I dont know what i was thinking. Instead of having undefined videos, it can just be an empty array. Refactor initialState and the VideosProps, along with anywhere that is affected by this.
+// ^^^^  See commentsSlice.ts, for an example of this
 const initialState: VideosProps = {
   videos: undefined,
 }
