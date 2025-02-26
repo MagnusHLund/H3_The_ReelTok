@@ -22,24 +22,24 @@ namespace reeltok.api.recommendations.RecommendationsServiceApi.Api.Controllers
             _recommendationsService = recommendationService;
         }
 
-        [HttpGet("GetRecommendations")]
-        public async Task<IActionResult> GetRecommendation([FromBody] GetRecommendationRequestDto request)
-        {
-            List<RecommendedCategories> recommendations = await _recommendationsService.GetRecommendation(request.UserId);
+        // [HttpGet("GetRecommendations")]
+        // public async Task<IActionResult> GetRecommendation([FromBody] GetRecommendationRequestDto request)
+        // {
+        //     List<RecommendedCategories> recommendations = await _recommendationsService.GetRecommendation(request.UserId);
 
-            bool success = true;
-            return Ok(new GetRecommendationResponseDto(recommendations, success));
-        }
+        //     bool success = true;
+        //     return Ok(new GetRecommendationResponseDto(recommendations, success));
+        // }
 
-        [HttpPut("UpdateRecommendations")]
+        // [HttpPut("UpdateRecommendations")]
 
-        public async Task<IActionResult> UpdateRecommendation([FromBody] UpdateRecommendationRequestDto request)
-        {
-            Recommendations recommendations = new Recommendations(request.UserId, request.Category);
+        // public async Task<IActionResult> UpdateRecommendation([FromBody] UpdateRecommendationRequestDto request)
+        // {
+        //     Recommendations recommendations = new Recommendations(request.UserId, request.Category);
 
-            bool success = await _recommendationsService.UpdateRecommendation(recommendations);
-            return Ok(new UpdateRecommendationResponseDto(success));
-        }
+        //     bool success = await _recommendationsService.UpdateRecommendation(recommendations);
+        //     return Ok(new UpdateRecommendationResponseDto(success));
+        // }
 
     }
 }

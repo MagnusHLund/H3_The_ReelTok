@@ -7,9 +7,7 @@ namespace reeltok.api.recommendations.Interfaces
 {
     public interface IRecommendationsService
     {
-        public Task<List<RecommendedCategories>> GetRecommendation(Guid userId);
-        public Task<bool> UpdateRecommendation(Recommendations recommendation);
-
+        
 
     }
 }
