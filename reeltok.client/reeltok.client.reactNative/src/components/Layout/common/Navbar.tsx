@@ -1,45 +1,52 @@
-// The navbar needs to be able to be at the bottom of the screen, in vertical mode, but on the right side of the screen while in horizontal mode.
-// The icons inside the navbar should turn to the correct axis, for the given screen orientation.
-
-import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import Ionicons from '@expo/vector-icons/Ionicons';
-
-import CustomButton from '../../input/CustomButton';
-import MediaSelector from './MediaSelector';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import useAppDimensions from '../../../hooks/useAppDimensions'
+import { useNavigation } from '@react-navigation/native'
+import CustomButton from '../../input/CustomButton'
+import { View, StyleSheet } from 'react-native'
+import { ScreenName } from '../../../Router'
+import MediaSelector from './MediaSelector'
+import RotatingIcon from './RotatingIcon'
+import React, { useState } from 'react'
 
 const Navbar: React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
-  const [showComponent, setShowComponent] = useState(false);
+  const navigation = useNavigation<NativeStackNavigationProp<any>>()
+  const [displayMediaSelector, setDisplayMediaSelector] = useState(false)
+  const { navbarHeight } = useAppDimensions()
 
-  const styles = StyleSheet.create({
-      container: {
-        display: 'flex',
-        position: 'absolute',
-        bottom: 0,
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        flexDirection: 'row',
-        width: '100%',
-        height: '6%',
-        backgroundColor: 'black',
-        zIndex: 110,
-      },
-  });
-  
+  const toggleMediaSelectorForVideoUpload = () => {
+    setDisplayMediaSelector(!displayMediaSelector)
+  }
+
+  const handleNavigation = (screenName: ScreenName) => {
+    navigation.replace(screenName)
+  }
+
   return (
     <>
-    {showComponent && <MediaSelector/>}
-      <View style={styles.container}>
-        <CustomButton transparent={true} onPress={() => navigation.replace('VideoFeed')}> <Ionicons name="play" size={32} color="white" /></CustomButton>
-        <CustomButton transparent={true} onPress={() => setShowComponent(!showComponent)}> <Ionicons name="add" size={32} color="white" /> </CustomButton>
-        <CustomButton transparent={true} onPress={() => navigation.replace('Profile')} > <Ionicons name="person-circle-sharp" size={32} color="white" /></CustomButton>
+      {displayMediaSelector && <MediaSelector />}
+      <View style={[styles.container, { height: navbarHeight }]}>
+        <CustomButton transparent={true} onPress={() => handleNavigation('VideoFeed')}>
+          <RotatingIcon name="play" size={32} color="white" />
+        </CustomButton>
+        <CustomButton transparent={true} onPress={toggleMediaSelectorForVideoUpload}>
+          <RotatingIcon name="add" size={32} color="white" />
+        </CustomButton>
+        <CustomButton transparent={true} onPress={() => handleNavigation('Profile')}>
+          <RotatingIcon name="person-circle-sharp" size={32} color="white" />
+        </CustomButton>
       </View>
     </>
-  );
-};
+  )
+}
 
-export default Navbar;
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '100%',
+    height: '6%',
+    backgroundColor: 'black',
+  },
+})
 
+export default Navbar
