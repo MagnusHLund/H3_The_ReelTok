@@ -1,7 +1,7 @@
 import { useWindowDimensions } from 'react-native'
 import { useMemo } from 'react'
 
-export default function useAppDispatch() {
+export default function useAppDimensions() {
   const { height } = useWindowDimensions()
 
   const navbarHeight = height * 0.05
