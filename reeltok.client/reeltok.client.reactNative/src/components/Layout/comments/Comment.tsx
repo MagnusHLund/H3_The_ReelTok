@@ -1,8 +1,6 @@
-import { useAppSelector } from '../../../hooks/useAppSelector'
+import useAppSelector from '../../../hooks/useAppSelector'
 import ProfilePicture from '../profile/ProfilePicture'
 import { StyleSheet, Text, View } from 'react-native'
-
-// TODO: Put comments related stuff into layout/video/comments/ directory
 
 interface CommentProps {
   commenterUserId: string

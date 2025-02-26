@@ -1,5 +1,5 @@
 import { hasLikedVideoThunk } from '../../../redux/thunks/videosThunks'
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import useAppDispatch from '../../../hooks/useAppDispatch'
 import { Video } from '../../../redux/slices/videosSlice'
 import { View, Text, StyleSheet } from 'react-native'
 import CustomButton from '../../input/CustomButton'
@@ -12,6 +12,7 @@ interface VideoOverlayProps {
 }
 
 // TODO: Use icons & text font with an outline, so they are visible on any video background!
+// TODO: Add video creator and video information to the overlay
 const VideoOverlay: React.FC<VideoOverlayProps> = ({ videoDetails, onCommentsOpen }) => {
   const dispatch = useAppDispatch()
 

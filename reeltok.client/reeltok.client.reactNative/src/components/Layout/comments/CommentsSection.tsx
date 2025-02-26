@@ -1,28 +1,26 @@
 import { Modal, View, Text, StyleSheet, FlatList } from 'react-native'
-import { useAppSelector } from '../../../hooks/useAppSelector'
+import useAppSelector from '../../../hooks/useAppSelector'
 import CustomTextInput from '../../input/CustomTextInput'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
-import ProfilePicture from '../profile/ProfilePicture'
 import CustomButton from '../../input/CustomButton'
 import { Ionicons } from '@expo/vector-icons'
 import Comment from './Comment'
 import React from 'react'
+import {
+  selectCommentsForVideo,
+  selectTotalVideoComments,
+} from '../../../redux/selectors/commentsSelectors'
 
 interface CommentsSectionProps {
   videoId: string
   onClose: () => void
 }
 
+// TODO: Fix styling on web
+// TODO: On app (using physical device), ensure that the comment text input goes up with the phone's keyboard
 const CommentsSection: React.FC<CommentsSectionProps> = ({ videoId, onClose }) => {
-  const commentsForVideo = useAppSelector((state) =>
-    state.comments.comments.filter((comment) => comment.videoId === videoId)
-  )
-  const totalVideoComments = useAppSelector(
-    (state) =>
-      state.comments.videoIdsWithCachedComments.find(
-        (cachedVideo) => cachedVideo.videoId === videoId
-      )?.totalVideoComments ?? 0
-  )
+  const commentsForVideo = useAppSelector((state) => selectCommentsForVideo(state, videoId))
+  const totalVideoComments = useAppSelector((state) => selectTotalVideoComments(state, videoId))
 
   return (
     <Modal animationType="slide" transparent={true} onRequestClose={onClose}>
