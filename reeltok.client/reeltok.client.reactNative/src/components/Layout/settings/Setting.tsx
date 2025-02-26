@@ -1,8 +1,8 @@
 import { Text, View, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { ReactNode } from 'react'
 interface SettingProps {
   title?: string
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const Setting: React.FC<SettingProps> = ({ title = '', children }) => {
