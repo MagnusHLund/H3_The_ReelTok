@@ -1,12 +1,11 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Platform } from 'react-native'
 import useAppDimensions from '../../../hooks/useAppDimensions'
 import { Video } from '../../../redux/slices/videosSlice'
+import CommentsSection from '../comments/CommentsSection'
 import { useIsFocused } from '@react-navigation/native'
 import { useVideoPlayer, VideoView } from 'expo-video'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import VideoOverlay from './VideoOverlay'
-import User from './User'
-import CommentsSection from './CommentsSection'
 
 interface VideoPlayerProps {
   videoDetails?: Video
@@ -15,7 +14,7 @@ interface VideoPlayerProps {
   onNextVideo: () => void
 }
 
-// TODO: Make it automatically start the video, on web
+// TODO: Add play icon, when video is paused
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
   videoDetails,
   loopAmount = 2,
@@ -26,11 +25,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const { contentHeight } = useAppDimensions()
   const isVideoFocused = useIsFocused()
   const [showCommentsSection, setShowCommentsSection] = useState(false)
+  const showCommentsSectionRef = useRef(showCommentsSection)
 
   const player = useVideoPlayer(videoDetails?.streamUrl ?? '', (player) => {
     player.loop = true
     player.play()
   })
+
+  useEffect(() => {
+    showCommentsSectionRef.current = showCommentsSection
+  }, [showCommentsSection])
 
   useEffect(() => {
     if (isDisplayed && isVideoFocused) {
@@ -50,7 +54,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   useEffect(() => {
     const handlePlayToEnd = () => {
-      if (!showCommentsSection) {
+      if (!showCommentsSectionRef.current) {
         setPlayCount((prevCount) => prevCount + 1)
       }
     }
@@ -93,7 +97,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       {showCommentsSection && (
         <CommentsSection
           videoId={videoDetails.videoId}
-          onClose={() => setShowCommentsSection(false)}
+          onClose={() => {
+            setShowCommentsSection(false)
+          }}
         />
       )}
     </View>

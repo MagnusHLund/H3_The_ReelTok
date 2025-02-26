@@ -18,8 +18,21 @@ export interface CommentsProps {
 }
 
 const initialState: CommentsProps = {
-  comments: [],
-  videoIdsWithCachedComments: [],
+  comments: [
+    {
+      commentId: 'guidCommentId1',
+      videoId: 'guidVideoId1',
+      userId: 'guidUserId1',
+      commentText: 'cool video!',
+    },
+    {
+      commentId: 'guidCommentId2',
+      videoId: 'guidVideoId1',
+      userId: 'guidUserId2',
+      commentText: 'wow',
+    },
+  ],
+  videoIdsWithCachedComments: [{ videoId: 'guidVideoId1', totalVideoComments: 2 }],
 }
 
 const commentsSlice = createSlice({

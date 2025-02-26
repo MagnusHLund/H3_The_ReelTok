@@ -43,11 +43,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ videoId, onClose }) =
             contentContainerStyle={{ gap: 17.5 }}
             data={commentsForVideo}
             renderItem={({ item }) => (
-              <Comment
-                commentText={item.commentText}
-                profilePicture={<ProfilePicture pictureUrl={item.userId} />} // TODO: Make this the actual profile picture
-                username={item.userId} // TODO: Make this the actual username
-              />
+              <Comment commentText={item.commentText} commenterUserId={item.userId} />
             )}
           />
           <View style={styles.commentInput}>

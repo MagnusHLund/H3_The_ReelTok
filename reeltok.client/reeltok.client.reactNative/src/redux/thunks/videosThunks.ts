@@ -14,7 +14,7 @@ export const addVideoToFeedThunk = createAsyncThunk(
   async (videosInFeed: Video[] | undefined, { dispatch }) => {
     const newVideos: Video[] = [
       {
-        videoId: getRandomNumber().toString(),
+        videoId: 'guidVideoId1',
         title: 'Mock video 1',
         description: 'Mock description 1',
         likes: 123,
@@ -30,7 +30,7 @@ export const addVideoToFeedThunk = createAsyncThunk(
         },
       },
       {
-        videoId: getRandomNumber().toString(),
+        videoId: 'guidVideoId2',
         title: 'Mock video 2',
         description: 'Mock description 2',
         likes: 321,

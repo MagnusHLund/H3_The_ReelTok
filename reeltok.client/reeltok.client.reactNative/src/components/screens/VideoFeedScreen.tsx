@@ -7,6 +7,8 @@ import { StyleSheet, View, FlatList } from 'react-native'
 import VideoPlayer from '../Layout/video/VideoPlayer'
 import Navbar from '../Layout/common/Navbar'
 
+// TODO: handle automatically playing video and pausing video on web, when scrolling, when it scrolls.
+// ^^^^  Currently only works on the app.
 const VideoFeedScreen: React.FC = () => {
   const videos = useAppSelector((state) => state.videos.videos)
   const dispatch = useAppDispatch()
