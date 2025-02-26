@@ -5,12 +5,15 @@ import VideoFeedScreen from './components/screens/VideoFeedScreen'
 import UploadVideoScreen from './components/screens/UploadVideoScreen'
 import UserProfileScreen from './components/screens/UserProfileScreen'
 import SettingsScreen from './components/screens/SettingsScreen'
+import AutoLanguageSelector from './utils/AutoLanguageSelector'
 
 const Stack = createStackNavigator()
 
 const Router = () => {
   return (
     <NavigationContainer>
+      {/* ✅ AutoLanguageSelector runs automatically when Router mounts */}
+      <AutoLanguageSelector />
       <Stack.Navigator initialRouteName="VideoFeed">
         <Stack.Screen
           name="VideoFeed"
