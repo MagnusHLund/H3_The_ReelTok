@@ -62,9 +62,8 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
   const renderContent = () => {
     console.log(uri)
     return (
-      <View style={[styles.contentContainer,{height: contentHeight}]}>
-        {cameraMode === 'picture'}
-        {uri && (
+      <View style={[styles.contentContainer, { height: contentHeight }]}>
+        {cameraMode === 'picture' && uri && (
           <Image
             source={{ uri }}
             resizeMode="contain"
@@ -104,7 +103,7 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     width: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -140,7 +139,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     height: '100%',
     width: '100%',
-    top: -800,
   },
   picture: {
     width: 500,

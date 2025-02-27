@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
     pointerEvents: 'none',
   },
   video: {
-    width: 500,
-    height: 500,
+    width: '100%',
+    height: '100%',
   },
 })
 export default VideoPlayer
