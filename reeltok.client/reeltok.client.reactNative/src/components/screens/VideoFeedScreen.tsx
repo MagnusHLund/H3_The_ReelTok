@@ -6,7 +6,6 @@ import useAppSelector from '../../hooks/useAppSelector'
 import useAppDispatch from '../../hooks/useAppDispatch'
 import { Video } from '../../redux/slices/videosSlice'
 import VideoPlayer from '../Layout/video/VideoPlayer'
-import Navbar from '../Layout/common/Navbar'
 
 interface RenderItemProps {
   item: Video
@@ -18,6 +17,7 @@ interface RenderItemProps {
 // TODO: Ensure that addVideosToFeed is dispatched when manual scrolling
 // TODO: Fix bug with it not being able to scroll more than 48 times.
 // TODO: Limit scroll speed. It can scroll SUPER fast on web.
+// TODO: The list should include only 3 video players. One to watch, one to scroll back and one to scroll forward. This will help performance.
 const VideoFeedScreen: React.FC = () => {
   const videos = useAppSelector((state) => state.videos.videos)
   const dispatch = useAppDispatch()
@@ -98,7 +98,6 @@ const VideoFeedScreen: React.FC = () => {
           index,
         })}
       />
-      <Navbar />
     </View>
   )
 }
