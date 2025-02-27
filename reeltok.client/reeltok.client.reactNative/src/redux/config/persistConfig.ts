@@ -8,7 +8,7 @@ const storage = Platform.OS === 'web' ? createWebStorage('local') : AsyncStorage
 export const rootPersistConfig: PersistConfig<any> = {
   key: 'root',
   storage: storage,
-  blacklist: ['nonPersistedReducers'],
+  whitelist: ['settings'],
 }
 
 export const settingsPersistConfig: PersistConfig<any> = {

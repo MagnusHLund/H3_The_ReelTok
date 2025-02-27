@@ -1,30 +1,37 @@
-import React, { useState } from 'react'
-import { View, StyleSheet } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import useAppDimensions from '../../../hooks/useAppDimensions'
+import { useNavigation } from '@react-navigation/native'
 import CustomButton from '../../input/CustomButton'
+import { View, StyleSheet } from 'react-native'
+import { ScreenName } from '../../../Router'
 import MediaSelector from './MediaSelector'
 import RotatingIcon from './RotatingIcon'
+import React, { useState } from 'react'
 
 const Navbar: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
   const [displayMediaSelector, setDisplayMediaSelector] = useState(false)
+  const { navbarHeight } = useAppDimensions()
 
   const toggleMediaSelectorForVideoUpload = () => {
     setDisplayMediaSelector(!displayMediaSelector)
   }
 
+  const handleNavigation = (screenName: ScreenName) => {
+    navigation.replace(screenName)
+  }
+
   return (
     <>
       {displayMediaSelector && <MediaSelector />}
-      <View style={styles.container}>
-        <CustomButton transparent={true} onPress={() => navigation.replace('VideoFeed')}>
+      <View style={[styles.container, { height: navbarHeight }]}>
+        <CustomButton transparent={true} onPress={() => handleNavigation('VideoFeed')}>
           <RotatingIcon name="play" size={32} color="white" />
         </CustomButton>
         <CustomButton transparent={true} onPress={toggleMediaSelectorForVideoUpload}>
           <RotatingIcon name="add" size={32} color="white" />
         </CustomButton>
-        <CustomButton transparent={true} onPress={() => navigation.replace('Profile')}>
+        <CustomButton transparent={true} onPress={() => handleNavigation('Profile')}>
           <RotatingIcon name="person-circle-sharp" size={32} color="white" />
         </CustomButton>
       </View>
@@ -34,16 +41,11 @@ const Navbar: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    position: 'absolute',
-    bottom: 0,
-    justifyContent: 'space-evenly',
     alignItems: 'center',
     flexDirection: 'row',
     width: '100%',
     height: '6%',
     backgroundColor: 'black',
-    zIndex: 110,
   },
 })
 

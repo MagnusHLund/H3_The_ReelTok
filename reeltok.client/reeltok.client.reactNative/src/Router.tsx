@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react'
-import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
-import VideoFeedScreen from './components/screens/VideoFeedScreen'
 import UploadVideoScreen from './components/screens/UploadVideoScreen'
 import UserProfileScreen from './components/screens/UserProfileScreen'
-import SettingsScreen from './components/screens/SettingsScreen'
-import { useAppDispatch } from './hooks/useAppDispatch'
-import useGeoLocation from './hooks/useGeoLocation'
-import { useAppSelector } from './hooks/useAppSelector'
 import { changeLanguageThunk } from './redux/thunks/settingsThunks'
+import VideoFeedScreen from './components/screens/VideoFeedScreen'
+import SettingsScreen from './components/screens/SettingsScreen'
+import { NavigationContainer } from '@react-navigation/native'
+import useAppDispatch from './hooks/useAppDispatch'
+import useAppSelector from './hooks/useAppSelector'
+import useGeoLocation from './hooks/useGeoLocation'
+import React, { useEffect } from 'react'
+
+export type ScreenName = 'VideoFeed' | 'UploadVideo' | 'Profile' | 'Settings'
 
 const Stack = createStackNavigator()
 
@@ -31,7 +33,7 @@ const Router = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="VideoFeed">
+      <Stack.Navigator initialRouteName="VideoFeed" detachInactiveScreens>
         <Stack.Screen
           name="VideoFeed"
           component={VideoFeedScreen}
