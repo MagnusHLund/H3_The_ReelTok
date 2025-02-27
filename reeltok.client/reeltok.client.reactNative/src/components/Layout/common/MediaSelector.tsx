@@ -2,30 +2,53 @@ import { StyleSheet, View } from 'react-native'
 import CustomButton from '../../input/CustomButton'
 import Entypo from '@expo/vector-icons/Entypo'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import CameraSelected from './CameraSelected'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useNavigation } from '@react-navigation/native'
+import Gradient from './GradientBackground'
+import useAppDimensions from '../../../hooks/useAppDimensions'
+import pickImage from '../../../utils/imagePickerUtils'
 
-export default function MediaSelector() {
+const MediaSelector: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
+  const { navbarHeight } = useAppDimensions()
+
+  const handlePickImage = async () => {
+    try {
+      // TODO: @Jorjo6712 the selectedImage is unused.
+      const selectedImage = await pickImage()
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
+
   return (
-    <View style={styles.outerContainer}>
-      <View style={styles.innerContainer}>
-        <CustomButton widthPercentage={0.45} onPress={() => navigation.replace('Camera')}>
-          <Entypo name="camera" size={24} color="white" />
-        </CustomButton>
-        <CustomButton widthPercentage={0.45} onPress={console.log}>
-          <MaterialIcons name="photo-library" size={24} color="white" />
-        </CustomButton>
-      </View>
+    <View style={[styles.outerContainer, { paddingBottom: navbarHeight }]}>
+      <Gradient colors={['transparent', 'transparent', 'black', 'black']}>
+        <View style={styles.innerContainer}>
+          <CustomButton
+            widthPercentage={0.45}
+            onPress={() => {
+              navigation.replace('Camera')
+            }}
+          >
+            <Entypo name="camera" size={24} color="white" />
+          </CustomButton>
+          <CustomButton widthPercentage={0.45} onPress={handlePickImage}>
+            <MaterialIcons name="photo-library" size={24} color="white" />
+          </CustomButton>
+        </View>
+      </Gradient>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   outerContainer: {
-    backgroundColor: 'black',
+    backgroundColor: 'transparent',
     width: '100%',
+    position: 'absolute',
+    paddingBottom: 10,
+    bottom: 0,
   },
   innerContainer: {
     flexDirection: 'row',
@@ -41,3 +64,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 })
+
+export default MediaSelector

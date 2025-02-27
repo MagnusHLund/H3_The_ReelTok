@@ -3,7 +3,7 @@ import SettingsSection from '../SettingsSection'
 import Setting from '../Setting'
 import React from 'react'
 
-const RecommendationsSettingsSection: React.FC = () => {
+const LogoutSettingsSection: React.FC = () => {
   return (
     <SettingsSection>
       <Setting>
@@ -13,4 +13,4 @@ const RecommendationsSettingsSection: React.FC = () => {
   )
 }
 
-export default RecommendationsSettingsSection
+export default LogoutSettingsSection
