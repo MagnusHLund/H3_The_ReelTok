@@ -10,6 +10,7 @@ interface UserCardProps {
 }
 
 const UserCard: React.FC<UserCardProps> = ({ user }) => {
+  // TODO: @Shazil0204 why dont you have styles in a style sheet? they aren't assigned dynamically here.
   return (
     <>
       {user.map((user, index) => (
@@ -27,7 +28,6 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
     </>
   )
 }
-
 
 export default UserCard
 

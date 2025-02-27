@@ -4,7 +4,7 @@ import UserList from '../Layout/common/UserList'
 import Header from '../Layout/common/Header'
 import React from 'react'
 
-const SubscriptionsScreen = () => {
+const SubscriptionsScreen: React.FC = () => {
   const t = useTranslation()
 
   const Subscription: {
@@ -87,7 +87,7 @@ const SubscriptionsScreen = () => {
 
   return (
     <ScrollView>
-      <Header showBackButton title={t('subscriptions.subscriptions')} />
+      <Header showBackButton title={t('common.subscriptions')} />
       <UserList users={Subscription} />
     </ScrollView>
   )
