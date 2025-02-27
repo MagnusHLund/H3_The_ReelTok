@@ -1,38 +1,41 @@
 
 using Microsoft.EntityFrameworkCore;
 using reeltok.api.recommendations.Data;
+using reeltok.api.recommendations.Middleware;
 
 namespace RecommendationsServiceApi
 {
-	public class Program
-	{
-		public static void Main(string[] args)
-		{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-			builder.Services.AddDbContextFactory<RecommendationDbContext>(options =>
+            builder.Services.AddDbContextFactory<RecommendationDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-			builder.Services.AddControllers();
-			builder.Services.AddEndpointsApiExplorer();
-			builder.Services.AddSwaggerGen();
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
             WebApplication app = builder.Build();
 
-			// Configure the HTTP request pipeline.
-			if (app.Environment.IsDevelopment())
-			{
-				app.UseSwagger();
-				app.UseSwaggerUI();
-			}
+            app.UseMiddleware<ExceptionMiddleware>();
 
-			app.UseAuthorization();
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
-			app.MapControllers();
+            app.UseAuthorization();
 
-			app.Run();
-		}
-	}
+            app.MapControllers();
+
+            app.Run();
+        }
+    }
 }
