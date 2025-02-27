@@ -1,19 +1,36 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
 import VideoFeedScreen from './components/screens/VideoFeedScreen'
 import UploadVideoScreen from './components/screens/UploadVideoScreen'
 import UserProfileScreen from './components/screens/UserProfileScreen'
 import SettingsScreen from './components/screens/SettingsScreen'
-import AutoLanguageSelector from './utils/AutoLanguageSelector'
+import { useAppDispatch } from './hooks/useAppDispatch'
+import useGeoLocation from './hooks/useGeoLocation'
+import { useAppSelector } from './hooks/useAppSelector'
+import { changeLanguageThunk } from './redux/thunks/settingsThunks'
 
 const Stack = createStackNavigator()
 
 const Router = () => {
+  const dispatch = useAppDispatch()
+  const { country } = useGeoLocation()
+  const language = useAppSelector((state) => state.settings.language)
+
+  useEffect(() => {
+    if (!language || !language.locale) {
+      const selectedLanguage = country === 'Denmark' ? 'da_DK' : 'en_GB'
+      dispatch(
+        changeLanguageThunk({
+          label: selectedLanguage === 'da_DK' ? 'Danish' : 'English',
+          value: selectedLanguage,
+        })
+      )
+    }
+  }, [country, language, dispatch])
+
   return (
     <NavigationContainer>
-      {/* ✅ AutoLanguageSelector runs automatically when Router mounts */}
-      <AutoLanguageSelector />
       <Stack.Navigator initialRouteName="VideoFeed">
         <Stack.Screen
           name="VideoFeed"
@@ -30,6 +47,7 @@ const Router = () => {
             headerShown: false,
           }}
         />
+        {/* TODO: FIX THIS COMPONENT TYPE ERROR  */}
         <Stack.Screen
           name="Profile"
           component={UserProfileScreen}
