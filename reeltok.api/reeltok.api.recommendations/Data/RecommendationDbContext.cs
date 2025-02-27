@@ -2,24 +2,22 @@ namespace reeltok.api.recommendations.Data
 {
     using Microsoft.EntityFrameworkCore;
     using reeltok.api.recommendations.Entities;
-    using reeltok.api.recommendations.ValueObjects;
-
     public class RecommendationDbContext : DbContext
     {
         public RecommendationDbContext(DbContextOptions<RecommendationDbContext> options)
             : base(options)
         {
         }
-
         public DbSet<CategoryEntity> CategoryEntities { get; set; }
-        public DbSet<RecommendationEntity> Recommendations { get; set; }
+        public DbSet<UserInterestEntity> UserInterests { get; set; }
         public DbSet<WatchedVideoEntity> WatchedVideoEntities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CategoryEntity>().ToTable("Categories");
             modelBuilder.Entity<WatchedVideoEntity>().ToTable("VideoWatched");
-            modelBuilder.Entity<RecommendationEntity>().ToTable("Recommendations");
+            modelBuilder.Entity<UserInterestEntity>().ToTable("UserInterests");
+            modelBuilder.Entity<VideoCategoryEntity>().ToTable("VideoCategories");
 
             modelBuilder.Entity<CategoryEntity>().OwnsOne(ce => ce.CategoryDetails, CategoryDetails =>
             {
@@ -33,20 +31,25 @@ namespace reeltok.api.recommendations.Data
                 WatchedVideoDetails.Property(vwd => vwd.TimeWatched).HasColumnName("TimeWatched");
             });
 
-            modelBuilder.Entity<RecommendationEntity>().OwnsOne(re => re.RecommendationDetails, RecommendationDetails =>
+            modelBuilder.Entity<UserInterestEntity>().OwnsOne(ur => ur.UserInterestDetails, UserInterestDetails =>
             {
-                RecommendationDetails.Property(rd => rd.UserId).HasColumnName("UserId");
+                UserInterestDetails.Property(ud => ud.UserId).HasColumnName("UserId");
+            });
+
+            modelBuilder.Entity<VideoCategoryEntity>().OwnsOne(vc => vc.VideoCategoryDetails, VideoCategoryDetails =>
+            {
+                VideoCategoryDetails.Property(vcd => vcd.VideoId).HasColumnName("VideoId");
             });
 
             // **Explicitly Define Many-to-Many Relationship with Custom Table and Column Names**
             modelBuilder.Entity<CategoryEntity>()
-                .HasMany(c => c.RecommendationEntities)
+                .HasMany(c => c.UserInterestEntities)
                 .WithMany(r => r.Categories)
                 .UsingEntity<Dictionary<string, object>>(
-                    "CategoryRecommendations", // Custom Join Table Name
-                    j => j.HasOne<RecommendationEntity>()
+                    "CategoryUserInterests", // Custom Join Table Name
+                    j => j.HasOne<UserInterestEntity>()
                         .WithMany()
-                        .HasForeignKey("RecommendationId")
+                        .HasForeignKey("UserInterestId")
                         .OnDelete(DeleteBehavior.Cascade),
                     j => j.HasOne<CategoryEntity>()
                         .WithMany()
@@ -54,13 +57,13 @@ namespace reeltok.api.recommendations.Data
                         .OnDelete(DeleteBehavior.Cascade),
                     j =>
                     {
-                        j.HasKey("RecommendationId", "CategoryId"); // Composite Primary Key
-                        j.ToTable("CategoryRecommendations"); // Set Table Name
+                        j.HasKey("UserInterestId", "CategoryId"); // Composite Primary Key
+                        j.ToTable("CategoryUserInterests"); // Set Table Name
                     });
 
             modelBuilder.Entity<CategoryEntity>()
                 .HasMany(c => c.WatchedVideoEntities)
-                .WithMany(v => v.CategoryEntities)
+                .WithMany(v => v.Categories)
                 .UsingEntity<Dictionary<string, object>>(
                     "CategoryWatchedVideos", // Custom Join Table Name
                     j => j.HasOne<WatchedVideoEntity>()
@@ -75,6 +78,25 @@ namespace reeltok.api.recommendations.Data
                     {
                         j.HasKey("CategoryId", "WatchedVideoId"); // Composite Primary Key
                         j.ToTable("CategoryWatchedVideos"); // Set Table Name
+                    });
+
+            modelBuilder.Entity<CategoryEntity>()
+                .HasMany(c => c.VideoCategoryEntities)
+                .WithMany(v => v.Categories)
+                .UsingEntity<Dictionary<string, object>>(
+                    "CategoryVideoCategories", // Custom Join Table Name
+                    j => j.HasOne<VideoCategoryEntity>()
+                        .WithMany()
+                        .HasForeignKey("VideoCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade),
+                    j => j.HasOne<CategoryEntity>()
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade),
+                    j =>
+                    {
+                        j.HasKey("CategoryId", "VideoCategoryId"); // Composite Primary Key
+                        j.ToTable("CategoryVideoCategories"); // Set Table Name
                     });
         }
     }

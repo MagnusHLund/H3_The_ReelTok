@@ -2,17 +2,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.recommendations.ValueObjects
 {
-    public class RecommendationDetails
+    public class UserInterestDetails
     {
         [Required]
         public Guid UserId { get; private set; }
 
-        public RecommendationDetails(Guid userId)
+        public UserInterestDetails(Guid userId)
         {
             UserId = userId;
         }
 
-        private RecommendationDetails()
+        private UserInterestDetails()
         {
 
         }

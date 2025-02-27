@@ -3,22 +3,21 @@ using reeltok.api.recommendations.ValueObjects;
 
 namespace reeltok.api.recommendations.Entities
 {
-    public class RecommendationEntity
+    public class UserInterestEntity
     {
         [Key]
-        public uint RecommendationId { get; private set; }
+        public uint UserInterestId { get; private set; }
 
         [Required]
-        public RecommendationDetails RecommendationDetails { get; private set; }
+        public UserInterestDetails UserInterestDetails { get; private set; }
 
         public List<CategoryEntity> Categories { get; private set; }
 
-        public RecommendationEntity(RecommendationDetails recommendationDetails)
+        public UserInterestEntity(UserInterestDetails userInterestDetails)
         {
-            RecommendationDetails = recommendationDetails;
+            UserInterestDetails = userInterestDetails;
         }
 
-        private RecommendationEntity() { }
+        private UserInterestEntity() { }
     }
 }
-

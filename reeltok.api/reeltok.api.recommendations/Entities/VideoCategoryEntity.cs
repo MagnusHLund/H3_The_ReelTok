@@ -7,23 +7,20 @@ using reeltok.api.recommendations.ValueObjects;
 
 namespace reeltok.api.recommendations.Entities
 {
-    public class WatchedVideoEntity
+    public class VideoCategoryEntity
     {
         [Key]
-        public uint WatchedVideoId { get; private set; }
+        public int VideoCategoryId { get; private set; }
 
-        public WatchedVideoDetails WatchedVideoDetails { get; private set; }
+        public VideoCategoryDetails VideoCategoryDetails { get; private set; }
 
         public List<CategoryEntity> Categories { get; private set; }
 
-        public WatchedVideoEntity(WatchedVideoDetails watchedVideoDetails)
+        public VideoCategoryEntity(VideoCategoryDetails videoCategoryDetails)
         {
-            WatchedVideoDetails = watchedVideoDetails;
+            VideoCategoryDetails = videoCategoryDetails;
         }
 
-        private WatchedVideoEntity()
-        {
-
-        }
+        private VideoCategoryEntity() { }
     }
 }
