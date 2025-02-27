@@ -1,4 +1,4 @@
-import { useAppSelector } from './useAppSelector'
+import useAppSelector from './useAppSelector'
 import { getTranslation } from './../utils/translationUtils'
 
 const useTranslation = () => {

@@ -11,6 +11,7 @@ export enum VideoRecommendationCategories {
 
 export type Video = {
   videoId: string
+  creatorUserId: string
   title: string
   description: string
   category: VideoRecommendationCategories
@@ -18,23 +19,39 @@ export type Video = {
   hasLiked: boolean
   streamUrl: string
   uploadedAt: string
-  creator: Creator
-}
-
-export type Creator = {
-  username: string
-  profileUrl: string
-  profilePictureUrl: string
 }
 
 export interface VideosProps {
-  videos: Video[] | undefined
+  videos: Video[]
 }
 
-// TODO: I dont know what i was thinking. Instead of having undefined videos, it can just be an empty array. Refactor initialState and the VideosProps, along with anywhere that is affected by this.
-// ^^^^  See commentsSlice.ts, for an example of this
 const initialState: VideosProps = {
-  videos: undefined,
+  videos: [
+    {
+      videoId: 'guidVideoId1',
+      creatorUserId: 'guidUserId3',
+      title: 'Mock video 1',
+      description: 'Mock description 1',
+      likes: 123,
+      hasLiked: true,
+      category: VideoRecommendationCategories.Gaming,
+      streamUrl:
+        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+      uploadedAt: new Date(Date.now()).toDateString(),
+    },
+    {
+      videoId: 'guidVideoId2',
+      creatorUserId: 'guidUserId3',
+      title: 'Mock video 2',
+      description: 'Mock description 2',
+      likes: 321,
+      hasLiked: false,
+      category: VideoRecommendationCategories.Gaming,
+      streamUrl:
+        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+      uploadedAt: new Date(Date.now()).toDateString(),
+    },
+  ],
 }
 
 const videosSlice = createSlice({
