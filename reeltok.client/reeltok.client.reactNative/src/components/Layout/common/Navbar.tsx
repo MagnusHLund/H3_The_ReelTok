@@ -8,6 +8,7 @@ import MediaSelector from './MediaSelector'
 import RotatingIcon from './RotatingIcon'
 import React, { useState } from 'react'
 
+// TODO: Cant navigate to same page as you are already on.
 const Navbar: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
   const [displayMediaSelector, setDisplayMediaSelector] = useState(false)

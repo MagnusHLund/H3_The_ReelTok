@@ -11,7 +11,7 @@ interface VideoPlayerProps {
   videoDetails?: Video
   loopAmount?: number
   isDisplayed: boolean
-  onNextVideo: () => void
+  onAutoScroll: () => void
 }
 
 // TODO: Add play icon, when video is paused
@@ -19,7 +19,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   videoDetails,
   loopAmount = 2,
   isDisplayed,
-  onNextVideo,
+  onAutoScroll,
 }) => {
   const [playCount, setPlayCount] = useState(0)
   const { contentHeight } = useAppDimensions()
@@ -47,10 +47,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   useEffect(() => {
     if (playCount >= loopAmount) {
-      onNextVideo()
+      onAutoScroll()
       setPlayCount(0)
     }
-  }, [playCount, loopAmount, onNextVideo])
+  }, [playCount, loopAmount, onAutoScroll])
 
   useEffect(() => {
     const handlePlayToEnd = () => {
