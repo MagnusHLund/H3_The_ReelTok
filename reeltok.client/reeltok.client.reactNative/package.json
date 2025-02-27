@@ -28,6 +28,7 @@
     "expo-font": "^13.0.4",
     "expo-image-picker": "^16.0.6",
     "expo-linear-gradient": "^14.0.2",
+    "expo-location": "~18.0.7",
     "expo-sensors": "~14.0.2",
     "expo-status-bar": "~2.0.1",
     "expo-video": "~2.0.5",
@@ -41,9 +42,8 @@
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^3.1.0",
-    "xml2js": "^0.6.2",
-    "expo-location": "~18.0.7",
-    "reselect": "^5.1.1"
+    "reselect": "^5.1.1",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
