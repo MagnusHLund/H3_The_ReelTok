@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using reeltok.api.auth.DTOs;
 using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Enums;
 

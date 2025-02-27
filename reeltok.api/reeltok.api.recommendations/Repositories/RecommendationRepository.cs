@@ -11,5 +11,20 @@ namespace reeltok.api.recommendations.Repositories
         {
             _Context = recommendationDbContext;
         }
+
+        public Task AddRecommendationForUserAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddRecommendationForVideoAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateRecommendationForUserAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
