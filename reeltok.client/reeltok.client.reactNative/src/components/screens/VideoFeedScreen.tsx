@@ -1,84 +1,107 @@
+import { addVideoToFeedThunk } from '../../redux/thunks/videosThunks'
+import React, { useState, useEffect, useCallback } from 'react'
+import useAppDimensions from '../../hooks/useAppDimensions'
+import { StyleSheet, View, FlatList } from 'react-native'
+import useAppSelector from '../../hooks/useAppSelector'
+import useAppDispatch from '../../hooks/useAppDispatch'
+import { Video } from '../../redux/slices/videosSlice'
+import VideoPlayer from '../Layout/video/VideoPlayer'
+import Navbar from '../Layout/common/Navbar'
 
-import React, { useState, useRef } from 'react';
-import { StyleSheet, View, FlatList, Dimensions } from 'react-native';
-import Video from '../Layout/video/Video';
-import Navbar from '../Layout/common/Navbar';
-import CommentSection from '../Layout/video/CommentsSection';
-const { height } = Dimensions.get('window');
+interface RenderItemProps {
+  item: Video
+  index: number
+}
 
-const VideoFeedScreen = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [showComments, setShowComments] = useState(false);
-  const viewabilityConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+const VideoFeedScreen: React.FC = () => {
+  const videos = useAppSelector((state) => state.videos.videos)
+  const dispatch = useAppDispatch()
+  const { contentHeight } = useAppDimensions()
+  const [currentlyDisplayedVideoIndex, setCurrentlyDisplayedVideoIndex] = useState(0)
+  const videoFeedRef = React.useRef<FlatList>(null)
 
-  const videoSources = [
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-  ];
-
-  const videoComments = {
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4": [
-      { text: "Amazing view!", profilePictureUrl: "https://i.pinimg.com/236x/2d/c7/b9/2dc7b9725100be062bc9b9e8276d84bd.jpg", username: "NatureLover" },
-      { text: "Epic escape!", profilePictureUrl: "https://i.pinimg.com/236x/2d/c7/b9/2dc7b9725100be062bc9b9e8276d84bd.jpg", username: "Explorer99" }
-    ],
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4": [
-      { text: "Love this car!", profilePictureUrl: "https://i.pinimg.com/236x/2d/c7/b9/2dc7b9725100be062bc9b9e8276d84bd.jpg", username: "CarFanatic" },
-      { text: "Great commercial!", profilePictureUrl: "https://i.pinimg.com/236x/2d/c7/b9/2dc7b9725100be062bc9b9e8276d84bd.jpg", username: "AutoGeek" }, 
-    ],
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4": [
-      { text: "So artistic!", profilePictureUrl: "https://i.pinimg.com/236x/2d/c7/b9/2dc7b9725100be062bc9b9e8276d84bd.jpg", username: "FilmBuff" },
-      { text: "Beautiful animation!", profilePictureUrl: "https://i.pinimg.com/236x/2d/c7/b9/2dc7b9725100be062bc9b9e8276d84bd.jpg", username: "Cinephile" }
-    ]
-  };
-
-   const videoCreators = {
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4": [
-      { profilePictureUrl: "https://i.pinimg.com/236x/5e/32/44/5e3244bb8da5e97961466465c35fd45f.jpg", username: "Creator1" },
-    ],
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4": [
-      { profilePictureUrl: "https://i.pinimg.com/236x/b6/e0/06/b6e006f3014500739afa53c27a641390.jpg", username: "Creator3" },
-    ],
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4": [
-      { profilePictureUrl: "https://i.pinimg.com/236x/2d/c7/b9/2dc7b9725100be062bc9b9e8276d84bd.jpg", username: "Creator5" },
-    ]
-  };
-
-  const handleViewableItemsChanged = useRef(({ viewableItems }) => {
-    if (viewableItems.length > 0) {
-      setCurrentIndex(viewableItems[0].index);
+  useEffect(() => {
+    if (!videos || videos.length === 0) {
+      dispatch(addVideoToFeedThunk())
     }
-  }).current;
+  }, [videos, dispatch])
 
-  const commentsAmount = 10;
+  const handleViewableItemsChanged = useCallback(({ viewableItems }: any) => {
+    if (viewableItems.length > 0) {
+      setCurrentlyDisplayedVideoIndex(viewableItems[0].index)
+    }
+  }, [])
+
+  const viewabilityConfig = {
+    itemVisiblePercentThreshold: 50,
+  }
+
+  const handleAutoScroll = useCallback(() => {
+    if (videoFeedRef.current) {
+      const nextIndex = currentlyDisplayedVideoIndex + 1
+
+      if (videos && nextIndex < videos.length) {
+        setCurrentlyDisplayedVideoIndex(nextIndex)
+        videoFeedRef.current.scrollToIndex({ index: nextIndex, animated: true })
+      }
+
+      dispatch(addVideoToFeedThunk())
+    }
+  }, [currentlyDisplayedVideoIndex, videos, dispatch])
+
+  const renderItem = useCallback(
+    ({ item, index }: RenderItemProps) => (
+      <View style={styles.videoContainer}>
+        <VideoPlayer
+          videoDetails={item}
+          onNextVideo={handleAutoScroll}
+          isDisplayed={currentlyDisplayedVideoIndex === index}
+        />
+      </View>
+    ),
+    [currentlyDisplayedVideoIndex, handleAutoScroll]
+  )
 
   return (
-    <>
+    <View style={styles.container}>
       <FlatList
-        data={videoSources}
-        renderItem={({ item, index }) =>
-          <Video source={item} creator={videoCreators[item] ? videoCreators[item][0] : null} isFocused={index === currentIndex} onShowComments={() => setShowComments(true)} />
-        }
-        keyExtractor={(_, index) => index.toString()}
-        decelerationRate='fast'
-        disableIntervalMomentum={true}
-        style={{ backgroundColor: 'black' }}
+        ref={videoFeedRef}
+        data={videos}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.videoId}
+        pagingEnabled
         showsVerticalScrollIndicator={false}
+        style={[styles.videoFeed, { height: contentHeight }]}
+        decelerationRate="fast"
+        disableIntervalMomentum
+        snapToInterval={contentHeight}
+        snapToAlignment="center"
         onViewableItemsChanged={handleViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
-        snapToInterval={height}
-        snapToAlignment="center"
         getItemLayout={(_, index) => ({
-          length: height,
-          offset: height * index,
+          length: contentHeight,
+          offset: contentHeight * index,
           index,
         })}
       />
-      <CommentSection comments={videoComments[videoSources[currentIndex]] || []} commentsAmount={commentsAmount} showComments={showComments} onClose={() => setShowComments(false)}/>
-      <Navbar/>
-    </>
-  );
-};
+      <Navbar />
+    </View>
+  )
+}
 
-export default VideoFeedScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
+  videoContainer: {
+    justifyContent: 'center',
+  },
+  videoFeed: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'black',
+  },
+})
 
+export default VideoFeedScreen

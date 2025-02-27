@@ -2,8 +2,8 @@ import CustomTextInput from '../../../input/CustomTextInput'
 import SettingsSection from '../SettingsSection'
 import Setting from '../Setting'
 import React, { useState } from 'react'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
+import useAppSelector from '../../../../hooks/useAppSelector'
+import useAppDispatch from '../../../../hooks/useAppDispatch'
 import { changeEmailThunk, changeUsernameThunk } from '../../../../redux/thunks/settingsThunks'
 
 const UserDetailsSettingsSection: React.FC = () => {
