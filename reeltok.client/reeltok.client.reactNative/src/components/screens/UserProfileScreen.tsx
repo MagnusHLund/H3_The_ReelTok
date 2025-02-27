@@ -6,11 +6,7 @@ import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { Ionicons } from '@expo/vector-icons'
 
-interface UserProfileScreenProps {
-  Username: string
-}
-
-const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ Username }) => {
+const UserProfileScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
 
   const videos = Array.from({ length: 30 }, (_, index) => ({
