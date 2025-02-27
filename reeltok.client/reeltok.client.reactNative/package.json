@@ -41,8 +41,9 @@
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^3.1.0",
-    "reselect": "^5.1.1",
-    "xml2js": "^0.6.2"
+    "xml2js": "^0.6.2",
+    "expo-location": "~18.0.7",
+    "reselect": "^5.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
