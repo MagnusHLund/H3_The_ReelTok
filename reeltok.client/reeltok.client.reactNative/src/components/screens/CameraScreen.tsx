@@ -5,8 +5,8 @@ import Camera from '../Layout/common/Camera'
 const CameraScreen = () => {
   const { width, height } = useWindowDimensions()
   return (
-    <View style={{ height: height, width: width }}>
-      <Camera />
+    <View style={{ height: '100%', width: '100%' }}>
+      <Camera cameraMode="video" />
     </View>
   )
 }

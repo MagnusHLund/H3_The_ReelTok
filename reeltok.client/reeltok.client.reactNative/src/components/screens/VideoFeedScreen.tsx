@@ -5,7 +5,7 @@ import { StyleSheet, View, FlatList } from 'react-native'
 import useAppSelector from '../../hooks/useAppSelector'
 import useAppDispatch from '../../hooks/useAppDispatch'
 import { Video } from '../../redux/slices/videosSlice'
-import VideoPlayer from '../Layout/video/VideoPlayer'
+import VideoFeedPlayer from '../Layout/video/VideoFeedPlayer'
 import Navbar from '../Layout/common/Navbar'
 
 interface RenderItemProps {
@@ -52,7 +52,7 @@ const VideoFeedScreen: React.FC = () => {
   const renderItem = useCallback(
     ({ item, index }: RenderItemProps) => (
       <View style={styles.videoContainer}>
-        <VideoPlayer
+        <VideoFeedPlayer
           videoDetails={item}
           onNextVideo={handleAutoScroll}
           isDisplayed={currentlyDisplayedVideoIndex === index}

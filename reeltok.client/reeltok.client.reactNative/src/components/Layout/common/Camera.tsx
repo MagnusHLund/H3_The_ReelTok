@@ -1,17 +1,24 @@
-import { CameraView, CameraType, CameraMode, useCameraPermissions } from 'expo-camera'
+import { CameraView, CameraType, useCameraPermissions } from 'expo-camera'
 import { useState, useRef } from 'react'
-import { Button, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native'
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import CustomButton from '../../input/CustomButton';
+import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import CustomButton from '../../input/CustomButton'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
+import useAppDimensions from '../../../hooks/useAppDimensions'
 
-export const Camera = () => {
+import { Entypo } from '@expo/vector-icons'
+import VideoPlayer from './../video/VideoPlayer'
+
+interface CameraProps {
+  cameraMode: 'picture' | 'video'
+}
+
+export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
   const ref = useRef<CameraView>(null)
   const [uri, setUri] = useState<string | null>(null)
-  const [cameraMode, setCameraMode] = useState<CameraMode>('picture')
   const [facing, setFacing] = useState<CameraType>('back')
   const [permission, requestPermission] = useCameraPermissions()
   const [recording, setRecording] = useState<boolean>(false)
-  const { height, width } = useWindowDimensions()
+  const { contentHeight } = useAppDimensions()
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -27,70 +34,117 @@ export const Camera = () => {
       </View>
     )
   }
-  // function setCameraMode(){
-
-  // }
 
   function toggleCameraFacing() {
     setFacing((current) => (current === 'back' ? 'front' : 'back'))
   }
 
   const takePicture = async () => {
-    const photo = await ref.current?.takePictureAsync();
+    const photo = await ref.current?.takePictureAsync()
     if (photo?.uri) {
-      setUri(photo.uri);
-    }
-  };
-
-  const recordVideo = async () => {
-    if (recording) {
-      setRecording(false);
-      ref.current?.stopRecording();
+      setUri(photo.uri)
     }
   }
 
-  return (
-    <View style={[styles.container, { height: height, width: width }]}>
-      <CameraView style={styles.camera} facing={facing}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Text style={styles.text}>Flip Camera</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <CustomButton onPress={cameraMode ==="picture"? takePicture : recordVideo}><FontAwesome name="video-camera" size={24} color="black" /></CustomButton>
-          </TouchableOpacity>
-          <TouchableOpacity>
+  const recordVideo = async () => {
+    if (recording) {
+      setRecording(false)
+      ref.current?.stopRecording()
+    } else {
+      setRecording(true)
+      const video = await ref.current?.recordAsync()
+      if (video?.uri) {
+        setUri(video.uri)
+      }
+    }
+  }
 
+  const renderContent = () => {
+    console.log(uri)
+    return (
+      <View style={[styles.contentContainer,{height: contentHeight}]}>
+        {cameraMode === 'picture'}
+        {uri && (
+          <Image
+            source={{ uri }}
+            resizeMode="contain"
+            style={[styles.picture, { height: contentHeight }]}
+          />
+        )}
+        {cameraMode === 'video' && uri !== null && <VideoPlayer uri={uri} />}
+        <CustomButton onPress={() => setUri(null)}>
+          <MaterialCommunityIcons name="restore" size={24} color={'white'} />
+        </CustomButton>
+      </View>
+    )
+  }
+
+  const renderCamera = () => {
+    return (
+      <CameraView style={styles.camera} ref={ref} mode={cameraMode} facing={facing} mirror={true}>
+        <View style={styles.shutterContainer}>
+          <TouchableOpacity onPress={toggleCameraFacing} style={styles.flipButton}>
+            <MaterialCommunityIcons name="camera-flip" size={24} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={cameraMode === 'picture' ? takePicture : recordVideo}
+            style={styles.captureButton}
+          >
+            <Entypo name="circle" size={24} color={recording ? 'red' : 'white'} />
           </TouchableOpacity>
         </View>
       </CameraView>
-    </View>
-  )
+    )
+  }
+
+  return <View style={styles.container}>{uri ? renderContent() : renderCamera()}</View>
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#fff',
+    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'red',
   },
   message: {
     textAlign: 'center',
     paddingBottom: 10,
+    color: 'white',
   },
   camera: {
     flex: 1,
+    width: '100%',
   },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: 'transparent',
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignSelf: 'flex-end',
+  shutterContainer: {
+    position: 'absolute',
+    bottom: 44,
+    left: 0,
+    width: '100%',
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 30,
+  },
+  flipButton: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 10,
+    borderRadius: 50,
+  },
+  captureButton: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 10,
+    borderRadius: 50,
+  },
+  contentContainer: {
+    height: '100%',
+    width: '100%',
+    top: -800,
+  },
+  picture: {
+    width: 500,
+    height: 300,
   },
   text: {
     fontSize: 24,
@@ -98,4 +152,5 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 })
+
 export default Camera

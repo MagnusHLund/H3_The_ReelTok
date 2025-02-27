@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import * as Location from 'expo-location'
-import { useAppDispatch } from '../hooks/useAppDispatch'
-import { useAppSelector } from '../hooks/useAppSelector'
+import useAppDispatch from '../hooks/useAppDispatch'
+import useAppSelector from '../hooks/useAppSelector'
 import { changeLanguageThunk } from '../redux/thunks/settingsThunks'
 
 const useGeoLocationUtils = () => {

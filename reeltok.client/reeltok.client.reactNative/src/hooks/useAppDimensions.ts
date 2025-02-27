@@ -1,6 +1,7 @@
 import { useWindowDimensions } from 'react-native'
 import { useMemo } from 'react'
 
+// TODO: Use useMemo to increase performance, by not recalculating same result
 export default function useAppDimensions() {
   const { height } = useWindowDimensions()
 
