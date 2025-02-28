@@ -1,22 +1,30 @@
 import useAppDimensions from '../../../hooks/useAppDimensions'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import pickImage from '../../../utils/imagePickerUtils'
+import mediaPicker from '../../../utils/mediaPickerUtils'
 import CustomButton from '../../input/CustomButton'
 import { StyleSheet, View } from 'react-native'
 import Entypo from '@expo/vector-icons/Entypo'
 import CameraSelected from './CameraSelected'
 import Gradient from './GradientBackground'
 import React, { useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 const MediaSelector: React.FC = () => {
   const [showCamera, setShowCamera] = useState(false)
+  const [selectedMedia, setSelectedMedia] = useState<string>()
   const { navbarHeight } = useAppDimensions()
+  const navigation = useNavigation<NativeStackNavigationProp<any>>()
 
-  const handlePickImage = async () => {
+  const handlePickMedia = async () => {
     try {
-      const selectedImage = await pickImage()
+      const media = await mediaPicker()
+      if (media) {
+        setSelectedMedia(media)
+        navigation.replace('UploadVideo', { video: media })
+      }
     } catch (error) {
-      console.error(error.message)
+      throw new Error(error.message)
     }
   }
 
@@ -33,7 +41,7 @@ const MediaSelector: React.FC = () => {
           >
             <Entypo name="camera" size={24} color="white" />
           </CustomButton>
-          <CustomButton widthPercentage={0.45} onPress={handlePickImage}>
+          <CustomButton widthPercentage={0.45} onPress={handlePickMedia}>
             <MaterialIcons name="photo-library" size={24} color="white" />
           </CustomButton>
         </View>
