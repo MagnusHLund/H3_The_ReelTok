@@ -1,15 +1,14 @@
+import useOrientation from '../../../hooks/useOrientation'
+import Ionicons from '@expo/vector-icons/Ionicons'
 import React, { useEffect, useRef } from 'react'
 import { Animated } from 'react-native'
-import Ionicons from '@expo/vector-icons/Ionicons'
-import useOrientation from '../../../hooks/useOrientation'
 
 type RotatingIconProps = {
   name: string
-  size: number
   color: string
 }
 
-const RotatingIcon: React.FC<RotatingIconProps> = ({ name, size, color }) => {
+const RotatingIcon: React.FC<RotatingIconProps> = ({ name, color }) => {
   const iconRotation = useRef(new Animated.Value(0)).current
   const orientation = useOrientation()
 
@@ -40,7 +39,7 @@ const RotatingIcon: React.FC<RotatingIconProps> = ({ name, size, color }) => {
 
   return (
     <Animated.View style={{ transform: [{ rotate: rotationInterpolation }] }}>
-      <Ionicons name={name} size={size} color={color} />
+      <Ionicons name={name} size={32} color={color} />
     </Animated.View>
   )
 }

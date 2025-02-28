@@ -2,6 +2,8 @@ import { useNavigation, CommonActions } from '@react-navigation/native'
 import { BackHandler } from 'react-native'
 import { useEffect } from 'react'
 
+// TODO: if possible, make "go back" navigation use a left to right animation
+
 const useAppBackHandler = () => {
   const navigation = useNavigation()
 

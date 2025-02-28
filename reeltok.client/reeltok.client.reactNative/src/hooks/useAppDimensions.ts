@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 export default function useAppDimensions() {
   const { height } = useWindowDimensions()
 
-  const navbarHeight = height * 0.05
+  const navbarHeight = Math.ceil(height * 0.1)
   const contentHeight = height - navbarHeight
 
   return { navbarHeight, contentHeight }

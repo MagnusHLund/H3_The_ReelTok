@@ -1,11 +1,12 @@
-import { createStackNavigator, StackCardStyleInterpolator } from '@react-navigation/stack'
 import { changeLanguageThunk } from '../redux/thunks/settingsThunks'
+import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import stackScreens, { screensWebConfig } from './Routes'
 import Navbar from '../components/Layout/common/Navbar'
 import useAppDispatch from '../hooks/useAppDispatch'
 import useAppSelector from '../hooks/useAppSelector'
 import useGeoLocation from '../hooks/useGeoLocation'
+import { View, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
 
 export type ScreenName =
@@ -15,6 +16,8 @@ export type ScreenName =
   | 'Settings'
   | 'Subscriptions'
   | 'Subscribers'
+  | 'Login'
+  | 'Signup'
 
 const Stack = createStackNavigator()
 
@@ -44,22 +47,32 @@ const Router: React.FC = () => {
 
   return (
     <NavigationContainer linking={linking}>
-      <Stack.Navigator initialRouteName="VideoFeed" detachInactiveScreens>
-        {stackScreens.map((screen) => (
-          <Stack.Screen
-            key={screen.name}
-            name={screen.name}
-            component={screen.component}
-            options={{
-              headerShown: false,
-              cardStyleInterpolator: screen.navigationAnimation,
-            }}
-          />
-        ))}
-      </Stack.Navigator>
-      <Navbar />
+      <View style={styles.rootContainer}>
+        <Stack.Navigator initialRouteName="VideoFeed" detachInactiveScreens>
+          {stackScreens.map((screen) => (
+            <Stack.Screen
+              key={screen.name}
+              name={screen.name}
+              component={screen.component}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: screen.navigationAnimation,
+              }}
+            />
+          ))}
+        </Stack.Navigator>
+        <Navbar />
+      </View>
     </NavigationContainer>
   )
 }
+
+const styles = StyleSheet.create({
+  rootContainer: {
+    flexDirection: 'column',
+    height: "100%",
+    width: "100%"
+  },
+})
 
 export default Router

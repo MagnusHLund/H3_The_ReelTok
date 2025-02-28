@@ -1,11 +1,13 @@
 import { CardStyleInterpolators, StackCardStyleInterpolator } from '@react-navigation/stack'
-import { ScreenName } from './Router'
-import VideoFeedScreen from '../components/screens/VideoFeedScreen'
+import SubscriptionsScreen from '../components/screens/SubscriptionsScreen'
 import UploadVideoScreen from '../components/screens/UploadVideoScreen'
 import UserProfileScreen from '../components/screens/UserProfileScreen'
-import SettingsScreen from '../components/screens/SettingsScreen'
-import SubscriptionsScreen from '../components/screens/SubscriptionsScreen'
 import SubscribersScreen from '../components/screens/SubscribersScreen'
+import VideoFeedScreen from '../components/screens/VideoFeedScreen'
+import SettingsScreen from '../components/screens/SettingsScreen'
+import { ScreenName } from './Router'
+import LoginScreen from '../components/screens/LoginScreen'
+import SignUpScreen from '../components/screens/SignUpScreen'
 
 interface StackScreenProps {
   name: ScreenName
@@ -48,6 +50,18 @@ const stackScreens: StackScreenProps[] = [
     name: 'Subscribers',
     webRoute: 'subscribers',
     component: SubscribersScreen,
+    navigationAnimation: CardStyleInterpolators.forHorizontalIOS,
+  },
+  {
+    name: 'Login',
+    webRoute: 'login',
+    component: LoginScreen,
+    navigationAnimation: CardStyleInterpolators.forHorizontalIOS,
+  },
+  {
+    name: 'Signup',
+    webRoute: 'signup',
+    component: SignUpScreen,
     navigationAnimation: CardStyleInterpolators.forHorizontalIOS,
   },
 ]

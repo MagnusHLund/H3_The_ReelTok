@@ -7,7 +7,6 @@ import MediaSelector from './MediaSelector'
 import RotatingIcon from './RotatingIcon'
 import React, { useState } from 'react'
 
-// TODO: Cant navigate to same page as you are already on.
 const Navbar: React.FC = () => {
   const navigateToScreen = useAppNavigation()
   const [displayMediaSelector, setDisplayMediaSelector] = useState(false)
@@ -20,16 +19,18 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      {displayMediaSelector && <MediaSelector />}
+      <View style={{ display: displayMediaSelector ? 'flex' : 'none' }}>
+        <MediaSelector />
+      </View>
       <View style={[styles.container, { height: navbarHeight }]}>
         <CustomButton transparent={true} onPress={() => navigateToScreen('VideoFeed')}>
-          <RotatingIcon name="play" size={32} color="white" />
+          <RotatingIcon name="play" color="white" />
         </CustomButton>
         <CustomButton transparent={true} onPress={toggleMediaSelectorForVideoUpload}>
-          <RotatingIcon name="add" size={32} color="white" />
+          <RotatingIcon name="add" color="white" />
         </CustomButton>
         <CustomButton transparent={true} onPress={() => navigateToScreen('Profile')}>
-          <RotatingIcon name="person-circle-sharp" size={32} color="white" />
+          <RotatingIcon name="person-circle-sharp" color="white" />
         </CustomButton>
       </View>
     </>
@@ -41,7 +42,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     width: '100%',
-    height: '6%',
     backgroundColor: 'black',
   },
 })

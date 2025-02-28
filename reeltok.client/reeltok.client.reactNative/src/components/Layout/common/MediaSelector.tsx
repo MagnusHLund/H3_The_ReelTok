@@ -29,7 +29,7 @@ const MediaSelector: React.FC = () => {
   }
 
   return (
-    <View style={[styles.outerContainer, { paddingBottom: navbarHeight }]}>
+    <View style={[styles.outerContainer]}>
       {showCamera && <CameraSelected />}
       <Gradient colors={['transparent', 'transparent', 'black', 'black']}>
         <View style={styles.innerContainer}>
@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     width: '100%',
     position: 'absolute',
-    paddingBottom: 10,
     bottom: 0,
   },
   innerContainer: {
