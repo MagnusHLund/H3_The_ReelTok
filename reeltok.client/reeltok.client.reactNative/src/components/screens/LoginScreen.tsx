@@ -1,12 +1,14 @@
-import { View, StyleSheet, Image, useWindowDimensions } from 'react-native'
-import React from 'react'
+import useAppDimensions from '../../hooks/useAppDimensions'
+import { View, StyleSheet, Image } from 'react-native'
 import CustomTextInput from '../input/CustomTextInput'
 import CustomButton from '../input/CustomButton'
+import React from 'react'
 
 const LoginScreen = () => {
-  const { height, width } = useWindowDimensions()
+  const { contentHeight } = useAppDimensions()
+
   return (
-    <View style={{ height: height, width: width }}>
+    <View style={styles.outerContainer}>
       <View style={styles.logoContainer}>
         <Image
           style={styles.logo}
@@ -18,7 +20,7 @@ const LoginScreen = () => {
         <CustomTextInput placeholder="password.." password></CustomTextInput>
         <CustomButton
           widthPercentage={0.8}
-          onPress={() => console.log('submitited')}
+          onPress={() => console.log('submitted')}
           title="Log ind"
         ></CustomButton>
       </View>
@@ -27,6 +29,10 @@ const LoginScreen = () => {
 }
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    width: '100%',
+    height: '100%',
+  },
   inputContainer: {
     flexDirection: 'column',
     marginLeft: '10%',

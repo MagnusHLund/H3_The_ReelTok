@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, Platform } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import useAppDimensions from '../../../hooks/useAppDimensions'
 import { Video } from '../../../redux/slices/videosSlice'
 import CommentsSection from '../comments/CommentsSection'
