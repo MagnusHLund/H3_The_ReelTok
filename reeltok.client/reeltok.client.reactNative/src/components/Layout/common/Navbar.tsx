@@ -1,39 +1,36 @@
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import useAppBackHandler from '../../../hooks/useAppBackHandler'
+import useAppNavigation from '../../../hooks/useAppNavigation'
 import useAppDimensions from '../../../hooks/useAppDimensions'
-import { useNavigation } from '@react-navigation/native'
 import CustomButton from '../../input/CustomButton'
 import { View, StyleSheet } from 'react-native'
-import { ScreenName } from '../../../Router'
 import MediaSelector from './MediaSelector'
 import RotatingIcon from './RotatingIcon'
 import React, { useState } from 'react'
 
-// TODO: Cant navigate to same page as you are already on.
 const Navbar: React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<any>>()
+  const navigateToScreen = useAppNavigation()
   const [displayMediaSelector, setDisplayMediaSelector] = useState(false)
   const { navbarHeight } = useAppDimensions()
+  useAppBackHandler()
 
   const toggleMediaSelectorForVideoUpload = () => {
     setDisplayMediaSelector(!displayMediaSelector)
   }
 
-  const handleNavigation = (screenName: ScreenName) => {
-    navigation.replace(screenName)
-  }
-
   return (
     <>
-      {displayMediaSelector && <MediaSelector />}
+      <View style={{ display: displayMediaSelector ? 'flex' : 'none' }}>
+        <MediaSelector />
+      </View>
       <View style={[styles.container, { height: navbarHeight }]}>
-        <CustomButton transparent={true} onPress={() => handleNavigation('VideoFeed')}>
-          <RotatingIcon name="play" size={32} color="white" />
+        <CustomButton transparent={true} onPress={() => navigateToScreen('VideoFeed')}>
+          <RotatingIcon name="play" color="white" />
         </CustomButton>
         <CustomButton transparent={true} onPress={toggleMediaSelectorForVideoUpload}>
-          <RotatingIcon name="add" size={32} color="white" />
+          <RotatingIcon name="add" color="white" />
         </CustomButton>
-        <CustomButton transparent={true} onPress={() => handleNavigation('Profile')}>
-          <RotatingIcon name="person-circle-sharp" size={32} color="white" />
+        <CustomButton transparent={true} onPress={() => navigateToScreen('Profile')}>
+          <RotatingIcon name="person-circle-sharp" color="white" />
         </CustomButton>
       </View>
     </>
@@ -45,7 +42,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     width: '100%',
-    height: '6%',
     backgroundColor: 'black',
   },
 })

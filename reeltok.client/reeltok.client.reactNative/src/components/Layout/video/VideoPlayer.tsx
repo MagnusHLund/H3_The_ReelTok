@@ -1,6 +1,11 @@
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
+import useAppDimensions from '../../../hooks/useAppDimensions'
+import { Video } from '../../../redux/slices/videosSlice'
+import CommentsSection from '../comments/CommentsSection'
+import { useIsFocused } from '@react-navigation/native'
 import { useVideoPlayer, VideoView } from 'expo-video'
+import { useEffect, useState, useRef } from 'react'
+import VideoOverlay from './VideoOverlay'
 
 interface VideoPlayerProps {
   videoDetails?: Video
@@ -68,20 +73,50 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       player.play()
     }
   }
+
+  if (videoDetails === undefined) {
+    return <></> // TODO: Use VideoSpinner
+  }
+
   return (
-    <TouchableOpacity onPress={changeVideoPlayState} style={styles.touchableArea} activeOpacity={1}>
-      <View style={styles.videoContainer}>
-        <VideoView
-          player={player}
-          style={styles.video}
-          nativeControls={false}
-          contentFit="contain"
+    <View style={[styles.container, { height: contentHeight }]}>
+      <VideoOverlay
+        videoDetails={videoDetails}
+        onCommentsOpen={() => setShowCommentsSection(true)}
+      />
+      <TouchableOpacity
+        onPress={changeVideoPlayState}
+        style={styles.touchableArea}
+        activeOpacity={1}
+      >
+        <View style={styles.videoContainer}>
+          <VideoView
+            player={player}
+            style={styles.video}
+            nativeControls={false}
+            contentFit="contain"
+          />
+        </View>
+      </TouchableOpacity>
+      {showCommentsSection && (
+        <CommentsSection
+          videoId={videoDetails.videoId}
+          onClose={() => {
+            setShowCommentsSection(false)
+          }}
         />
-      </View>
-    </TouchableOpacity>
+      )}
+    </View>
   )
 }
+
 const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+  },
   touchableArea: {
     width: '100%',
     height: '100%',
@@ -96,4 +131,5 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 })
+
 export default VideoPlayer
