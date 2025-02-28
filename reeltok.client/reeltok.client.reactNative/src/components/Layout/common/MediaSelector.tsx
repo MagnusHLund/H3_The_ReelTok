@@ -1,23 +1,28 @@
-import { StyleSheet, View } from 'react-native'
-import CustomButton from '../../input/CustomButton'
-import Entypo from '@expo/vector-icons/Entypo'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { useNavigation } from '@react-navigation/native'
-import Gradient from './GradientBackground'
 import useAppDimensions from '../../../hooks/useAppDimensions'
-import pickImage from '../../../utils/imagePickerUtils'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import mediaPicker from '../../../utils/mediaPickerUtils'
+import { useNavigation } from '@react-navigation/native'
+import CustomButton from '../../input/CustomButton'
+import { StyleSheet, View } from 'react-native'
+import Entypo from '@expo/vector-icons/Entypo'
+import Gradient from './GradientBackground'
+import React, { useState } from 'react'
 
 const MediaSelector: React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<any>>()
+  const [selectedMedia, setSelectedMedia] = useState<string>()
   const { navbarHeight } = useAppDimensions()
+  const navigation = useNavigation<NativeStackNavigationProp<any>>()
 
-  const handlePickImage = async () => {
+  const handlePickMedia = async () => {
     try {
-      // TODO: @Jorjo6712 the selectedImage is unused.
-      const selectedImage = await pickImage()
+      const media = await mediaPicker()
+      if (media) {
+        setSelectedMedia(media)
+        navigation.navigate('UploadVideo', { video: media })
+      }
     } catch (error) {
-      console.error(error.message)
+      throw new Error(error.message)
     }
   }
 
@@ -28,12 +33,12 @@ const MediaSelector: React.FC = () => {
           <CustomButton
             widthPercentage={0.45}
             onPress={() => {
-              navigation.replace('Camera')
+              navigation.navigate('Camera')
             }}
           >
             <Entypo name="camera" size={24} color="white" />
           </CustomButton>
-          <CustomButton widthPercentage={0.45} onPress={handlePickImage}>
+          <CustomButton widthPercentage={0.45} onPress={handlePickMedia}>
             <MaterialIcons name="photo-library" size={24} color="white" />
           </CustomButton>
         </View>

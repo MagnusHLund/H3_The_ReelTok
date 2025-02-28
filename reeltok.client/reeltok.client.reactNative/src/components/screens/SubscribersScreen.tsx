@@ -1,10 +1,10 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import Header from '../Layout/common/Header'
 import useTranslation from '../../hooks/useTranslations'
+import { ScrollView, StyleSheet } from 'react-native'
 import UserList from '../Layout/common/UserList'
+import Header from '../Layout/common/Header'
+import React from 'react'
 
-const SubscribersScreen = () => {
+const SubscribersScreen: React.FC = () => {
   const t = useTranslation()
 
   const Subscribers: {
@@ -87,7 +87,7 @@ const SubscribersScreen = () => {
 
   return (
     <ScrollView>
-      <Header showBackButton title={t('subscribers.subscribers')} />
+      <Header showBackButton title={t('common.subscribers')} />
       <UserList users={Subscribers} />
     </ScrollView>
   )

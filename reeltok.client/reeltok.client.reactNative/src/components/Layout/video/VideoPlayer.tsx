@@ -3,13 +3,64 @@ import React from 'react'
 import { useVideoPlayer, VideoView } from 'expo-video'
 
 interface VideoPlayerProps {
-  uri: string
+  videoDetails?: Video
+  loopAmount?: number
+  isDisplayed: boolean
+  onAutoScroll: () => void
 }
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ uri }) => {
-  const player = useVideoPlayer(uri ?? '', (player) => {
+
+// TODO: Add play icon, when video is paused
+const VideoPlayer: React.FC<VideoPlayerProps> = ({
+  videoDetails,
+  loopAmount = 2,
+  isDisplayed,
+  onAutoScroll,
+}) => {
+  const [playCount, setPlayCount] = useState(0)
+  const { contentHeight } = useAppDimensions()
+  const isVideoFocused = useIsFocused()
+  const [showCommentsSection, setShowCommentsSection] = useState(false)
+  const showCommentsSectionRef = useRef(showCommentsSection)
+
+  const player = useVideoPlayer(videoDetails?.streamUrl ?? '', (player) => {
     player.loop = true
     player.play()
   })
+
+  useEffect(() => {
+    showCommentsSectionRef.current = showCommentsSection
+  }, [showCommentsSection])
+
+  useEffect(() => {
+    if (isDisplayed && isVideoFocused) {
+      player.play()
+    } else {
+      player.currentTime = 0
+      player.pause()
+    }
+  }, [isVideoFocused, player, isDisplayed])
+
+  useEffect(() => {
+    if (playCount >= loopAmount) {
+      onAutoScroll()
+      setPlayCount(0)
+    }
+  }, [playCount, loopAmount, onAutoScroll])
+
+  useEffect(() => {
+    const handlePlayToEnd = () => {
+      if (!showCommentsSectionRef.current) {
+        setPlayCount((prevCount) => prevCount + 1)
+      }
+    }
+
+    player.addListener('playToEnd', handlePlayToEnd)
+
+    return () => {
+      player.removeListener('playToEnd', handlePlayToEnd)
+    }
+  }, [player])
+
   const changeVideoPlayState = () => {
     if (player.playing) {
       player.pause()

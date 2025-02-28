@@ -50,7 +50,6 @@ const Router = () => {
             headerShown: false,
           }}
         />
-        {/* TODO: FIX THIS COMPONENT TYPE ERROR  */}
         <Stack.Screen
           name="Profile"
           component={UserProfileScreen}
