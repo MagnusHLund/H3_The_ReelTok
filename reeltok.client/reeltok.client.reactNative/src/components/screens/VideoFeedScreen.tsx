@@ -18,6 +18,7 @@ interface RenderItemProps {
 // TODO: Fix bug with it not being able to scroll more than 48 times.
 // TODO: Limit scroll speed. It can scroll SUPER fast on web.
 // TODO: The list should include only 3 video players. One to watch, one to scroll back and one to scroll forward. This will help performance.
+// TODO: Once the phone rotates, video and comments are displayed next to each other.
 const VideoFeedScreen: React.FC = () => {
   const videos = useAppSelector((state) => state.videos.videos)
   const dispatch = useAppDispatch()
