@@ -1,0 +1,29 @@
+<translations>
+  <common>
+    <email>Email</email>
+    <password>Password</password>
+    <subscribers>Subscribers</subscribers>
+    <subscriptions>Subscriptions</subscriptions>
+  </common>
+  <login>
+    <login>Login</login>
+    <orSignUpIfYouAreNew>... or sign up if you are new!</orSignUpIfYouAreNew>
+  </login>
+  <signUp>
+    <signUp>Sign up</signUp>
+    <orLoginIfYouArentNew>... or login if you aren't new!</orLoginIfYouArentNew>
+  </signUp>
+  <settings>
+    <settings>Settings</settings>
+    <userDetails>User details</userDetails>
+    <username>Username</username>
+    <email>Email</email>
+    <recommendations>Recommendations</recommendations>
+    <selectCategory>Select category</selectCategory>
+    <language>Language</language>
+    <logout>Logout</logout>
+  </settings>
+  <profile>
+    <posts>Posts</posts>
+  </profile>
+</translations>

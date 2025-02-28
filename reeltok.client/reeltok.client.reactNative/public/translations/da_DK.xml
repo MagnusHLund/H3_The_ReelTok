@@ -1,0 +1,29 @@
+<translations>
+  <common>
+    <email>Email</email>
+    <password>Adgangskode</password>
+    <subscribers>Abonnenter</subscribers>
+    <subscriptions>Abonnementer</subscriptions>
+  </common>
+  <login>
+    <login>Login</login>
+    <orSignUpIfYouAreNew>... eller tilmeld dig hvis du er ny!</orSignUpIfYouAreNew>
+  </login>
+  <signUp>
+    <signUp>Tilmeld</signUp>
+    <orLoginIfYouArentNew>... eller login hvis du ikke er ny!</orLoginIfYouArentNew>
+  </signUp>
+  <settings>
+    <settings>Indstillinger</settings>
+    <userDetails>Bruger informationer</userDetails>
+    <username>Brugernavn</username>
+    <email>Email</email>
+    <recommendations>Anbefalinger</recommendations>
+    <selectCategory>Vælg kategori</selectCategory>
+    <language>Sprog</language>
+    <logout>Log ud</logout>
+  </settings>
+  <profile>
+    <posts>Indlæg</posts>
+  </profile>
+</translations>
