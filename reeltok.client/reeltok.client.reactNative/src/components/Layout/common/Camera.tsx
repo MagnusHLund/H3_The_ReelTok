@@ -1,12 +1,13 @@
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera'
-import { useState, useRef } from 'react'
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
-import CustomButton from '../../input/CustomButton'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { CameraView, CameraType, useCameraPermissions } from 'expo-camera'
 import useAppDimensions from '../../../hooks/useAppDimensions'
-
+import { useNavigation } from '@react-navigation/native'
+import UploadedVideo from './../upload/UploadedVideo'
+import CustomButton from '../../input/CustomButton'
 import { Entypo } from '@expo/vector-icons'
-import VideoPlayer from './../video/VideoPlayer'
+import { useState, useRef } from 'react'
 
 interface CameraProps {
   cameraMode: 'picture' | 'video'
@@ -19,6 +20,7 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
   const [permission, requestPermission] = useCameraPermissions()
   const [recording, setRecording] = useState<boolean>(false)
   const { contentHeight } = useAppDimensions()
+  
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -70,29 +72,43 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
             style={[styles.picture, { height: contentHeight }]}
           />
         )}
-        {cameraMode === 'video' && uri !== null && <VideoPlayer uri={uri} />}
-        <CustomButton onPress={() => setUri(null)}>
-          <MaterialCommunityIcons name="restore" size={24} color={'white'} />
-        </CustomButton>
+        {cameraMode === 'video' && uri !== null && <UploadedVideo uri={uri} />}
+        <View style={styles.contentButton}>
+          <CustomButton onPress={() => setUri(null)}>
+            <MaterialCommunityIcons name="restore" size={50} color={'white'} />
+          </CustomButton>
+        </View>
+        <View style={styles.closeButton}>
+          <CustomButton onPress={navigation.goBack}>
+            <Entypo name="cross" size={50} color="white" />
+          </CustomButton>
+        </View>
       </View>
     )
   }
 
   const renderCamera = () => {
     return (
-      <CameraView style={styles.camera} ref={ref} mode={cameraMode} facing={facing} mirror={true}>
-        <View style={styles.shutterContainer}>
-          <TouchableOpacity onPress={toggleCameraFacing} style={styles.flipButton}>
-            <MaterialCommunityIcons name="camera-flip" size={24} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={cameraMode === 'picture' ? takePicture : recordVideo}
-            style={styles.captureButton}
-          >
-            <Entypo name="circle" size={24} color={recording ? 'red' : 'white'} />
-          </TouchableOpacity>
+      <>
+        <CameraView style={styles.camera} ref={ref} mode={cameraMode} facing={facing} mirror={true}>
+          <View style={styles.shutterContainer}>
+            <TouchableOpacity onPress={toggleCameraFacing} style={styles.flipButton}>
+              <MaterialCommunityIcons name="camera-flip" size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={cameraMode === 'picture' ? takePicture : recordVideo}
+              style={styles.captureButton}
+            >
+              <Entypo name="circle" size={24} color={recording ? 'red' : 'white'} />
+            </TouchableOpacity>
+          </View>
+        </CameraView>
+        <View style={styles.closeButton}>
+          <CustomButton onPress={navigation.goBack}>
+            <Entypo name="cross" size={50} color="white" />
+          </CustomButton>
         </View>
-      </CameraView>
+      </>
     )
   }
 
@@ -148,6 +164,20 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
+  },
+  contentButton: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: '85%',
+    left: '33.33%',
+  },
+  closeButton: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    left: '66%',
+    top: '8%',
   },
 })
 
