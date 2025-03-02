@@ -6,6 +6,7 @@ using reeltok.api.videos.Interfaces;
 using reeltok.api.videos.ValueObjects;
 using reeltok.api.videos.DTOs.GetRecommendedVideos;
 using reeltok.api.videos.DTOs.GetUserDetailsForVideo;
+using reeltok.api.videos.Factories;
 
 namespace reeltok.api.videos.Services
 {
@@ -34,17 +35,24 @@ namespace reeltok.api.videos.Services
             await _storageService.RemoveVideoFromFileServerAsync(streamPath).ConfigureAwait(false);
         }
 
-        public async Task<List<VideoEntity>> GetVideosForFeedAsync(Guid userId, byte amount)
+        public async Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(Guid userId, byte amount)
         {
             List<Guid> videoIds = await GetRecommendedVideoIdsAsync(userId, amount).ConfigureAwait(false);
             List<VideoEntity> videos = await _videosRepository.GetVideosForFeedAsync(videoIds).ConfigureAwait(false);
 
-            List<VideoCreatorDetailsEntity> videoCreatorDetails = await GetVideoCreatorDetailsAsync(videoIds)
+            List<VideoCreatorEntity> videoCreatorDetails = await GetVideoCreatorDetailsAsync(videoIds)
                 .ConfigureAwait(false);
 
             List<VideoLikesEntity> videoLikes = await _likesService.GetVideoLikesAsync(userId, videoIds).ConfigureAwait(false);
 
-            List<VideoForFeedEntity> videosForFeed = 
+            List<VideoForFeedEntity> videosForFeed = VideoFactory.CreateVideoForFeedEntityList(
+                videoIds,
+                videos,
+                videoCreatorDetails,
+                videoLikes
+            );
+
+            return videosForFeed;
         }
 
         public async Task<List<VideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize)

@@ -8,20 +8,20 @@ namespace reeltok.api.videos.Entities
         public VideoDetails VideoDetails { get; set; }
         public VideoLikes VideoLikes { get; set; }
         public UserDetails VideoCreatorUserDetails { get; set; }
-        public Uri StreamUrl { get; set; }
+        public string StreamPath { get; set; }
 
         public VideoForFeedEntity(
             Guid videoId,
             VideoDetails videoDetails,
             VideoLikes videoLikes,
             UserDetails videoCreatorUserDetails,
-            Uri streamUrl)
+            string streamPath)
         {
             VideoId = videoId;
             VideoDetails = videoDetails;
             VideoLikes = videoLikes;
             VideoCreatorUserDetails = videoCreatorUserDetails;
-            StreamUrl = streamUrl;
+            StreamPath = streamPath;
         }
 
         public VideoForFeedEntity() { }

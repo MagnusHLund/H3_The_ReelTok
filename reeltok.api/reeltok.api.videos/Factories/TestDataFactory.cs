@@ -1,14 +1,11 @@
 using System.Net;
 using System.Text;
 using reeltok.api.videos.DTOs;
+using reeltok.api.videos.Enums;
+using reeltok.api.videos.Entities;
 using reeltok.api.videos.ValueObjects;
 using reeltok.api.videos.DTOs.LikeVideo;
 using reeltok.api.videos.DTOs.RemoveLike;
-using reeltok.api.videos.DTOs.UserLikedVideo;
-using reeltok.api.videos.Entities;
-using reeltok.api.videos.Enums;
-using Microsoft.IdentityModel.Tokens;
-using Moq;
 
 namespace reeltok.api.videos.Factories
 {

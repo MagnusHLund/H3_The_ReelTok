@@ -49,12 +49,12 @@ namespace reeltok.api.videos.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<VideoLikesEntity> GetLikesForVideos(Guid userId, List<Guid> videoIds)
+        public async Task<List<VideoLikesEntity>> GetLikesForVideos(Guid userId, List<Guid> videoIds)
         {
             bool hasUserLikedVideo = await HasUserLikedVideoAsync(userId, videoIds).ConfigureAwait(false);
             uint videoTotalLikes = await _likesRepository.GetTotalLikesForVideosAsync(videoIds).ConfigureAwait(false);
 
-            return new VideoLikesEntity(videoTotalLikes, hasUserLikedVideo);
+            return new VideoLikesEntity(videoIds, videoTotalLikes, hasUserLikedVideo);
         }
 
         private async Task<bool> HasUserLikedVideoAsync(Guid userId, List<Guid> videoIds)
