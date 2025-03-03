@@ -1,11 +1,9 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.Extensions.Configuration;
 using Moq;
+using Xunit;
+using reeltok.api.videos.Utils;
+using reeltok.api.videos.Services;
 using reeltok.api.videos.Entities;
 using reeltok.api.videos.Factories;
-using reeltok.api.videos.Services;
-using reeltok.api.videos.Utils;
-using Xunit;
 
 namespace reeltok.api.videos.Tests
 {
@@ -39,11 +37,25 @@ namespace reeltok.api.videos.Tests
         public async Task UploadVideoToFileServerAsync_WithValidParameters_SuccessfullyUploadVideo()
         {
             // Arrange
-            IFormFile videoFile = new Mock<IFormFile>().Object;
+            var videoFileMock = new Mock<IFormFile>();
+            var fileName = "test_video.mp4";
+            var videoContent = new byte[] { /* Your test video content as byte array */ };
+
+            var memoryStream = new MemoryStream(videoContent);
+            videoFileMock.Setup(f => f.FileName).Returns(fileName);
+            videoFileMock.Setup(f => f.OpenReadStream()).Returns(memoryStream);
+
+            IFormFile videoFile = videoFileMock.Object;
             VideoEntity video = TestDataFactory.CreateVideoEntity();
 
-            _mockConfiguration.Setup(x => x[It.IsAny<string>()])
-                .Returns("C:/ReelTok/Videos/");
+            _mockConfiguration.Setup(x => x["FileServer:Hostname"])
+                .Returns("localhost");
+            _mockConfiguration.Setup(x => x["FileServer:Username"])
+                .Returns("VideosService");
+            _mockConfiguration.Setup(x => x["FileServer:Password"])
+                .Returns("SecurePassw0rd");
+            _mockConfiguration.Setup(x => x["FileServer:Directory"])
+                .Returns("videos");
 
             // Act
             await _storageService.UploadVideoToFileServerAsync(videoFile, video.VideoId, video.UserId);

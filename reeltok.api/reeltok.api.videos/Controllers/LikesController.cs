@@ -1,3 +1,4 @@
+using reeltok.api.videos.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using reeltok.api.videos.Interfaces;
 using reeltok.api.videos.ActionFilters;
@@ -19,18 +20,34 @@ namespace reeltok.api.videos.Controllers
 
         [HttpPost]
         [Route("AddLike")]
-        public async Task<IActionResult> LikeVideoAsync(
-            [FromBody] AddLikeRequestDto request)
+        public async Task<IActionResult> LikeVideoAsync([FromBody] AddLikeRequestDto request)
         {
-            return Ok();
+            bool success = await _likesService.LikeVideoAsync(request.UserId, request.VideoId).ConfigureAwait(false);
+
+            if (!success)
+            {
+                FailureResponseDto failureResponseDto = new FailureResponseDto("Unable to like the video!");
+                return BadRequest(failureResponseDto);
+            }
+
+            AddLikeResponseDto responseDto = new AddLikeResponseDto();
+            return Ok(responseDto);
         }
 
         [HttpPost]
         [Route("RemoveLike")]
-        public async Task<IActionResult> RemoveLikeFromVideoAsync(
-            [FromBody] RemoveLikeRequestDto request)
+        public async Task<IActionResult> RemoveLikeFromVideoAsync([FromBody] RemoveLikeRequestDto request)
         {
-            return Ok();
+            bool success = await _likesService.LikeVideoAsync(request.UserId, request.VideoId).ConfigureAwait(false);
+
+            if (!success)
+            {
+                FailureResponseDto failureResponseDto = new FailureResponseDto("Unable to remove like from the video!");
+                return BadRequest(failureResponseDto);
+            }
+
+            RemoveLikeResponseDto responseDto = new RemoveLikeResponseDto();
+            return Ok(responseDto);
         }
     }
 }

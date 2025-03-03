@@ -1,5 +1,4 @@
-using MediaToolkit;
-using MediaToolkit.Model;
+using Xabe.FFmpeg;
 
 namespace reeltok.api.videos.Utils
 {
@@ -19,9 +18,9 @@ namespace reeltok.api.videos.Utils
         // Public method to validate video length
         public static async Task<bool> IsVideoMinimumLength(IFormFile video)
         {
-            MediaFile media = await GetMediaFileAsync(video).ConfigureAwait(false);
+            var mediaInfo = await GetMediaInfoAsync(video).ConfigureAwait(false);
             TimeSpan minimumDuration = TimeSpan.FromSeconds(1);
-            return media.Metadata.Duration >= minimumDuration;
+            return mediaInfo.Duration >= minimumDuration;
         }
 
         // Public method to validate file extension
@@ -35,27 +34,22 @@ namespace reeltok.api.videos.Utils
         // Public method to check if the file has a video stream
         public static async Task<bool> HasVideoStream(IFormFile video)
         {
-            MediaFile media = await GetMediaFileAsync(video).ConfigureAwait(false);
-            return media.Metadata.VideoData != null;
+            var mediaInfo = await GetMediaInfoAsync(video).ConfigureAwait(false);
+            return mediaInfo.VideoStreams.Count() > 0;
         }
 
-        // Private helper method to get MediaFile object
-        private static async Task<MediaFile> GetMediaFileAsync(IFormFile video)
+        // Private helper method to get MediaInfo object
+        private static async Task<IMediaInfo> GetMediaInfoAsync(IFormFile video)
         {
             string temporaryFilePath = Path.GetTempFileName();
             using (FileStream stream = new FileStream(temporaryFilePath, FileMode.Create))
             {
-                await video.CopyToAsync(stream);
+                await video.CopyToAsync(stream).ConfigureAwait(false);
             }
 
-            MediaFile media = new MediaFile { Filename = temporaryFilePath };
-            using (Engine engine = new Engine())
-            {
-                engine.GetMetadata(media);
-            }
-
+            var mediaInfo = await FFmpeg.GetMediaInfo(temporaryFilePath).ConfigureAwait(false);
             File.Delete(temporaryFilePath);
-            return media;
+            return mediaInfo;
         }
     }
 }

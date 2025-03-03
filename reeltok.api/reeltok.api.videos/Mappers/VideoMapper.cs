@@ -2,19 +2,30 @@ using reeltok.api.videos.Utils;
 using reeltok.api.videos.Entities;
 using reeltok.api.videos.ValueObjects;
 using reeltok.api.videos.DTOs.GetVideosForProfile;
+using reeltok.api.videos.DTOs;
 
 namespace reeltok.api.videos.Mappers
 {
     internal static class VideoMapper
     {
-        internal static GetVideosForProfileResponseDto ConvertVideoEntityToGetVideosForProfileResponseDto(VideoEntity videoEntity)
+        internal static GetVideosForProfileResponseDto ConvertVideoEntityToGetVideosForProfileResponseDto(
+            List<VideoEntity> videoEntity)
         {
-            Uri streamUrl = VideoUtils.GetStreamUrl(videoEntity.StreamPath);
+            List<ProfileVideoEntity> profileVideos = new List<ProfileVideoEntity>();
+
+            foreach (VideoEntity video in videoEntity)
+            {
+                ProfileVideoEntity profileVideo = new ProfileVideoEntity(
+                    videoId: video.VideoId,
+                    streamPath: video.StreamPath,
+                    uploadedAt: video.UploadedAt
+                );
+
+                profileVideos.Add(profileVideo);
+            }
 
             return new GetVideosForProfileResponseDto(
-                videoId: videoEntity.VideoId,
-                streamUrl: streamUrl,
-                uploadedAt: videoEntity.UploadedAt
+                profileVideos: profileVideos
             );
         }
 
@@ -33,6 +44,19 @@ namespace reeltok.api.videos.Mappers
                 streamPath: streamPath,
                 uploadedAt: currentUnixTime
             );
+        }
+
+        internal static VideoUpload ConvertUploadVideoRequestDtoToVideoUpload(UploadVideoRequestDto requestDto)
+        {
+            VideoDetails videoDetails = new VideoDetails(
+                title: requestDto.Title,
+                description: requestDto.Description,
+                tag: 0
+            );
+
+            return new VideoUpload(
+                videoDetails: videoDetails,
+                videoFile: requestDto.VideoFile);
         }
     }
 }

@@ -1,16 +1,14 @@
+using reeltok.api.videos.Entities;
+
 namespace reeltok.api.videos.DTOs.GetVideosForProfile
 {
     public class GetVideosForProfileResponseDto
     {
-        public Guid VideoId { get; set; }
-        public Uri StreamUrl { get; set; }
-        public uint UploadedAt { get; set; }
+        public List<ProfileVideoEntity> ProfileVideos { get; set; }
 
-        public GetVideosForProfileResponseDto(Guid videoId, Uri streamUrl, uint uploadedAt)
+        public GetVideosForProfileResponseDto(List<ProfileVideoEntity> profileVideos)
         {
-            VideoId = videoId;
-            StreamUrl = streamUrl;
-            UploadedAt = uploadedAt;
+            ProfileVideos = profileVideos;
         }
     }
 }

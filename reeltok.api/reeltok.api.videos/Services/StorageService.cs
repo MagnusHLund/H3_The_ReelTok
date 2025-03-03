@@ -1,5 +1,5 @@
-using SharpCifs.Smb;
-using SharpCifs.Util.Sharpen;
+using Renci.SshNet;
+using Renci.SshNet.Common;
 using reeltok.api.videos.Utils;
 using reeltok.api.videos.Interfaces;
 
@@ -7,7 +7,6 @@ namespace reeltok.api.videos.Services
 {
     public class StorageService : BaseService, IStorageService
     {
-        // TODO: Implement queue for uploading / deleting videos?
         private const string HostnameConfig = "FileServer:Hostname";
         private const string DirectoryConfig = "FileServer:Directory";
         private const string UsernameConfig = "FileServer:Username";
@@ -21,59 +20,69 @@ namespace reeltok.api.videos.Services
 
         public async Task UploadVideoToFileServerAsync(IFormFile videoFile, Guid videoId, Guid userId)
         {
-            string smbHostname = _appSettingsUtils.GetConfigurationValue(HostnameConfig);
-            string smbDirectory = _appSettingsUtils.GetConfigurationValue(DirectoryConfig);
-            string smbUsername = _appSettingsUtils.GetConfigurationValue(UsernameConfig);
-            string smbPassword = _appSettingsUtils.GetConfigurationValue(PasswordConfig);
+            string sftpHostname = _appSettingsUtils.GetConfigurationValue(HostnameConfig);
+            string sftpDirectory = _appSettingsUtils.GetConfigurationValue(DirectoryConfig);
+            string sftpUsername = _appSettingsUtils.GetConfigurationValue(UsernameConfig);
+            string sftpPassword = _appSettingsUtils.GetConfigurationValue(PasswordConfig);
 
             string fileExtension = Path.GetExtension(videoFile.FileName).ToUpperInvariant();
-
             string filePath = GenerateFilePath(userId, videoId, fileExtension);
-            string fullPath = $"smb://{smbHostname}/{smbDirectory}/{filePath}";
 
-            try
+            using (var sftpClient = new SftpClient(sftpHostname, sftpUsername, sftpPassword))
             {
-                NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, smbUsername, smbPassword);
-                SmbFile smbFile = new SmbFile(fullPath, auth);
-
-                using (Stream inStream = videoFile.OpenReadStream())
+                try
                 {
-                    using (OutputStream outStream = smbFile.GetOutputStream())
+                    sftpClient.Connect();
+
+                    using (Stream inStream = videoFile.OpenReadStream())
                     {
-                        await inStream.CopyToAsync(outStream).ConfigureAwait(false);
+                        await Task.Run(() => sftpClient.UploadFile(inStream, $"{sftpDirectory}/{filePath}")).ConfigureAwait(false);
                     }
+
+                    sftpClient.Disconnect();
                 }
-            }
-            catch (IOException ex)
-            {
-                throw new IOException("Unable to connect to the file server!");
+                catch (SshException ex)
+                {
+                    throw new IOException("Unable to connect to the SFTP server!", ex);
+                }
+                catch (Exception ex)
+                {
+                    throw new IOException("An error occurred while uploading the video to the SFTP server!", ex);
+                }
             }
         }
 
         public async Task RemoveVideoFromFileServerAsync(string streamPath)
         {
-            string smbHostname = _appSettingsUtils.GetConfigurationValue(HostnameConfig);
-            string smbDirectory = _appSettingsUtils.GetConfigurationValue(DirectoryConfig);
-            string smbUsername = _appSettingsUtils.GetConfigurationValue(UsernameConfig);
-            string smbPassword = _appSettingsUtils.GetConfigurationValue(PasswordConfig);
+            string sftpHostname = _appSettingsUtils.GetConfigurationValue(HostnameConfig);
+            string sftpDirectory = _appSettingsUtils.GetConfigurationValue(DirectoryConfig);
+            string sftpUsername = _appSettingsUtils.GetConfigurationValue(UsernameConfig);
+            string sftpPassword = _appSettingsUtils.GetConfigurationValue(PasswordConfig);
 
-            string fullPath = $"smb://{smbHostname}/{smbDirectory}/{streamPath}";
-
-            try
+            using (var sftpClient = new SftpClient(sftpHostname, sftpUsername, sftpPassword))
             {
-                NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, smbUsername, smbPassword);
-                SmbFile smbFile = new SmbFile(fullPath, auth);
-
-                if (!smbFile.Exists())
+                try
                 {
-                    throw new FileNotFoundException("Video not found.");
-                }
+                    sftpClient.Connect();
+                    string fullPath = $"{sftpDirectory}/{streamPath}";
 
-                await Task.Run(() => smbFile.Delete()).ConfigureAwait(false);
-            }
-            catch (IOException ex)
-            {
-                throw new IOException("Unable to connect to the file server!");
+                    if (!sftpClient.Exists(fullPath))
+                    {
+                        throw new FileNotFoundException("Video not found.");
+                    }
+
+                    await Task.Run(() => sftpClient.DeleteFile(fullPath)).ConfigureAwait(false);
+
+                    sftpClient.Disconnect();
+                }
+                catch (SshException ex)
+                {
+                    throw new IOException("Unable to connect to the SFTP server!", ex);
+                }
+                catch (Exception ex)
+                {
+                    throw new IOException("An error occurred while removing the video from the SFTP server!", ex);
+                }
             }
         }
 
@@ -84,25 +93,24 @@ namespace reeltok.api.videos.Services
 
         public static async Task EnsureValidFileUploadAsync(IFormFile? video)
         {
-            // TODO: Better exceptions
             if (video == null)
             {
-                throw new InvalidOperationException("");
+                throw new InvalidOperationException("No video file provided.");
             }
 
-            if (VideoUtils.IsValidFileExtension(video))
+            if (!VideoUtils.IsValidFileExtension(video))
             {
-                throw new InvalidOperationException("");
+                throw new InvalidOperationException("Invalid video file extension.");
             }
 
             if (!await VideoUtils.HasVideoStream(video).ConfigureAwait(false))
             {
-                throw new InvalidOperationException("");
+                throw new InvalidOperationException("The video file does not contain a valid video stream.");
             }
 
             if (!await VideoUtils.IsVideoMinimumLength(video).ConfigureAwait(false))
             {
-                throw new InvalidOperationException("");
+                throw new InvalidOperationException("The video file is too short.");
             }
         }
     }

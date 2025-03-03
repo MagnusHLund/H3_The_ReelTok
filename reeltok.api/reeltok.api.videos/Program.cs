@@ -16,15 +16,19 @@ namespace reeltok.api.videos
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddScoped<IHttpService, HttpService>();
             builder.Services.AddScoped<ILikesService, LikesService>();
-            builder.Services.AddScoped<IHttpService, HttpService>();  // Register HttpService if not already registered
+            builder.Services.AddScoped<IVideosService, VideosService>();
+            builder.Services.AddScoped<IStorageService, StorageService>();
             builder.Services.AddScoped<ILikesRepository, LikesRepository>();
+            builder.Services.AddScoped<IVideosRepository, VideosRepository>();
 
-            builder.Services.AddDbContext<VideosDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("VideosDb")));
+            builder.Services.AddDbContext<VideosDbContext>(
+                options => options.UseSqlServer(builder.Configuration.GetConnectionString("VideosDb")));
 
             builder.Services.AddSingleton(sp => new AppSettingsUtils(builder.Configuration));
 
-            builder.Services.AddHttpClient();
+            builder.Services.AddHttpClient<IHttpService, HttpService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
