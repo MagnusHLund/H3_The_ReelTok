@@ -10,6 +10,7 @@ namespace reeltok.api.videos.Tests
         private const string BaseTestUrl = "http://localhost:5004/recommendations";
         private readonly Mock<IVideosRepository> _videosRepositoryMock;
         private readonly Mock<IStorageService> _storageServiceMock;
+        private readonly Mock<ILikesService> _likesServiceMock;
         private readonly Mock<IHttpService> _httpServiceMock;
         private readonly IVideosService _videosService;
 
@@ -17,8 +18,14 @@ namespace reeltok.api.videos.Tests
         {
             _videosRepositoryMock = new Mock<IVideosRepository>();
             _storageServiceMock = new Mock<IStorageService>();
+            _likesServiceMock = new Mock<ILikesService>();
             _httpServiceMock = new Mock<IHttpService>();
-            _videosService = new VideosService(_videosRepositoryMock.Object, _storageServiceMock.Object, _httpServiceMock.Object);
+            _videosService = new VideosService(
+                _videosRepositoryMock.Object,
+                _storageServiceMock.Object,
+                _likesServiceMock.Object,
+                _httpServiceMock.Object
+            );
         }
 
         [Fact]

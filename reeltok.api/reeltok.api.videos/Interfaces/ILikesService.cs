@@ -6,6 +6,6 @@ namespace reeltok.api.videos.Interfaces
     {
         Task<bool> LikeVideoAsync(Guid userId, Guid videoId);
         Task<bool> RemoveLikeFromVideoAsync(Guid userId, Guid videoId);
-        Task<List<VideoLikesEntity>> GetVideoLikesAsync(Guid userId, List<Guid> videoIds);
+        Task<List<VideoLikesEntity>> GetLikesForVideos(Guid userId, List<Guid> videoIds);
     }
 }

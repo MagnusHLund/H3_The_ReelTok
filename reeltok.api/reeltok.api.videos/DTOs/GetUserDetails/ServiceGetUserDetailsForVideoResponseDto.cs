@@ -1,12 +1,12 @@
-using reeltok.api.videos.ValueObjects;
+using reeltok.api.videos.Entities;
 
 namespace reeltok.api.videos.DTOs.GetUserDetailsForVideo
 {
     public class ServiceGetUserDetailsForVideoResponseDto : BaseResponseDto
     {
-        public List<VideoCreatorDetails> VideoCreatorDetailsList { get; set; }
+        public List<VideoCreatorEntity> VideoCreatorDetailsList { get; set; }
 
-        public ServiceGetUserDetailsForVideoResponseDto(List<VideoCreatorDetails> videoCreatorDetailsList, bool success) : base(success)
+        public ServiceGetUserDetailsForVideoResponseDto(List<VideoCreatorEntity> videoCreatorDetailsList, bool success) : base(success)
         {
             VideoCreatorDetailsList = videoCreatorDetailsList;
         }

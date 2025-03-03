@@ -28,8 +28,8 @@ namespace reeltok.api.videos.Controllers
             [FromQuery] Guid userId,
             [FromQuery] byte amount)
         {
-            List<VideoEntity> videos = await _videosService.GetVideosForFeedAsync(userId, amount).ConfigureAwait(false);
-
+            List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(userId, amount).ConfigureAwait(false);
+            return Ok();
         }
 
         [HttpGet]

@@ -61,5 +61,31 @@ namespace reeltok.api.videos.Factories
 
             return videosForFeed;
         }
+
+        internal static List<VideoLikesEntity> CreateVideoLikesEntityList(
+            List<Guid> videoIds,
+            List<HasUserLikedVideoEntity> hasUserLikedVideoEntities,
+            List<TotalVideoLikesEntity> totalVideoLikesEntities
+        )
+        {
+            Dictionary<Guid, HasUserLikedVideoEntity> userLikedDict = hasUserLikedVideoEntities.
+                ToDictionary(hasUserLiked => hasUserLiked.VideoId);
+
+            Dictionary<Guid, TotalVideoLikesEntity> totalLikesDict = totalVideoLikesEntities.ToDictionary(total => total.VideoId);
+
+            List<VideoLikesEntity> videoLikes = new List<VideoLikesEntity>();
+            foreach (Guid videoId in videoIds)
+            {
+                if (userLikedDict.TryGetValue(videoId, out HasUserLikedVideoEntity? hasUserLiked) &&
+                    totalLikesDict.TryGetValue(videoId, out TotalVideoLikesEntity? totalLike))
+                {
+                    VideoLikes videoLikesValue = new VideoLikes(totalLike.TotalLikes, hasUserLiked.HasUserLikedVideo);
+                    VideoLikesEntity videoLikesEntity = new VideoLikesEntity(videoId, videoLikesValue);
+                    videoLikes.Add(videoLikesEntity);
+                }
+            }
+
+            return videoLikes;
+        }
     }
 }

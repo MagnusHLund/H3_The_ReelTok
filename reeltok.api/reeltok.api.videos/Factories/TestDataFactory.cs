@@ -51,16 +51,17 @@ namespace reeltok.api.videos.Factories
                 success: true
             );
         }
+        /*
+                public static ServiceUserLikedVideoResponseDto CreateUserLikedVideoResponse(bool userHasLikedVideo)
+                {
+                    return new ServiceUserLikedVideoResponseDto
+                    (
+                        userHasLikedVideo: userHasLikedVideo,
+                        success: true
+                    );
+                }
 
-        public static ServiceUserLikedVideoResponseDto CreateUserLikedVideoResponse(bool userHasLikedVideo)
-        {
-            return new ServiceUserLikedVideoResponseDto
-            (
-                userHasLikedVideo: userHasLikedVideo,
-                success: true
-            );
-        }
-
+        */
         public static VideoLikes CreateVideoLikes()
         {
             uint totalLikes = 10;

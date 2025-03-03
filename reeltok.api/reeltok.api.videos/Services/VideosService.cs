@@ -2,11 +2,11 @@ using reeltok.api.videos.DTOs;
 using reeltok.api.videos.Utils;
 using reeltok.api.videos.Mappers;
 using reeltok.api.videos.Entities;
+using reeltok.api.videos.Factories;
 using reeltok.api.videos.Interfaces;
 using reeltok.api.videos.ValueObjects;
 using reeltok.api.videos.DTOs.GetRecommendedVideos;
 using reeltok.api.videos.DTOs.GetUserDetailsForVideo;
-using reeltok.api.videos.Factories;
 
 namespace reeltok.api.videos.Services
 {
@@ -43,7 +43,7 @@ namespace reeltok.api.videos.Services
             List<VideoCreatorEntity> videoCreatorDetails = await GetVideoCreatorDetailsAsync(videoIds)
                 .ConfigureAwait(false);
 
-            List<VideoLikesEntity> videoLikes = await _likesService.GetVideoLikesAsync(userId, videoIds).ConfigureAwait(false);
+            List<VideoLikesEntity> videoLikes = await _likesService.GetLikesForVideos(userId, videoIds).ConfigureAwait(false);
 
             List<VideoForFeedEntity> videosForFeed = VideoFactory.CreateVideoForFeedEntityList(
                 videoIds,
@@ -99,7 +99,7 @@ namespace reeltok.api.videos.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        private async Task<List<VideoCreatorDetailsEntity>> GetVideoCreatorDetailsAsync(List<Guid> videoIds)
+        private async Task<List<VideoCreatorEntity>> GetVideoCreatorDetailsAsync(List<Guid> videoIds)
         {
             ServiceGetUserDetailsForVideoRequestDto requestDto = new ServiceGetUserDetailsForVideoRequestDto(videoIds);
             Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/getUserDetails");
