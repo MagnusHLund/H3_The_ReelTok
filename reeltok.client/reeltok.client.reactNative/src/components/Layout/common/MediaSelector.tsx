@@ -1,5 +1,4 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import useAppDimensions from '../../../hooks/useAppDimensions'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import mediaPicker from '../../../utils/mediaPickerUtils'
 import { useNavigation } from '@react-navigation/native'
@@ -9,7 +8,12 @@ import Entypo from '@expo/vector-icons/Entypo'
 import Gradient from './GradientBackground'
 import React, { useState } from 'react'
 
-const MediaSelector: React.FC = () => {
+
+interface mediaSelectorProps {
+  handleSelectMedia: () => void
+}
+
+const MediaSelector: React.FC<mediaSelectorProps> = ({ handleSelectMedia }) => {
   const [selectedMedia, setSelectedMedia] = useState<string>()
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
 
@@ -24,7 +28,6 @@ const MediaSelector: React.FC = () => {
       throw new Error(error.message)
     }
   }
-
   return (
     <View style={styles.outerContainer}>
       <Gradient colors={['transparent', 'transparent', 'black', 'black']}>
@@ -33,11 +36,18 @@ const MediaSelector: React.FC = () => {
             widthPercentage={0.45}
             onPress={() => {
               navigation.navigate('Camera')
+              handleSelectMedia()
             }}
           >
             <Entypo name="camera" size={24} color="white" />
           </CustomButton>
-          <CustomButton widthPercentage={0.45} onPress={handlePickMedia}>
+          <CustomButton
+            widthPercentage={0.45}
+            onPress={() => {
+              handlePickMedia()
+              handleSelectMedia()
+            }}
+          >
             <MaterialIcons name="photo-library" size={24} color="white" />
           </CustomButton>
         </View>

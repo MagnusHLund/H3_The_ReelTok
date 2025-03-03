@@ -8,6 +8,7 @@ import SettingsScreen from '../components/screens/SettingsScreen'
 import { ScreenName } from './Router'
 import LoginScreen from '../components/screens/LoginScreen'
 import SignUpScreen from '../components/screens/SignUpScreen'
+import CameraScreen from '../components/screens/CameraScreen'
 
 interface StackScreenProps {
   name: ScreenName
@@ -62,6 +63,12 @@ const stackScreens: StackScreenProps[] = [
     name: 'Signup',
     webRoute: 'signup',
     component: SignUpScreen,
+    navigationAnimation: CardStyleInterpolators.forHorizontalIOS,
+  },
+  {
+    name: 'Camera',
+    webRoute: 'camera',
+    component: CameraScreen,
     navigationAnimation: CardStyleInterpolators.forHorizontalIOS,
   },
 ]

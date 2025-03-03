@@ -8,7 +8,7 @@ import UploadedVideo from './../upload/UploadedVideo'
 import CustomButton from '../../input/CustomButton'
 import { Entypo } from '@expo/vector-icons'
 import { useState, useRef } from 'react'
-
+import AntDesign from '@expo/vector-icons/AntDesign'
 interface CameraProps {
   cameraMode: 'picture' | 'video'
 }
@@ -20,7 +20,7 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
   const [permission, requestPermission] = useCameraPermissions()
   const [recording, setRecording] = useState<boolean>(false)
   const { contentHeight } = useAppDimensions()
-  
+  const navigation = useNavigation<NativeStackNavigationProp<any>>()
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -60,6 +60,10 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
       }
     }
   }
+  const uploadvideo = async (uri: string | null) => {
+    const media = uri
+    navigation.navigate('UploadVideo', { video: media })
+  }
 
   const renderContent = () => {
     console.log(uri)
@@ -73,13 +77,16 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
           />
         )}
         {cameraMode === 'video' && uri !== null && <UploadedVideo uri={uri} />}
-        <View style={styles.contentButton}>
-          <CustomButton onPress={() => setUri(null)}>
+        <View style={styles.contentButtons}>
+          <CustomButton onPress={() => setUri(null)} transparent>
             <MaterialCommunityIcons name="restore" size={50} color={'white'} />
+          </CustomButton>
+          <CustomButton onPress={() => uploadvideo(uri)} transparent>
+            <AntDesign name="arrowright" size={50} color="white" />
           </CustomButton>
         </View>
         <View style={styles.closeButton}>
-          <CustomButton onPress={navigation.goBack}>
+          <CustomButton onPress={navigation.goBack} transparent widthPercentage={0.15}>
             <Entypo name="cross" size={50} color="white" />
           </CustomButton>
         </View>
@@ -91,20 +98,21 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
     return (
       <>
         <CameraView style={styles.camera} ref={ref} mode={cameraMode} facing={facing} mirror={true}>
-          <View style={styles.shutterContainer}>
-            <TouchableOpacity onPress={toggleCameraFacing} style={styles.flipButton}>
-              <MaterialCommunityIcons name="camera-flip" size={24} color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity
+          <View style={styles.contentButtons}>
+            <CustomButton onPress={toggleCameraFacing} transparent widthPercentage={0.5}>
+              <MaterialCommunityIcons name="camera-flip" size={50} color="white" />
+            </CustomButton>
+            <CustomButton
               onPress={cameraMode === 'picture' ? takePicture : recordVideo}
-              style={styles.captureButton}
+              transparent
+              widthPercentage={0.5}
             >
-              <Entypo name="circle" size={24} color={recording ? 'red' : 'white'} />
-            </TouchableOpacity>
+              <Entypo name="circle" size={50} color={recording ? 'red' : 'white'} />
+            </CustomButton>
           </View>
         </CameraView>
         <View style={styles.closeButton}>
-          <CustomButton onPress={navigation.goBack}>
+          <CustomButton widthPercentage={0.15} onPress={navigation.goBack} transparent>
             <Entypo name="cross" size={50} color="white" />
           </CustomButton>
         </View>
@@ -132,16 +140,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
-  shutterContainer: {
-    position: 'absolute',
-    bottom: 44,
-    left: 0,
-    width: '100%',
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 30,
-  },
   flipButton: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     padding: 10,
@@ -165,18 +163,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
-  contentButton: {
-    width: '100%',
-    height: '100%',
+  contentButtons: {
     position: 'absolute',
-    top: '85%',
-    left: '33.33%',
+    bottom: 44,
+    width: '100%',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   closeButton: {
     width: '100%',
     height: '100%',
     position: 'absolute',
-    left: '66%',
+    left: '80%',
     top: '8%',
   },
 })
