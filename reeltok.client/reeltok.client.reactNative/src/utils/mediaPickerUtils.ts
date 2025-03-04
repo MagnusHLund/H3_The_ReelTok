@@ -1,6 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
 
-const pickImage = async (): Promise<string | null> => {
+const mediaPicker = async (): Promise<string | null> => {
   const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
   if (status !== 'granted') {
@@ -8,7 +8,7 @@ const pickImage = async (): Promise<string | null> => {
   }
 
   const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    mediaTypes: ['images', 'videos'],
     allowsEditing: true,
     aspect: [3, 4],
     quality: 1,
@@ -21,5 +21,5 @@ const pickImage = async (): Promise<string | null> => {
   return null;
 };
 
-export default pickImage;
+export default mediaPicker;
 

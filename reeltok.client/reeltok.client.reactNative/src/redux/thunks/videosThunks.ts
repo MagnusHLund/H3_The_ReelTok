@@ -11,26 +11,23 @@ import {
 // TODO: Handle more than one videos being returned and overall fix shit code inside the thunk
 export const addVideoToFeedThunk = createAsyncThunk(
   'videos/addVideoToFeed',
-  async (videosInFeed: Video[] | undefined, { dispatch }) => {
+  async (videosInFeed: Video[], { dispatch }) => {
     const newVideos: Video[] = [
       {
-        videoId: 'guidVideoId1',
+        videoId: getRandomNumber().toString(),
+        creatorUserId: 'guidUserId3',
         title: 'Mock video 1',
         description: 'Mock description 1',
         likes: 123,
         hasLiked: true,
         category: VideoRecommendationCategories.Gaming,
         streamUrl:
-          'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+          'https://cdn.viggle.ai/gras/f2736735-7bbd-4c8f-b0e7-2f84ec6aff0e.mp4?Expires=1740772331&KeyName=vigglecloudcdn2&Signature=BoAeGxk5B9bhr9a20ZaTiIDixc8=',
         uploadedAt: new Date(Date.now()).toDateString(),
-        creator: {
-          username: 'Mock user1',
-          profileUrl: 'http://local.profile.com',
-          profilePictureUrl: 'http://profilePicture.profile.com',
-        },
       },
       {
-        videoId: 'guidVideoId2',
+        videoId: getRandomNumber().toString(),
+        creatorUserId: 'guidUserId3',
         title: 'Mock video 2',
         description: 'Mock description 2',
         likes: 321,
@@ -39,22 +36,14 @@ export const addVideoToFeedThunk = createAsyncThunk(
         streamUrl:
           'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
         uploadedAt: new Date(Date.now()).toDateString(),
-        creator: {
-          username: 'Mock user 2',
-          profileUrl: 'http://local.profile.com',
-          profilePictureUrl: 'http://profilePicture.profile.com',
-        },
       },
     ]
 
-    if (videosInFeed !== undefined && videosInFeed.length > 49) {
-      videosInFeed.shift()
-      videosInFeed.shift()
-    }
+    let newVideoFeed = (videosInFeed ?? []).concat(newVideos)
 
-    const newVideoFeed = videosInFeed ?? []
-    newVideoFeed.push(newVideos[0])
-    newVideoFeed.push(newVideos[1])
+    if (newVideoFeed.length > 50) {
+      newVideoFeed = newVideoFeed.slice(newVideoFeed.length - 50)
+    }
 
     dispatch(addVideoToFeed(newVideoFeed))
   }

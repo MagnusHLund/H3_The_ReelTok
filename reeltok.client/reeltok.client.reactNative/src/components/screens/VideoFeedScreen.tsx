@@ -6,25 +6,40 @@ import useAppSelector from '../../hooks/useAppSelector'
 import useAppDispatch from '../../hooks/useAppDispatch'
 import { Video } from '../../redux/slices/videosSlice'
 import VideoPlayer from '../Layout/video/VideoPlayer'
-import Navbar from '../Layout/common/Navbar'
 
 interface RenderItemProps {
   item: Video
   index: number
 }
 
+// TODO: Ensure that there are always 3 videos loaded, ahead of the users current position.
+// TODO: Cleanup rendered VideoPlayers, once their data is no longer saved in redux
+// TODO: Ensure that addVideosToFeed is dispatched when manual scrolling
+// TODO: Fix bug with it not being able to scroll more than 48 times.
+// TODO: Limit scroll speed. It can scroll SUPER fast on web.
+// TODO: The list should include only 3 video players. One to watch, one to scroll back and one to scroll forward. This will help performance.
+// TODO: Once the phone rotates, video and comments are displayed next to each other.
 const VideoFeedScreen: React.FC = () => {
   const videos = useAppSelector((state) => state.videos.videos)
   const dispatch = useAppDispatch()
   const { contentHeight } = useAppDimensions()
   const [currentlyDisplayedVideoIndex, setCurrentlyDisplayedVideoIndex] = useState(0)
+  const [highestDisplayedVideoIndex, setHighestDisplayedVideoIndex] = useState(0)
   const videoFeedRef = React.useRef<FlatList>(null)
 
   useEffect(() => {
-    if (!videos || videos.length === 0) {
-      dispatch(addVideoToFeedThunk())
+    if (videos.length === 0) {
+      dispatch(addVideoToFeedThunk(videos))
     }
   }, [videos, dispatch])
+
+  useEffect(() => {
+    if (currentlyDisplayedVideoIndex > highestDisplayedVideoIndex) {
+      setHighestDisplayedVideoIndex(currentlyDisplayedVideoIndex)
+      dispatch(addVideoToFeedThunk(videos))
+      console.log(highestDisplayedVideoIndex)
+    }
+  }, [currentlyDisplayedVideoIndex])
 
   const handleViewableItemsChanged = useCallback(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
@@ -45,7 +60,7 @@ const VideoFeedScreen: React.FC = () => {
         videoFeedRef.current.scrollToIndex({ index: nextIndex, animated: true })
       }
 
-      dispatch(addVideoToFeedThunk())
+      dispatch(addVideoToFeedThunk(videos))
     }
   }, [currentlyDisplayedVideoIndex, videos, dispatch])
 
@@ -54,7 +69,7 @@ const VideoFeedScreen: React.FC = () => {
       <View style={styles.videoContainer}>
         <VideoPlayer
           videoDetails={item}
-          onNextVideo={handleAutoScroll}
+          onAutoScroll={handleAutoScroll}
           isDisplayed={currentlyDisplayedVideoIndex === index}
         />
       </View>
@@ -84,7 +99,6 @@ const VideoFeedScreen: React.FC = () => {
           index,
         })}
       />
-      <Navbar />
     </View>
   )
 }

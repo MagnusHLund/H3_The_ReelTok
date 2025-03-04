@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, Platform } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import useAppDimensions from '../../../hooks/useAppDimensions'
 import { Video } from '../../../redux/slices/videosSlice'
 import CommentsSection from '../comments/CommentsSection'
@@ -11,7 +11,7 @@ interface VideoPlayerProps {
   videoDetails?: Video
   loopAmount?: number
   isDisplayed: boolean
-  onNextVideo: () => void
+  onAutoScroll: () => void
 }
 
 // TODO: Add play icon, when video is paused
@@ -19,7 +19,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   videoDetails,
   loopAmount = 2,
   isDisplayed,
-  onNextVideo,
+  onAutoScroll,
 }) => {
   const [playCount, setPlayCount] = useState(0)
   const { contentHeight } = useAppDimensions()
@@ -47,10 +47,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   useEffect(() => {
     if (playCount >= loopAmount) {
-      onNextVideo()
+      onAutoScroll()
       setPlayCount(0)
     }
-  }, [playCount, loopAmount, onNextVideo])
+  }, [playCount, loopAmount, onAutoScroll])
 
   useEffect(() => {
     const handlePlayToEnd = () => {
@@ -66,7 +66,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   }, [player])
 
-  const handlePress = () => {
+  const changeVideoPlayState = () => {
     if (player.playing) {
       player.pause()
     } else {
@@ -84,7 +84,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         videoDetails={videoDetails}
         onCommentsOpen={() => setShowCommentsSection(true)}
       />
-      <TouchableOpacity onPress={handlePress} style={styles.touchableArea} activeOpacity={1}>
+      <TouchableOpacity
+        onPress={changeVideoPlayState}
+        style={styles.touchableArea}
+        activeOpacity={1}
+      >
         <View style={styles.videoContainer}>
           <VideoView
             player={player}

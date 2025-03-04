@@ -1,17 +1,13 @@
-import React from 'react'
 import { View, Image, Text, StyleSheet, ScrollView } from 'react-native'
+import useAppNavigation from '../../hooks/useAppNavigation'
+import useTranslation from '../../hooks/useTranslations'
 import CustomButton from '../input/CustomButton'
-import Navbar from '../Layout/common/Navbar'
-import { useNavigation } from '@react-navigation/native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { Ionicons } from '@expo/vector-icons'
+import React from 'react'
 
-interface UserProfileScreenProps {
-  Username: string
-}
-
-const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ Username }) => {
-  const navigation = useNavigation<NativeStackNavigationProp<any>>()
+const UserProfileScreen: React.FC = () => {
+  const navigateToScreen = useAppNavigation()
+  const t = useTranslation()
 
   const videos = Array.from({ length: 30 }, (_, index) => ({
     id: index + 1,
@@ -33,18 +29,29 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ Username }) => {
         </View>
       </View>
       <View style={styles.mainContainer}>
+        {/* TODO: Remove button for posts and fix styling */}
         <CustomButton widthPercentage={0.22} onPress={() => {}} transparent>
-          <Text>posts</Text>
+          <Text>{t('profile.posts')}</Text>
         </CustomButton>
-        <CustomButton widthPercentage={0.22} onPress={() => {}} transparent>
-          <Text>Followers</Text>
+        <CustomButton
+          widthPercentage={0.22}
+          onPress={() => {
+            navigateToScreen('Subscribers')
+          }}
+          transparent
+        >
+          <Text>{t('common.subscribers')}</Text>
         </CustomButton>
-        <CustomButton widthPercentage={0.22} onPress={() => {}} transparent>
-          <Text>Following</Text>
+        <CustomButton
+          widthPercentage={0.22}
+          onPress={() => navigateToScreen('Subscriptions')}
+          transparent
+        >
+          <Text>{t('common.subscriptions')}</Text>
         </CustomButton>
         <CustomButton
           widthPercentage={0.07}
-          onPress={() => navigation.replace('Settings')}
+          onPress={() => navigateToScreen('Settings')}
           transparent
         >
           <Ionicons name="cog" size={24} color="black" />
@@ -59,7 +66,6 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({ Username }) => {
           </View>
         ))}
       </ScrollView>
-      <Navbar />
     </>
   )
 }

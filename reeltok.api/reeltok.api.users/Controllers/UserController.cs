@@ -12,7 +12,7 @@ namespace reeltok.api.users.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        // TODO: MAKE A LOGIN CONTROLLER 
+        // TODO: MAKE A LOGIN CONTROLLER
         private readonly IUsersService _usersService;
 
         public UserController(IUsersService usersService)
@@ -26,6 +26,7 @@ namespace reeltok.api.users.Controllers
         // TODO: Delete subscription and subscriber when user is deleted
         // TODO: Change name of columns in database using EF
         // TODO: Add Login in User API
+        // TODO: Add asymmetric encryption for emails
 
         // TODO: CALL AUTH SERVICE TO ADD OTHER USER INFO THERE
         [HttpPost("Create A User")]

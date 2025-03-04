@@ -8,9 +8,15 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 const BackButton = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
 
+  const handleOnPress = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    }
+  }
+
   return (
     <View style={styles.backButton}>
-      <CustomButton widthPercentage={0.1} onPress={() => navigation.replace('Profile')}>
+      <CustomButton widthPercentage={0.1} onPress={handleOnPress}>
         <Ionicons name="arrow-back" size={24} color="black" />
       </CustomButton>
     </View>
