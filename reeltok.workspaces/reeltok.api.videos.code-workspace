@@ -29,9 +29,11 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[csharp]": {
-      "editor.defaultFormatter": "Leopotam.csharpfixformat"
+      "editor.defaultFormatter": "ms-dotnettools.csharp"
     },
-    "cSpell.words": ["reeltok"]
+    "cSpell.words": ["reeltok"],
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 130
   },
   "launch": {
     "version": "0.2.0",
@@ -41,9 +43,9 @@
         "type": "coreclr",
         "request": "launch",
         "preLaunchTask": "build",
-        "program": "${workspaceFolder:Reeltok Videos API}/bin/Debug/net6.0/VideosServiceApi.dll",
+        "program": "${workspaceFolder:ReelTok Videos API}/bin/Debug/net8.0/VideosServiceApi.dll",
         "args": [],
-        "cwd": "${workspaceFolder:Reeltok Videos API}",
+        "cwd": "${workspaceFolder:ReelTok Videos API}",
         "stopAtEntry": false,
         "serverReadyAction": {
           "action": "openExternally",

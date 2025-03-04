@@ -21,7 +21,7 @@ namespace reeltok.api.users.Controllers
         }
 
         // TODO: CALL VIDEO SERVICE TO VERIFY VIDEO BY ID
-        [HttpPost("Like A Video")]
+        [HttpPost("AddLike")]
         public async Task<IActionResult> LikeVideoAsync([FromBody] LikeVideoRequestDto likeVideo)
         {
             if (!ModelState.IsValid)
@@ -41,7 +41,7 @@ namespace reeltok.api.users.Controllers
                 return BadRequest("User does not exist.");
             }
 
-            LikedDetails likeVideoModel = likeVideo.ToLikeVideoFromCreateDTO();
+            LikedDetails likeVideoModel = LikeVideoMapper.ToLikeVideoFromCreateDTO(likeVideo);
 
             LikedVideo likedVideoEntity = new LikedVideo(likeVideoModel);
 
@@ -49,6 +49,7 @@ namespace reeltok.api.users.Controllers
 
             if (isLiked)
             {
+                
                 return Ok("Video liked successfully!");
             }
 
