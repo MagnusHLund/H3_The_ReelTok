@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using reeltok.api.recommendations.Interfaces.Repositories;
+using reeltok.api.recommendations.Interfaces.Services;
 
 namespace reeltok.api.recommendations.Services
 {
-    public class VideoRecommendationService : IVideoRecommendationRepository
+    public class VideoRecommendationService : IVideoRecommendationService
     {
         public Task AddRecommendationForVideoAsync()
         {
