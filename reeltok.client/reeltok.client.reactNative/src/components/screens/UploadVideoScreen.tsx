@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useRoute } from '@react-navigation/native'
 import { View, StyleSheet } from 'react-native'
 import Header from '../Layout/common/Header'
-import useTranslation from '../../hooks/useTranslations'
 import Navbar from '../Layout/common/Navbar'
 import Title from '../Layout/common/Title'
 import Section from '../Layout/common/Section'
@@ -10,10 +9,11 @@ import CustomTextInput from '../input/CustomTextInput'
 import CustomDropdown, { DropdownOption } from '../input/CustomDropdown'
 import CustomButton from '../input/CustomButton'
 import UploadedVideo from '../Layout/upload/UploadedVideo'
+import useAppSelector from '../../hooks/useAppSelector'
 
 const UploadVideoScreen: React.FC = ({}) => {
   const route = useRoute()
-  const { video } = route.params // For later use when we POST to the the Gateway.
+  const uploadedVideo = useAppSelector((state) => state.upload.video)
   //const t = useTranslation();
 
   const [selectedCategory, setSelectedCategory] = useState<DropdownOption>()
@@ -54,7 +54,7 @@ const UploadVideoScreen: React.FC = ({}) => {
     <>
       <Header showBackButton title={'Upload video'} />
       <View style={styles.videoContainer}>
-        <UploadedVideo uri={video} />
+        <UploadedVideo uri={uploadedVideo.fileUri} />
       </View>
       <View style={styles.videoScreenContainer}>
         <Section displayDivider={false}>
@@ -82,7 +82,7 @@ const UploadVideoScreen: React.FC = ({}) => {
           <CustomButton
             widthPercentage={0.75}
             title="Upload"
-            onPress={() => console.log('uploaded video' + video)}
+            onPress={() => console.log('uploaded video' + uploadedVideo.fileUri)}
           />
         </Section>
       </View>

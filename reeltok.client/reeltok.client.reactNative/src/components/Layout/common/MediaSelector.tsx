@@ -7,6 +7,7 @@ import { StyleSheet, View } from 'react-native'
 import Entypo from '@expo/vector-icons/Entypo'
 import Gradient from './GradientBackground'
 import React, { useState } from 'react'
+import useAppNavigation from '../../../hooks/useAppNavigation'
 
 
 interface mediaSelectorProps {
@@ -15,14 +16,14 @@ interface mediaSelectorProps {
 
 const MediaSelector: React.FC<mediaSelectorProps> = ({ handleSelectMedia }) => {
   const [selectedMedia, setSelectedMedia] = useState<string>()
-  const navigation = useNavigation<NativeStackNavigationProp<any>>()
+  const navigateToScreen = useAppNavigation()
 
   const handlePickMedia = async () => {
     try {
       const media = await mediaPicker()
       if (media) {
         setSelectedMedia(media)
-        navigation.navigate('UploadVideo', { video: media })
+        navigateToScreen('UploadVideo', { video: media })
       }
     } catch (error) {
       throw new Error(error.message)
@@ -35,7 +36,7 @@ const MediaSelector: React.FC<mediaSelectorProps> = ({ handleSelectMedia }) => {
           <CustomButton
             widthPercentage={0.45}
             onPress={() => {
-              navigation.navigate('Camera')
+              navigateToScreen('Camera')
               handleSelectMedia()
             }}
           >

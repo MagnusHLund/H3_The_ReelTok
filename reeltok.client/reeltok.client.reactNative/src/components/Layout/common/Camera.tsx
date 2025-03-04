@@ -1,26 +1,36 @@
-import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import { UploadedVideo as UploadedVideoType } from '../../../redux/slices/uploadSlice'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera'
+import { setUploadedVideoThunk } from '../../../redux/thunks/uploadThunks'
+import { Button, StyleSheet, Text, View, Image } from 'react-native'
 import useAppDimensions from '../../../hooks/useAppDimensions'
+import useAppDispatch from '../../../hooks/useAppDispatch'
 import { useNavigation } from '@react-navigation/native'
 import UploadedVideo from './../upload/UploadedVideo'
+import AntDesign from '@expo/vector-icons/AntDesign'
+import { useState, useRef, useEffect } from 'react'
 import CustomButton from '../../input/CustomButton'
 import { Entypo } from '@expo/vector-icons'
-import { useState, useRef } from 'react'
-import AntDesign from '@expo/vector-icons/AntDesign'
+
 interface CameraProps {
   cameraMode: 'picture' | 'video'
 }
 
 export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
   const ref = useRef<CameraView>(null)
-  const [uri, setUri] = useState<string | null>(null)
+  const [uri, setUri] = useState<UploadedVideoType>({ fileUri: '' })
   const [facing, setFacing] = useState<CameraType>('back')
   const [permission, requestPermission] = useCameraPermissions()
   const [recording, setRecording] = useState<boolean>(false)
   const { contentHeight } = useAppDimensions()
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    console.log('test 1')
+    dispatch(setUploadedVideoThunk(uri))
+  }, [uri])
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -44,7 +54,7 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
   const takePicture = async () => {
     const photo = await ref.current?.takePictureAsync()
     if (photo?.uri) {
-      setUri(photo.uri)
+      setUri({ fileUri: photo.uri })
     }
   }
 
@@ -56,13 +66,13 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
       setRecording(true)
       const video = await ref.current?.recordAsync()
       if (video?.uri) {
-        setUri(video.uri)
+        setUri({ fileUri: video.uri })
       }
     }
   }
   const uploadvideo = async (uri: string | null) => {
     const media = uri
-    navigation.navigate('UploadVideo', { video: media })
+    navigation.navigate('UploadVideo')
   }
 
   const renderContent = () => {
@@ -71,17 +81,17 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
       <View style={[styles.contentContainer, { height: contentHeight }]}>
         {cameraMode === 'picture' && uri && (
           <Image
-            source={{ uri }}
+            source={{ uri: uri.fileUri }}
             resizeMode="contain"
             style={[styles.picture, { height: contentHeight }]}
           />
         )}
-        {cameraMode === 'video' && uri !== null && <UploadedVideo uri={uri} />}
+        {cameraMode === 'video' && uri.fileUri !== '' && <UploadedVideo uri={uri.fileUri} />}
         <View style={styles.contentButtons}>
-          <CustomButton onPress={() => setUri(null)} transparent>
+          <CustomButton onPress={() => setUri({ fileUri: '' })} transparent>
             <MaterialCommunityIcons name="restore" size={50} color={'white'} />
           </CustomButton>
-          <CustomButton onPress={() => uploadvideo(uri)} transparent>
+          <CustomButton onPress={() => uploadvideo(uri.fileUri)} transparent>
             <AntDesign name="arrowright" size={50} color="white" />
           </CustomButton>
         </View>
@@ -120,7 +130,9 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
     )
   }
 
-  return <View style={styles.container}>{uri ? renderContent() : renderCamera()}</View>
+  return (
+    <View style={styles.container}>{uri.fileUri !== '' ? renderContent() : renderCamera()}</View>
+  )
 }
 
 const styles = StyleSheet.create({
