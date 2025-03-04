@@ -14,8 +14,6 @@ namespace reeltok.api.recommendations.Entities
 
         public WatchedVideoDetails WatchedVideoDetails { get; private set; }
 
-        public List<CategoryEntity> Categories { get; private set; }
-
         public WatchedVideoEntity(WatchedVideoDetails watchedVideoDetails)
         {
             WatchedVideoDetails = watchedVideoDetails;

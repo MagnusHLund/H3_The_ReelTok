@@ -62,25 +62,6 @@ namespace reeltok.api.recommendations.Data
                     });
 
             modelBuilder.Entity<CategoryEntity>()
-                .HasMany(c => c.WatchedVideoEntities)
-                .WithMany(v => v.Categories)
-                .UsingEntity<Dictionary<string, object>>(
-                    "CategoryWatchedVideos", // Custom Join Table Name
-                    j => j.HasOne<WatchedVideoEntity>()
-                        .WithMany()
-                        .HasForeignKey("WatchedVideoId")
-                        .OnDelete(DeleteBehavior.Cascade),
-                    j => j.HasOne<CategoryEntity>()
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade),
-                    j =>
-                    {
-                        j.HasKey("CategoryId", "WatchedVideoId"); // Composite Primary Key
-                        j.ToTable("CategoryWatchedVideos"); // Set Table Name
-                    });
-
-            modelBuilder.Entity<CategoryEntity>()
                 .HasMany(c => c.VideoCategoryEntities)
                 .WithMany(v => v.Categories)
                 .UsingEntity<Dictionary<string, object>>(
