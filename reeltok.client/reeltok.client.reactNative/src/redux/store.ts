@@ -4,8 +4,9 @@ import settingsReducer, { SettingsProps } from './slices/settingsSlice'
 import commentsReducer, { CommentsProps } from './slices/commentsSlice'
 import storeMiddlewareConfig from './config/storeMiddlewareConfig'
 import videosReducer, { VideosProps } from './slices/videosSlice'
-import usersReducer, { UsersProps } from './slices/usersSlice'
+import uploadReducer, { UploadProps } from './slices/uploadSlice'
 import { PersistPartial } from 'redux-persist/lib/persistReducer'
+import usersReducer, { UsersProps } from './slices/usersSlice'
 import { persistStore, persistReducer } from 'redux-persist'
 
 interface RootState {
@@ -13,6 +14,7 @@ interface RootState {
   comments: CommentsProps
   videos: VideosProps
   users: UsersProps
+  upload: UploadProps
 }
 
 const persistedReducers = {
@@ -23,6 +25,8 @@ const nonPersistedReducers = {
   comments: commentsReducer,
   videos: videosReducer,
   users: usersReducer,
+  upload: uploadReducer,
+
 }
 
 const rootReducer = combineReducers({

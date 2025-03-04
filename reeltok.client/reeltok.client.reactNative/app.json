@@ -22,10 +22,12 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.the_reeltok_client"
     },
-
     "web": {},
-    "plugins": ["expo-video"]
+    "plugins": [
+      "expo-video"
+    ]
   }
 }

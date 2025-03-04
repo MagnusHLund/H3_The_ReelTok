@@ -18,6 +18,7 @@ export type ScreenName =
   | 'Subscribers'
   | 'Login'
   | 'Signup'
+  | 'Camera'
 
 const Stack = createStackNavigator()
 
@@ -70,8 +71,8 @@ const Router: React.FC = () => {
 const styles = StyleSheet.create({
   rootContainer: {
     flexDirection: 'column',
-    height: "100%",
-    width: "100%"
+    height: '100%',
+    width: '100%',
   },
 })
 

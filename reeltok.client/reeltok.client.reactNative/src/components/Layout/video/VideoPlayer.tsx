@@ -66,7 +66,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   }, [player])
 
-  const handlePress = () => {
+  const changeVideoPlayState = () => {
     if (player.playing) {
       player.pause()
     } else {
@@ -84,7 +84,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         videoDetails={videoDetails}
         onCommentsOpen={() => setShowCommentsSection(true)}
       />
-      <TouchableOpacity onPress={handlePress} style={styles.touchableArea} activeOpacity={1}>
+      <TouchableOpacity
+        onPress={changeVideoPlayState}
+        style={styles.touchableArea}
+        activeOpacity={1}
+      >
         <View style={styles.videoContainer}>
           <VideoView
             player={player}

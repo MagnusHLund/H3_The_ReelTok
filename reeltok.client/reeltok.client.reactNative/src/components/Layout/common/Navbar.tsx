@@ -13,20 +13,20 @@ const Navbar: React.FC = () => {
   const { navbarHeight } = useAppDimensions()
   useAppBackHandler()
 
-  const toggleMediaSelectorForVideoUpload = () => {
+  const toggleMediaSelector = () => {
     setDisplayMediaSelector(!displayMediaSelector)
   }
 
   return (
     <>
       <View style={{ display: displayMediaSelector ? 'flex' : 'none' }}>
-        <MediaSelector />
+        <MediaSelector handleSelectMedia={toggleMediaSelector} />
       </View>
       <View style={[styles.container, { height: navbarHeight }]}>
         <CustomButton transparent={true} onPress={() => navigateToScreen('VideoFeed')}>
           <RotatingIcon name="play" color="white" />
         </CustomButton>
-        <CustomButton transparent={true} onPress={toggleMediaSelectorForVideoUpload}>
+        <CustomButton transparent={true} onPress={toggleMediaSelector}>
           <RotatingIcon name="add" color="white" />
         </CustomButton>
         <CustomButton transparent={true} onPress={() => navigateToScreen('Profile')}>

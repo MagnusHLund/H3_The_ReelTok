@@ -22,7 +22,7 @@ export const addVideoToFeedThunk = createAsyncThunk(
         hasLiked: true,
         category: VideoRecommendationCategories.Gaming,
         streamUrl:
-          'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+          'https://cdn.viggle.ai/gras/f2736735-7bbd-4c8f-b0e7-2f84ec6aff0e.mp4?Expires=1740772331&KeyName=vigglecloudcdn2&Signature=BoAeGxk5B9bhr9a20ZaTiIDixc8=',
         uploadedAt: new Date(Date.now()).toDateString(),
       },
       {
