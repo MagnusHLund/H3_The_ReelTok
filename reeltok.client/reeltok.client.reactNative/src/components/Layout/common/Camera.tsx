@@ -12,6 +12,7 @@ import AntDesign from '@expo/vector-icons/AntDesign'
 import { useState, useRef, useEffect } from 'react'
 import CustomButton from '../../input/CustomButton'
 import { Entypo } from '@expo/vector-icons'
+import useAppNavigation from '../../../hooks/useAppNavigation'
 
 interface CameraProps {
   cameraMode: 'picture' | 'video'
@@ -24,6 +25,7 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
   const [permission, requestPermission] = useCameraPermissions()
   const [recording, setRecording] = useState<boolean>(false)
   const { contentHeight } = useAppDimensions()
+  const navigateToScreen = useAppNavigation()
   const navigation = useNavigation<NativeStackNavigationProp<any>>()
   const dispatch = useAppDispatch()
 
@@ -72,7 +74,7 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
   }
   const uploadvideo = async (uri: string | null) => {
     const media = uri
-    navigation.navigate('UploadVideo')
+    navigateToScreen('UploadVideo')
   }
 
   const renderContent = () => {
