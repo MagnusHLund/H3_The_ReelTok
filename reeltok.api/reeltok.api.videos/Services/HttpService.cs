@@ -1,7 +1,7 @@
 using System.Text;
+using System.Text.Json;
 using System.Reflection;
 using reeltok.api.videos.DTOs;
-using reeltok.api.videos.Utils;
 using reeltok.api.videos.Interfaces;
 using Microsoft.AspNetCore.WebUtilities;
 
@@ -16,7 +16,11 @@ namespace reeltok.api.videos.Services
             _httpClient = httpClient;
         }
 
-        public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, Uri targetUrl, HttpMethod httpMethod) where TResponse : BaseResponseDto
+        public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(
+            TRequest requestDto,
+            Uri targetUrl,
+            HttpMethod httpMethod
+        ) where TResponse : BaseResponseDto
         {
             if (Equals(requestDto, default(TRequest)))
             {
@@ -32,19 +36,23 @@ namespace reeltok.api.videos.Services
             return response;
         }
 
-        public async Task<BaseResponseDto> RouteRequestAsync<TResponse>(HttpRequestMessage request) where TResponse : BaseResponseDto
+        public async Task<BaseResponseDto> RouteRequestAsync<TResponse>(HttpRequestMessage request)
+            where TResponse : BaseResponseDto
         {
-
             HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
 
             return response.IsSuccessStatusCode
-                ? await DeserializeXmlToDto<TResponse>(response).ConfigureAwait(false)
-                : await DeserializeXmlToDto<FailureResponseDto>(response).ConfigureAwait(false);
+                ? await DeserializeJsonToDto<TResponse>(response).ConfigureAwait(false)
+                : await DeserializeJsonToDto<FailureResponseDto>(response).ConfigureAwait(false);
         }
 
-        private static HttpRequestMessage PrepareHttpRequestBody<TRequest>(TRequest requestDto, Uri targetUrl, HttpMethod httpMethod)
+        private static HttpRequestMessage PrepareHttpRequestBody<TRequest>(
+            TRequest requestDto,
+            Uri targetUrl,
+            HttpMethod httpMethod
+        )
         {
-            string requestContent = XmlUtils.SerializeDtoToXml(requestDto);
+            string requestContent = JsonSerializer.Serialize(requestDto);
             return new HttpRequestMessage(httpMethod, targetUrl)
             {
                 Content = CreateStringContent(requestContent)
@@ -61,13 +69,14 @@ namespace reeltok.api.videos.Services
 
         private static StringContent CreateStringContent(string content)
         {
-            return new StringContent(content, Encoding.UTF8, "application/xml");
+            return new StringContent(content, Encoding.UTF8, "application/json");
         }
 
-        private static async Task<BaseResponseDto> DeserializeXmlToDto<TResponse>(HttpResponseMessage response) where TResponse : BaseResponseDto
+        private static async Task<BaseResponseDto> DeserializeJsonToDto<TResponse>(HttpResponseMessage response)
+            where TResponse : BaseResponseDto
         {
             string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return XmlUtils.DeserializeFromXml<TResponse>(responseContent);
+            return JsonSerializer.Deserialize<TResponse>(responseContent);
         }
 
         private static Dictionary<string, string> ConvertRequestDtoToQueryParameters<TRequest>(TRequest request)

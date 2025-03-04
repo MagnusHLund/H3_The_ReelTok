@@ -10,7 +10,7 @@ namespace reeltok.api.videos.Services
 {
     public class LikesService : BaseService, ILikesService
     {
-        private const string UsersMicroServiceBaseUrl = "http://localhost:5001/api/users";
+        private const string UsersMicroServiceBaseUrl = "https://localhost:5001/api/likedVideos";
         private readonly IHttpService _httpService;
         private readonly ILikesRepository _likesRepository;
         public LikesService(IHttpService httpService, ILikesRepository likesRepository)
