@@ -72,6 +72,8 @@ namespace reeltok.api.videos.Services
             VideoEntity videoToUpload = VideoMapper.ConvertVideoUploadToVideoEntity(video, userId);
             VideoEntity videoEntity = await _videosRepository.CreateVideoAsync(videoToUpload).ConfigureAwait(false);
 
+            // TODO: Call recommendations api to add the video in its database
+
             await _storageService.UploadVideoToFileServerAsync(
                 video.VideoFile, videoEntity.VideoId, videoEntity.UserId)
                 .ConfigureAwait(false);

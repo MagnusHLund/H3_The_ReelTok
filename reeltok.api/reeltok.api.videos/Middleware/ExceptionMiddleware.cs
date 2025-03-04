@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 using reeltok.api.videos.DTOs;
+using System.Xml.Serialization;
 
 namespace reeltok.api.videos.Middleware
 {
@@ -28,7 +24,7 @@ namespace reeltok.api.videos.Middleware
             catch (Exception ex)
             {
                 _logger.LogError($"An exception has occurred: {ex}");
-                await HandleExceptionAsync(context);
+                await HandleExceptionAsync(context).ConfigureAwait(false);
             }
         }
 

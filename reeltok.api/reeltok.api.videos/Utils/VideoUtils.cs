@@ -44,11 +44,24 @@ namespace reeltok.api.videos.Utils
             string temporaryFilePath = Path.GetTempFileName();
             using (FileStream stream = new FileStream(temporaryFilePath, FileMode.Create))
             {
-                await video.CopyToAsync(stream).ConfigureAwait(false);
+                await video.CopyToAsync(stream);
             }
 
-            var mediaInfo = await FFmpeg.GetMediaInfo(temporaryFilePath).ConfigureAwait(false);
-            File.Delete(temporaryFilePath);
+            IMediaInfo mediaInfo;
+
+            try
+            {
+                mediaInfo = await FFmpeg.GetMediaInfo(temporaryFilePath);
+            }
+            catch (Exception ex)
+            {
+                throw new IOException("An error occurred while getting media info!", ex);
+            }
+            finally
+            {
+                File.Delete(temporaryFilePath);
+            }
+
             return mediaInfo;
         }
     }

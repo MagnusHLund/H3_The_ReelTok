@@ -1,3 +1,4 @@
+using reeltok.api.videos.Data;
 using reeltok.api.videos.Entities;
 using reeltok.api.videos.Interfaces;
 
@@ -5,9 +6,19 @@ namespace reeltok.api.videos.Repositories
 {
     public class VideosRepository : IVideosRepository
     {
-        public Task<VideoEntity> CreateVideoAsync(VideoEntity video)
+        private readonly VideosDbContext _context;
+
+        public VideosRepository(VideosDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+
+        public async Task<VideoEntity> CreateVideoAsync(VideoEntity video)
+        {
+            VideoEntity videoEntity = (await _context.Videos.AddAsync(video).ConfigureAwait(false)).Entity;
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            return videoEntity;
         }
 
         public Task<VideoEntity> UpdateVideoStreamPathAsync(Guid videoId, string streamPath)

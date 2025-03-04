@@ -26,7 +26,8 @@ namespace reeltok.api.videos.Services
             string sftpPassword = _appSettingsUtils.GetConfigurationValue(PasswordConfig);
 
             string fileExtension = Path.GetExtension(videoFile.FileName).ToUpperInvariant();
-            string filePath = GenerateFilePath(userId, videoId, fileExtension);
+            string userDirectory = $"{sftpDirectory}/{userId}";
+            string filePath = $"{userDirectory}/{videoId}{fileExtension}";
 
             using (var sftpClient = new SftpClient(sftpHostname, sftpUsername, sftpPassword))
             {
@@ -34,12 +35,15 @@ namespace reeltok.api.videos.Services
                 {
                     sftpClient.Connect();
 
-                    using (Stream inStream = videoFile.OpenReadStream())
+                    if (!sftpClient.Exists(userDirectory))
                     {
-                        await Task.Run(() => sftpClient.UploadFile(inStream, $"{sftpDirectory}/{filePath}")).ConfigureAwait(false);
+                        sftpClient.CreateDirectory(userDirectory);
                     }
 
-                    sftpClient.Disconnect();
+                    using (Stream inStream = videoFile.OpenReadStream())
+                    {
+                        await Task.Run(() => sftpClient.UploadFile(inStream, $"{filePath}")).ConfigureAwait(false);
+                    }
                 }
                 catch (SshException ex)
                 {
@@ -48,6 +52,10 @@ namespace reeltok.api.videos.Services
                 catch (Exception ex)
                 {
                     throw new IOException("An error occurred while uploading the video to the SFTP server!", ex);
+                }
+                finally
+                {
+                    sftpClient.Disconnect();
                 }
             }
         }
@@ -84,11 +92,6 @@ namespace reeltok.api.videos.Services
                     throw new IOException("An error occurred while removing the video from the SFTP server!", ex);
                 }
             }
-        }
-
-        private static string GenerateFilePath(Guid userId, Guid videoId, string fileExtension)
-        {
-            return Path.Combine(userId.ToString(), videoId.ToString() + fileExtension);
         }
 
         public static async Task EnsureValidFileUploadAsync(IFormFile? video)
