@@ -2,18 +2,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using reeltok.api.recommendations.Data;
+using reeltok.api.recommendations.Entities;
+using reeltok.api.recommendations.Enums;
 using reeltok.api.recommendations.Interfaces.Repositories;
 
 namespace reeltok.api.recommendations.Repositories
 {
     public class UserRecommendationRepository : IUserRecommendationRepository
     {
-        public Task AddRecommendationForUserAsync()
+        private readonly RecommendationDbContext _context;
+        public UserRecommendationRepository(RecommendationDbContext context)
+        {
+            _context = context;
+        }
+
+        public Task AddRecommendationForUserAsync(UserInterestEntity userInterest, int categoryId)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateRecommendationForUserAsync()
+        public Task UpdateRecommendationForUserAsync(Guid userId, RecommendedCategories updateCategory)
         {
             throw new NotImplementedException();
         }
