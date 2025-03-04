@@ -1,8 +1,5 @@
 using reeltok.api.recommendations.Enums;
 using reeltok.api.recommendations.Interfaces.Services;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace reeltok.api.recommendations.Services
 {
