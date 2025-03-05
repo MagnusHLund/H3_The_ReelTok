@@ -6,11 +6,11 @@ namespace reeltok.api.recommendations.Entities
     public class VideoCategoryEntity
     {
         [Key]
-        public int VideoCategoryId { get; private set; }
+        public int VideoCategoryId { get; set; }
 
-        public VideoCategoryDetails VideoCategoryDetails { get; private set; }
+        public VideoCategoryDetails VideoCategoryDetails { get; set; }
 
-        public List<CategoryEntity> Categories { get; private set; }
+        public List<CategoryEntity> Categories { get; set; }
 
         public VideoCategoryEntity(VideoCategoryDetails videoCategoryDetails)
         {

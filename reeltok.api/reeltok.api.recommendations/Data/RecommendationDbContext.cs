@@ -11,6 +11,7 @@ namespace reeltok.api.recommendations.Data
         public DbSet<CategoryEntity> CategoryEntities { get; set; }
         public DbSet<UserInterestEntity> UserInterests { get; set; }
         public DbSet<WatchedVideoEntity> WatchedVideoEntities { get; set; }
+        public DbSet<VideoCategoryEntity> VideoCategoryEntities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
