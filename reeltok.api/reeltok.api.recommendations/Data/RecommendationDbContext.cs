@@ -21,7 +21,7 @@ namespace reeltok.api.recommendations.Data
 
             modelBuilder.Entity<CategoryEntity>().OwnsOne(ce => ce.CategoryDetails, CategoryDetails =>
             {
-                CategoryDetails.Property(cd => cd.CategoryName).HasColumnName("CategoryName");
+                CategoryDetails.Property(cd => cd.CategoryName).HasColumnName("CategoryName").HasConversion<string>();
             });
 
             modelBuilder.Entity<WatchedVideoEntity>().OwnsOne(vw => vw.WatchedVideoDetails, WatchedVideoDetails =>
