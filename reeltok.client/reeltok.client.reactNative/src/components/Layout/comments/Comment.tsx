@@ -1,5 +1,5 @@
 import useAppSelector from '../../../hooks/useAppSelector'
-import ProfilePicture from '../profile/ProfilePicture'
+import ProfilePicture from '../common/ProfilePicture'
 import { StyleSheet, Text, View } from 'react-native'
 
 interface CommentProps {

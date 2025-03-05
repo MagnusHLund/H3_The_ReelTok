@@ -1,6 +1,6 @@
 import CustomButton from '../../input/CustomButton'
 import { StyleSheet, View } from 'react-native'
-import UserCard from '../profile/UserCard'
+import UserCard from '../common/UserCard'
 import Divider from './Divider'
 import React from 'react'
 
