@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
-using reeltok.api.recommendations.DTOs;
 
 namespace reeltok.api.auth.DTOs
 {
