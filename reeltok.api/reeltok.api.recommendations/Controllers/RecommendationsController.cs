@@ -5,12 +5,12 @@ using reeltok.api.recommendations.Interfaces.Services;
 namespace reeltok.api.recommendations.RecommendationsServiceApi.Api.Controllers
 {
     [ApiController]
-    [Route("api/recommendateions")]
-    public class GetRecommendationsController : ControllerBase
+    [Route("api/recommendations")]
+    public class RecommendationsController : ControllerBase
     {
         private readonly IRecommendationsService _recommendationsService;
 
-        public GetRecommendationsController(IRecommendationsService recommendationsService)
+        public RecommendationsController(IRecommendationsService recommendationsService)
         {
             _recommendationsService = recommendationsService;
         }

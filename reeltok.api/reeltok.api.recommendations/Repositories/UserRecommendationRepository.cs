@@ -1,24 +1,46 @@
 using reeltok.api.recommendations.Data;
-using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Enums;
+using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
+using reeltok.api.recommendations.Interfaces.repositories;
 
 namespace reeltok.api.recommendations.Repositories
 {
     public class UserRecommendationRepository : IUserRecommendationRepository
     {
         private readonly RecommendationDbContext _context;
-        public UserRecommendationRepository(RecommendationDbContext context)
+        private readonly IRecommendationsRepository _recommendationsRepository;
+        public UserRecommendationRepository(RecommendationDbContext context, IRecommendationsRepository recommendationsRepository)
         {
             _context = context;
+            
+            _recommendationsRepository = recommendationsRepository;
         }
 
-        public Task AddRecommendationForUserAsync(UserInterestEntity userInterest, int categoryId)
+        public async Task<bool> AddRecommendationForUserAsync(UserInterestEntity userInterest, int categoryId)
+        {
+            CategoryEntity categoryEntity = await _recommendationsRepository
+                .GetCategoryAsync((RecommendedCategories) categoryId);
+
+            if (categoryEntity == null)
+            {
+                return false;
+            }
+
+            userInterest.Categories.Add(categoryEntity);
+
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            return true;
+        }
+
+        public Task<UserInterestEntity> GetUserInterestAsync(Guid userId)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateRecommendationForUserAsync(Guid userId, RecommendedCategories updateCategory)
+        public Task<bool> UpdateRecommendationForUserAsync(Guid userId, RecommendedCategories updateCategory)
         {
             throw new NotImplementedException();
         }
