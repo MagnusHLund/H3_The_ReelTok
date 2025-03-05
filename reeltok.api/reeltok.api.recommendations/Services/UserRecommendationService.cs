@@ -32,9 +32,18 @@ namespace reeltok.api.recommendations.Services
             return userInterestEntity;
         }
 
-        public Task<bool> UpdateRecommendationForUserAsync()
+        public async Task<bool> UpdateRecommendationForUserAsync(Guid userId, int oldCategoryId, int newCategoryId)
         {
-            throw new NotImplementedException();
+            UserInterestEntity userInterestEntity = await _userRecommendationRepository.GetUserInterestAsync(userId);
+
+            bool isUpdated = await _userRecommendationRepository.UpdateRecommendationForUserAsync(userInterestEntity, oldCategoryId, newCategoryId);
+
+            if (!isUpdated)
+            {
+                throw new Exception("Category not found");
+            }
+
+            return isUpdated;
         }
     }
 }

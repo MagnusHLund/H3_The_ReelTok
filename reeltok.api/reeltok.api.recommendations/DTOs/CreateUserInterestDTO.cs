@@ -1,11 +1,13 @@
+using reeltok.api.auth.DTOs;
+
 namespace reeltok.api.recommendations.DTOs
 {
-    public class CreateUserInterestDTO
+    public class CreateUserInterestDto : BaseResponseDto
     {
         public Guid UserId { get; set; }
         public int CategoryId { get; set; }
 
-        public CreateUserInterestDTO(Guid userId, int categoryId)
+        public CreateUserInterestDto(Guid userId, int categoryId, bool success) : base(success)
         {
             UserId = userId;
             CategoryId = categoryId;

@@ -47,9 +47,32 @@ namespace reeltok.api.recommendations.Repositories
                 ?? throw new KeyNotFoundException("User not found");
         }
 
-        public Task<bool> UpdateRecommendationForUserAsync(Guid userId, RecommendedCategories updateCategory)
+        public async Task<bool> UpdateRecommendationForUserAsync
+            (UserInterestEntity userInterest, int oldCategoryId, int newCategoryId)
         {
-            throw new NotImplementedException();
+            // Remove the old category if it exists
+            CategoryEntity? oldCategory = userInterest.Categories.FirstOrDefault(c => c.CategoryId == oldCategoryId);
+
+            if (oldCategory != null)
+            {
+                userInterest.Categories.Remove(oldCategory);
+            }
+
+            // Get the new category
+            CategoryEntity? newCategory = await _context.CategoryEntities
+                .FirstOrDefaultAsync(c => c.CategoryId == newCategoryId);
+
+            if (newCategory == null)
+            {
+                return false;  // New category not found
+            }
+
+            userInterest.Categories.Add(newCategory);
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

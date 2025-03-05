@@ -21,7 +21,7 @@ namespace reeltok.api.recommendations.Controllers
         }
 
         [HttpPost("Add user recommendation")]
-        public async Task<IActionResult> AddUserRecommendationAsync([FromBody] CreateUserInterestDTO dto)
+        public async Task<IActionResult> AddUserRecommendationAsync([FromBody] CreateUserInterestDto dto)
         {
             UserInterestDetails userInterestDetails = UserRecommendationMapper.ToUserInterestDetailsFromDTO(dto);
 
@@ -47,16 +47,30 @@ namespace reeltok.api.recommendations.Controllers
                 return BadRequest(new FailureResponseDto("User not found"));
             }
 
-            CategoryEntity category = userInterest.Categories.FirstOrDefault();
-            if (category == null)
+            if (userInterest.Categories == null || !userInterest.Categories.Any())
             {
                 return BadRequest(new FailureResponseDto("Category not found"));
             }
 
-            UserInterestResponseDTO userInterestDto = UserRecommendationMapper.ToUserInterestDTOFromEntity(userInterest, category);
+            CategoryEntity category = userInterest.Categories.First();
+
+            UserInterestResponseDto userInterestDto = UserRecommendationMapper.ToUserInterestDTOFromEntity(userInterest, category);
 
             return Ok(userInterestDto);
+        }
 
+        [HttpPut("Update user recommendation")]
+        public async Task<IActionResult> UpdateUserRecommendationAsync(UpdateUserInterestDto dto)
+        {
+            bool isUpdated = await _userRecommendationService.UpdateRecommendationForUserAsync
+                (dto.UserId, dto.OldCategoryId, dto.NewCategoryId);
+
+            if (!isUpdated)
+            {
+                return BadRequest(new FailureResponseDto("Failed to update user recommendation"));
+            }
+
+            return Ok(isUpdated);
         }
     }
 }
