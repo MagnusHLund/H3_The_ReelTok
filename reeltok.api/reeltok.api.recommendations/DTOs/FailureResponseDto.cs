@@ -12,7 +12,7 @@ namespace reeltok.api.auth.DTOs
         [XmlElement("Success")]
         public override bool Success { get; set; }
 
-        public FailureResponseDto(string message)
+        public FailureResponseDto(string message, bool success = true) : base(success)
         {
             Message = message;
             Success = false;

@@ -8,7 +8,7 @@ namespace reeltok.api.recommendations.DTOs
         [Required]
         public List<string> Recommendations { get; private set; }
 
-        public GetRecommendationResponseDto(List<string> recommendations, bool success) : base(success)
+        public GetRecommendationResponseDto(List<string> recommendations, bool success = true) : base(success)
         {
             Recommendations = recommendations;
         }
