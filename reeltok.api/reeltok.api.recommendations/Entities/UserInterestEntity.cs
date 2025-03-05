@@ -6,12 +6,12 @@ namespace reeltok.api.recommendations.Entities
     public class UserInterestEntity
     {
         [Key]
-        public uint UserInterestId { get; private set; }
+        public uint UserInterestId { get; set; }
 
         [Required]
-        public UserInterestDetails UserInterestDetails { get; private set; }
+        public UserInterestDetails UserInterestDetails { get; set; }
 
-        public List<CategoryEntity> Categories { get; private set; }
+        public List<CategoryEntity>? Categories { get; set; }
 
         public UserInterestEntity(UserInterestDetails userInterestDetails)
         {

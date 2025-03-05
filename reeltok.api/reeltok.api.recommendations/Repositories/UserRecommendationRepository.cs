@@ -14,7 +14,7 @@ namespace reeltok.api.recommendations.Repositories
         public UserRecommendationRepository(RecommendationDbContext context, IRecommendationsRepository recommendationsRepository)
         {
             _context = context;
-            
+
             _recommendationsRepository = recommendationsRepository;
         }
 
@@ -28,7 +28,11 @@ namespace reeltok.api.recommendations.Repositories
                 return false;
             }
 
+            userInterest.Categories ??= new List<CategoryEntity>();
+
             userInterest.Categories.Add(categoryEntity);
+
+            await _context.UserInterests.AddAsync(userInterest).ConfigureAwait(false);
 
             await _context.SaveChangesAsync().ConfigureAwait(false);
 

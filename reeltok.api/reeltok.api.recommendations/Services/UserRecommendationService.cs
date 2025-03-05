@@ -1,15 +1,31 @@
+using reeltok.api.recommendations.Entities;
+using reeltok.api.recommendations.Interfaces.Repositories;
 using reeltok.api.recommendations.Interfaces.Services;
 
 namespace reeltok.api.recommendations.Services
 {
     public class UserRecommendationService : IUserRecommendationService
     {
-        public Task AddRecommendationForUserAsync()
+        private readonly IUserRecommendationRepository _userRecommendationRepository;
+
+        public UserRecommendationService(IUserRecommendationRepository userRecommendationRepository)
         {
-            throw new NotImplementedException();
+            _userRecommendationRepository = userRecommendationRepository;
         }
 
-        public Task UpdateRecommendationForUserAsync()
+        public async Task<bool> AddRecommendationForUserAsync(UserInterestEntity userInterest, int categoryId)
+        {
+            bool isAdded = await _userRecommendationRepository.AddRecommendationForUserAsync(userInterest, categoryId);
+
+            if (!isAdded)
+            {
+                throw new Exception("Category not found");
+            }
+
+            return isAdded;
+        }
+
+        public Task<bool> UpdateRecommendationForUserAsync()
         {
             throw new NotImplementedException();
         }
