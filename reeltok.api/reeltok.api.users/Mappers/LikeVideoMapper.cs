@@ -1,5 +1,5 @@
 using reeltok.api.users.ValueObjects;
-using reeltok.api.users.DTOs.LikeVideoRequests;
+using reeltok.api.users.DTOs.LikeVideo;
 
 namespace reeltok.api.users.Mappers
 {

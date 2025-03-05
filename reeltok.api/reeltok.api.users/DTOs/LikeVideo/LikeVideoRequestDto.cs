@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace reeltok.api.users.DTOs.LikeVideoRequests
+namespace reeltok.api.users.DTOs.LikeVideo
 {
     public class LikeVideoRequestDto
     {
         [Required]
         public Guid UserId { get; }
+
         [Required]
         public Guid VideoId { get; }
 

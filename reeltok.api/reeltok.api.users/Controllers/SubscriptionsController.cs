@@ -2,20 +2,22 @@ using Microsoft.AspNetCore.Mvc;
 using reeltok.api.users.Mappers;
 using reeltok.api.users.Entities;
 using reeltok.api.users.ValueObjects;
+using reeltok.api.users.ActionFilters;
 using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.DTOs.SubscriptionRequests;
 using reeltok.api.users.DTOs.SubscriptionResponses;
 
 namespace reeltok.api.users.Controllers
 {
-    [Route("api/subscriptions")]
+    [ValidateModel]
     [ApiController]
-    public class SubscriptionController : ControllerBase
+    [Route("api/[controller]")]
+    public class SubscriptionsController : ControllerBase
     {
         private readonly IUsersService _usersService;
-        private readonly ISubscriptionService _subscriptionService;
+        private readonly ISubscriptionsService _subscriptionService;
 
-        public SubscriptionController(ISubscriptionService subscriptionService, IUsersService usersService)
+        public SubscriptionsController(ISubscriptionsService subscriptionService, IUsersService usersService)
         {
             _usersService = usersService;
             _subscriptionService = subscriptionService;
@@ -35,7 +37,7 @@ namespace reeltok.api.users.Controllers
                 return BadRequest("Subscription cannot be null");
             }
 
-            User? existingUser = await _usersService.GetUserByIdAsync(subscription.SubscriberUserId).ConfigureAwait(false);
+            User? existingUser = await _usersService.GetUserByIdAsync(subscription.UserId).ConfigureAwait(false);
 
             if (existingUser == null)
             {

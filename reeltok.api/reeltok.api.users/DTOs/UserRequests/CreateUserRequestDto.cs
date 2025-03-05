@@ -10,7 +10,7 @@ namespace reeltok.api.users.DTOs.UserRequests
         [Required]
         public string Email { get; }
 
-    public CreateUserRequestDto(string userName, string email)
+        public CreateUserRequestDto(string userName, string email)
         {
             UserName = userName;
             Email = email;

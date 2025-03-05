@@ -1,21 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
+using reeltok.api.users.Mappers;
+using reeltok.api.users.Entities;
+using reeltok.api.users.ValueObjects;
+using reeltok.api.users.ActionFilters;
 using reeltok.api.users.DTOs.UserRequests;
 using reeltok.api.users.DTOs.UserResponses;
-using reeltok.api.users.Entities;
 using reeltok.api.users.Interfaces.Services;
-using reeltok.api.users.Mappers;
-using reeltok.api.users.ValueObjects;
 
 namespace reeltok.api.users.Controllers
 {
+    [ValidateModel]
     [Route("api/user")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         // TODO: MAKE A LOGIN CONTROLLER
         private readonly IUsersService _usersService;
 
-        public UserController(IUsersService usersService)
+        public UsersController(IUsersService usersService)
         {
             _usersService = usersService;
         }

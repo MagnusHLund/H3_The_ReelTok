@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using reeltok.api.users.Data;
 using reeltok.api.users.Entities;
+using Microsoft.EntityFrameworkCore;
 using reeltok.api.users.Interfaces.Repositories;
 
 namespace reeltok.api.users.Repositories
@@ -21,37 +21,27 @@ namespace reeltok.api.users.Repositories
             return DbUser;
         }
 
-        public async Task<User?> GetUserByIdAsync(Guid id)
+        public async Task<User> GetUserByIdAsync(Guid userId)
         {
-            return await _context.Users.FindAsync(id).ConfigureAwait(false);
+            return await _context.Users.FindAsync(userId).ConfigureAwait(false)
+                ?? throw new KeyNotFoundException($"User with id {userId} not found!");
         }
 
-        public async Task<User?> UpdateUserAsync(User user, Guid userId)
+        public async Task<User> UpdateUserAsync(User user)
         {
-            User? existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId).ConfigureAwait(false);
-
-            if (existingUser == null)
-            {
-                throw new KeyNotFoundException("User not found");
-            }
-
-            User updateUser = _context.Users.Update(user).Entity;
+            _context.Users.Attach(user);
+            _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
-            return updateUser;
+            return user;
         }
 
         public async Task<bool> DeleteUserAsync(Guid userId)
         {
-            User? userModel = await _context.Users.FindAsync(userId).ConfigureAwait(false);
+            User userEntity = await _context.Users.FindAsync(userId).ConfigureAwait(false)
+                ?? throw new KeyNotFoundException($"User with id {userId} not found!");
 
-            if (userModel == null)
-            {
-                return false;
-            }
-
-            _context.Users.Remove(userModel);
-
+            _context.Users.Remove(userEntity);
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return true;

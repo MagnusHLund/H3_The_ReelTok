@@ -14,12 +14,12 @@ namespace UsersServiceApi
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddScoped<IUsersRepository, UsersRepository>();
-            builder.Services.AddScoped<ILikeVideoRepository, LikeVideoRepository>();
-            builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+            builder.Services.AddScoped<ILikeVideosRepository, LikeVideosRepository>();
+            builder.Services.AddScoped<ISubscriptionsRepository, SubscriptionsRepository>();
 
             builder.Services.AddScoped<IUsersService, UsersService>();
-            builder.Services.AddScoped<ILikeVideoService, LikeVideoService>();
-            builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+            builder.Services.AddScoped<ILikeVideosService, LikeVideosService>();
+            builder.Services.AddScoped<ISubscriptionsService, SubscriptionsService>();
 
             builder.Services.AddDbContextFactory<UserDbContext>(options =>
             {

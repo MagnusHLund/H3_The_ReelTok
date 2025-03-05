@@ -1,0 +1,49 @@
+using Microsoft.AspNetCore.Mvc;
+using reeltok.api.users.Mappers;
+using reeltok.api.users.ValueObjects;
+using reeltok.api.users.ActionFilters;
+using reeltok.api.users.DTOs.LikeVideo;
+using reeltok.api.users.DTOs.RemoveLike;
+using reeltok.api.users.Interfaces.Services;
+
+namespace reeltok.api.users.Controllers
+{
+    [ValidateModel]
+    [ApiController]
+    [Route("api/[controller]")]
+    public class LikeVideosController : ControllerBase
+    {
+        private readonly ILikeVideosService _likeVideoService;
+
+        public LikeVideosController(ILikeVideosService likeVideoService)
+        {
+            _likeVideoService = likeVideoService;
+        }
+
+        // TODO: Remove unused DTOs
+
+        [HttpPost("like")]
+        public async Task<IActionResult> AddLikeToVideoAsync([FromBody] LikeVideoRequestDto request)
+        {
+            LikedDetails likedDetails = LikeVideoMapper.ToLikeVideoFromCreateDTO(request);
+
+            bool success = await _likeVideoService.AddToLikedVideosAsync(likedDetails)
+                .ConfigureAwait(false);
+
+            LikeVideoResponseDto response = new LikeVideoResponseDto(success);
+            return Ok(response);
+        }
+
+        [HttpDelete("like")]
+        public async Task<IActionResult> RemoveLikeFromVideoAsync([FromQuery] Guid videoId, [FromQuery] Guid userId)
+        {
+            LikedDetails likeVideo = new LikedDetails(userId, videoId);
+
+            bool success = await _likeVideoService.RemoveFromLikedVideosAsync(likeVideo.UserId, likeVideo.VideoId)
+                .ConfigureAwait(false);
+
+            RemoveLikeResponseDto response = new RemoveLikeResponseDto(success);
+            return Ok(response);
+        }
+    }
+}

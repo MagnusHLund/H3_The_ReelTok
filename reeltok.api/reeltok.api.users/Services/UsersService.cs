@@ -4,7 +4,7 @@ using reeltok.api.users.Interfaces.Repositories;
 
 namespace reeltok.api.users.Services
 {
-    public class UsersService : IUsersService
+    public class UsersService : BaseService, IUsersService
     {
         private readonly IUsersRepository _userRepository;
 
@@ -15,58 +15,34 @@ namespace reeltok.api.users.Services
 
         public async Task<User> CreateUserAsync(User user)
         {
-            User returnUser;
+            User returnUser = await _userRepository.CreateUserAsync(user).ConfigureAwait(false);
 
-            try
-            {
-                returnUser = await _userRepository.CreateUserAsync(user).ConfigureAwait(false);
-
-            }
-            catch (Exception ex)
-            {
-                // Handle the error, you can log it or throw a custom exception if needed
-                throw new InvalidOperationException("User creation failed.", ex);
-            }
+            // TODO: Call recommendation api to add users recommendation
 
             return returnUser;
         }
-        public async Task<User?> GetUserByIdAsync(Guid userId)
+
+        public async Task<User> GetUserByIdAsync(Guid userId)
         {
-            User? user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
-
-            if (user == null)
-            {
-                return null;
-            }
-
+            User user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
             return user;
         }
-        public async Task<User?> UpdateUserAsync(User user, Guid userId)
-        {
-            User? updatedUser = await _userRepository.UpdateUserAsync(user, userId).ConfigureAwait(false);
 
-            if (updatedUser == null)
+        public async Task<User> UpdateUserAsync(User user, Guid userId)
+        {
+            if (user?.UserId != userId)
             {
-                return null;
+                throw new InvalidOperationException($"User id mismatch. {user?.UserId} does not match {userId}");
             }
 
+            User updatedUser = await _userRepository.UpdateUserAsync(user).ConfigureAwait(false);
             return updatedUser;
         }
-        public Task<bool> DeleteUserAsync(Guid userId)
+
+        public async Task<bool> DeleteUserAsync(Guid userId)
         {
-            bool IsUserDeleted;
-
-            try
-            {
-                IsUserDeleted = _userRepository.DeleteUserAsync(userId).Result;
-            }
-            catch (Exception ex)
-            {
-                // Handle the error, you can log it or throw a custom exception if needed
-                throw new InvalidOperationException("User deletion failed.", ex);
-            }
-
-            return Task.FromResult(IsUserDeleted);
+            bool IsUserDeleted = await _userRepository.DeleteUserAsync(userId).ConfigureAwait(false);
+            return IsUserDeleted;
         }
     }
 }

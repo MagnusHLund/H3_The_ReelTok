@@ -20,7 +20,7 @@ namespace reeltok.api.users.DTOs.UserResponses
         [XmlElement("Email")]
         public string Email { get; set; }
 
-        public ReturnCreateUserResponseDTO( Guid userId, string email, string userName, string profileUrl, string profilePictureUrl)
+        public ReturnCreateUserResponseDTO(Guid userId, string email, string userName, string profileUrl, string profilePictureUrl)
         {
             UserId = userId;
             Email = email;

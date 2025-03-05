@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.users.ValueObjects
 {
-    public class UserDetails    
+    public class UserDetails
     {
         [Required]
         public string UserName { get; private set; } = string.Empty;
@@ -11,7 +11,7 @@ namespace reeltok.api.users.ValueObjects
         public string ProfileUrl { get; private set; } = string.Empty;
 
         [Required]
-        public string ProfilePictureUrl { get; private set; } = string.Empty; 
+        public string ProfilePictureUrl { get; private set; } = string.Empty;
 
         [Required]
         public HiddenUserDetails HiddenDetails { get; private set; }

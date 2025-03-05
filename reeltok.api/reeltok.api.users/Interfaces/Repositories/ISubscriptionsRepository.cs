@@ -2,7 +2,7 @@ using reeltok.api.users.Entities;
 
 namespace reeltok.api.users.Interfaces.Repositories
 {
-    public interface ISubscriptionRepository
+    public interface ISubscriptionsRepository
     {
         Task<List<Guid>> GetAllSubscribersIdAsync(Guid userId); // All who follow User
         Task<List<Guid>> GetAllSubscriptionIdAsync(Guid userId); // All who User follows

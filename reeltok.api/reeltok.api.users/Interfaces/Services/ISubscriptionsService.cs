@@ -2,7 +2,7 @@ using reeltok.api.users.Entities;
 
 namespace reeltok.api.users.Interfaces.Services
 {
-    public interface ISubscriptionService
+    public interface ISubscriptionsService
     {
         Task<bool> SubscribeAsync(Subscription subscription);
         Task<bool> UnsubscribeAsync(Guid userId, Guid subscribeUserId);

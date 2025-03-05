@@ -1,22 +1,22 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.users.DTOs.SubscriptionRequests
 {
     public class SubscribeRequestDto
     {
         [Required]
-        public Guid SubscriberUserId { get; }
+        public Guid UserId { get; }
 
         [Required]
         public Guid SubscribingToUserId { get; }
 
-        public SubscribeRequestDto(Guid subscriberUserId, Guid subscribingToUserId)
+        public SubscribeRequestDto(Guid userId, Guid subscribingToUserId)
         {
-            SubscriberUserId = subscriberUserId;
+            UserId = userId;
             SubscribingToUserId = subscribingToUserId;
         }
     }
