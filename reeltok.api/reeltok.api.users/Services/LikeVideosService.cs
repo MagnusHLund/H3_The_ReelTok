@@ -1,7 +1,7 @@
 using reeltok.api.users.Entities;
+using reeltok.api.users.ValueObjects;
 using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.Interfaces.Repositories;
-using reeltok.api.users.ValueObjects;
 
 namespace reeltok.api.users.Services
 {
@@ -21,7 +21,7 @@ namespace reeltok.api.users.Services
             // Ensure the user exists
             await _usersService.GetUserByIdAsync(likedDetails.UserId).ConfigureAwait(false);
 
-            LikedVideo likedVideo = new LikedVideo(likedDetails);
+            LikedVideoEntity likedVideo = new LikedVideoEntity(likedDetails);
             bool IsLikedVideoAdded = await _likeVideoRepository.AddToLikedVideoAsync(likedVideo)
                 .ConfigureAwait(false);
 

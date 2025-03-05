@@ -1,21 +1,20 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using reeltok.api.users.ValueObjects;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.users.Entities
 {
-    public class LikedVideo
+    public class LikedVideoEntity
     {
         [Key]
         public uint LikedVideoId { get; set; }
 
         [Required]
         public LikedDetails LikedVideoDetails { get; set; }
-        public LikedVideo(LikedDetails likedVideoDetails)
+        public LikedVideoEntity(LikedDetails likedVideoDetails)
         {
             LikedVideoDetails = likedVideoDetails;
         }
 
-        private LikedVideo() { }
+        private LikedVideoEntity() { }
     }
 }

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using reeltok.api.users.Mappers;
 using reeltok.api.users.Entities;
-using reeltok.api.users.ValueObjects;
 using reeltok.api.users.ActionFilters;
 using reeltok.api.users.DTOs.UserRequests;
 using reeltok.api.users.DTOs.UserResponses;
@@ -10,11 +9,10 @@ using reeltok.api.users.Interfaces.Services;
 namespace reeltok.api.users.Controllers
 {
     [ValidateModel]
-    [Route("api/user")]
     [ApiController]
+    [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        // TODO: MAKE A LOGIN CONTROLLER
         private readonly IUsersService _usersService;
 
         public UsersController(IUsersService usersService)
@@ -22,124 +20,37 @@ namespace reeltok.api.users.Controllers
             _usersService = usersService;
         }
 
-        //Shazil TODOs on discord:
+        // TODO: Refactor DTO names
         // TODO: Call video API to verify video id
         // TODO: Call auth API when creating user
-        // TODO: Delete subscription and subscriber when user is deleted
-        // TODO: Change name of columns in database using EF
-        // TODO: Add Login in User API
-        // TODO: Add asymmetric encryption for emails
+        // TODO: Add Login in User API, using a login controller
 
         // TODO: CALL AUTH SERVICE TO ADD OTHER USER INFO THERE
-        [HttpPost("Create A User")]
-        public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequestDto user)
+        [HttpPost]
+        public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequestDto request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            UserEntity user = await _usersService.CreateUserAsync(request.Username, request.Email, request.Password).ConfigureAwait(false);
 
-            if (user == null)
-            {
-                return BadRequest("User cannot be null");
-            }
-
-            User userModel = user.ToUsersFromCreateDTO();
-
-            // Adding the leftover Properties
-            userModel.UserId = Guid.NewGuid();
-
-            User dbUser = await _usersService.CreateUserAsync(userModel).ConfigureAwait(false);
-            // Map the entity to DTO
-            ReturnCreateUserResponseDTO responseDto = UserMapper.ToReturnCreateUserResponseDTO(dbUser);
-
-            return Ok(responseDto);
+            ReturnCreateUserResponseDTO response = UserMapper.ToReturnCreateUserResponseDTO(user);
+            return Ok(response);
         }
 
-        [HttpGet("Get User By Id")]
-        public async Task<IActionResult> GetUserById([FromQuery] Guid userId)
+        [HttpGet]
+        public async Task<IActionResult> GetUserByIdAsync([FromQuery] Guid userId)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            UserEntity user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
 
-            if (userId == Guid.Empty)
-            {
-                return BadRequest("User Id cannot be empty");
-            }
-
-            User? user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
-
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
-
-            ReturnCreateUserResponseDTO responseDto = UserMapper.ToReturnCreateUserResponseDTO(user);
-
-            return Ok(responseDto);
+            ReturnCreateUserResponseDTO response = UserMapper.ToReturnCreateUserResponseDTO(user);
+            return Ok(response);
         }
 
-        [HttpPut("Update User")]
-        public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserRequestDto user)
+        [HttpPut]
+        public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserRequestDto request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            UserEntity updatedUser = await _usersService.UpdateUserAsync(request.UserId, request.Username, request.Email).ConfigureAwait(false);
 
-            if (user == null)
-            {
-                return BadRequest("User cannot be null");
-            }
-
-            User? existingUser = await _usersService.GetUserByIdAsync(user.UserId).ConfigureAwait(false);
-
-            if (existingUser == null)
-            {
-                return NotFound("User not found");
-            }
-
-            UserDetails? updatedUserDetails = user.ToUserDetailsFromUpdateDTO(existingUser);
-            existingUser.UserDetails = updatedUserDetails;
-
-            User? dbUser = await _usersService.UpdateUserAsync(existingUser, user.UserId).ConfigureAwait(false);
-
-            if (dbUser == null)
-            {
-                return NotFound("User not found");
-            }
-
-            ReturnCreateUserResponseDTO responseDto = UserMapper.ToReturnCreateUserResponseDTO(dbUser);
-
-            return Ok(responseDto);
-        }
-
-        // TODO: DELETE USER FROM AUTH SERVICE AND ALSO DELETE ALL USER RELATED DATA LIKE SUBSCRIPTION AND LIKES
-        [HttpDelete("Delete User")]
-        public async Task<IActionResult> DeleteUserAsync([FromQuery] Guid userId)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (userId == Guid.Empty)
-            {
-                return BadRequest("User Id cannot be empty");
-            }
-
-            User? user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
-
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
-
-            bool isDeleted = await _usersService.DeleteUserAsync(userId).ConfigureAwait(false);
-
-            return Ok(isDeleted);
+            ReturnCreateUserResponseDTO response = UserMapper.ToReturnCreateUserResponseDTO(updatedUser);
+            return Ok(response);
         }
     }
 }

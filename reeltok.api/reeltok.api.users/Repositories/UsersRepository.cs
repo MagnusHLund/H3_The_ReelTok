@@ -14,20 +14,20 @@ namespace reeltok.api.users.Repositories
             _context = context;
         }
 
-        public async Task<User> CreateUserAsync(User user)
+        public async Task<UserEntity> CreateUserAsync(UserEntity user)
         {
-            User DbUser = (await _context.Users.AddAsync(user).ConfigureAwait(false)).Entity;
+            UserEntity DbUser = (await _context.Users.AddAsync(user).ConfigureAwait(false)).Entity;
             await _context.SaveChangesAsync().ConfigureAwait(false);
             return DbUser;
         }
 
-        public async Task<User> GetUserByIdAsync(Guid userId)
+        public async Task<UserEntity> GetUserByIdAsync(Guid userId)
         {
             return await _context.Users.FindAsync(userId).ConfigureAwait(false)
                 ?? throw new KeyNotFoundException($"User with id {userId} not found!");
         }
 
-        public async Task<User> UpdateUserAsync(User user)
+        public async Task<UserEntity> UpdateUserAsync(UserEntity user)
         {
             _context.Users.Attach(user);
             _context.Entry(user).State = EntityState.Modified;
@@ -38,13 +38,19 @@ namespace reeltok.api.users.Repositories
 
         public async Task<bool> DeleteUserAsync(Guid userId)
         {
-            User userEntity = await _context.Users.FindAsync(userId).ConfigureAwait(false)
+            UserEntity userEntity = await _context.Users.FindAsync(userId).ConfigureAwait(false)
                 ?? throw new KeyNotFoundException($"User with id {userId} not found!");
 
             _context.Users.Remove(userEntity);
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return true;
+        }
+
+        public async Task<List<UserEntity>> GetUsersByUserIdsAsync(List<Guid> userIds)
+        {
+            return await _context.Users.Where(u => userIds.Contains(u.UserId)).ToListAsync().ConfigureAwait(false)
+                ?? throw new KeyNotFoundException("No users found with the provided ids!");
         }
     }
 }

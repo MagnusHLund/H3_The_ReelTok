@@ -6,17 +6,13 @@ namespace reeltok.api.users.DTOs.UserRequests
     {
         [Required]
         public Guid UserId { get; }
+        public string? Username { get; }
+        public string? Email { get; }
 
-        [Required]
-        public string UserName { get; }
-
-        [Required]
-        public string Email { get; }
-
-        public UpdateUserRequestDto(Guid userId, string userName, string email)
+        public UpdateUserRequestDto(Guid userId, string username, string email)
         {
             UserId = userId;
-            UserName = userName;
+            Username = username;
             Email = email;
         }
     }

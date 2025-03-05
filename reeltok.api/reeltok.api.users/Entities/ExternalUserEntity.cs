@@ -1,21 +1,21 @@
-using System.ComponentModel.DataAnnotations;
 using reeltok.api.users.ValueObjects;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.users.Entities
 {
-    public class User
+    public class ExternalUserEntity
     {
         [Key]
         public Guid UserId { get; set; } = Guid.Empty;
         public UserDetails UserDetails { get; set; }
 
-        public User(Guid userId, UserDetails details)
+
+        public ExternalUserEntity(Guid userId, UserDetails details)
         {
             UserId = userId;
             UserDetails = details;
         }
 
-        // Parameterless constructor for EF Core
-        private User() { }
+        private protected ExternalUserEntity() { }
     }
 }

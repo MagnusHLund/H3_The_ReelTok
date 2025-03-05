@@ -5,11 +5,11 @@ namespace reeltok.api.users.Mappers
 {
     public static class SubscriptionMapper
     {
-        public static SubscribptionDetails ToSubscriptionFromCreateDTO(this SubscribeRequestDto dto)
+        public static SubscriptionDetails ToSubscriptionFromCreateDTO(SubscribeRequestDto requestDto)
         {
-            return new SubscribptionDetails(
-                dto.SubscriberUserId,
-                dto.SubscribingToUserId
+            return new SubscriptionDetails(
+                requestDto.UserId,
+                requestDto.SubscribingToUserId
             );
         }
     }

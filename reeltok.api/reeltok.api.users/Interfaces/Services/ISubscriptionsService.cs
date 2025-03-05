@@ -1,13 +1,14 @@
 using reeltok.api.users.Entities;
+using reeltok.api.users.ValueObjects;
 
 namespace reeltok.api.users.Interfaces.Services
 {
     public interface ISubscriptionsService
     {
-        Task<bool> SubscribeAsync(Subscription subscription);
-        Task<bool> UnsubscribeAsync(Guid userId, Guid subscribeUserId);
-        Task<List<Guid>> GetAllSubscribersIdAsync(Guid userId);
-        Task<List<Guid>> GetAllSubscriptionIdAsync(Guid userId);
+        Task<bool> SubscribeAsync(SubscriptionDetails subscriptionDetails);
+        Task<bool> UnsubscribeAsync(SubscriptionDetails subscriptionDetails);
+        Task<List<ExternalUserEntity>> GetSubscribersByUserIdAsync(Guid userId);
+        Task<List<ExternalUserEntity>> GetSubscriptionsByUserIdAsync(Guid userId);
 
     }
 }

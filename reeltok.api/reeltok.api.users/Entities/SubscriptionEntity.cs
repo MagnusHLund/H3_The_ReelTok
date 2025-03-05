@@ -3,18 +3,18 @@ using reeltok.api.users.ValueObjects;
 
 namespace reeltok.api.users.Entities
 {
-    public class Subscription
+    public class SubscriptionEntity
     {
         [Key]
         public uint SubscriptionId { get; set; }
 
         [Required]
-        public SubscribptionDetails SubDetails { get; set; }
+        public SubscriptionDetails SubDetails { get; set; }
 
-        public Subscription(SubscribptionDetails subDetails)
+        public SubscriptionEntity(SubscriptionDetails subDetails)
         {
             SubDetails = subDetails;
         }
-        private Subscription() { }
+        private SubscriptionEntity() { }
     }
 }

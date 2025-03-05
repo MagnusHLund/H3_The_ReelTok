@@ -12,7 +12,7 @@ namespace reeltok.api.users.DTOs.UserResponses
         [XmlElement("UserId")]
         public Guid UserId { get; set; }
         [XmlElement("Username")]
-        public string UserName { get; set; }
+        public string Username { get; set; }
         [XmlElement("ProfileUrl")]
         public string ProfileUrl { get; set; }
         [XmlElement("ProfilePictureUrl")]
@@ -20,11 +20,11 @@ namespace reeltok.api.users.DTOs.UserResponses
         [XmlElement("Email")]
         public string Email { get; set; }
 
-        public ReturnCreateUserResponseDTO(Guid userId, string email, string userName, string profileUrl, string profilePictureUrl)
+        public ReturnCreateUserResponseDTO(Guid userId, string email, string username, string profileUrl, string profilePictureUrl)
         {
             UserId = userId;
             Email = email;
-            UserName = userName;
+            Username = username;
             ProfileUrl = profileUrl;
             ProfilePictureUrl = profilePictureUrl;
         }

@@ -14,9 +14,9 @@ namespace reeltok.api.users.Repositories
             _context = context;
         }
 
-        public async Task<bool> AddToLikedVideoAsync(LikedVideo likedVideo)
+        public async Task<bool> AddToLikedVideoAsync(LikedVideoEntity likedVideo)
         {
-            LikedVideo likedVideoEntity = (await _context.LikedVideos.AddAsync(likedVideo).ConfigureAwait(false)).Entity;
+            LikedVideoEntity likedVideoEntity = (await _context.LikedVideos.AddAsync(likedVideo).ConfigureAwait(false)).Entity;
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return likedVideoEntity != null;
@@ -24,7 +24,7 @@ namespace reeltok.api.users.Repositories
 
         public async Task<bool> RemoveFromLikedVideoAsync(Guid userId, Guid videoId)
         {
-            LikedVideo likedVideoEntity = await _context.LikedVideos.FirstOrDefaultAsync(
+            LikedVideoEntity likedVideoEntity = await _context.LikedVideos.FirstOrDefaultAsync(
                 lv => lv.LikedVideoDetails.UserId == userId && lv.LikedVideoDetails.VideoId == videoId).ConfigureAwait(false)
                 ?? throw new KeyNotFoundException($"Unable to find liked video with user id {userId} and video id {videoId}!");
 
