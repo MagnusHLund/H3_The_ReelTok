@@ -1,10 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
 using reeltok.api.auth.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using reeltok.api.recommendations.DTOs;
-using reeltok.api.recommendations.Entities;
-using reeltok.api.recommendations.Interfaces.Services;
 using reeltok.api.recommendations.Mappers;
+using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.ValueObjects;
+using reeltok.api.recommendations.Interfaces.Services;
+using reeltok.api.recommendations.Enums;
 
 namespace reeltok.api.recommendations.Controllers
 {
@@ -34,6 +35,28 @@ namespace reeltok.api.recommendations.Controllers
             }
 
             return Ok(isAdded);
+        }
+
+        [HttpGet("Get user recommendation")]
+        public async Task<IActionResult> GetUserRecommendationAsync([FromQuery] Guid userId)
+        {
+            UserInterestEntity? userInterest = await _userRecommendationService.GetUserInterestAsync(userId);
+
+            if (userInterest == null)
+            {
+                return BadRequest(new FailureResponseDto("User not found"));
+            }
+
+            CategoryEntity category = userInterest.Categories.FirstOrDefault();
+            if (category == null)
+            {
+                return BadRequest(new FailureResponseDto("Category not found"));
+            }
+
+            UserInterestResponseDTO userInterestDto = UserRecommendationMapper.ToUserInterestDTOFromEntity(userInterest, category);
+
+            return Ok(userInterestDto);
+
         }
     }
 }

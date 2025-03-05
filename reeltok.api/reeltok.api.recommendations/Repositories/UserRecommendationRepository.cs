@@ -39,9 +39,12 @@ namespace reeltok.api.recommendations.Repositories
             return true;
         }
 
-        public Task<UserInterestEntity> GetUserInterestAsync(Guid userId)
+        public async Task<UserInterestEntity?> GetUserInterestAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            return await _context.UserInterests
+                .Include(ui => ui.Categories)
+                .FirstOrDefaultAsync(ui => ui.UserInterestDetails.UserId == userId)
+                ?? throw new KeyNotFoundException("User not found");
         }
 
         public Task<bool> UpdateRecommendationForUserAsync(Guid userId, RecommendedCategories updateCategory)

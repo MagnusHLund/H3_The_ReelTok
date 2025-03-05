@@ -25,6 +25,13 @@ namespace reeltok.api.recommendations.Services
             return isAdded;
         }
 
+        public async Task<UserInterestEntity?> GetUserInterestAsync(Guid userId)
+        {
+            UserInterestEntity userInterestEntity = await _userRecommendationRepository.GetUserInterestAsync(userId);
+
+            return userInterestEntity;
+        }
+
         public Task<bool> UpdateRecommendationForUserAsync()
         {
             throw new NotImplementedException();
