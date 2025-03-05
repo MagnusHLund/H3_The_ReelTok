@@ -1,11 +1,15 @@
 import useAppNavigation from '../../../hooks/useAppNavigation'
 import useTranslation from '../../../hooks/useTranslations'
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import { View, Text, StyleSheet } from 'react-native'
 import CustomButton from '../../input/CustomButton'
 import React from 'react'
 
-const ProfileButtons = () => {
+interface SubButtonsProps {
+  subscriberCount: number
+  subscriptionCount: number
+}
+
+const SubButtons: React.FC<SubButtonsProps> = ({ subscriberCount, subscriptionCount }) => {
   const navigateToScreen = useAppNavigation()
   const t = useTranslation()
 
@@ -18,14 +22,16 @@ const ProfileButtons = () => {
         }}
         transparent
       >
-        <Text>{t('common.subscribers')}</Text>
+        <Text style={styles.subcount}>{subscriberCount}</Text>
+        <Text style={styles.subtext}>{t('common.subscribers')}</Text>
       </CustomButton>
       <CustomButton
         widthPercentage={0.3}
         onPress={() => navigateToScreen('Subscriptions')}
         transparent
       >
-        <Text>{t('common.subscriptions')}</Text>
+        <Text style={styles.subcount}>{subscriptionCount}</Text>
+        <Text style={styles.subtext}>{t('common.subscriptions')}</Text>
       </CustomButton>
     </View>
   )
@@ -44,6 +50,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     top: -30,
   },
+  subtext: {
+    fontWeight: '400',
+  },
+  subcount: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   ProfileContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -52,4 +65,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default ProfileButtons
+export default SubButtons

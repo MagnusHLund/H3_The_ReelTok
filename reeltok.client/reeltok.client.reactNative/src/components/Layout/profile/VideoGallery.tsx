@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     backgroundColor: 'lightgrey',
-    padding: 10,
+    padding: '100%',
   },
   videoItem: {
     width: '33%',

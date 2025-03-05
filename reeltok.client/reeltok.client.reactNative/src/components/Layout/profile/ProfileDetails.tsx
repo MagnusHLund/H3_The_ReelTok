@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native'
 import SettingsButton from './SettingsButton'
-import ProfileButtons from './ProfileButtons'
+import SubButtons from './SubButtons'
 import ProfileImage from './ProfileImage'
 import Username from './Username'
 import React from 'react'
@@ -15,11 +15,11 @@ const ProfileDetails = () => {
       </View>
       <View style={styles.StackedContainer}>
         <View style={styles.UpperContainer}>
-          <Username username="fffefefefefefefefefefefefefe" />
+          <Username username="Magnus" />
           <SettingsButton />
         </View>
         <View style={styles.LowerContainer}>
-          <ProfileButtons />
+          <SubButtons subscriberCount={10} subscriptionCount={30} />
         </View>
       </View>
     </View>
@@ -39,23 +39,24 @@ const styles = StyleSheet.create({
   },
   StackedContainer: {
     flexDirection: 'column',
-    // justifyContent: 'flex-start',
     alignItems: 'center',
     width: '80%',
   },
   UpperContainer: {
-    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'baseline',
-    width: '80%',
-    marginLeft: '20%',
+    flexDirection: 'row',
     marginRight: '20%',
+    marginLeft: '28%',
+    width: '75%',
+    top: '8%',
   },
   LowerContainer: {
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: '60%',
+    marginRight: '30%',
+    width: '80%',
+    top: '50%',
   },
 })
 

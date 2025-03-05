@@ -1,13 +1,11 @@
 import useAppNavigation from '../../../hooks/useAppNavigation'
-import useTranslation from '../../../hooks/useTranslations'
 import CustomButton from '../../input/CustomButton'
 import { FontAwesome5 } from '@expo/vector-icons'
-import { View, StyleSheet } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
 
 const SettingsButton: React.FC = () => {
   const navigateToScreen = useAppNavigation()
-  const t = useTranslation()
 
   return (
     <View>
