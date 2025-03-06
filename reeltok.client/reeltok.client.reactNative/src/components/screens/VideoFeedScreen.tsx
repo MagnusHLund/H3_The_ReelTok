@@ -1,11 +1,16 @@
 import { addVideoToFeedThunk } from '../../redux/thunks/videosThunks'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useCallback, RefObject } from 'react'
 import useAppDimensions from '../../hooks/useAppDimensions'
-import { StyleSheet, View, FlatList } from 'react-native'
+import { Platform, Animated, StyleSheet, View, FlatList } from 'react-native'
+import { FlashList } from '@shopify/flash-list'
+import { useRoute } from '@react-navigation/native'
 import useAppSelector from '../../hooks/useAppSelector'
 import useAppDispatch from '../../hooks/useAppDispatch'
 import { Video } from '../../redux/slices/videosSlice'
 import VideoPlayer from '../Layout/video/VideoPlayer'
+import UseOrientation from '../../hooks/useOrientation'
+import VideoListApp from '../Layout/video/VideoListApp'
+import VideoListWeb from '../Layout/video/VideoListWeb'
 
 interface RenderItemProps {
   item: Video
@@ -25,7 +30,10 @@ const VideoFeedScreen: React.FC = () => {
   const { contentHeight } = useAppDimensions()
   const [currentlyDisplayedVideoIndex, setCurrentlyDisplayedVideoIndex] = useState(0)
   const [highestDisplayedVideoIndex, setHighestDisplayedVideoIndex] = useState(0)
-  const videoFeedRef = React.useRef<FlatList>(null)
+  const videoFeedRef = React.useRef<FlashList<Video> | FlatList>(null)
+  const route = useRoute()
+  const orientation = UseOrientation(route.name)
+  const videoRotation = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
     if (videos.length === 0) {
@@ -41,7 +49,34 @@ const VideoFeedScreen: React.FC = () => {
     }
   }, [currentlyDisplayedVideoIndex])
 
+  useEffect(() => {
+    let rotationValue: number
+    switch (orientation) {
+      case 'left':
+        rotationValue = 1 // 90deg
+        break
+      case 'right':
+        rotationValue = -1 // -90deg
+        break
+      default:
+        rotationValue = 0 // 0deg
+    }
+
+    Animated.timing(videoRotation, {
+      toValue: rotationValue,
+      duration: 300,
+      useNativeDriver: true,
+    }).start()
+  }, [orientation])
+
+  const rotationInterpolation = videoRotation.interpolate({
+    inputRange: [-1, 0, 1],
+    outputRange: ['-90deg', '0deg', '90deg'],
+  })
+
+
   const handleViewableItemsChanged = useCallback(({ viewableItems }: any) => {
+    console.log(`Currently rendered items: ${viewableItems.length} ${route.name}`)
     if (viewableItems.length > 0) {
       setCurrentlyDisplayedVideoIndex(viewableItems[0].index)
     }
@@ -66,56 +101,59 @@ const VideoFeedScreen: React.FC = () => {
 
   const renderItem = useCallback(
     ({ item, index }: RenderItemProps) => (
-      <View style={styles.videoContainer}>
+      <Animated.View style={[styles.videoContainer, { transform: [{ rotate: rotationInterpolation }] }]}>
         <VideoPlayer
           videoDetails={item}
           onAutoScroll={handleAutoScroll}
           isDisplayed={currentlyDisplayedVideoIndex === index}
         />
-      </View>
+      </Animated.View>
     ),
     [currentlyDisplayedVideoIndex, handleAutoScroll]
   )
 
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: 'black',
+    },
+    videoContainer: {
+      justifyContent: 'center',
+    },
+    videoFeed: {
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'black',
+    },
+  })
+
   return (
     <View style={styles.container}>
-      <FlatList
-        ref={videoFeedRef}
-        data={videos}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.videoId}
-        pagingEnabled
-        showsVerticalScrollIndicator={false}
-        style={[styles.videoFeed, { height: contentHeight }]}
-        decelerationRate="fast"
-        disableIntervalMomentum
-        snapToInterval={contentHeight}
-        snapToAlignment="center"
-        onViewableItemsChanged={handleViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
-        getItemLayout={(_, index) => ({
-          length: contentHeight,
-          offset: contentHeight * index,
-          index,
-        })}
-      />
+      {Platform.OS === "web" ?
+        <VideoListWeb
+          videoFeedRef={videoFeedRef as RefObject<FlatList>}
+          videos={videos}
+          renderItem={renderItem}
+          contentHeight={contentHeight}
+          style={styles.videoFeed}
+          viewabilityConfig={viewabilityConfig}
+          handleViewableItemsChanged={handleViewableItemsChanged}
+        />
+        :
+        <VideoListApp
+          videoFeedRef={videoFeedRef as RefObject<FlashList<Video>>}
+          videos={videos}
+          renderItem={renderItem}
+          contentHeight={contentHeight}
+          style={styles.videoFeed}
+          viewabilityConfig={viewabilityConfig}
+          handleViewableItemsChanged={handleViewableItemsChanged}
+        />
+      }
     </View>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-  },
-  videoContainer: {
-    justifyContent: 'center',
-  },
-  videoFeed: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'black',
-  },
-})
 
 export default VideoFeedScreen

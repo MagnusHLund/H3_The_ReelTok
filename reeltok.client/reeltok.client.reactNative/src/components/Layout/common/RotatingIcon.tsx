@@ -10,7 +10,7 @@ type RotatingIconProps = {
 
 const RotatingIcon: React.FC<RotatingIconProps> = ({ name, color }) => {
   const iconRotation = useRef(new Animated.Value(0)).current
-  const orientation = useOrientation()
+  const orientation = useOrientation('', 'RotatingIcon')
 
   useEffect(() => {
     let rotationValue: number
