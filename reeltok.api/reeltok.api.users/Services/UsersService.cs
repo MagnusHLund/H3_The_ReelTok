@@ -1,72 +1,84 @@
+using reeltok.api.users.utils;
 using reeltok.api.users.Entities;
+using reeltok.api.users.factories;
 using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.Interfaces.Repositories;
 
 namespace reeltok.api.users.Services
 {
-    public class UsersService : IUsersService
+    public class UsersService : BaseService, IUsersService
     {
         private readonly IUsersRepository _userRepository;
+        private readonly IExternalApiService _externalApiService;
 
-        public UsersService(IUsersRepository userRepository)
+        public UsersService(IUsersRepository userRepository, IExternalApiService externalApiService)
         {
             _userRepository = userRepository;
+            _externalApiService = externalApiService;
         }
 
-        public async Task<User> CreateUserAsync(User user)
+        public async Task<UserEntity> CreateUserAsync(string username, string email, string password, byte interests)
         {
-            User returnUser;
+            UserEntity userToCreate = UsersFactory.CreateUserEntity(username, email);
+            UserEntity createdUser = await _userRepository.CreateUserAsync(userToCreate).ConfigureAwait(false);
 
             try
             {
-                returnUser = await _userRepository.CreateUserAsync(user).ConfigureAwait(false);
-
+                await _externalApiService.CreateUserInAuthApiAsync(createdUser.UserId, password).ConfigureAwait(false);
+                await _externalApiService.CreateUserInRecommendationsApiAsync(createdUser.UserId, interests).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                // Handle the error, you can log it or throw a custom exception if needed
-                throw new InvalidOperationException("User creation failed.", ex);
+                await DeleteUserAsync(createdUser.UserId).ConfigureAwait(false);
+                throw new InvalidOperationException($"User creation failed in other API!, {ex}");
             }
 
-            return returnUser;
+            return createdUser;
         }
-        public async Task<User?> GetUserByIdAsync(Guid userId)
+
+        public async Task<UserEntity> GetUserByIdAsync(Guid userId)
         {
-            User? user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
-
-            if (user == null)
-            {
-                return null;
-            }
-
+            UserEntity user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
             return user;
         }
-        public async Task<User?> UpdateUserAsync(User user, Guid userId)
-        {
-            User? updatedUser = await _userRepository.UpdateUserAsync(user, userId).ConfigureAwait(false);
 
-            if (updatedUser == null)
+        public async Task<UserEntity> UpdateUserAsync(Guid userId, string? username, string? email)
+        {
+            UserEntity user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
+
+            if (!string.IsNullOrEmpty(username))
             {
-                return null;
+                if (!ValidationUtils.IsValidUsername(username))
+                {
+                    throw new InvalidOperationException("Invalid username");
+                }
+
+                user = UsersFactory.UpdateUserEntityUsername(user, username);
             }
 
-            return updatedUser;
+            if (!string.IsNullOrEmpty(email))
+            {
+                if (!ValidationUtils.IsValidEmail(email))
+                {
+                    throw new InvalidOperationException("Invalid email");
+                }
+
+                user = UsersFactory.UpdateUserEntityEmail(user, email);
+            }
+
+            user = await _userRepository.UpdateUserAsync(user).ConfigureAwait(false);
+            return user;
         }
-        public Task<bool> DeleteUserAsync(Guid userId)
+
+        public async Task<List<UserEntity>> GetUsersByIdsAsync(List<Guid> userIds)
         {
-            bool IsUserDeleted;
+            List<UserEntity> users = await _userRepository.GetUsersByUserIdsAsync(userIds).ConfigureAwait(false);
+            return users;
+        }
 
-            try
-            {
-                IsUserDeleted = _userRepository.DeleteUserAsync(userId).Result;
-            }
-            catch (Exception ex)
-            {
-                // Handle the error, you can log it or throw a custom exception if needed
-                throw new InvalidOperationException("User deletion failed.", ex);
-            }
-
-            return Task.FromResult(IsUserDeleted);
+        private async Task DeleteUserAsync(Guid userId)
+        {
+            await _userRepository.DeleteUserAsync(userId).ConfigureAwait(false);
         }
     }
 }

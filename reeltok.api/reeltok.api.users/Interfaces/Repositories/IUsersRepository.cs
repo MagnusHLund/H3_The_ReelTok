@@ -4,9 +4,10 @@ namespace reeltok.api.users.Interfaces.Repositories
 {
     public interface IUsersRepository
     {
-        Task<User> CreateUserAsync(User user);
-        Task<User?> GetUserByIdAsync(Guid id);
-        Task<User?> UpdateUserAsync(User user, Guid userId);
-        Task<bool> DeleteUserAsync(Guid userId);
+        Task<UserEntity> CreateUserAsync(UserEntity user);
+        Task<UserEntity> GetUserByIdAsync(Guid userId);
+        Task<UserEntity> UpdateUserAsync(UserEntity user);
+        Task DeleteUserAsync(Guid userId);
+        Task<List<UserEntity>> GetUsersByUserIdsAsync(List<Guid> userIds);
     }
 }

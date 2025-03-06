@@ -1,53 +1,66 @@
-using Microsoft.EntityFrameworkCore;
 using reeltok.api.users.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace reeltok.api.users.Data
 {
     public class UserDbContext : DbContext
     {
-        // TODO: CHANGE THE NAME OF THE COLUMNS IN DATABASE
-        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
-        {
+        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
-        }
+        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<LikedVideoEntity> LikedVideos { get; set; }
+        public DbSet<SubscriptionEntity> Subscriptions { get; set; }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<LikedVideo> LikedVideos { get; set; }
-        public DbSet<Subscription> Subscriptions { get; set; }
+        // TODO: Add keys: https://github.com/MagnusHLund/H3_The_ReelTok/blob/main/reeltok.documentation/database/ReelTok_UsersService_RDS.png
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<UserEntity>().ToTable("Users");
 
-            modelBuilder.Entity<User>()
-            .OwnsOne(up => up.UserDetails, ud =>
-            {
-                ud.OwnsOne(u => u.HiddenDetails);  // Ensure HiddenDetails is also owned
-            });
+            modelBuilder.Entity<UserEntity>()
+                .OwnsOne(u => u.UserDetails);
 
-            modelBuilder.Entity<LikedVideo>().OwnsOne(lv => lv.LikedVideoDetails, lv =>
+            modelBuilder.Entity<UserEntity>()
+                .OwnsOne(u => u.UserDetails, ud =>
+                {
+                    ud.Property(u => u.Username).HasColumnName("Username");
+                    ud.Property(u => u.ProfileUrlPath).HasColumnName("ProfileUrlPath");
+                    ud.Property(u => u.ProfilePictureUrlPath).HasColumnName("ProfilePictureUrlPath");
+                });
+
+            modelBuilder.Entity<UserEntity>()
+                .OwnsOne(u => u.HiddenUserDetails, hd =>
+                {
+                    hd.Property(h => h.Email).HasColumnName("Email");
+                });
+
+            modelBuilder.Entity<LikedVideoEntity>().OwnsOne(lv => lv.LikedVideoDetails, lv =>
             {
+                lv.Property(l => l.UserId).HasColumnName("UserId");
+                lv.Property(l => l.VideoId).HasColumnName("VideoId");
+
                 lv.WithOwner();
 
-                lv.HasOne<User>()
+                lv.HasOne<UserEntity>()
                     .WithMany()
                     .HasForeignKey(lv => lv.UserId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // modelBuilder.Entity<Subscription>().OwnsOne(s => s.SubDetails);
-
-            modelBuilder.Entity<Subscription>().OwnsOne(s => s.SubDetails, sd =>
+            modelBuilder.Entity<SubscriptionEntity>().OwnsOne(s => s.SubDetails, sd =>
             {
+                sd.Property(s => s.UserId).HasColumnName("SubscriberUserId");
+                sd.Property(s => s.SubscribingToUserId).HasColumnName("SubscribingToUserId");
+
                 sd.WithOwner();
 
                 // Configure foreign keys without cascade delete
-                sd.HasOne<User>()
+                sd.HasOne<UserEntity>()
                     .WithMany()
-                    .HasForeignKey(s => s.SubscriberUserId)
+                    .HasForeignKey(s => s.UserId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                sd.HasOne<User>()
+                sd.HasOne<UserEntity>()
                     .WithMany()
                     .HasForeignKey(s => s.SubscribingToUserId)
                     .OnDelete(DeleteBehavior.Restrict);

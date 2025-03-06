@@ -2,30 +2,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.users.ValueObjects
 {
-    public class UserDetails    
+    public class UserDetails
     {
         [Required]
-        public string UserName { get; private set; } = string.Empty;
+        public string Username { get; private set; } = string.Empty;
 
-        [Required]
-        public string ProfileUrl { get; private set; } = string.Empty;
+        public string? ProfileUrlPath { get; private set; }
+        public string? ProfilePictureUrlPath { get; private set; }
 
-        [Required]
-        public string ProfilePictureUrl { get; private set; } = string.Empty; 
-
-        [Required]
-        public HiddenUserDetails HiddenDetails { get; private set; }
-        public UserDetails(string userName, string profileUrl, string profilePictureUrl, HiddenUserDetails hiddenDetails)
+        public UserDetails(string username, string? profileUrlPath, string? profilePictureUrlPath)
         {
-            UserName = userName;
-            ProfileUrl = profileUrl;
-            ProfilePictureUrl = profilePictureUrl;
-            HiddenDetails = hiddenDetails;
+            Username = username;
+            ProfileUrlPath = profileUrlPath;
+            ProfilePictureUrlPath = profilePictureUrlPath;
         }
 
-        private UserDetails()
-        {
-
-        }
+        private UserDetails() { }
     }
 }

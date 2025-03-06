@@ -7,9 +7,9 @@ namespace reeltok.api.users.DTOs
     public abstract class BaseResponseDto
     {
         [Required]
-        public bool Success { get; private set; }
+        public virtual bool Success { get; set; }
 
-        private protected BaseResponseDto(bool success)
+        private protected BaseResponseDto(bool success = true)
         {
             Success = success;
         }
