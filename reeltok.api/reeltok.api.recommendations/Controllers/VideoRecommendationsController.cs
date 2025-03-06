@@ -10,11 +10,11 @@ namespace reeltok.api.recommendations.Controllers
 {
     [ApiController]
     [Route("api/Video recommendations")]
-    public class VideoRecommendationController : ControllerBase
+    public class VideoRecommendationsController : ControllerBase
     {
         private readonly IVideoRecommendationService _videoRecommendationService;
 
-        public VideoRecommendationController(IVideoRecommendationService videoRecommendationService)
+        public VideoRecommendationsController(IVideoRecommendationService videoRecommendationService)
         {
             _videoRecommendationService = videoRecommendationService;
         }

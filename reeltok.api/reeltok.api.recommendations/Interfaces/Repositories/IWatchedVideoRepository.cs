@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using reeltok.api.recommendations.Entities;
 
 namespace reeltok.api.recommendations.Interfaces.Repositories
 {
     public interface IWatchedVideoRepository
     {
-        Task AddWatchedVideoAsync();
-        Task UpdateWatchedVideoAsync();
+        Task<bool> AddWatchedVideoAsync(WatchedVideoEntity watchedVideoEntity);
+        Task<WatchedVideoEntity?> GetByVideoAndUserAsync(Guid videoId, Guid userId);
+        Task<bool> UpdateWatchedVideoAsync(WatchedVideoEntity watchedVideoEntity);
     }
 }

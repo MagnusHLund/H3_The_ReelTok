@@ -6,13 +6,18 @@ namespace reeltok.api.recommendations.Entities
     public class WatchedVideoEntity
     {
         [Key]
-        public uint WatchedVideoId { get; private set; }
+        public uint WatchedVideoId { get; set; }
 
-        public WatchedVideoDetails WatchedVideoDetails { get; private set; }
+        public WatchedVideoDetails WatchedVideoDetails { get; set; }
 
         public WatchedVideoEntity(WatchedVideoDetails watchedVideoDetails)
         {
             WatchedVideoDetails = watchedVideoDetails;
+        }
+
+        public void IncrementTimeWatched()
+        {
+            WatchedVideoDetails = WatchedVideoDetails.IncrementTimeWatched();
         }
 
         private WatchedVideoEntity()

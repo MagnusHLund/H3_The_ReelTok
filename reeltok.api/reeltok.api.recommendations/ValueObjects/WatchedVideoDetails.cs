@@ -12,6 +12,10 @@ namespace reeltok.api.recommendations.ValueObjects
             VideoId = videoId;
             TimeWatched = timeWatched;
         }
+        public WatchedVideoDetails IncrementTimeWatched()
+        {
+            return new WatchedVideoDetails(UserId, VideoId, (ushort) (TimeWatched + 1));
+        }
 
         private WatchedVideoDetails()
         {

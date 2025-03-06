@@ -1,4 +1,4 @@
-using reeltok.api.recommendations.Interfaces.repositories;
+using reeltok.api.recommendations.Interfaces.Repositories;
 using reeltok.api.recommendations.Data;
 using Microsoft.EntityFrameworkCore;
 using reeltok.api.recommendations.Entities;

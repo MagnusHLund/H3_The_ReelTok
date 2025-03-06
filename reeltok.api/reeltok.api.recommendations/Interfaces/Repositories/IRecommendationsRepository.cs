@@ -1,7 +1,7 @@
 using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Enums;
 
-namespace reeltok.api.recommendations.Interfaces.repositories
+namespace reeltok.api.recommendations.Interfaces.Repositories
 {
     public interface IRecommendationsRepository
     {
