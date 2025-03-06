@@ -15,7 +15,7 @@ namespace reeltok.api.recommendations.Services
 
         public async Task<(bool, string)> AddOrUpdateWatchedVideoAsync(WatchedVideoEntity watchedVideoEntity)
         {
-            var existingRecord = await GetWatchedVideoAsync(
+            WatchedVideoEntity? existingRecord = await GetWatchedVideoAsync(
                 watchedVideoEntity.WatchedVideoDetails.VideoId,
                 watchedVideoEntity.WatchedVideoDetails.UserId);
 
