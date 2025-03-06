@@ -1,5 +1,4 @@
 using reeltok.api.auth.DTOs;
-using reeltok.api.recommendations.Enums;
 
 namespace reeltok.api.recommendations.DTOs
 {
