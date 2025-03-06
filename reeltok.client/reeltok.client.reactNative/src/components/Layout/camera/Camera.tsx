@@ -1,5 +1,4 @@
 import { UploadedVideo as UploadedVideoType } from '../../../redux/slices/uploadSlice';
-
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { setUploadedVideoThunk } from '../../../redux/thunks/uploadThunks';
@@ -16,9 +15,10 @@ import CloseButton from './CloseButton';
 
 interface CameraProps {
   cameraMode: 'picture' | 'video';
+  onClose: () => void;
 }
 
-export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
+export const Camera: React.FC<CameraProps> = ({ cameraMode, onClose }) => {
   const ref = useRef<CameraView>(null);
   const [uri, setUri] = useState<UploadedVideoType>({ fileUri: '' });
   const [facing, setFacing] = useState<CameraType>('back');
@@ -82,6 +82,7 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
   };
 
   const uploadVideo = async (uri: string | null) => {
+    onClose(); // Call the onClose callback to unmount the Camera component
     navigateToScreen('UploadVideo');
   };
 
@@ -95,7 +96,7 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
           fullWidth={fullWidth}
         />
         <CameraControls uri={uri.fileUri} uploadVideo={uploadVideo} resetUri={() => setUri({ fileUri: '' })} />
-        <CloseButton onClose={handleNavigate} />
+        <CloseButton onClose={onClose} />
       </View>
     );
   };
@@ -114,7 +115,7 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
           fullWidth={fullWidth}
           contentHeight={contentHeight}
         />
-        <CloseButton onClose={navigation.goBack} />
+        <CloseButton onClose={onClose} />
       </>
     );
   };

@@ -17,7 +17,6 @@ const UploadVideo: React.FC = ({}) => {
 
   const [selectedCategory, setSelectedCategory] = useState<DropdownOption>()
 
-  
   const handleChangeCategory = (selectedCategory: DropdownOption) => {
     setSelectedCategory({ label: selectedCategory.label, value: selectedCategory.value })
   }
@@ -69,6 +68,7 @@ const UploadVideo: React.FC = ({}) => {
         <Section displayDivider={false}>
           <Title title="Category">
             <CustomDropdown
+              backgroundColor="white"
               defaultOption={defaultOption}
               options={categories}
               onChange={(selectedCategory: DropdownOption) =>
@@ -79,7 +79,7 @@ const UploadVideo: React.FC = ({}) => {
         </Section>
         <Section displayDivider={false}>
           <CustomButton
-            widthPercentage={0.75}
+            widthPercentage={0.8}
             title="Upload"
             onPress={() => console.log('uploaded video' + uploadedVideo.fileUri)}
           />

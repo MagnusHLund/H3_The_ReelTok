@@ -34,7 +34,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({ onClose }) => {
       </CustomButton>
       {dialogVisible && (
         <DialogBox
-          text="Are you sure you want to close the camera?"
+          text={'Do you want to close the camera'}
           visible={dialogVisible}
           handleModalClose={handleHideDialog}
           handleConfirmation={handleConfirmation}
@@ -46,11 +46,9 @@ const CloseButton: React.FC<CloseButtonProps> = ({ onClose }) => {
 
 const styles = StyleSheet.create({
   closeButton: {
-    width: '10%',
-    height: '10%',
     position: 'absolute',
-    left: '80%',
-    top: '8%',
+    top: '10%',
+    right: '5%',
     zIndex: 1,
   },
 })

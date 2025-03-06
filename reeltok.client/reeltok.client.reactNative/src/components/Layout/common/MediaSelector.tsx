@@ -5,6 +5,7 @@ import CustomButton from '../../input/CustomButton'
 import { StyleSheet, View, Modal, TouchableWithoutFeedback } from 'react-native'
 import Entypo from '@expo/vector-icons/Entypo'
 import Gradient from './GradientBackground'
+import Camera from '../camera/Camera'
 import React, { useState } from 'react'
 
 interface mediaSelectorProps {
@@ -13,6 +14,7 @@ interface mediaSelectorProps {
 
 const MediaSelector: React.FC<mediaSelectorProps> = ({ handleSelectMedia }) => {
   const [selectedMedia, setSelectedMedia] = useState<string>()
+  const [showCamera, setShowCamera] = useState(false)
   const navigateToScreen = useAppNavigation()
 
   const handlePickMedia = async () => {
@@ -27,34 +29,41 @@ const MediaSelector: React.FC<mediaSelectorProps> = ({ handleSelectMedia }) => {
     }
   }
 
+  const handleShowCamera = () => {
+    setShowCamera(true)
+  }
+
+  const handleHideCamera = () => {
+    setShowCamera(false)
+    handleSelectMedia()
+  }
+
   return (
     <Modal transparent={true} onRequestClose={handleSelectMedia}>
       <TouchableWithoutFeedback onPress={handleSelectMedia}>
         <View style={styles.overlay}>
-          <View style={styles.outerContainer}>
-            <Gradient colors={['transparent', 'transparent', 'black', 'black']}>
-              <View style={styles.innerContainer}>
-                <CustomButton
-                  widthPercentage={0.45}
-                  onPress={() => {
-                    navigateToScreen('Camera')
-                    handleSelectMedia()
-                  }}
-                >
-                  <Entypo name="camera" size={24} color="white" />
-                </CustomButton>
-                <CustomButton
-                  widthPercentage={0.45}
-                  onPress={() => {
-                    handlePickMedia()
-                    handleSelectMedia()
-                  }}
-                >
-                  <MaterialIcons name="photo-library" size={24} color="white" />
-                </CustomButton>
-              </View>
-            </Gradient>
-          </View>
+          {showCamera ? (
+            <Camera cameraMode="video" onClose={handleHideCamera} />
+          ) : (
+            <View style={styles.outerContainer}>
+              <Gradient colors={['transparent', 'transparent', 'black', 'black']}>
+                <View style={styles.innerContainer}>
+                  <CustomButton widthPercentage={0.45} onPress={handleShowCamera}>
+                    <Entypo name="camera" size={24} color="white" />
+                  </CustomButton>
+                  <CustomButton
+                    widthPercentage={0.45}
+                    onPress={() => {
+                      handlePickMedia()
+                      handleSelectMedia()
+                    }}
+                  >
+                    <MaterialIcons name="photo-library" size={24} color="white" />
+                  </CustomButton>
+                </View>
+              </Gradient>
+            </View>
+          )}
         </View>
       </TouchableWithoutFeedback>
     </Modal>
