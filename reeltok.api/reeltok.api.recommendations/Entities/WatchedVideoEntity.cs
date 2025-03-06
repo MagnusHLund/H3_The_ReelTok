@@ -17,7 +17,7 @@ namespace reeltok.api.recommendations.Entities
 
         public void IncrementTimeWatched()
         {
-            WatchedVideoDetails = WatchedVideoDetails.IncrementTimeWatched();
+            WatchedVideoDetails = WatchedVideoDetails.UpdateWatchedVideo();
         }
 
         private WatchedVideoEntity()

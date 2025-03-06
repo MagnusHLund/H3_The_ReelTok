@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using reeltok.api.recommendations.DTOs;
-using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.ValueObjects;
 
 namespace reeltok.api.recommendations.Mappers
@@ -12,11 +7,14 @@ namespace reeltok.api.recommendations.Mappers
     {
         public static WatchedVideoDetails ToEntity(CreateWatchedVideoDto createWatchedVideoDto)
         {
+            uint unixTimestamp = Convert.ToUInt32(Math.Floor(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds));
+
             return new WatchedVideoDetails
             (
                 createWatchedVideoDto.UserId,
                 createWatchedVideoDto.VideoId,
-                createWatchedVideoDto.TimeWatched
+                createWatchedVideoDto.TimeWatched,
+                unixTimestamp
             );
         }
     }

@@ -30,6 +30,7 @@ namespace reeltok.api.recommendations.Data
                 WatchedVideoDetails.Property(vwd => vwd.UserId).HasColumnName("UserId");
                 WatchedVideoDetails.Property(vwd => vwd.VideoId).HasColumnName("VideoId");
                 WatchedVideoDetails.Property(vwd => vwd.TimeWatched).HasColumnName("TimeWatched");
+                WatchedVideoDetails.Property(vwd => vwd.LastWatched).HasColumnName("Timestamp");
             });
 
             modelBuilder.Entity<UserInterestEntity>().OwnsOne(ur => ur.UserInterestDetails, UserInterestDetails =>
