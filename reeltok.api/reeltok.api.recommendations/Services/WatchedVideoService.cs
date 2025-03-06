@@ -1,14 +1,11 @@
 using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Interfaces.Repositories;
 using reeltok.api.recommendations.Interfaces.Services;
-using reeltok.api.recommendations.ValueObjects;
-// using reeltok.api.recommendations.ValueObjects;
 
 namespace reeltok.api.recommendations.Services
 {
     public class WatchedVideoService : IWatchedVideoService
     {
-
         private readonly IWatchedVideoRepository _watchedVideoRepository;
 
         public WatchedVideoService(IWatchedVideoRepository watchedVideoRepository)
@@ -16,39 +13,51 @@ namespace reeltok.api.recommendations.Services
             _watchedVideoRepository = watchedVideoRepository;
         }
 
-        public Task<bool> AddWatchedVideoAsync(WatchedVideoEntity watchedVideoEntity)
+        public async Task<(bool, string)> AddOrUpdateWatchedVideoAsync(WatchedVideoEntity watchedVideoEntity)
         {
-            try
+            var existingRecord = await GetWatchedVideoAsync(
+                watchedVideoEntity.WatchedVideoDetails.VideoId,
+                watchedVideoEntity.WatchedVideoDetails.UserId);
+
+            if (existingRecord != null)
             {
-                bool IsAdded = _watchedVideoRepository.AddWatchedVideoAsync(watchedVideoEntity).Result;
-                return Task.FromResult(IsAdded);
+                return await UpdateTimeWatchedAsync(existingRecord);
             }
-            catch (Exception ex)
+            else
             {
-                throw new Exception(ex.Message);
+                return await CreateWatchedVideoAsync(watchedVideoEntity);
             }
         }
 
-        public async Task<(bool, string)> UpdateTimeWatchedAsync(Guid videoId, Guid userId)
+        private async Task<WatchedVideoEntity?> GetWatchedVideoAsync(Guid videoId, Guid userId)
         {
-            WatchedVideoEntity? watchRecord = await _watchedVideoRepository.GetByVideoAndUserAsync(videoId, userId);
+            return await _watchedVideoRepository.GetByVideoAndUserAsync(videoId, userId);
+        }
 
-            if (watchRecord == null)
-            {
-                return (false, "Couldn't find the record");
-            }
-
+        private async Task<(bool, string)> CreateWatchedVideoAsync(WatchedVideoEntity watchedVideoEntity)
+        {
             try
             {
-                watchRecord.IncrementTimeWatched();
-
-                bool isUpdated = await _watchedVideoRepository.UpdateWatchedVideoAsync(watchRecord);
-
-                return (isUpdated, "User update successfully");
+                bool isAdded = await _watchedVideoRepository.AddWatchedVideoAsync(watchedVideoEntity);
+                return (isAdded, isAdded ? "Success" : "Failed to add watched video");
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return (false, ex.Message);
+            }
+        }
+
+        private async Task<(bool, string)> UpdateTimeWatchedAsync(WatchedVideoEntity watchRecord)
+        {
+            try
+            {
+                watchRecord.IncrementTimeWatched();
+                bool isUpdated = await _watchedVideoRepository.UpdateWatchedVideoAsync(watchRecord);
+                return (isUpdated, isUpdated ? "User update successful" : "Failed to update record");
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
             }
         }
     }

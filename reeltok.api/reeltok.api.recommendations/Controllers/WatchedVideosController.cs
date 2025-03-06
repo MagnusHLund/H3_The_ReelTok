@@ -2,9 +2,9 @@ using reeltok.api.auth.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using reeltok.api.recommendations.DTOs;
 using reeltok.api.recommendations.Mappers;
-using reeltok.api.recommendations.ValueObjects;
 using reeltok.api.recommendations.Interfaces.Services;
 using reeltok.api.recommendations.Entities;
+using reeltok.api.recommendations.ValueObjects;
 
 namespace reeltok.api.recommendations.Controllers
 {
@@ -19,37 +19,21 @@ namespace reeltok.api.recommendations.Controllers
             _watchedVideoService = watchedVideoService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddWatchedVideoAsync([FromBody] CreateWatchedVideoDto createWatchedVideoDto)
+        [HttpPut]
+        public async Task<IActionResult> AddOrUpdateWatchedVideoAsync([FromBody] CreateWatchedVideoDto createWatchedVideoDto)
         {
             try
             {
                 WatchedVideoDetails watchedVideoDetails = WatchedVideosMapper.ToEntity(createWatchedVideoDto);
                 WatchedVideoEntity watchedVideoEntity = new WatchedVideoEntity(watchedVideoDetails);
-                bool IsAdded = await _watchedVideoService.AddWatchedVideoAsync(watchedVideoEntity);
-                return Ok(IsAdded);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new FailureResponseDto(ex.Message));
-            }
-        }
+                (bool result, string message) = await _watchedVideoService.AddOrUpdateWatchedVideoAsync(watchedVideoEntity);
 
-        [HttpPut("update-time-watched")]
-        public async Task<IActionResult> UpdateWatchedTime([FromBody] UpdateWatchedTimeDto dto)
-        {
-            try
-            {
-                (bool updated, string message) = await _watchedVideoService.UpdateTimeWatchedAsync(dto.VideoId, dto.UserId);
-
-                if (updated != true)
+                if (!result)
                 {
                     return BadRequest(new FailureResponseDto(message));
                 }
-                else
-                {
-                    return Ok(updated);
-                }
+
+                return Ok(message);
             }
             catch (Exception ex)
             {
