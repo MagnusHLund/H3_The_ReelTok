@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace reeltok.api.users.DTOs.UserRequests
+namespace reeltok.api.users.DTOs.CreateUser
 {
     public class CreateUserRequestDto
     {

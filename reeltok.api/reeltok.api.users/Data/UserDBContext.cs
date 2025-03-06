@@ -11,7 +11,6 @@ namespace reeltok.api.users.Data
         public DbSet<LikedVideoEntity> LikedVideos { get; set; }
         public DbSet<SubscriptionEntity> Subscriptions { get; set; }
 
-        // TODO: Email should not be saved in this database! Auth database only!
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserEntity>().ToTable("Users");
@@ -28,7 +27,7 @@ namespace reeltok.api.users.Data
                 });
 
             modelBuilder.Entity<UserEntity>()
-                .OwnsOne(u => u.HiddenDetails, hd =>
+                .OwnsOne(u => u.HiddenUserDetails, hd =>
                 {
                     hd.Property(h => h.Email).HasColumnName("Email");
                 });

@@ -6,13 +6,13 @@ namespace reeltok.api.users.Entities
     public class UserEntity : ExternalUserEntity
     {
         [Required]
-        public HiddenUserDetails HiddenDetails { get; set; }
+        public HiddenUserDetails HiddenUserDetails { get; set; }
 
         public UserEntity(Guid userId, UserDetails userDetails, HiddenUserDetails hiddenUserDetails) : base(userId, userDetails)
         {
             UserId = userId;
             UserDetails = userDetails;
-            HiddenDetails = hiddenUserDetails;
+            HiddenUserDetails = hiddenUserDetails;
         }
 
         // Parameterless constructor for EF Core

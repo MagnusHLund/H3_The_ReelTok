@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using reeltok.api.users.Mappers;
 using reeltok.api.users.Entities;
 using reeltok.api.users.ActionFilters;
-using reeltok.api.users.DTOs.UserRequests;
-using reeltok.api.users.DTOs.UserResponses;
+using reeltok.api.users.DTOs.CreateUser;
+using reeltok.api.users.DTOs.UpdateUser;
+using reeltok.api.users.DTOs.GetUserById;
 using reeltok.api.users.Interfaces.Services;
 
 namespace reeltok.api.users.Controllers
@@ -24,14 +24,16 @@ namespace reeltok.api.users.Controllers
         // TODO: Call video API to verify video id
         // TODO: Call auth API when creating user
         // TODO: Add Login in User API, using a login controller
+        // TODO: Modify profile picture endpoint
 
         // TODO: CALL AUTH SERVICE TO ADD OTHER USER INFO THERE
         [HttpPost]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequestDto request)
         {
-            UserEntity user = await _usersService.CreateUserAsync(request.Username, request.Email, request.Password).ConfigureAwait(false);
+            UserEntity user = await _usersService.CreateUserAsync(request.Username, request.Email, request.Password)
+                .ConfigureAwait(false);
 
-            ReturnCreateUserResponseDTO response = UserMapper.ToReturnCreateUserResponseDTO(user);
+            CreateUserResponseDto response = new CreateUserResponseDto(user);
             return Ok(response);
         }
 
@@ -40,16 +42,17 @@ namespace reeltok.api.users.Controllers
         {
             UserEntity user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
 
-            ReturnCreateUserResponseDTO response = UserMapper.ToReturnCreateUserResponseDTO(user);
+            GetUserByIdResponseDto response = new GetUserByIdResponseDto(user);
             return Ok(response);
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserRequestDto request)
         {
-            UserEntity updatedUser = await _usersService.UpdateUserAsync(request.UserId, request.Username, request.Email).ConfigureAwait(false);
+            UserEntity updatedUser = await _usersService.UpdateUserAsync(request.UserId, request.Username, request.Email)
+                .ConfigureAwait(false);
 
-            ReturnCreateUserResponseDTO response = UserMapper.ToReturnCreateUserResponseDTO(updatedUser);
+            UpdateUserResponseDto response = new UpdateUserResponseDto(updatedUser);
             return Ok(response);
         }
     }

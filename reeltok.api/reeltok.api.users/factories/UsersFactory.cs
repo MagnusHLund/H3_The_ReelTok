@@ -23,5 +23,33 @@ namespace reeltok.api.users.factories
                 hiddenUserDetails: hiddenUserDetails
             );
         }
+
+        internal static UserEntity UpdateUserEntityEmail(UserEntity user, string email)
+        {
+            HiddenUserDetails hiddenUserDetails = new HiddenUserDetails(
+                email: email
+            );
+
+            return new UserEntity(
+                userId: user.UserId,
+                userDetails: user.UserDetails,
+                hiddenUserDetails: hiddenUserDetails
+            );
+        }
+
+        internal static UserEntity UpdateUserEntityUsername(UserEntity user, string username)
+        {
+            UserDetails userDetails = new UserDetails(
+                username: username,
+                profileUrl: user.UserDetails.ProfileUrl,
+                profilePictureUrl: user.UserDetails.ProfilePictureUrl
+            );
+
+            return new UserEntity(
+                userId: user.UserId,
+                userDetails: userDetails,
+                hiddenUserDetails: user.HiddenUserDetails
+            );
+        }
     }
 }
