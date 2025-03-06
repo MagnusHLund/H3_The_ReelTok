@@ -17,12 +17,7 @@ interface RenderItemProps {
   index: number
 }
 
-// TODO: Ensure that there are always 3 videos loaded, ahead of the users current position.
-// TODO: Cleanup rendered VideoPlayers, once their data is no longer saved in redux
-// TODO: Ensure that addVideosToFeed is dispatched when manual scrolling
 // TODO: Fix bug with it not being able to scroll more than 48 times.
-// TODO: Limit scroll speed. It can scroll SUPER fast on web.
-// TODO: The list should include only 3 video players. One to watch, one to scroll back and one to scroll forward. This will help performance.
 // TODO: Once the phone rotates, video and comments are displayed next to each other.
 const VideoFeedScreen: React.FC = () => {
   const videos = useAppSelector((state) => state.videos.videos)
@@ -74,7 +69,6 @@ const VideoFeedScreen: React.FC = () => {
     outputRange: ['-90deg', '0deg', '90deg'],
   })
 
-
   const handleViewableItemsChanged = useCallback(({ viewableItems }: any) => {
     console.log(`Currently rendered items: ${viewableItems.length} ${route.name}`)
     if (viewableItems.length > 0) {
@@ -101,7 +95,9 @@ const VideoFeedScreen: React.FC = () => {
 
   const renderItem = useCallback(
     ({ item, index }: RenderItemProps) => (
-      <Animated.View style={[styles.videoContainer, { transform: [{ rotate: rotationInterpolation }] }]}>
+      <Animated.View
+        style={[styles.videoContainer, { transform: [{ rotate: rotationInterpolation }] }]}
+      >
         <VideoPlayer
           videoDetails={item}
           onAutoScroll={handleAutoScroll}
@@ -111,7 +107,6 @@ const VideoFeedScreen: React.FC = () => {
     ),
     [currentlyDisplayedVideoIndex, handleAutoScroll]
   )
-
 
   const styles = StyleSheet.create({
     container: {
@@ -130,7 +125,7 @@ const VideoFeedScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {Platform.OS === "web" ?
+      {Platform.OS === 'web' ? (
         <VideoListWeb
           videoFeedRef={videoFeedRef as RefObject<FlatList>}
           videos={videos}
@@ -140,7 +135,7 @@ const VideoFeedScreen: React.FC = () => {
           viewabilityConfig={viewabilityConfig}
           handleViewableItemsChanged={handleViewableItemsChanged}
         />
-        :
+      ) : (
         <VideoListApp
           videoFeedRef={videoFeedRef as RefObject<FlashList<Video>>}
           videos={videos}
@@ -150,10 +145,9 @@ const VideoFeedScreen: React.FC = () => {
           viewabilityConfig={viewabilityConfig}
           handleViewableItemsChanged={handleViewableItemsChanged}
         />
-      }
+      )}
     </View>
   )
 }
-
 
 export default VideoFeedScreen

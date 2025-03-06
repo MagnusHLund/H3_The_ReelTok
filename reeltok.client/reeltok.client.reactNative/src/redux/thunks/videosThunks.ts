@@ -8,7 +8,6 @@ import {
 } from '../slices/videosSlice'
 
 // TODO: Update this to use our APIs
-// TODO: Handle more than one videos being returned and overall fix shit code inside the thunk
 export const addVideoToFeedThunk = createAsyncThunk(
   'videos/addVideoToFeed',
   async (videosInFeed: Video[], { dispatch }) => {
