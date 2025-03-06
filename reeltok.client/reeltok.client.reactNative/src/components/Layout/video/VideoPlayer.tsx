@@ -25,8 +25,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const { contentHeight } = useAppDimensions()
   const isVideoFocused = useIsFocused()
   const [showCommentsSection, setShowCommentsSection] = useState(false)
-  const showCommentsSectionRef = useRef(showCommentsSection)
-
+  const showCommentsSectionRef = useRef(showCommentsSection) 
   const player = useVideoPlayer(videoDetails?.streamUrl ?? '', (player) => {
     player.loop = true
     player.play()
@@ -65,7 +64,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       player.removeListener('playToEnd', handlePlayToEnd)
     }
   }, [player])
-
+ 
   const changeVideoPlayState = () => {
     if (player.playing) {
       player.pause()

@@ -1,14 +1,10 @@
 import { DeviceMotion, DeviceMotionMeasurement } from 'expo-sensors'
-import { useState, useEffect } from 'react'
-import { Platform } from 'react-native'
+import * as ScreenOrientation from 'expo-screen-orientation'
+import { useFocusEffect } from '@react-navigation/native'
+import { useState, useCallback } from 'react'
 
-type Orientation = 'up' | 'down' | 'left' | 'right'
+export type Orientation = 'up' | 'down' | 'left' | 'right'
 
-// Due to the app following a TikTok style, the app is mostly fixed in portrait mode.
-// To simplify our styling, we locked the app to be only portrait, within app.json.
-// Because of this, we are unable to use expo-screen-orientation, as it relies on the app not being locked in app.json.
-// Instead we listen to the device's gyroscope and determine the orientation ourselves.
-// This solution does not work well on the emulator, but it works perfectly fine on an actual device.
 const calculateOrientation = (
   rotation: DeviceMotionMeasurement['rotation']
 ): Orientation | undefined => {
@@ -28,34 +24,44 @@ const calculateOrientation = (
   } else if (!isInDeadZone(betaDegrees) && isInDeadZone(gammaDegrees)) {
     return betaDegrees > deadZone ? 'up' : 'down'
   }
-
   return undefined
 }
 
-const UseOrientation = (): Orientation => {
+const allowedScreens = ['VideoFeed']
+const allowedComponents = ['Comments', 'VideoOverlay', 'RotatingIcon']
+
+const useOrientation = (currentRoute: string, component: string): Orientation => {
   const [orientation, setOrientation] = useState<Orientation>('up')
 
-  useEffect(() => {
-    if (Platform.OS == 'web') {
-      // TODO: Add orientation support for web?
-      return
-    }
+  useFocusEffect(
+    useCallback(() => {
+      let subscription: { remove: () => void } | null = null
 
-    const subscription = DeviceMotion.addListener((data: DeviceMotionMeasurement) => {
-      const newOrientation = calculateOrientation(data.rotation)
-      if (newOrientation !== undefined) {
-        setOrientation(newOrientation)
+      const adjustOrientation = async () => {
+        if (allowedScreens.includes(currentRoute) || allowedComponents.includes(component)) {
+          await ScreenOrientation.unlockAsync()
+          subscription = DeviceMotion.addListener((data: DeviceMotionMeasurement) => {
+            const newOrientation = calculateOrientation(data.rotation)
+            if (newOrientation !== undefined) {
+              setOrientation(newOrientation)
+            }
+          })
+          DeviceMotion.setUpdateInterval(1000)
+        } else {
+          await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+        }
       }
-    })
 
-    DeviceMotion.setUpdateInterval(1000)
+      adjustOrientation()
 
-    return () => {
-      subscription.remove()
-    }
-  }, [])
+      return () => {
+        subscription?.remove()
+        ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+      }
+    }, [currentRoute])
+  )
 
   return orientation
 }
 
-export default UseOrientation
+export default useOrientation

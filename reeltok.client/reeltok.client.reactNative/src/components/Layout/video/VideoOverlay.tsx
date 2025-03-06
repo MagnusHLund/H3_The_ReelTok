@@ -4,6 +4,7 @@ import { Video } from '../../../redux/slices/videosSlice'
 import { View, Text, StyleSheet } from 'react-native'
 import CustomButton from '../../input/CustomButton'
 import { Ionicons } from '@expo/vector-icons'
+import useOrientation from '../../../hooks/useOrientation'
 import React from 'react'
 
 interface VideoOverlayProps {
@@ -15,7 +16,7 @@ interface VideoOverlayProps {
 // TODO: Add video creator and video information to the overlay
 const VideoOverlay: React.FC<VideoOverlayProps> = ({ videoDetails, onCommentsOpen }) => {
   const dispatch = useAppDispatch()
-
+  const orientation = useOrientation('', 'VideoOverlay')
   const handleLikeButtonPress = () => {
     dispatch(hasLikedVideoThunk(videoDetails))
   }

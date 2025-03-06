@@ -1,5 +1,6 @@
 import { changeLanguageThunk } from '../redux/thunks/settingsThunks'
 import { createStackNavigator } from '@react-navigation/stack'
+import * as ScreenOrientation from 'expo-screen-orientation'
 import { NavigationContainer } from '@react-navigation/native'
 import stackScreens, { screensWebConfig } from './Routes'
 import Navbar from '../components/Layout/common/Navbar'
@@ -45,6 +46,13 @@ const Router: React.FC = () => {
       )
     }
   }, [country, language, dispatch])
+
+  useEffect(() => {
+    const lockOrientation = async () => {
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+    }
+    lockOrientation()
+  }, [])
 
   return (
     <NavigationContainer linking={linking}>
