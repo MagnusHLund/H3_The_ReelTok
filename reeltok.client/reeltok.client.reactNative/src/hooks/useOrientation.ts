@@ -1,7 +1,7 @@
-import { useState, useCallback, ReactNode } from 'react'
 import { DeviceMotion, DeviceMotionMeasurement } from 'expo-sensors'
-import { useFocusEffect } from '@react-navigation/native'
 import * as ScreenOrientation from 'expo-screen-orientation'
+import { useFocusEffect } from '@react-navigation/native'
+import { useState, useCallback } from 'react'
 
 export type Orientation = 'up' | 'down' | 'left' | 'right'
 
@@ -27,8 +27,8 @@ const calculateOrientation = (
   return undefined
 }
 
-const ALLOWED_SCREENS = ['VideoFeed']
-const ALLOWED_COMPONENTS = ['Comments', 'VideoOverlay', 'RotatingIcon']
+const allowedScreens = ['VideoFeed']
+const allowedComponents = ['Comments', 'VideoOverlay', 'RotatingIcon']
 
 const useOrientation = (currentRoute: string, component: string): Orientation => {
   const [orientation, setOrientation] = useState<Orientation>('up')
@@ -38,7 +38,7 @@ const useOrientation = (currentRoute: string, component: string): Orientation =>
       let subscription: { remove: () => void } | null = null
 
       const adjustOrientation = async () => {
-        if (ALLOWED_SCREENS.includes(currentRoute) || ALLOWED_COMPONENTS.includes(component)) {
+        if (allowedScreens.includes(currentRoute) || allowedComponents.includes(component)) {
           await ScreenOrientation.unlockAsync()
           subscription = DeviceMotion.addListener((data: DeviceMotionMeasurement) => {
             const newOrientation = calculateOrientation(data.rotation)
