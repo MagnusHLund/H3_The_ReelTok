@@ -1,4 +1,11 @@
 ﻿{
+  "Kestrel": {
+    "Endpoints": {
+      "Http": {
+        "Url": "http://*:5000/"
+      }
+    }
+  },
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
