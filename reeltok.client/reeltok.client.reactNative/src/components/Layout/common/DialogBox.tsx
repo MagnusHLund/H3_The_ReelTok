@@ -1,18 +1,15 @@
 import { Modal, View, Text, StyleSheet } from 'react-native'
 import CustomButton from '../../input/CustomButton'
 
-interface DialogueBoxProps {
+interface DialogBoxProps {
   text: string
   visible: boolean
   handleModalClose: () => void
   handleConfirmation: () => void
 }
+// TODO: Use dialog box for retaking a picture.
 
-// TODO: Use dialogue box for removing a video.
-// TODO: Use dialogue box for retaking a video.
-// TODO: Use dialogue box for retaking a picture.
-
-const DialogueBox: React.FC<DialogueBoxProps> = ({
+const DialogBox: React.FC<DialogBoxProps> = ({
   text,
   visible,
   handleModalClose,
@@ -67,4 +64,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default DialogueBox
+export default DialogBox

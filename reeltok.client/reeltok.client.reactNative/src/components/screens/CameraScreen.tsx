@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native'
 import React from 'react'
-import Camera from '../Layout/common/Camera'
+import Camera from '../Layout/camera/Camera'
 
 const CameraScreen = () => {
   return (
