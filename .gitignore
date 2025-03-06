@@ -238,3 +238,6 @@ _Pvt_Extensions
 
 # Production appsettings
 **/appsettings.json
+
+# Api logs
+reeltok.api/**/Logs/

@@ -9,8 +9,8 @@ namespace reeltok.api.users.factories
         {
             UserDetails userDetails = new UserDetails(
                 username: username,
-                profileUrl: string.Empty,
-                profilePictureUrl: null
+                profileUrlPath: null,
+                profilePictureUrlPath: null
             );
 
             HiddenUserDetails hiddenUserDetails = new HiddenUserDetails(
@@ -41,8 +41,8 @@ namespace reeltok.api.users.factories
         {
             UserDetails userDetails = new UserDetails(
                 username: username,
-                profileUrl: user.UserDetails.ProfileUrl,
-                profilePictureUrl: user.UserDetails.ProfilePictureUrl
+                profileUrlPath: user.UserDetails.ProfileUrlPath,
+                profilePictureUrlPath: user.UserDetails.ProfilePictureUrlPath
             );
 
             return new UserEntity(

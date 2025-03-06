@@ -11,6 +11,8 @@ namespace reeltok.api.users.Data
         public DbSet<LikedVideoEntity> LikedVideos { get; set; }
         public DbSet<SubscriptionEntity> Subscriptions { get; set; }
 
+        // TODO: Add keys: https://github.com/MagnusHLund/H3_The_ReelTok/blob/main/reeltok.documentation/database/ReelTok_UsersService_RDS.png
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserEntity>().ToTable("Users");
@@ -22,8 +24,8 @@ namespace reeltok.api.users.Data
                 .OwnsOne(u => u.UserDetails, ud =>
                 {
                     ud.Property(u => u.Username).HasColumnName("Username");
-                    ud.Property(u => u.ProfileUrl).HasColumnName("ProfileUrl");
-                    ud.Property(u => u.ProfilePictureUrl).HasColumnName("ProfilePictureUrl");
+                    ud.Property(u => u.ProfileUrlPath).HasColumnName("ProfileUrlPath");
+                    ud.Property(u => u.ProfilePictureUrlPath).HasColumnName("ProfilePictureUrlPath");
                 });
 
             modelBuilder.Entity<UserEntity>()

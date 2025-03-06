@@ -5,6 +5,7 @@ using reeltok.api.users.DTOs.CreateUser;
 using reeltok.api.users.DTOs.UpdateUser;
 using reeltok.api.users.DTOs.GetUserById;
 using reeltok.api.users.Interfaces.Services;
+using reeltok.api.users.DTOs.UpdateProfilePicture;
 
 namespace reeltok.api.users.Controllers
 {
@@ -20,17 +21,10 @@ namespace reeltok.api.users.Controllers
             _usersService = usersService;
         }
 
-        // TODO: Refactor DTO names
-        // TODO: Call video API to verify video id
-        // TODO: Call auth API when creating user
-        // TODO: Add Login in User API, using a login controller
-        // TODO: Modify profile picture endpoint
-
-        // TODO: CALL AUTH SERVICE TO ADD OTHER USER INFO THERE
         [HttpPost]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequestDto request)
         {
-            UserEntity user = await _usersService.CreateUserAsync(request.Username, request.Email, request.Password)
+            UserEntity user = await _usersService.CreateUserAsync(request.Username, request.Email, request.Password, request.Interests)
                 .ConfigureAwait(false);
 
             CreateUserResponseDto response = new CreateUserResponseDto(user);
@@ -40,6 +34,8 @@ namespace reeltok.api.users.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserByIdAsync([FromQuery] Guid userId)
         {
+            // TODO: Also return total amount of subscribers and total amount of subscriptions
+
             UserEntity user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
 
             GetUserByIdResponseDto response = new GetUserByIdResponseDto(user);
@@ -53,6 +49,14 @@ namespace reeltok.api.users.Controllers
                 .ConfigureAwait(false);
 
             UpdateUserResponseDto response = new UpdateUserResponseDto(updatedUser);
+            return Ok(response);
+        }
+
+        // TODO: Add update profile picture functionality
+        [HttpPut("profile-picture")]
+        public async Task<IActionResult> UpdateUserProfilePicture([FromBody] UpdateUserProfilePictureRequestDto request)
+        {
+            UpdateUserProfilePictureResponseDto response = new UpdateUserProfilePictureResponseDto();
             return Ok(response);
         }
     }

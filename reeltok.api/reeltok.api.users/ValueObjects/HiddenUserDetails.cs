@@ -13,6 +13,5 @@ namespace reeltok.api.users.ValueObjects
         }
 
         private HiddenUserDetails() { }
-
     }
 }

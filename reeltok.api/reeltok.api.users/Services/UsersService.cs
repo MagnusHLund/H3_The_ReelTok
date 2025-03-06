@@ -3,20 +3,18 @@ using reeltok.api.users.Entities;
 using reeltok.api.users.factories;
 using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.Interfaces.Repositories;
-using reeltok.api.users.DTOs.CreateUser;
-using reeltok.api.users.DTOs;
 
 namespace reeltok.api.users.Services
 {
     public class UsersService : BaseService, IUsersService
     {
         private readonly IUsersRepository _userRepository;
-        private readonly IHttpService _httpService;
+        private readonly IExternalApiService _externalApiService;
 
-        public UsersService(IUsersRepository userRepository, IHttpService httpService)
+        public UsersService(IUsersRepository userRepository, IExternalApiService externalApiService)
         {
             _userRepository = userRepository;
-            _httpService = httpService;
+            _externalApiService = externalApiService;
         }
 
         public async Task<UserEntity> CreateUserAsync(string username, string email, string password, byte interests)
@@ -26,8 +24,8 @@ namespace reeltok.api.users.Services
 
             try
             {
-                await CreateUserInAuthApiAsync(createdUser.UserId, password).ConfigureAwait(false);
-                await CreateUserInRecommendationsApiAsync(createdUser.UserId, interests).ConfigureAwait(false);
+                await _externalApiService.CreateUserInAuthApiAsync(createdUser.UserId, password).ConfigureAwait(false);
+                await _externalApiService.CreateUserInRecommendationsApiAsync(createdUser.UserId, interests).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -50,7 +48,7 @@ namespace reeltok.api.users.Services
 
             if (!string.IsNullOrEmpty(username))
             {
-                if (ValidationUtils.IsValidUsername(username))
+                if (!ValidationUtils.IsValidUsername(username))
                 {
                     throw new InvalidOperationException("Invalid username");
                 }
@@ -60,7 +58,6 @@ namespace reeltok.api.users.Services
 
             if (!string.IsNullOrEmpty(email))
             {
-                // TODO: validate email
                 if (!ValidationUtils.IsValidEmail(email))
                 {
                     throw new InvalidOperationException("Invalid email");
@@ -69,15 +66,7 @@ namespace reeltok.api.users.Services
                 user = UsersFactory.UpdateUserEntityEmail(user, email);
             }
 
-            try
-            {
-                user = await _userRepository.UpdateUserAsync(user).ConfigureAwait(false);
-            }
-            catch
-            {
-                throw new InvalidOperationException("User update failed!");
-            }
-
+            user = await _userRepository.UpdateUserAsync(user).ConfigureAwait(false);
             return user;
         }
 
@@ -87,46 +76,9 @@ namespace reeltok.api.users.Services
             return users;
         }
 
-        private async Task CreateUserInAuthApiAsync(Guid userId, string password)
+        private async Task DeleteUserAsync(Guid userId)
         {
-            // TODO: Less hardcoded uri
-            AuthServiceCreateUserRequestDto requestDto = new AuthServiceCreateUserRequestDto(userId, password);
-            Uri targetUrl = new Uri("https://localhost:5003/api/auth");
-
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<AuthServiceCreateUserRequestDto, AuthServiceCreateUserResponseDto>(
-                requestDto, targetUrl, HttpMethod.Post)
-                .ConfigureAwait(false);
-
-            if (response.Success && response is AuthServiceCreateUserResponseDto responseDto)
-            {
-                return;
-            }
-
-            throw HandleNetworkResponseExceptions(response);
-        }
-
-        private async Task CreateUserInRecommendationsApiAsync(Guid userId, byte userInterests)
-        {
-            // TODO: Less hardcoded uri
-            RecommendationsServiceCreateUserRequestDto requestDto = new RecommendationsServiceCreateUserRequestDto(userId, userInterests);
-            Uri targetUrl = new Uri("https://localhost:5004/api/recommendations");
-
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<RecommendationsServiceCreateUserRequestDto, RecommendationsServiceCreateUserResponseDto>(
-                requestDto, targetUrl, HttpMethod.Post)
-                .ConfigureAwait(false);
-
-            if (response.Success && response is RecommendationsServiceCreateUserResponseDto responseDto)
-            {
-                return;
-            }
-
-            throw HandleNetworkResponseExceptions(response);
-        }
-
-        private async Task<bool> DeleteUserAsync(Guid userId)
-        {
-            bool IsUserDeleted = await _userRepository.DeleteUserAsync(userId).ConfigureAwait(false);
-            return IsUserDeleted;
+            await _userRepository.DeleteUserAsync(userId).ConfigureAwait(false);
         }
     }
 }

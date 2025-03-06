@@ -7,15 +7,14 @@ namespace reeltok.api.users.ValueObjects
         [Required]
         public string Username { get; private set; } = string.Empty;
 
-        [Required] // TODO: Do we even really need ProfileUrl? we have their UserId. The profile page can be their userId.
-        public string ProfileUrl { get; private set; } = string.Empty;
-        public string? ProfilePictureUrl { get; private set; }
+        public string? ProfileUrlPath { get; private set; }
+        public string? ProfilePictureUrlPath { get; private set; }
 
-        public UserDetails(string username, string profileUrl, string? profilePictureUrl)
+        public UserDetails(string username, string? profileUrlPath, string? profilePictureUrlPath)
         {
             Username = username;
-            ProfileUrl = profileUrl;
-            ProfilePictureUrl = profilePictureUrl;
+            ProfileUrlPath = profileUrlPath;
+            ProfilePictureUrlPath = profilePictureUrlPath;
         }
 
         private UserDetails() { }

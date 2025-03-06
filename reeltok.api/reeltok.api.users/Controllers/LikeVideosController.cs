@@ -20,8 +20,7 @@ namespace reeltok.api.users.Controllers
             _likeVideoService = likeVideoService;
         }
 
-        // TODO: Remove unused DTOs
-
+        // Called from Video API
         [HttpPost("like")]
         public async Task<IActionResult> AddLikeToVideoAsync([FromBody] LikeVideoRequestDto request)
         {
@@ -34,6 +33,7 @@ namespace reeltok.api.users.Controllers
             return Ok(response);
         }
 
+        // Called from Video API
         [HttpDelete("like")]
         public async Task<IActionResult> RemoveLikeFromVideoAsync([FromQuery] Guid videoId, [FromQuery] Guid userId)
         {

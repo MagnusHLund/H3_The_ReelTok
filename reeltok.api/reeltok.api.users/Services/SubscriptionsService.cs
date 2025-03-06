@@ -42,7 +42,7 @@ namespace reeltok.api.users.Services
         {
             if (subscriptionDetails.UserId == subscriptionDetails.SubscribingToUserId)
             {
-                throw new Exception("User cannot subscribe to themselves!");
+                throw new InvalidOperationException("User cannot subscribe to themselves!");
             }
 
             await _usersService.GetUserByIdAsync(subscriptionDetails.UserId).ConfigureAwait(false);

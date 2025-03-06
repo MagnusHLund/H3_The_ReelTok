@@ -32,7 +32,6 @@ namespace reeltok.api.users.Controllers
 
             SubscribeResponseDto response = new SubscribeResponseDto(success);
             return Ok(response);
-
         }
 
         [HttpDelete("subscribe")]
