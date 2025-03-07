@@ -1,8 +1,13 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace reeltok.api.users.DTOs.CreateUser
 {
     public class RecommendationsServiceCreateUserRequestDto
     {
+        [Required]
         public Guid UserId { get; set; }
+
+        [Required]
         public byte Interests { get; set; }
 
         public RecommendationsServiceCreateUserRequestDto(Guid userId, byte interests)
@@ -10,7 +15,5 @@ namespace reeltok.api.users.DTOs.CreateUser
             UserId = userId;
             Interests = interests;
         }
-
-        public RecommendationsServiceCreateUserRequestDto() { }
     }
 }

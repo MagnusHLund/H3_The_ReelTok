@@ -9,6 +9,7 @@ namespace reeltok.api.users.Controllers
     [ValidateModel]
     [ApiController]
     [Route("api/[controller]")]
+    [Consumes("application/json")]
     public class LoginController : ControllerBase
     {
         private readonly ILoginService _loginService;
