@@ -9,5 +9,6 @@ namespace reeltok.api.users.Interfaces.Services
         Task<UserEntity> UpdateUserAsync(Guid userId, string? username, string? email);
         Task<List<UserEntity>> GetUsersByIdsAsync(List<Guid> userIds);
         Task<UserEntity> GetUserByEmail(string email);
+        Task<UserEntity> UpdateUserProfilePictureAsync(IFormFile imageFile, Guid userId);
     }
 }

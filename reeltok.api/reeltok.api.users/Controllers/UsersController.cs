@@ -52,11 +52,12 @@ namespace reeltok.api.users.Controllers
             return Ok(response);
         }
 
-        // TODO: Add update profile picture functionality
         [HttpPut("profile-picture")]
-        public async Task<IActionResult> UpdateUserProfilePicture([FromBody] UpdateUserProfilePictureRequestDto request)
+        public async Task<IActionResult> UpdateUserProfilePictureAsync([FromForm] UpdateUserProfilePictureRequestDto request)
         {
-            UpdateUserProfilePictureResponseDto response = new UpdateUserProfilePictureResponseDto();
+            UserEntity updatedUser = await _usersService.UpdateUserProfilePictureAsync(request.ProfilePicture, request.UserId).ConfigureAwait(false);
+
+            UpdateUserProfilePictureResponseDto response = new UpdateUserProfilePictureResponseDto(updatedUser);
             return Ok(response);
         }
     }
