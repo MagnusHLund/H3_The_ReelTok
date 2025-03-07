@@ -19,6 +19,7 @@ namespace reeltok.api.users.Services
 
         public async Task CreateUserInAuthApiAsync(Guid userId, string password)
         {
+            // TODO: Remove this return, once auth api is ready
             return;
 
             AuthServiceCreateUserRequestDto requestDto = new AuthServiceCreateUserRequestDto(userId, password);
@@ -38,6 +39,7 @@ namespace reeltok.api.users.Services
 
         public async Task CreateUserInRecommendationsApiAsync(Guid userId, byte userInterests)
         {
+            // TODO: Remove this return, once recommendations api is ready
             return;
 
             RecommendationsServiceCreateUserRequestDto requestDto = new RecommendationsServiceCreateUserRequestDto(userId, userInterests);

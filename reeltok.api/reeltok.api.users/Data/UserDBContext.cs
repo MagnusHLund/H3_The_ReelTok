@@ -11,14 +11,9 @@ namespace reeltok.api.users.Data
         public DbSet<LikedVideoEntity> LikedVideos { get; set; }
         public DbSet<SubscriptionEntity> Subscriptions { get; set; }
 
-        // TODO: Add keys: https://github.com/MagnusHLund/H3_The_ReelTok/blob/main/reeltok.documentation/database/ReelTok_UsersService_RDS.png
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserEntity>().ToTable("Users");
-
-            modelBuilder.Entity<UserEntity>()
-                .OwnsOne(u => u.UserDetails);
 
             modelBuilder.Entity<UserEntity>()
                 .OwnsOne(u => u.UserDetails, ud =>
@@ -26,45 +21,28 @@ namespace reeltok.api.users.Data
                     ud.Property(u => u.Username).HasColumnName("Username");
                     ud.Property(u => u.ProfileUrlPath).HasColumnName("ProfileUrlPath");
                     ud.Property(u => u.ProfilePictureUrlPath).HasColumnName("ProfilePictureUrlPath");
+
+                    // Add unique constraints using Fluent API
+                    ud.HasIndex(u => u.ProfileUrlPath).IsUnique();
+                    ud.HasIndex(u => u.ProfilePictureUrlPath).IsUnique();
                 });
 
             modelBuilder.Entity<UserEntity>()
                 .OwnsOne(u => u.HiddenUserDetails, hd =>
                 {
                     hd.Property(h => h.Email).HasColumnName("Email");
+
+                    // Add unique constraint using Fluent API
+                    hd.HasIndex(h => h.Email).IsUnique();
                 });
 
-            modelBuilder.Entity<LikedVideoEntity>().OwnsOne(lv => lv.LikedVideoDetails, lv =>
-            {
-                lv.Property(l => l.UserId).HasColumnName("UserId");
-                lv.Property(l => l.VideoId).HasColumnName("VideoId");
+            modelBuilder.Entity<LikedVideoEntity>()
+                .HasIndex(lv => new { lv.UserId, lv.VideoId })
+                .IsUnique();
 
-                lv.WithOwner();
-
-                lv.HasOne<UserEntity>()
-                    .WithMany()
-                    .HasForeignKey(lv => lv.UserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            modelBuilder.Entity<SubscriptionEntity>().OwnsOne(s => s.SubDetails, sd =>
-            {
-                sd.Property(s => s.UserId).HasColumnName("SubscriberUserId");
-                sd.Property(s => s.SubscribingToUserId).HasColumnName("SubscribingToUserId");
-
-                sd.WithOwner();
-
-                // Configure foreign keys without cascade delete
-                sd.HasOne<UserEntity>()
-                    .WithMany()
-                    .HasForeignKey(s => s.UserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                sd.HasOne<UserEntity>()
-                    .WithMany()
-                    .HasForeignKey(s => s.SubscribingToUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
+            modelBuilder.Entity<SubscriptionEntity>()
+                .HasIndex(s => new { s.UserId, s.SubscribingToUserId })
+                .IsUnique();
 
             base.OnModelCreating(modelBuilder);
         }

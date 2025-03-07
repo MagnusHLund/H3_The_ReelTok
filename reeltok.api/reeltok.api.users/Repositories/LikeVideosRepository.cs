@@ -25,7 +25,7 @@ namespace reeltok.api.users.Repositories
         public async Task<bool> RemoveFromLikedVideoAsync(Guid userId, Guid videoId)
         {
             LikedVideoEntity likedVideoEntity = await _context.LikedVideos.FirstOrDefaultAsync(
-                lv => lv.LikedVideoDetails.UserId == userId && lv.LikedVideoDetails.VideoId == videoId).ConfigureAwait(false)
+                lv => lv.UserId == userId && lv.VideoId == videoId).ConfigureAwait(false)
                 ?? throw new KeyNotFoundException($"Unable to find liked video with user id {userId} and video id {videoId}!");
 
             _context.LikedVideos.Remove(likedVideoEntity);

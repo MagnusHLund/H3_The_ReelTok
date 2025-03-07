@@ -6,7 +6,6 @@ namespace reeltok.api.users.ValueObjects
     {
         [Required]
         public string Username { get; private set; } = string.Empty;
-
         public string? ProfileUrlPath { get; private set; }
         public string? ProfilePictureUrlPath { get; private set; }
 
