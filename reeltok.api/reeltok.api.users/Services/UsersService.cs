@@ -6,7 +6,7 @@ using reeltok.api.users.Interfaces.Repositories;
 
 namespace reeltok.api.users.Services
 {
-    public class UsersService : BaseService, IUsersService
+    public class UsersService : IUsersService
     {
         private readonly IUsersRepository _userRepository;
         private readonly IExternalApiService _externalApiService;
@@ -79,6 +79,12 @@ namespace reeltok.api.users.Services
         {
             List<UserEntity> users = await _userRepository.GetUsersByUserIdsAsync(userIds).ConfigureAwait(false);
             return users;
+        }
+
+        public async Task<UserEntity> GetUserByEmail(string email)
+        {
+            UserEntity user = await _userRepository.GetUserByEmailAsync(email).ConfigureAwait(false);
+            return user;
         }
 
         private async Task DeleteUserAsync(Guid userId)

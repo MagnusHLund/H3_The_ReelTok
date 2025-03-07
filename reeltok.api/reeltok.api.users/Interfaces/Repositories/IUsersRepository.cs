@@ -9,5 +9,6 @@ namespace reeltok.api.users.Interfaces.Repositories
         Task<UserEntity> UpdateUserAsync(UserEntity user);
         Task DeleteUserAsync(Guid userId);
         Task<List<UserEntity>> GetUsersByUserIdsAsync(List<Guid> userIds);
+        Task<UserEntity> GetUserByEmailAsync(string email);
     }
 }

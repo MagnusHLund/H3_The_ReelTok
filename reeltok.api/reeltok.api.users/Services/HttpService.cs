@@ -2,13 +2,12 @@ using System.Text;
 using System.Text.Json;
 using System.Reflection;
 using reeltok.api.users.DTOs;
-using reeltok.api.users.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using reeltok.api.users.Interfaces.Services;
 
 namespace reeltok.api.videos.Services
 {
-    public class HttpService : BaseService, IHttpService
+    public class HttpService : IHttpService
     {
         private readonly HttpClient _httpClient;
 
