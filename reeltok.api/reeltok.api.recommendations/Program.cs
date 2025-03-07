@@ -25,6 +25,7 @@ namespace RecommendationsServiceApi
             builder.Services.AddScoped<IRecommendationsRepository, RecommendationRepository>();
             builder.Services.AddScoped<IUserRecommendationRepository, UserRecommendationRepository>();
             builder.Services.AddScoped<IVideoRecommendationRepository, VideoRecommendationRepository>();
+            builder.Services.AddScoped<IVideoRecommendationAlgorithmRepository, VideoRecommendationAlgorithmRepository>();
 
             builder.Services.AddDbContextFactory<RecommendationDbContext>(options =>
             {

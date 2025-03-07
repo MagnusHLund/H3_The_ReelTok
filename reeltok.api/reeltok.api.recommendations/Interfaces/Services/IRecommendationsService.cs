@@ -7,8 +7,6 @@ namespace reeltok.api.recommendations.Interfaces.Services
     {
         Task<List<string>> GetAllCategoriesAsync();
 
-        /*
-        Task GetRecommendedVideosForUserAsync();
-        */
+        Task<List<Guid>> GetTopVideoByUserInterestAsync(Guid userId, int amount);
     }
 }
