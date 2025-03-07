@@ -27,7 +27,7 @@ namespace reeltok.api.videos.Controllers
         }
 
         [HttpGet]
-        [Route("GetVideoFeed")]
+        [Route("feed")]
         public async Task<IActionResult> GetVideosForFeedAsync(
             [FromQuery] Guid userId,
             [FromQuery] byte amount)
@@ -45,7 +45,7 @@ namespace reeltok.api.videos.Controllers
         }
 
         [HttpGet]
-        [Route("GetVideosForProfile")]
+        [Route("profile")]
         public async Task<IActionResult> GetVideosForProfileAsync(
             [FromQuery] Guid userId,
             [FromQuery] uint pageNumber,
@@ -65,14 +65,13 @@ namespace reeltok.api.videos.Controllers
         }
 
         [HttpGet]
-        [Route("Video")]
         public async Task<IActionResult> GetVideoAsync([FromQuery] Guid videoId)
         {
             return Ok();
         }
 
         [HttpPost]
-        [Route("Upload")]
+        [Route("upload")]
         public async Task<IActionResult> UploadVideoAsync(
             [FromForm] UploadVideoRequestDto request)
         {
@@ -85,7 +84,6 @@ namespace reeltok.api.videos.Controllers
         }
 
         [HttpDelete]
-        [Route("Delete")]
         public async Task<IActionResult> DeleteVideoAsync(
             [FromQuery] Guid userId,
             [FromQuery] Guid videoId)
