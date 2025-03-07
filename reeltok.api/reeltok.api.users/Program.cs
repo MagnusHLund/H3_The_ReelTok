@@ -20,7 +20,6 @@ namespace UsersServiceApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Initialize Serilog logger
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)

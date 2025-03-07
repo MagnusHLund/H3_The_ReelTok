@@ -10,11 +10,13 @@ namespace reeltok.api.users.Services
     {
         private readonly IUsersRepository _userRepository;
         private readonly IExternalApiService _externalApiService;
+        private readonly IStorageService _storageService;
 
-        public UsersService(IUsersRepository userRepository, IExternalApiService externalApiService)
+        public UsersService(IUsersRepository userRepository, IExternalApiService externalApiService, IStorageService storageService)
         {
             _userRepository = userRepository;
             _externalApiService = externalApiService;
+            _storageService = storageService;
         }
 
         public async Task<UserEntity> CreateUserAsync(string username, string email, string password, byte interests)
@@ -85,6 +87,25 @@ namespace reeltok.api.users.Services
         {
             UserEntity user = await _userRepository.GetUserByEmailAsync(email).ConfigureAwait(false);
             return user;
+        }
+
+        public async Task<UserEntity> UpdateUserProfilePictureAsync(IFormFile imageFile, Guid userId)
+        {
+            bool isValidImage = await ImageUtils.IsValidImage(imageFile).ConfigureAwait(false);
+
+            if (!isValidImage)
+            {
+                throw new ArgumentException($"The provided file is not a valid image. Uploaded by userId {userId}");
+            }
+
+            string profilePictureUrl = await _storageService.UploadProfilePictureToFileServerAsync(imageFile, userId)
+                .ConfigureAwait(false);
+
+            UserEntity userToUpdate = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
+            userToUpdate = UsersFactory.UpdateUserEntityProfilePictureUrlPath(userToUpdate, profilePictureUrl);
+
+            UserEntity updatedUser = await _userRepository.UpdateUserAsync(userToUpdate).ConfigureAwait(false);
+            return updatedUser;
         }
 
         private async Task DeleteUserAsync(Guid userId)

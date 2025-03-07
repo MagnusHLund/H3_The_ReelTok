@@ -51,5 +51,20 @@ namespace reeltok.api.users.factories
                 hiddenUserDetails: user.HiddenUserDetails
             );
         }
+
+        internal static UserEntity UpdateUserEntityProfilePictureUrlPath(UserEntity user, string profilePictureUrlPath)
+        {
+            UserDetails userDetails = new UserDetails(
+                username: user.UserDetails.Username,
+                profileUrlPath: user.UserDetails.ProfileUrlPath,
+                profilePictureUrlPath: profilePictureUrlPath
+            );
+
+            return new UserEntity(
+                userId: user.UserId,
+                userDetails: userDetails,
+                hiddenUserDetails: user.HiddenUserDetails
+            );
+        }
     }
 }
