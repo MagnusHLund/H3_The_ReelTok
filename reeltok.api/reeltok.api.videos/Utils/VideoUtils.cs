@@ -26,7 +26,7 @@ namespace reeltok.api.videos.Utils
         // Public method to validate file extension
         public static bool IsValidFileExtension(IFormFile video)
         {
-            string[] allowedFileExtensions = { ".MP4", ".MKV" };
+            string[] allowedFileExtensions = { ".MP4", ".MKV", ".MOV };
             string fileExtension = Path.GetExtension(video.FileName).ToUpperInvariant();
             return allowedFileExtensions.Contains(fileExtension);
         }
