@@ -15,7 +15,5 @@ namespace reeltok.api.users.DTOs.Login
             UserId = userId;
             Password = password;
         }
-
-        public AuthServiceLoginRequestDto() { }
     }
 }

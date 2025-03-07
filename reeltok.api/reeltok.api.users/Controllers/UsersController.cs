@@ -12,6 +12,7 @@ namespace reeltok.api.users.Controllers
     [ValidateModel]
     [ApiController]
     [Route("api/[controller]")]
+    [Consumes("application/json")]
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _usersService;
@@ -53,6 +54,7 @@ namespace reeltok.api.users.Controllers
         }
 
         [HttpPut("profile-picture")]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> UpdateUserProfilePictureAsync([FromForm] UpdateUserProfilePictureRequestDto request)
         {
             UserEntity updatedUser = await _usersService.UpdateUserProfilePictureAsync(request.ProfilePicture, request.UserId).ConfigureAwait(false);

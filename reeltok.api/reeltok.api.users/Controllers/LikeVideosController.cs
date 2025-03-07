@@ -11,6 +11,7 @@ namespace reeltok.api.users.Controllers
     [ValidateModel]
     [ApiController]
     [Route("api/[controller]")]
+    [Consumes("application/json")]
     public class LikeVideosController : ControllerBase
     {
         private readonly ILikeVideosService _likeVideoService;

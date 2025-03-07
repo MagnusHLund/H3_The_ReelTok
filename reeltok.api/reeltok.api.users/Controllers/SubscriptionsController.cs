@@ -14,6 +14,7 @@ namespace reeltok.api.users.Controllers
     [ValidateModel]
     [ApiController]
     [Route("api/[controller]")]
+    [Consumes("application/json")]
     public class SubscriptionsController : ControllerBase
     {
         private readonly ISubscriptionsService _subscriptionService;

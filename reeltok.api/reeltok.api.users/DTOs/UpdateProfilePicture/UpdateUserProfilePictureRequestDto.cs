@@ -16,6 +16,7 @@ namespace reeltok.api.users.DTOs.UpdateProfilePicture
             ProfilePicture = profilePicture;
         }
 
+        // Parameterless constructor required for multipart/form-data requests
         public UpdateUserProfilePictureRequestDto() { }
     }
 }
