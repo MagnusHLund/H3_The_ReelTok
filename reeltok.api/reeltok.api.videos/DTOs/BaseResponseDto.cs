@@ -1,17 +1,18 @@
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs
 {
-    [XmlRoot("BaseResponseDto")]
     public abstract class BaseResponseDto
     {
-        [XmlElement(elementName: "Success")]
+        [Required]
+        [JsonProperty("Success")]
         public virtual bool Success { get; set; } = true;
 
         protected BaseResponseDto(bool success)
         {
             Success = success;
         }
-        protected BaseResponseDto() { }
     }
 }

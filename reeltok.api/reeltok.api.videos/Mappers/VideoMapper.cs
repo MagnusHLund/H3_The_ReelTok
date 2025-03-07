@@ -1,8 +1,8 @@
+using reeltok.api.videos.DTOs;
 using reeltok.api.videos.Utils;
 using reeltok.api.videos.Entities;
 using reeltok.api.videos.ValueObjects;
 using reeltok.api.videos.DTOs.GetVideosForProfile;
-using reeltok.api.videos.DTOs;
 
 namespace reeltok.api.videos.Mappers
 {
@@ -11,11 +11,11 @@ namespace reeltok.api.videos.Mappers
         internal static GetVideosForProfileResponseDto ConvertVideoEntityToGetVideosForProfileResponseDto(
             List<VideoEntity> videoEntity)
         {
-            List<ProfileVideoEntity> profileVideos = new List<ProfileVideoEntity>();
+            List<BaseVideoEntity> profileVideos = new List<BaseVideoEntity>();
 
             foreach (VideoEntity video in videoEntity)
             {
-                ProfileVideoEntity profileVideo = new ProfileVideoEntity(
+                BaseVideoEntity profileVideo = new BaseVideoEntity(
                     videoId: video.VideoId,
                     streamPath: video.StreamPath,
                     uploadedAt: video.UploadedAt
@@ -40,7 +40,6 @@ namespace reeltok.api.videos.Mappers
                 userId: videoCreator,
                 title: videoUpload.VideoDetails.Title,
                 description: videoUpload.VideoDetails.Description,
-                tag: videoUpload.VideoDetails.Tag,
                 streamPath: streamPath,
                 uploadedAt: currentUnixTime
             );
@@ -50,8 +49,7 @@ namespace reeltok.api.videos.Mappers
         {
             VideoDetails videoDetails = new VideoDetails(
                 title: requestDto.Title,
-                description: requestDto.Description,
-                tag: 0
+                description: requestDto.Description
             );
 
             return new VideoUpload(

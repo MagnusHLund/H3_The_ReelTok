@@ -15,10 +15,10 @@ namespace reeltok.api.videos.Controllers
     [ValidateModel]
     [ApiController]
     [Route("api/[controller]")]
+    [Consumes("application/json")]
     public class VideosController : ControllerBase
     {
         // TODO: Remove unused DTOs
-        // TODO: Add additional attributes to DTOs and types used within DTOs (value objects / entities)
         private readonly IVideosService _videosService;
 
         public VideosController(IVideosService videosService)
@@ -64,17 +64,13 @@ namespace reeltok.api.videos.Controllers
             return Ok(responseDto);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetVideoAsync([FromQuery] Guid videoId)
-        {
-            return Ok();
-        }
-
         [HttpPost]
-        [Route("upload")]
-        public async Task<IActionResult> UploadVideoAsync(
-            [FromForm] UploadVideoRequestDto request)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadVideoAsync([FromForm] UploadVideoRequestDto request)
         {
+            // TODO: Add byte for handling the category, (see the dto above ^^^^) but do not save it in videos database. 
+            //!^^^^  it goes to recommendations database.
+             
             VideoUpload videoUpload = VideoMapper.ConvertUploadVideoRequestDtoToVideoUpload(request);
 
             await _videosService.UploadVideoAsync(videoUpload, request.UserId).ConfigureAwait(false);

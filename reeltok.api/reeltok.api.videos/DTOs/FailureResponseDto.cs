@@ -1,20 +1,22 @@
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs
 {
-    [XmlRoot("FailureResponseDto")]
     public class FailureResponseDto : BaseResponseDto
     {
-        [XmlElement(elementName: "Message")]
+        [Required]
+        [JsonProperty("Message")]
         public string Message { get; set; }
-        [XmlElement(elementName: "Success")]
+
+        [Required]
+        [JsonProperty("Success")]
         public override bool Success { get; set; }
 
-        public FailureResponseDto(string message)
+        public FailureResponseDto(string message, bool success = false) : base(success)
         {
             Message = message;
             Success = false;
         }
-        public FailureResponseDto() { }
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace reeltok.api.videos.Services
 {
-    public class HttpService : BaseService, IHttpService
+    public class HttpService : IHttpService
     {
         private readonly HttpClient _httpClient;
 
@@ -31,9 +31,11 @@ namespace reeltok.api.videos.Services
                 ? PrepareHttpRequestWithQueryParameters(requestDto, targetUrl)
                 : PrepareHttpRequestBody(requestDto, targetUrl, httpMethod);
 
-            BaseResponseDto response = await RouteRequestAsync<TResponse>(request).ConfigureAwait(false);
-
-            return response;
+            using (request)
+            {
+                BaseResponseDto response = await RouteRequestAsync<TResponse>(request).ConfigureAwait(false);
+                return response;
+            }
         }
 
         public async Task<BaseResponseDto> RouteRequestAsync<TResponse>(HttpRequestMessage request)
@@ -76,7 +78,9 @@ namespace reeltok.api.videos.Services
             where TResponse : BaseResponseDto
         {
             string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return JsonSerializer.Deserialize<TResponse>(responseContent);
+
+            return JsonSerializer.Deserialize<TResponse>(responseContent)
+                ?? throw new InvalidOperationException("Failed to deserialize response content.");
         }
 
         private static Dictionary<string, string> ConvertRequestDtoToQueryParameters<TRequest>(TRequest request)

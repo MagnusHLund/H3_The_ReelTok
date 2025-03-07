@@ -6,12 +6,12 @@ using reeltok.api.users.Interfaces.Repositories;
 
 namespace reeltok.api.users.Services
 {
-    public class LikeVideosService : ILikeVideosService
+    public class LikesService : ILikesService
     {
-        private readonly ILikeVideosRepository _likeVideoRepository;
+        private readonly ILikesRepository _likeVideoRepository;
         private readonly IUsersService _usersService;
 
-        public LikeVideosService(ILikeVideosRepository likeVideoRepository, IUsersService usersService)
+        public LikesService(ILikesRepository likeVideoRepository, IUsersService usersService)
         {
             _likeVideoRepository = likeVideoRepository;
             _usersService = usersService;

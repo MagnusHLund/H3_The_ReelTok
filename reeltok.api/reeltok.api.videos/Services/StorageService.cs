@@ -5,39 +5,38 @@ using reeltok.api.videos.Interfaces;
 
 namespace reeltok.api.videos.Services
 {
-    public class StorageService : BaseService, IStorageService
+    public class StorageService : IStorageService
     {
-        private const string HostnameConfig = "FileServer:Hostname";
-        private const string DirectoryConfig = "FileServer:Directory";
-        private const string UsernameConfig = "FileServer:Username";
-        private const string PasswordConfig = "FileServer:Password";
+        private readonly string _sftpHostname;
+        private readonly string _sftpDirectory;
+        private readonly string _sftpUsername;
+        private readonly string _sftpPassword;
 
-        private readonly AppSettingsUtils _appSettingsUtils;
         public StorageService(AppSettingsUtils appSettingsUtils)
         {
-            _appSettingsUtils = appSettingsUtils;
+            string baseFileServerAppSettingsConfig = "FileServer";
+
+            _sftpHostname = appSettingsUtils.GetConfigurationValue($"{baseFileServerAppSettingsConfig}:Hostname");
+            _sftpDirectory = appSettingsUtils.GetConfigurationValue($"{baseFileServerAppSettingsConfig}:Directory");
+            _sftpUsername = appSettingsUtils.GetConfigurationValue($"{baseFileServerAppSettingsConfig}:Username");
+            _sftpPassword = appSettingsUtils.GetConfigurationValue($"{baseFileServerAppSettingsConfig}:Password");
         }
 
         public async Task UploadVideoToFileServerAsync(IFormFile videoFile, Guid videoId, Guid userId)
         {
-            string sftpHostname = _appSettingsUtils.GetConfigurationValue(HostnameConfig);
-            string sftpDirectory = _appSettingsUtils.GetConfigurationValue(DirectoryConfig);
-            string sftpUsername = _appSettingsUtils.GetConfigurationValue(UsernameConfig);
-            string sftpPassword = _appSettingsUtils.GetConfigurationValue(PasswordConfig);
-
             string fileExtension = Path.GetExtension(videoFile.FileName).ToUpperInvariant();
-            string userDirectory = $"{sftpDirectory}/{userId}";
+            string userDirectory = $"{_sftpDirectory}/{userId}";
             string filePath = $"{userDirectory}/{videoId}{fileExtension}";
 
-            using (var sftpClient = new SftpClient(sftpHostname, sftpUsername, sftpPassword))
+            using (var sftpClient = new SftpClient(_sftpHostname, _sftpUsername, _sftpPassword))
             {
                 try
                 {
                     sftpClient.Connect();
 
-                    if (!sftpClient.Exists(userDirectory))
+                    if (!await sftpClient.ExistsAsync(userDirectory).ConfigureAwait(false))
                     {
-                        sftpClient.CreateDirectory(userDirectory);
+                        await sftpClient.CreateDirectoryAsync(userDirectory).ConfigureAwait(false);
                     }
 
                     using (Stream inStream = videoFile.OpenReadStream())
@@ -62,19 +61,14 @@ namespace reeltok.api.videos.Services
 
         public async Task RemoveVideoFromFileServerAsync(string streamPath)
         {
-            string sftpHostname = _appSettingsUtils.GetConfigurationValue(HostnameConfig);
-            string sftpDirectory = _appSettingsUtils.GetConfigurationValue(DirectoryConfig);
-            string sftpUsername = _appSettingsUtils.GetConfigurationValue(UsernameConfig);
-            string sftpPassword = _appSettingsUtils.GetConfigurationValue(PasswordConfig);
-
-            using (var sftpClient = new SftpClient(sftpHostname, sftpUsername, sftpPassword))
+            using (var sftpClient = new SftpClient(_sftpHostname, _sftpUsername, _sftpPassword))
             {
                 try
                 {
                     sftpClient.Connect();
-                    string fullPath = $"{sftpDirectory}/{streamPath}";
+                    string fullPath = $"{_sftpDirectory}/{streamPath}";
 
-                    if (!sftpClient.Exists(fullPath))
+                    if (!await sftpClient.ExistsAsync(fullPath).ConfigureAwait(false))
                     {
                         throw new FileNotFoundException("Video not found.");
                     }
@@ -91,29 +85,6 @@ namespace reeltok.api.videos.Services
                 {
                     throw new IOException("An error occurred while removing the video from the SFTP server!", ex);
                 }
-            }
-        }
-
-        public static async Task EnsureValidFileUploadAsync(IFormFile? video)
-        {
-            if (video == null)
-            {
-                throw new InvalidOperationException("No video file provided.");
-            }
-
-            if (!VideoUtils.IsValidFileExtension(video))
-            {
-                throw new InvalidOperationException("Invalid video file extension.");
-            }
-
-            if (!await VideoUtils.HasVideoStream(video).ConfigureAwait(false))
-            {
-                throw new InvalidOperationException("The video file does not contain a valid video stream.");
-            }
-
-            if (!await VideoUtils.IsVideoMinimumLength(video).ConfigureAwait(false))
-            {
-                throw new InvalidOperationException("The video file is too short.");
             }
         }
     }

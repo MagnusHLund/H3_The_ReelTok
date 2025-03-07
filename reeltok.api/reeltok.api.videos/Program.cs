@@ -1,4 +1,5 @@
-
+using Serilog;
+using Serilog.Events;
 using reeltok.api.videos.Data;
 using reeltok.api.videos.Utils;
 using reeltok.api.videos.Services;
@@ -14,6 +15,20 @@ namespace reeltok.api.videos
         public static void Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.File(
+                    "./Logs/log-.txt",
+                    rollingInterval: RollingInterval.Day,
+                    outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}"
+                )
+                .CreateLogger();
+
+            builder.Host.UseSerilog();
 
             // Add services to the container.
             builder.Services.AddScoped<IHttpService, HttpService>();
@@ -51,6 +66,20 @@ namespace reeltok.api.videos
             app.MapControllers();
 
             app.Run();
+
+            try
+            {
+                Log.Information("Starting up");
+                app.Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Application start-up failed");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
     }
 }

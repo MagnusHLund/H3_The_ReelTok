@@ -1,13 +1,16 @@
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs.LikeVideo
 {
-    [XmlRoot("AddLikeRequestDto")]
     public class ServiceAddLikeRequestDto
     {
-        [XmlElement("UserId")]
+        [Required]
+        [JsonProperty("UserId")]
         public Guid UserId { get; set; }
-        [XmlElement("VideoId")]
+
+        [Required]
+        [JsonProperty("VideoId")]
         public Guid VideoId { get; set; }
 
         public ServiceAddLikeRequestDto(Guid userId, Guid videoId)
@@ -15,7 +18,5 @@ namespace reeltok.api.videos.DTOs.LikeVideo
             UserId = userId;
             VideoId = videoId;
         }
-
-        public ServiceAddLikeRequestDto() {}
     }
 }

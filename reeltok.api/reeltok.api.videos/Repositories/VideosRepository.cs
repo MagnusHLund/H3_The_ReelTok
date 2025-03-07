@@ -13,6 +13,8 @@ namespace reeltok.api.videos.Repositories
             _context = context;
         }
 
+        // TODO: Add repository logic
+
         public async Task<VideoEntity> CreateVideoAsync(VideoEntity video)
         {
             VideoEntity videoEntity = (await _context.Videos.AddAsync(video).ConfigureAwait(false)).Entity;
@@ -21,22 +23,22 @@ namespace reeltok.api.videos.Repositories
             return videoEntity;
         }
 
-        public Task<VideoEntity> UpdateVideoStreamPathAsync(Guid videoId, string streamPath)
+        public async Task<VideoEntity> UpdateVideoStreamPathAsync(Guid videoId, string streamPath)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteVideoAsync(Guid userId, Guid videosId)
+        public async Task DeleteVideoAsync(Guid userId, Guid videosId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<VideoEntity>> GetVideosForFeedAsync(List<Guid> videoIds)
+        public async Task<List<VideoEntity>> GetVideosForFeedAsync(List<Guid> videoIds)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<VideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize)
+        public async Task<List<VideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize)
         {
             throw new NotImplementedException();
         }

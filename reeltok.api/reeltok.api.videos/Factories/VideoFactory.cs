@@ -18,11 +18,11 @@ namespace reeltok.api.videos.Factories
 
             VideoDetails videoDetails = new VideoDetails(
                 title: videoEntity.Title,
-                description: videoEntity.Description,
-                tag: videoEntity.Tag
+                description: videoEntity.Description
             );
 
-            UserDetails userDetails = new UserDetails(
+            UserEntity videoCreator = new UserEntity(
+                userId: videoCreatorDetails.UserId,
                 username: videoCreatorDetails.Username,
                 profileUrlPath: videoCreatorDetails.ProfileUrlPath,
                 profilePictureUrlPath: videoCreatorDetails.ProfilePictureUrlPath
@@ -32,8 +32,9 @@ namespace reeltok.api.videos.Factories
                 videoId: videoEntity.VideoId,
                 videoDetails: videoDetails,
                 videoLikes: videoLikes.VideoLikes,
-                videoCreatorUserDetails: userDetails,
-                streamPath: videoEntity.StreamPath
+                videoCreator: videoCreator,
+                streamPath: videoEntity.StreamPath,
+                uploadedAt: videoEntity.UploadedAt
             );
         }
 

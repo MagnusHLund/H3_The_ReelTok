@@ -1,13 +1,16 @@
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs
 {
-    [XmlRoot("GetVideosForFeedRequestDto")]
     public class GetVideosForFeedRequestDto
     {
-        [XmlElement("UserId")]
+        [Required]
+        [JsonProperty("UserId")]
         public Guid UserId { get; set; }
-        [XmlElement("Amount")]
+
+        [Required]
+        [JsonProperty("Amount")]
         public byte Amount { get; set; }
 
         public GetVideosForFeedRequestDto(Guid userId, byte amount)

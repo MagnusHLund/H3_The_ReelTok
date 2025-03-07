@@ -1,14 +1,16 @@
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs.RemoveLike
 {
-
-    [XmlRoot("RemoveLikeRequestDto")]
     public class ServiceRemoveLikeRequestDto
     {
-        [XmlElement("UserId")]
+        [Required]
+        [JsonProperty("UserId")]
         public Guid UserId { get; set; }
-        [XmlElement("VideoId")]
+
+        [Required]
+        [JsonProperty("VideoId")]
         public Guid VideoId { get; set; }
 
         public ServiceRemoveLikeRequestDto(Guid userId, Guid videoId)
@@ -16,7 +18,5 @@ namespace reeltok.api.videos.DTOs.RemoveLike
             UserId = userId;
             VideoId = videoId;
         }
-
-        public ServiceRemoveLikeRequestDto() { }
     }
 }

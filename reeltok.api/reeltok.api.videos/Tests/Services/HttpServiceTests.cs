@@ -4,10 +4,10 @@ using System.Net;
 using Moq.Protected;
 using reeltok.api.videos.DTOs;
 using reeltok.api.videos.Services;
-using reeltok.api.videos.Factories;
 using reeltok.api.videos.DTOs.LikeVideo;
+using reeltok.api.videos.Tests.Factories;
 
-namespace reeltok.api.videos.Tests
+namespace reeltok.api.videos.Tests.Services
 {
     public class HttpServiceTests
     {
@@ -28,7 +28,7 @@ namespace reeltok.api.videos.Tests
             // Arrange
             ServiceAddLikeRequestDto requestDto = TestDataFactory.CreateAddLikeRequest();
             Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("addLike");
-            string responseContent = "<AddLikeResponseDto><Success>true</Success></AddLikeResponseDto>";
+            string responseContent = "{\"Success\":true}";
             HttpResponseMessage expectedResponse = TestDataFactory.CreateHttpResponseMessage(HttpStatusCode.OK, responseContent);
 
             _mockHttpMessageHandler.Protected()
@@ -47,15 +47,15 @@ namespace reeltok.api.videos.Tests
             Assert.NotNull(logOutResponse);
         }
 
-
         [Fact]
         public async Task ProcessRequestAsync_WithInvalidRequest_ReturnsErrorResponse()
         {
             // Arrange
             ServiceAddLikeRequestDto requestDto = TestDataFactory.CreateAddLikeRequest();
             Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("addLike");
-            string responseContent = "<FailureResponseDto><Success>false</Success><Message>Test message</Message></FailureResponseDto>";
-            HttpResponseMessage expectedResponse = TestDataFactory.CreateHttpResponseMessage(HttpStatusCode.BadRequest, responseContent);
+            string responseContent = "{\"Success\":false,\"Message\":\"Test message\"}";
+            HttpResponseMessage expectedResponse = TestDataFactory.CreateHttpResponseMessage(
+                HttpStatusCode.BadRequest, responseContent);
 
             _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>(

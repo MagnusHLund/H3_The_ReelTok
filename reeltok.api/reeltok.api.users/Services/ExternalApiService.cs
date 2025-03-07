@@ -1,21 +1,21 @@
 using reeltok.api.users.DTOs;
 using reeltok.api.users.Exceptions;
+using reeltok.api.users.DTOs.Login;
 using reeltok.api.users.DTOs.CreateUser;
 using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.Interfaces.Factories;
-using reeltok.api.users.DTOs.Login;
 
 namespace reeltok.api.users.Services
 {
     public class ExternalApiService : IExternalApiService
     {
         private readonly IHttpService _httpService;
-        private readonly IExternalApiFactory _externalApiFactory;
+        private readonly IEndpointFactory _endpointFactory;
 
-        public ExternalApiService(IHttpService httpService, IExternalApiFactory externalApiFactory)
+        public ExternalApiService(IHttpService httpService, IEndpointFactory endpointFactory)
         {
             _httpService = httpService;
-            _externalApiFactory = externalApiFactory;
+            _endpointFactory = endpointFactory;
         }
 
         public async Task CreateUserInAuthApiAsync(Guid userId, string password)
@@ -24,7 +24,7 @@ namespace reeltok.api.users.Services
             return;
 
             AuthServiceCreateUserRequestDto requestDto = new AuthServiceCreateUserRequestDto(userId, password);
-            Uri targetUrl = _externalApiFactory.GetAuthApiUrl();
+            Uri targetUrl = _endpointFactory.GetAuthApiUrl(""); // TODO: @MagnusHLund correct the endpoint
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<AuthServiceCreateUserRequestDto, AuthServiceCreateUserResponseDto>(
                 requestDto, targetUrl, HttpMethod.Post)
@@ -44,7 +44,7 @@ namespace reeltok.api.users.Services
             return;
 
             RecommendationsServiceCreateUserRequestDto requestDto = new RecommendationsServiceCreateUserRequestDto(userId, userInterests);
-            Uri targetUrl = _externalApiFactory.GetRecommendationsApiUrl();
+            Uri targetUrl = _endpointFactory.GetRecommendationsApiUrl(""); // TODO: @MagnusHLund correct the endpoint
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<RecommendationsServiceCreateUserRequestDto, RecommendationsServiceCreateUserResponseDto>(
                 requestDto, targetUrl, HttpMethod.Post)
@@ -64,7 +64,7 @@ namespace reeltok.api.users.Services
             return;
 
             AuthServiceLoginRequestDto requestDto = new AuthServiceLoginRequestDto(userId, password);
-            Uri targetUrl = _externalApiFactory.GetAuthApiUrl();
+            Uri targetUrl = _endpointFactory.GetAuthApiUrl(""); // TODO: @MagnusHLund correct the endpoint
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<AuthServiceLoginRequestDto, AuthServiceLoginResponseDto>(
                 requestDto, targetUrl, HttpMethod.Post)

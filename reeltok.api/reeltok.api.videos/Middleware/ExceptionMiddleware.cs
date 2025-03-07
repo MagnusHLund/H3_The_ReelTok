@@ -1,6 +1,7 @@
 using System.Net;
+using System.Text.Json;
 using reeltok.api.videos.DTOs;
-using System.Xml.Serialization;
+using reeltok.api.videos.Mappers;
 
 namespace reeltok.api.videos.Middleware
 {
@@ -19,29 +20,27 @@ namespace reeltok.api.videos.Middleware
         {
             try
             {
-                await _next(context);
+                await _next(context).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"An exception has occurred: {ex}");
-                await HandleExceptionAsync(context).ConfigureAwait(false);
+                string logMessage = ExceptionMessageMapper.GetLogMessage(ex);
+                var (responseMessage, statusCode) = ExceptionMessageMapper.GetExceptionDetails(ex);
+
+                _logger.LogError(ex, "An exception has occurred: {0}", logMessage);
+                await HandleExceptionAsync(context, responseMessage, statusCode).ConfigureAwait(false);
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context)
+        private static Task HandleExceptionAsync(HttpContext context, string responseMessage, HttpStatusCode statusCode)
         {
-            context.Response.ContentType = "application/xml";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)statusCode;
 
-            FailureResponseDto response = new FailureResponseDto("public server error!");
+            FailureResponseDto response = new FailureResponseDto(responseMessage);
 
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(FailureResponseDto));
-            using (StringWriter stringWriter = new StringWriter())
-            {
-                xmlSerializer.Serialize(stringWriter, response);
-                string responseXml = stringWriter.ToString();
-                return context.Response.WriteAsync(responseXml);
-            }
+            string responseJson = JsonSerializer.Serialize(response);
+            return context.Response.WriteAsync(responseJson);
         }
     }
 }

@@ -1,30 +1,31 @@
-using reeltok.api.videos.DTOs;
 using reeltok.api.videos.Utils;
 using reeltok.api.videos.Mappers;
 using reeltok.api.videos.Entities;
 using reeltok.api.videos.Factories;
 using reeltok.api.videos.Interfaces;
 using reeltok.api.videos.ValueObjects;
-using reeltok.api.videos.DTOs.GetRecommendedVideos;
-using reeltok.api.videos.DTOs.GetUserDetailsForVideo;
+using reeltok.api.videos.Interfaces.Services;
 
 namespace reeltok.api.videos.Services
 {
-    public class VideosService : BaseService, IVideosService
+    public class VideosService : IVideosService
     {
-        private const string RecommendationsMicroServiceBaseUrl = "http://localhost:5004/api/recommendations";
-        private const string UsersMicroServiceBaseUrl = "http://localhost:5001/api/users";
+        private readonly IExternalApiService _externalApiService;
         private readonly IVideosRepository _videosRepository;
         private readonly IStorageService _storageService;
         private readonly ILikesService _likesService;
-        private readonly IHttpService _httpService;
 
-        public VideosService(IVideosRepository videosRepository, IStorageService storageService, ILikesService likesService, IHttpService httpService)
+        public VideosService(
+            IExternalApiService externalApiService,
+            IVideosRepository videosRepository,
+            IStorageService storageService,
+            ILikesService likesService
+            )
         {
+            _externalApiService = externalApiService;
             _videosRepository = videosRepository;
             _storageService = storageService;
             _likesService = likesService;
-            _httpService = httpService;
         }
 
         public async Task DeleteVideoAsync(Guid userId, Guid videoId)
@@ -37,10 +38,10 @@ namespace reeltok.api.videos.Services
 
         public async Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(Guid userId, byte amount)
         {
-            List<Guid> videoIds = await GetRecommendedVideoIdsAsync(userId, amount).ConfigureAwait(false);
+            List<Guid> videoIds = await _externalApiService.GetRecommendedVideoIdsAsync(userId, amount).ConfigureAwait(false);
             List<VideoEntity> videos = await _videosRepository.GetVideosForFeedAsync(videoIds).ConfigureAwait(false);
 
-            List<VideoCreatorEntity> videoCreatorDetails = await GetVideoCreatorDetailsAsync(videoIds)
+            List<VideoCreatorEntity> videoCreatorDetails = await _externalApiService.GetVideoCreatorDetailsAsync(videoIds)
                 .ConfigureAwait(false);
 
             List<VideoLikesEntity> videoLikes = await _likesService.GetLikesForVideos(userId, videoIds).ConfigureAwait(false);
@@ -67,7 +68,7 @@ namespace reeltok.api.videos.Services
 
         public async Task<VideoEntity> UploadVideoAsync(VideoUpload video, Guid userId)
         {
-            await StorageService.EnsureValidFileUploadAsync(video.VideoFile).ConfigureAwait(false);
+            await VideoUtils.EnsureValidVideoFile(video.VideoFile).ConfigureAwait(false);
 
             VideoEntity videoToUpload = VideoMapper.ConvertVideoUploadToVideoEntity(video, userId);
             VideoEntity videoEntity = await _videosRepository.CreateVideoAsync(videoToUpload).ConfigureAwait(false);
@@ -79,41 +80,6 @@ namespace reeltok.api.videos.Services
                 .ConfigureAwait(false);
 
             return videoEntity;
-        }
-
-        private async Task<List<Guid>> GetRecommendedVideoIdsAsync(Guid userId, byte amount)
-        {
-            ServiceGetRecommendedVideosRequestDto requestDto = new ServiceGetRecommendedVideosRequestDto(userId, amount);
-            Uri targetUrl = new Uri($"{RecommendationsMicroServiceBaseUrl}/getRecommendations");
-
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetRecommendedVideosRequestDto, ServiceGetRecommendedVideosResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
-
-            if (response.Success && response is ServiceGetRecommendedVideosResponseDto responseDto)
-            {
-                if (responseDto?.VideoIdList?.Count > 0)
-                {
-                    return responseDto.VideoIdList;
-                }
-
-                throw new InvalidOperationException("No videos to return!");
-            }
-
-            throw HandleNetworkResponseExceptions(response);
-        }
-
-        private async Task<List<VideoCreatorEntity>> GetVideoCreatorDetailsAsync(List<Guid> videoIds)
-        {
-            ServiceGetUserDetailsForVideoRequestDto requestDto = new ServiceGetUserDetailsForVideoRequestDto(videoIds);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/getUserDetails");
-
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetUserDetailsForVideoRequestDto, ServiceGetUserDetailsForVideoResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
-
-            if (response.Success && response is ServiceGetUserDetailsForVideoResponseDto responseDto)
-            {
-                return responseDto.VideoCreatorDetailsList;
-            }
-
-            throw HandleNetworkResponseExceptions(response);
         }
     }
 }

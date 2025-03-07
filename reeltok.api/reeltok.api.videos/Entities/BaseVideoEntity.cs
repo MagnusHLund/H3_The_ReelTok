@@ -1,12 +1,15 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace reeltok.api.videos.Entities
 {
-    public class ProfileVideoEntity
+    public class BaseVideoEntity
     {
+        [Key]
         public Guid VideoId { get; set; }
         public string StreamPath { get; set; }
         public uint UploadedAt { get; set; }
 
-        public ProfileVideoEntity(Guid videoId, string streamPath, uint uploadedAt)
+        public BaseVideoEntity(Guid videoId, string streamPath, uint uploadedAt)
         {
             VideoId = videoId;
             StreamPath = streamPath;

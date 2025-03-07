@@ -4,10 +4,27 @@ namespace reeltok.api.videos.Utils
 {
     public static class VideoUtils
     {
-        public static Uri GetStreamUrl(string streamPath)
+        public static async Task EnsureValidVideoFile(IFormFile video)
         {
-            string baseStreamUrl = "http://localhost:5006";
-            return new Uri($"{baseStreamUrl}/{streamPath}");
+            if (video == null || video.Length == 0)
+            {
+                throw new InvalidOperationException("No video file provided.");
+            }
+
+            if (!IsValidFileExtension(video))
+            {
+                throw new InvalidOperationException("Invalid video file extension.");
+            }
+
+            if (!await HasVideoStream(video).ConfigureAwait(false))
+            {
+                throw new InvalidOperationException("The video file does not contain a valid video stream.");
+            }
+
+            if (!await IsVideoMinimumLength(video).ConfigureAwait(false))
+            {
+                throw new InvalidOperationException("The video file is too short.");
+            }
         }
 
         public static string CreateStreamPath(Guid userId, Guid videoId)
@@ -15,30 +32,26 @@ namespace reeltok.api.videos.Utils
             return $"{userId}/{videoId}";
         }
 
-        // Public method to validate video length
-        public static async Task<bool> IsVideoMinimumLength(IFormFile video)
+        private static async Task<bool> IsVideoMinimumLength(IFormFile video)
         {
             var mediaInfo = await GetMediaInfoAsync(video).ConfigureAwait(false);
             TimeSpan minimumDuration = TimeSpan.FromSeconds(1);
             return mediaInfo.Duration >= minimumDuration;
         }
 
-        // Public method to validate file extension
-        public static bool IsValidFileExtension(IFormFile video)
+        private static bool IsValidFileExtension(IFormFile video)
         {
             string[] allowedFileExtensions = { ".MP4", ".MKV", ".MOV" };
             string fileExtension = Path.GetExtension(video.FileName).ToUpperInvariant();
             return allowedFileExtensions.Contains(fileExtension);
         }
 
-        // Public method to check if the file has a video stream
-        public static async Task<bool> HasVideoStream(IFormFile video)
+        private static async Task<bool> HasVideoStream(IFormFile video)
         {
             var mediaInfo = await GetMediaInfoAsync(video).ConfigureAwait(false);
             return mediaInfo.VideoStreams.Count() > 0;
         }
 
-        // Private helper method to get MediaInfo object
         private static async Task<IMediaInfo> GetMediaInfoAsync(IFormFile video)
         {
             string temporaryFilePath = Path.GetTempFileName();

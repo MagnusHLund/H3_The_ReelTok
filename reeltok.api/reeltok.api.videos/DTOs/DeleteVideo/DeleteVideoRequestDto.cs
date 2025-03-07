@@ -1,13 +1,16 @@
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs
 {
-    [XmlRoot("DeleteVideoRequestDto")]
     public class DeleteVideoRequestDto
     {
-        [XmlElement("UserId")]
+        [Required]
+        [JsonProperty("UserId")]
         public Guid UserId { get; set; }
-        [XmlElement("VideoId")]
+
+        [Required]
+        [JsonProperty("VideoId")]
         public Guid VideoId { get; set; }
 
         public DeleteVideoRequestDto(Guid userId, Guid videoId)
