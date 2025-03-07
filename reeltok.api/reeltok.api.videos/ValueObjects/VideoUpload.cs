@@ -1,13 +1,16 @@
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.ValueObjects
 {
-    [XmlRoot("VideoUpload")]
     public class VideoUpload
     {
-        [XmlElement("VideoDetails")]
+        [Required]
+        [JsonProperty("VideoDetails")]
         public VideoDetails VideoDetails { get; }
-        [XmlElement("VideoFile")]
+
+        [Required]
+        [JsonProperty("VideoFile")]
         public IFormFile VideoFile { get; }
 
         public VideoUpload(VideoDetails videoDetails, IFormFile videoFile)

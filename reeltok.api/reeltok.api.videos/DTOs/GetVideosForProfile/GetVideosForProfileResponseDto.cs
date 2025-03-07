@@ -1,12 +1,16 @@
+using Newtonsoft.Json;
 using reeltok.api.videos.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs.GetVideosForProfile
 {
     public class GetVideosForProfileResponseDto
     {
-        public List<ProfileVideoEntity> ProfileVideos { get; set; }
+        [Required]
+        [JsonProperty("Videos")]
+        public List<BaseVideoEntity> ProfileVideos { get; set; }
 
-        public GetVideosForProfileResponseDto(List<ProfileVideoEntity> profileVideos)
+        public GetVideosForProfileResponseDto(List<BaseVideoEntity> profileVideos)
         {
             ProfileVideos = profileVideos;
         }

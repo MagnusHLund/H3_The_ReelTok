@@ -5,7 +5,7 @@ namespace reeltok.api.users.Mappers
 {
     internal static class SubscriptionMapper
     {
-        internal static SubscriptionDetails ToSubscriptionFromCreateDTO(SubscribeRequestDto requestDto)
+        internal static SubscriptionDetails ConvertSubscribeRequestDtoToSubscriptionDetails(SubscribeRequestDto requestDto)
         {
             return new SubscriptionDetails(
                 requestDto.UserId,

@@ -1,23 +1,22 @@
-using System.Xml.Serialization;
-using reeltok.api.videos.Enums;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.ValueObjects
 {
-    [XmlRoot("VideoDetails")]
     public class VideoDetails
     {
-        [XmlElement("Title")]
+        [Required]
+        [JsonProperty("Title")]
         public string Title { get; }
-        [XmlElement("Description")]
-        public string Description { get; }
-        [XmlElement("RecommendedCategories")]
-        public RecommendedCategories Tag { get; }
 
-        public VideoDetails(string title, string description, RecommendedCategories tag)
+        [Required]
+        [JsonProperty("Description")]
+        public string Description { get; }
+
+        public VideoDetails(string title, string description)
         {
             Title = title;
             Description = description;
-            Tag = tag;
         }
     }
 }

@@ -2,28 +2,26 @@ using reeltok.api.videos.ValueObjects;
 
 namespace reeltok.api.videos.Entities
 {
-    public class VideoForFeedEntity
+    public class VideoForFeedEntity : BaseVideoEntity
     {
-        public Guid VideoId { get; set; }
         public VideoDetails VideoDetails { get; set; }
         public VideoLikes VideoLikes { get; set; }
-        public UserDetails VideoCreatorUserDetails { get; set; }
-        public string StreamPath { get; set; }
+        public UserEntity VideoCreator { get; set; }
 
         public VideoForFeedEntity(
             Guid videoId,
             VideoDetails videoDetails,
             VideoLikes videoLikes,
-            UserDetails videoCreatorUserDetails,
-            string streamPath)
+            UserEntity videoCreator,
+            string streamPath,
+            uint uploadedAt
+            ) : base(videoId, streamPath, uploadedAt)
         {
             VideoId = videoId;
             VideoDetails = videoDetails;
             VideoLikes = videoLikes;
-            VideoCreatorUserDetails = videoCreatorUserDetails;
+            VideoCreator = videoCreator;
             StreamPath = streamPath;
         }
-
-        public VideoForFeedEntity() { }
     }
 }

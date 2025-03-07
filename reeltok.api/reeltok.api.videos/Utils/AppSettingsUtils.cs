@@ -2,12 +2,12 @@ namespace reeltok.api.videos.Utils
 {
     public class AppSettingsUtils
     {
-        private static IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
         // This is a singleton class
         public AppSettingsUtils(IConfiguration configuration)
         {
-            _configuration = configuration;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         internal string GetConfigurationValue(string key)

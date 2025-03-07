@@ -5,11 +5,11 @@ using reeltok.api.users.Interfaces.Repositories;
 
 namespace reeltok.api.users.Repositories
 {
-    public class LikeVideosRepository : ILikeVideosRepository
+    public class LikesRepository : ILikesRepository
     {
         private readonly UserDbContext _context;
 
-        public LikeVideosRepository(UserDbContext context)
+        public LikesRepository(UserDbContext context)
         {
             _context = context;
         }

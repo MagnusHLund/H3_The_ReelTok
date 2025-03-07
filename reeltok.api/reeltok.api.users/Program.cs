@@ -37,13 +37,13 @@ namespace UsersServiceApi
             // Add services to the container
             builder.Services.AddScoped<IUsersService, UsersService>();
             builder.Services.AddScoped<ILoginService, LoginService>();
+            builder.Services.AddScoped<ILikesService, LikesService>();
             builder.Services.AddScoped<IStorageService, StorageService>();
             builder.Services.AddScoped<IUsersRepository, UsersRepository>();
-            builder.Services.AddScoped<ILikeVideosService, LikeVideosService>();
-            builder.Services.AddScoped<IExternalApiFactory, ExternalApiFactory>();
+            builder.Services.AddScoped<ILikesRepository, LikesRepository>();
+            builder.Services.AddScoped<IEndpointFactory, EndpointFactory>();
             builder.Services.AddScoped<IExternalApiService, ExternalApiService>();
             builder.Services.AddScoped<ISubscriptionsService, SubscriptionsService>();
-            builder.Services.AddScoped<ILikeVideosRepository, LikeVideosRepository>();
             builder.Services.AddScoped<ISubscriptionsRepository, SubscriptionsRepository>();
 
             builder.Services.AddDbContextFactory<UserDbContext>(options =>

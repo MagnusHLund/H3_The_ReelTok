@@ -27,7 +27,7 @@ namespace reeltok.api.users.Controllers
         [HttpPost("subscribe")]
         public async Task<IActionResult> SubscribeToUserAsync([FromBody] SubscribeRequestDto request)
         {
-            SubscriptionDetails subscriptionDetails = SubscriptionMapper.ToSubscriptionFromCreateDTO(request);
+            SubscriptionDetails subscriptionDetails = SubscriptionMapper.ConvertSubscribeRequestDtoToSubscriptionDetails(request);
 
             bool success = await _subscriptionService.SubscribeAsync(subscriptionDetails).ConfigureAwait(false);
 

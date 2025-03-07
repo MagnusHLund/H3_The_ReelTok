@@ -5,6 +5,7 @@ using reeltok.api.users.ActionFilters;
 using reeltok.api.users.DTOs.LikeVideo;
 using reeltok.api.users.DTOs.RemoveLike;
 using reeltok.api.users.Interfaces.Services;
+using reeltok.api.users.DTOs.GetHasLikedVideoAsync;
 
 namespace reeltok.api.users.Controllers
 {
@@ -12,20 +13,32 @@ namespace reeltok.api.users.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Consumes("application/json")]
-    public class LikeVideosController : ControllerBase
+    public class LikesController : ControllerBase
     {
-        private readonly ILikeVideosService _likeVideoService;
+        // TODO: Overall, add JsonProperty names to the DTOs. Do not use typeof! Look at video api for "inspiration".  
 
-        public LikeVideosController(ILikeVideosService likeVideoService)
+        private readonly ILikesService _likeVideoService;
+
+        public LikesController(ILikesService likeVideoService)
         {
             _likeVideoService = likeVideoService;
         }
 
         // Called from Video API
-        [HttpPost("like")]
+        [HttpGet]
+        public async Task<IActionResult> GetHasUserLikedVideosAsync([FromQuery] Guid userId, [FromQuery] List<Guid> videoIds)
+        {
+            // TODO: Implement this! Follow the same code style, as elsewhere in the codebase.
+
+            //HasUserLikedVideosResponseDto response = new HasUserLikedVideosResponseDto();
+            return Ok(/* response */);
+        }
+
+        // Called from Video API
+        [HttpPost]
         public async Task<IActionResult> AddLikeToVideoAsync([FromBody] LikeVideoRequestDto request)
         {
-            LikedDetails likedDetails = LikeVideoMapper.ToLikeVideoFromCreateDTO(request);
+            LikedDetails likedDetails = LikesMapper.ConvertLikeVideoRequestDtoToLikedDetails(request);
 
             bool success = await _likeVideoService.AddToLikedVideosAsync(likedDetails)
                 .ConfigureAwait(false);
@@ -35,7 +48,7 @@ namespace reeltok.api.users.Controllers
         }
 
         // Called from Video API
-        [HttpDelete("like")]
+        [HttpDelete]
         public async Task<IActionResult> RemoveLikeFromVideoAsync([FromQuery] Guid videoId, [FromQuery] Guid userId)
         {
             LikedDetails likeVideo = new LikedDetails(userId, videoId);

@@ -1,12 +1,13 @@
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using reeltok.api.videos.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs.GetVideosForFeed
 {
-    [XmlRoot("GetVideosForFeedResponseDto")]
     public class GetVideosForFeedResponseDto : BaseResponseDto
     {
-        [XmlElement("Videos")]
+        [Required]
+        [JsonProperty("Videos")]
         public List<VideoForFeedEntity> Videos { get; set; }
 
         public GetVideosForFeedResponseDto(List<VideoForFeedEntity> videos, bool success = true) : base(success)

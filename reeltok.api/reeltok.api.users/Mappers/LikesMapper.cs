@@ -3,9 +3,9 @@ using reeltok.api.users.DTOs.LikeVideo;
 
 namespace reeltok.api.users.Mappers
 {
-    internal static class LikeVideoMapper
+    internal static class LikesMapper
     {
-        internal static LikedDetails ToLikeVideoFromCreateDTO(LikeVideoRequestDto requestDto)
+        internal static LikedDetails ConvertLikeVideoRequestDtoToLikedDetails(LikeVideoRequestDto requestDto)
         {
             return new LikedDetails(
                 userId: requestDto.UserId,

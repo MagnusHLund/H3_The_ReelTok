@@ -1,16 +1,18 @@
+using Newtonsoft.Json;
 using reeltok.api.videos.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs.GetUserDetailsForVideo
 {
     public class ServiceGetUserDetailsForVideoResponseDto : BaseResponseDto
     {
-        public List<VideoCreatorEntity> VideoCreatorDetailsList { get; set; }
+        [Required]
+        [JsonProperty("VideoCreator")]
+        public List<VideoCreatorEntity> VideoCreators { get; set; }
 
-        public ServiceGetUserDetailsForVideoResponseDto(List<VideoCreatorEntity> videoCreatorDetailsList, bool success) : base(success)
+        public ServiceGetUserDetailsForVideoResponseDto(List<VideoCreatorEntity> videoCreators, bool success) : base(success)
         {
-            VideoCreatorDetailsList = videoCreatorDetailsList;
+            VideoCreators = videoCreators;
         }
-
-        public ServiceGetUserDetailsForVideoResponseDto() { }
     }
 }
