@@ -20,7 +20,6 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpPost]
-        [Route("add")]
         public async Task<IActionResult> AddComment([FromBody] GatewayAddCommentRequestDto request)
         {
 
