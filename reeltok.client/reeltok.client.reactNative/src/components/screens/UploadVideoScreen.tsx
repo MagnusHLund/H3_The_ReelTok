@@ -1,6 +1,6 @@
 import React from 'react'
-import UploadVideo from '../Layout/common/UploadVideo'
-import Header from '../Layout/common/Header'
+import UploadVideo from '../layout/common/UploadVideo'
+import Header from '../layout/common/Header'
 
 const UploadVideoScreen = () => {
   return (

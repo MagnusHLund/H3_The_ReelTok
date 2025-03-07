@@ -12,7 +12,7 @@ interface VideoListWebProps {
   handleViewableItemsChanged: (info: {
     viewableItems: ViewToken<Video>[]
     changed: ViewToken<Video>[]
-  }) => void  
+  }) => void
   style?: object
 }
 
@@ -41,11 +41,11 @@ const VideoListWeb: React.FC<VideoListWebProps> = ({
       snapToAlignment="center"
       onViewableItemsChanged={handleViewableItemsChanged}
       viewabilityConfig={viewabilityConfig}
-      getItemLayout={(_, index) => ({
-          length: contentHeight,
-          offset: contentHeight * index,
-          index,
-        })}
+      getItemlayout={(_, index) => ({
+        length: contentHeight,
+        offset: contentHeight * index,
+        index,
+      })}
     />
   )
 }
