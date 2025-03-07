@@ -9,7 +9,7 @@ using reeltok.api.recommendations.ValueObjects;
 namespace reeltok.api.recommendations.Controllers
 {
     [ApiController]
-    [Route("api/Video recommendations")]
+    [Route("api/video-recommendations")]
     public class VideoRecommendationsController : ControllerBase
     {
         private readonly IVideoRecommendationService _videoRecommendationService;
@@ -19,7 +19,7 @@ namespace reeltok.api.recommendations.Controllers
             _videoRecommendationService = videoRecommendationService;
         }
 
-        [HttpPost("Add video recommendation")]
+        [HttpPost("add")]
         public async Task<IActionResult> AddVideoRecommendationAsync([FromBody] CreateVideoInterestDto dto)
         {
             VideoCategoryDetails videoCategoryDetails = VideoRecommendationMapper.ToVideoCategoryDetailsFromDTO(dto);
@@ -36,7 +36,7 @@ namespace reeltok.api.recommendations.Controllers
             return Ok(isAdded);
         }
 
-        [HttpGet("Get video recommendation")]
+        [HttpGet("recommendation")]
         public async Task<IActionResult> GetVideoRecommendationAsync([FromQuery] Guid videoId)
         {
             VideoCategoryEntity? videoCategory = await _videoRecommendationService. GetVideoCategoryAsync(videoId);

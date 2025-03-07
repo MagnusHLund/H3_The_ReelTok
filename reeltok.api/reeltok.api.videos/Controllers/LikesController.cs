@@ -19,7 +19,7 @@ namespace reeltok.api.videos.Controllers
         }
 
         [HttpPost]
-        [Route("AddLike")]
+        [Route("like")]
         public async Task<IActionResult> LikeVideoAsync([FromBody] AddLikeRequestDto request)
         {
             bool success = await _likesService.LikeVideoAsync(request.UserId, request.VideoId).ConfigureAwait(false);
@@ -35,7 +35,7 @@ namespace reeltok.api.videos.Controllers
         }
 
         [HttpPost]
-        [Route("RemoveLike")]
+        [Route("remove-like")]
         public async Task<IActionResult> RemoveLikeFromVideoAsync([FromBody] RemoveLikeRequestDto request)
         {
             bool success = await _likesService.LikeVideoAsync(request.UserId, request.VideoId).ConfigureAwait(false);

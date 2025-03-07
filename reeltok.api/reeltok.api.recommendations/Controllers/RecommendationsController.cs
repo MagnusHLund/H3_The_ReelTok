@@ -6,7 +6,7 @@ using reeltok.api.recommendations.Interfaces.Services;
 namespace reeltok.api.recommendations.RecommendationsServiceApi.Api.Controllers
 {
     [ApiController]
-    [Route("api/recommendations")]
+    [Route("api/[controller]")]
     public class RecommendationsController : ControllerBase
     {
         private readonly IRecommendationsService _recommendationsService;
@@ -16,7 +16,7 @@ namespace reeltok.api.recommendations.RecommendationsServiceApi.Api.Controllers
             _recommendationsService = recommendationsService;
         }
 
-        [HttpGet("GetRecommendations")]
+        [HttpGet]
         public async Task<IActionResult> GetRecommendation()
         {
             List<string> recommendations = await _recommendationsService.GetAllCategoriesAsync()
@@ -26,7 +26,7 @@ namespace reeltok.api.recommendations.RecommendationsServiceApi.Api.Controllers
             return Ok(new GetRecommendationResponseDto(recommendations, success));
         }
 
-        [HttpGet("GetTopVideoByUserInterest")]
+        [HttpGet("top-videos-by-user-interest")]
         public async Task<IActionResult> GetTopVideoByUserInterest([FromQuery] Guid userId, [FromQuery] int amount)
         {
 

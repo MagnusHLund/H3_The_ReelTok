@@ -5,12 +5,11 @@ using reeltok.api.recommendations.Mappers;
 using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.ValueObjects;
 using reeltok.api.recommendations.Interfaces.Services;
-using reeltok.api.recommendations.Enums;
 
 namespace reeltok.api.recommendations.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/user-recommendations")]
     public class UserRecommendationsController : ControllerBase
     {
         private readonly IUserRecommendationService _userRecommendationService;
@@ -20,7 +19,7 @@ namespace reeltok.api.recommendations.Controllers
             _userRecommendationService = userRecommendationService;
         }
 
-        [HttpPost("Add user recommendation")]
+        [HttpPost("add")]
         public async Task<IActionResult> AddUserRecommendationAsync([FromBody] CreateUserInterestDto dto)
         {
             UserInterestDetails userInterestDetails = UserRecommendationMapper.ToUserInterestDetailsFromDTO(dto);
@@ -37,7 +36,7 @@ namespace reeltok.api.recommendations.Controllers
             return Ok(isAdded);
         }
 
-        [HttpGet("Get user recommendation")]
+        [HttpGet("user-recommendation")]
         public async Task<IActionResult> GetUserRecommendationAsync([FromQuery] Guid userId)
         {
             UserInterestEntity? userInterest = await _userRecommendationService.GetUserInterestAsync(userId);
@@ -59,7 +58,7 @@ namespace reeltok.api.recommendations.Controllers
             return Ok(userInterestDto);
         }
 
-        [HttpPut("Update user recommendation")]
+        [HttpPut("update")]
         public async Task<IActionResult> UpdateUserRecommendationAsync(UpdateUserInterestDto dto)
         {
             bool isUpdated = await _userRecommendationService.UpdateRecommendationForUserAsync
