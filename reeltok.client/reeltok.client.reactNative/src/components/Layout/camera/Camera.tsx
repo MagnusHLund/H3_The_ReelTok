@@ -1,42 +1,42 @@
-import { UploadedVideo as UploadedVideoType } from '../../../redux/slices/uploadSlice';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-import { setUploadedVideoThunk } from '../../../redux/thunks/uploadThunks';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import useAppDimensions from '../../../hooks/useAppDimensions';
-import useAppDispatch from '../../../hooks/useAppDispatch';
-import { useNavigation } from '@react-navigation/native';
-import { useState, useRef, useEffect } from 'react';
-import useAppNavigation from '../../../hooks/useAppNavigation';
-import CameraViewComponent from './CameraViewComponent';
-import CameraControls from './CameraControls';
-import CapturedContent from './CapturedContent';
-import CloseButton from './CloseButton';
+import { UploadedVideo as UploadedVideoType } from '../../../redux/slices/uploadSlice'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { CameraView, CameraType, useCameraPermissions } from 'expo-camera'
+import { setUploadedVideoThunk } from '../../../redux/thunks/uploadThunks'
+import { Button, StyleSheet, Text, View } from 'react-native'
+import useAppDimensions from '../../../hooks/useAppDimensions'
+import useAppDispatch from '../../../hooks/useAppDispatch'
+import { useNavigation } from '@react-navigation/native'
+import { useState, useRef, useEffect } from 'react'
+import useAppNavigation from '../../../hooks/useAppNavigation'
+import CameraViewComponent from './CameraViewComponent'
+import CameraControls from './CameraControls'
+import CapturedContent from './CapturedContent'
+import CloseButton from './CloseButton'
 
 interface CameraProps {
-  cameraMode: 'picture' | 'video';
-  onClose: () => void;
+  cameraMode: 'picture' | 'video'
+  onClose: () => void
 }
 
 export const Camera: React.FC<CameraProps> = ({ cameraMode, onClose }) => {
-  const ref = useRef<CameraView>(null);
-  const [uri, setUri] = useState<UploadedVideoType>({ fileUri: '' });
-  const [facing, setFacing] = useState<CameraType>('back');
-  const [permission, requestPermission] = useCameraPermissions();
-  const [recording, setRecording] = useState<boolean>(false);
-  const { contentHeight, fullHeight, fullWidth } = useAppDimensions();
-  const navigateToScreen = useAppNavigation();
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
-  const dispatch = useAppDispatch();
+  const ref = useRef<CameraView>(null)
+  const [uri, setUri] = useState<UploadedVideoType>({ fileUri: '' })
+  const [facing, setFacing] = useState<CameraType>('back')
+  const [permission, requestPermission] = useCameraPermissions()
+  const [recording, setRecording] = useState<boolean>(false)
+  const { contentHeight, fullHeight, fullWidth } = useAppDimensions()
+  const navigateToScreen = useAppNavigation()
+  const navigation = useNavigation<NativeStackNavigationProp<any>>()
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    console.log('test 1');
-    dispatch(setUploadedVideoThunk(uri));
-  }, [uri]);
+    console.log('test 1')
+    dispatch(setUploadedVideoThunk(uri))
+  }, [uri])
 
   if (!permission) {
     // Camera permissions are still loading.
-    return <View />;
+    return <View />
   }
 
   if (!permission.granted) {
@@ -46,45 +46,45 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode, onClose }) => {
         <Text style={styles.message}>We need your permission to show the camera</Text>
         <Button onPress={requestPermission} title="grant permission" />
       </View>
-    );
+    )
   }
 
   function toggleCameraFacing() {
-    setFacing((current) => (current === 'back' ? 'front' : 'back'));
+    setFacing((current) => (current === 'back' ? 'front' : 'back'))
   }
 
   const takePicture = async () => {
-    const photo = await ref.current?.takePictureAsync();
+    const photo = await ref.current?.takePictureAsync()
     if (photo?.uri) {
-      setUri({ fileUri: photo.uri });
+      setUri({ fileUri: photo.uri })
     }
-  };
+  }
 
   const handleNavigate = () => {
     if (cameraMode === 'picture') {
-      navigateToScreen('Profile');
+      navigateToScreen('Profile')
     } else {
-      navigation.goBack();
+      navigation.goBack()
     }
-  };
+  }
 
   const recordVideo = async () => {
     if (recording) {
-      setRecording(false);
-      ref.current?.stopRecording();
+      setRecording(false)
+      ref.current?.stopRecording()
     } else {
-      setRecording(true);
-      const video = await ref.current?.recordAsync();
+      setRecording(true)
+      const video = await ref.current?.recordAsync()
       if (video?.uri) {
-        setUri({ fileUri: video.uri });
+        setUri({ fileUri: video.uri })
       }
     }
-  };
+  }
 
   const uploadVideo = async (uri: string | null) => {
-    onClose(); // Call the onClose callback to unmount the Camera component
-    navigateToScreen('UploadVideo');
-  };
+    onClose() // Call the onClose callback to unmount the Camera component
+    navigateToScreen('UploadVideo')
+  }
 
   const renderContent = () => {
     return (
@@ -95,11 +95,15 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode, onClose }) => {
           contentHeight={contentHeight}
           fullWidth={fullWidth}
         />
-        <CameraControls uri={uri.fileUri} uploadVideo={uploadVideo} resetUri={() => setUri({ fileUri: '' })} />
+        <CameraControls
+          uri={uri.fileUri}
+          uploadVideo={uploadVideo}
+          resetUri={() => setUri({ fileUri: '' })}
+        />
         <CloseButton onClose={onClose} />
       </View>
-    );
-  };
+    )
+  }
 
   const renderCamera = () => {
     return (
@@ -117,13 +121,13 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode, onClose }) => {
         />
         <CloseButton onClose={onClose} />
       </>
-    );
-  };
+    )
+  }
 
   return (
     <View style={styles.container}>{uri.fileUri !== '' ? renderContent() : renderCamera()}</View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -150,6 +154,6 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 1,
   },
-});
+})
 
-export default Camera;
+export default Camera

@@ -27,14 +27,14 @@ const ProfileDetails = () => {
 }
 const styles = StyleSheet.create({
   outercontainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: 'column',
+    // justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     height: '20%',
   },
   ProfilePictureContainer: {
-    width: '20%',
+    width: '100%',
     height: '100%',
     paddingBottom: 20,
   },
@@ -45,19 +45,19 @@ const styles = StyleSheet.create({
   },
   UpperContainer: {
     justifyContent: 'space-between',
-    alignItems: 'baseline',
     flexDirection: 'row',
     marginRight: '20%',
-    marginLeft: '28%',
+    marginLeft: '50%',
     width: '75%',
-    top: '8%',
+    top: '-120%',
   },
   LowerContainer: {
     justifyContent: 'space-between',
     flexDirection: 'row',
     marginRight: '30%',
+    marginLeft: '20%',
     width: '80%',
-    top: '50%',
+    top: '-40%',
   },
 })
 
