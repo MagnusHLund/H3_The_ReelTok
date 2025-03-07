@@ -23,7 +23,7 @@ namespace reeltok.api.auth.Controllers
         }
 
         [HttpGet]
-        [Route("GetUserIdByToken")]
+        [Route("user-id-by-token")]
         public IActionResult GetUserIdByToken()
         {
             string? accessTokenValue = CookieUtils.GetCookieValue(HttpContext, TokenName.AccessToken);
@@ -47,7 +47,7 @@ namespace reeltok.api.auth.Controllers
         // TODO: Ensure that all token usage checks if the token is expired!
         // TODO: Create factory for tests
         [HttpPost]
-        [Route("CreateUser")]
+        [Route("register")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDto request)
         {
             CreateDetails CreateDetails = new CreateDetails(request.UserId, request.PlainTextPassword);
@@ -63,7 +63,7 @@ namespace reeltok.api.auth.Controllers
         }
 
         [HttpPost]
-        [Route("Login")]
+        [Route("login")]
         public async Task<IActionResult> LoginUser([FromBody] LoginUserRequestDto request)
         {
             LoginCredentials loginCredentials = new LoginCredentials(request.UserId, request.PlainTextPassword);
@@ -79,7 +79,7 @@ namespace reeltok.api.auth.Controllers
         }
 
         [HttpPost]
-        [Route("Logout")]
+        [Route("logout")]
         public async Task<IActionResult> LogoutUser()
         {
             string accessToken = CookieUtils.GetCookieValue(HttpContext, TokenName.AccessToken);
@@ -95,7 +95,6 @@ namespace reeltok.api.auth.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteUser")]
         public async Task<IActionResult> DeleteUser()
         {
             string accessToken = CookieUtils.GetCookieValue(HttpContext, TokenName.AccessToken);
