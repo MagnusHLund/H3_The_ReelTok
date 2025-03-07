@@ -123,7 +123,7 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
             </CustomButton>
           </View>
         </CameraView>
-        <View style={styles.closeButton}>
+        <View>
           <CustomButton widthPercentage={0.15} onPress={navigation.goBack} transparent>
             <Entypo name="cross" size={50} color="white" />
           </CustomButton>
@@ -184,13 +184,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  closeButton: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    left: '80%',
-    top: '8%',
   },
 })
 

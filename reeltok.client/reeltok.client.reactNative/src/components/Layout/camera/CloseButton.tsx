@@ -47,8 +47,8 @@ const CloseButton: React.FC<CloseButtonProps> = ({ onClose }) => {
 const styles = StyleSheet.create({
   closeButton: {
     position: 'absolute',
-    top: '10%',
-    right: '5%',
+    top: '12%',
+    left: '8%',
     zIndex: 1,
   },
 })
