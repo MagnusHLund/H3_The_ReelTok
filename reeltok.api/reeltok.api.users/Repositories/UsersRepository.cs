@@ -72,5 +72,11 @@ namespace reeltok.api.users.Repositories
             return await _context.Users.Where(u => userIds.Contains(u.UserId)).ToListAsync().ConfigureAwait(false)
                 ?? throw new KeyNotFoundException("No users found with the provided user ids!");
         }
+
+        public async Task<UserEntity> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.HiddenUserDetails.Email == email).ConfigureAwait(false)
+                ?? throw new KeyNotFoundException($"User with email {email} not found in the database!");
+        }
     }
 }

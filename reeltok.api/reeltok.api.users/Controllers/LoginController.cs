@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using reeltok.api.users.ActionFilters;
+using reeltok.api.users.Entities;
 using reeltok.api.users.DTOs.Login;
+using reeltok.api.users.ActionFilters;
+using reeltok.api.users.Interfaces.Services;
 
 namespace reeltok.api.users.Controllers
 {
@@ -9,16 +11,20 @@ namespace reeltok.api.users.Controllers
     [Route("api/[controller]")]
     public class LoginController : ControllerBase
     {
-        // TODO: Add login functionality
+        private readonly ILoginService _loginService;
 
-        public LoginController()
+        public LoginController(ILoginService loginService)
         {
+            _loginService = loginService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginRequestDto request)
+        public async Task<IActionResult> LoginUserAsync([FromBody] LoginRequestDto request)
         {
-            LoginResponseDto response = new LoginResponseDto();
+            UserEntity user = await _loginService.LoginUserAsync(request.Email, request.Password)
+                .ConfigureAwait(false);
+
+            LoginResponseDto response = new LoginResponseDto(user);
             return Ok(response);
         }
     }

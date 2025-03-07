@@ -6,7 +6,7 @@ using reeltok.api.users.Interfaces.Repositories;
 
 namespace reeltok.api.users.Services
 {
-    public class SubscriptionsService : BaseService, ISubscriptionsService
+    public class SubscriptionsService : ISubscriptionsService
     {
         private readonly ISubscriptionsRepository _subscriptionRepository;
         private readonly IUsersService _usersService;
