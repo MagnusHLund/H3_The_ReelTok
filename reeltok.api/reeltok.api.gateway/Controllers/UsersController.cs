@@ -22,7 +22,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpPost]
-        [Route("Login")]
+        [Route("login")]
         public async Task<IActionResult> LoginUser([FromBody] GatewayLoginRequestDto request)
         {
             UserProfileData userProfileData = await _usersService.LoginUser(request.Email, request.Password).ConfigureAwait(false);
@@ -32,7 +32,6 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpPost]
-        [Route("Create")]
         public async Task<IActionResult> CreateUser([FromBody] GatewayCreateUserRequestDto request)
         {
             UserProfileData userProfileData = await _usersService.CreateUser(request.Email, request.Username, request.Password).ConfigureAwait(false);
@@ -42,7 +41,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpGet]
-        [Route("GetUserProfileData/{userId}")]
+        [Route("{userId}")]
         public async Task<IActionResult> GetUserProfileData([FromRoute] Guid userId)
         {
             UserProfileData userProfileData = await _usersService.GetUserProfileData(userId).ConfigureAwait(false);
@@ -52,7 +51,6 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateUserDetails")]
         public async Task<IActionResult> UpdateUserDetails([FromBody] GatewayUpdateUserDetailsRequestDto request)
         {
             EditableUserDetails userProfileData = await _usersService.UpdateUserDetails(request.Username, request.Email).ConfigureAwait(false);
@@ -62,7 +60,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateProfilePicture")]
+        [Route("profile-picture")]
         public async Task<IActionResult> UpdateProfilePicture([FromBody] GatewayUpdateProfilePictureRequestDto request)
         {
             string profilePictureUrl = await _usersService.UpdateProfilePicture(request.ProfilePicture).ConfigureAwait(false);
@@ -72,7 +70,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllSubscriptionsForUser")]
+        [Route("{userId}/subscriptions")]
         public async Task<IActionResult> GetAllSubscriptionsForUser([FromRoute] Guid userId)
         {
             List<UserDetails> users = await _usersService.GetAllSubscriptionsForUser(userId).ConfigureAwait(false);
@@ -87,8 +85,8 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllSubscribingToUser")]
-        public async Task<IActionResult> GetAllSubscribingToUser([FromBody] Guid userId)
+        [Route("{userId}/subscribers")]
+        public async Task<IActionResult> GetAllSubscribingToUser([FromRoute] Guid userId)
         {
             List<UserDetails> users = await _usersService.GetAllSubscribingToUser(userId).ConfigureAwait(false);
             GatewayGetAllSubscribingToUserResponseDto responseDto = new GatewayGetAllSubscribingToUserResponseDto(users);

@@ -26,7 +26,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpPost]
-        [Route("AddLike/{videoId}")]
+        [Route("{videoId}/like")]
         public async Task<IActionResult> LikeVideo([FromRoute] Guid videoId)
         {
             bool success = await _videosService.LikeVideo(videoId).ConfigureAwait(false);
@@ -36,7 +36,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpPost]
-        [Route("RemoveLike/{videoId}")]
+        [Route("{videoId}/like")]
         public async Task<IActionResult> RemoveLikeFromVideo([FromRoute] Guid videoId)
         {
             bool success = await _videosService.RemoveLikeFromVideo(videoId).ConfigureAwait(false);
@@ -46,7 +46,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpGet]
-        [Route("GetVideoFeed")]
+        [Route("feed")]
         public async Task<IActionResult> GetVideosForFeed([FromQuery] byte amount)
         {
             List<Video> videos = await _videosService.GetVideosForFeed(amount).ConfigureAwait(false);
@@ -56,7 +56,6 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpPost]
-        [Route("Upload")]
         public async Task<IActionResult> UploadVideo([FromBody] GatewayUploadVideoRequestDto request)
         {
             VideoUpload videoUpload = VideoMapper.ConvertRequestDtoToVideoUpload(request);
@@ -67,7 +66,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpDelete]
-        [Route("Delete/{videoId}")]
+        [Route("{videoId}")]
         public async Task<IActionResult> DeleteVideo([FromRoute] Guid videoId)
         {
             bool success = await _videosService.DeleteVideo(videoId).ConfigureAwait(false);
@@ -78,7 +77,7 @@ namespace reeltok.api.gateway.Controllers
 
 
         [HttpGet]
-        [Route("GetVideosForProfile")]
+        [Route("profile")]
         internal async Task<IActionResult> GetVideosForProfile([FromBody] GatewayGetVideosForProfileRequestDto gatewayGetVideosForProfileRequestDto)
         {
             List<Video> videos = await _videosService.GetVideosForProfile(gatewayGetVideosForProfileRequestDto.UserId, gatewayGetVideosForProfileRequestDto.Amount, gatewayGetVideosForProfileRequestDto.AmountReceived).ConfigureAwait(false);

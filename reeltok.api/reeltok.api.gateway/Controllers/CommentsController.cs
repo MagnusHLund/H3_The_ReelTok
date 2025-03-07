@@ -20,7 +20,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpPost]
-        [Route("Add")]
+        [Route("add")]
         public async Task<IActionResult> AddComment([FromBody] GatewayAddCommentRequestDto request)
         {
 
@@ -32,7 +32,6 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpGet]
-        [Route("Get")]
         public async Task<IActionResult> LoadComments([FromBody] GatewayLoadCommentsRequestDto request)
         {
             if (request.Amount <= 0)
