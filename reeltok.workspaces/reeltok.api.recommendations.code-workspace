@@ -29,7 +29,9 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[csharp]": {
-      "editor.defaultFormatter": "Leopotam.csharpfixformat"
+      "editor.defaultFormatter": "ms-dotnettools.csharp",
+      "editor.wordWrap": "wordWrapColumn",
+      "editor.wordWrapColumn": 130
     },
     "cSpell.words": ["reeltok"]
   },

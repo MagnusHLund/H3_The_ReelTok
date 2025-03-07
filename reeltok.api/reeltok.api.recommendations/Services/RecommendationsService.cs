@@ -1,34 +1,28 @@
-
-using Microsoft.IdentityModel.Tokens;
-using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Enums;
-using reeltok.api.recommendations.Interfaces;
+using reeltok.api.recommendations.Interfaces.Repositories;
+using reeltok.api.recommendations.Interfaces.Services;
+using reeltok.api.recommendations.Repositories;
 
 namespace reeltok.api.recommendations.Services
 {
     public class RecommendationsService : IRecommendationsService
     {
-        private readonly IRecommendationsRepository _recommendationsRepository;
-        public RecommendationsService(IRecommendationsRepository recommendationsRepository)
-        {
-            _recommendationsRepository = recommendationsRepository;
-        }
-        public async Task<List<RecommendedCategories>> GetRecommendation(Guid userId)
-        {
-            List<RecommendedCategories> recommendation = await _recommendationsRepository.GetRecommendationAsync(userId);
+        private readonly IVideoRecommendationAlgorithmRepository _videoRecAlgRepo;
 
-            if (recommendation.IsNullOrEmpty())
-            {
-                throw new InvalidOperationException("Yordan is Gay!");
-            }
-
-            return recommendation;
+        public RecommendationsService(IVideoRecommendationAlgorithmRepository videoRecommendationAlgorithmRepository)
+        {
+            _videoRecAlgRepo = videoRecommendationAlgorithmRepository;
         }
 
-        public Task<bool> UpdateRecommendation(Recommendations recommendation)
+        public Task<List<string>> GetAllCategoriesAsync()
         {
+            List<string> categories = Enum.GetNames(typeof(RecommendedCategories)).ToList();
+            return Task.FromResult(categories);
+        }
 
-            throw new InvalidOperationException("Invalid parameters provided.");
+        public async Task<List<Guid>> GetTopVideoByUserInterestAsync(Guid userId, int amount)
+        {
+            return await _videoRecAlgRepo.GetTopVideoByUserInterestAsync(userId, amount);
         }
     }
 }
