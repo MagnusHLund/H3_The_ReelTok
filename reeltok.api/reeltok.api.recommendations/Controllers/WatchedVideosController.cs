@@ -9,7 +9,7 @@ using reeltok.api.recommendations.ValueObjects;
 namespace reeltok.api.recommendations.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/watched-videos")]
     public class WatchedVideosController : ControllerBase
     {
         private readonly IWatchedVideoService _watchedVideoService;
