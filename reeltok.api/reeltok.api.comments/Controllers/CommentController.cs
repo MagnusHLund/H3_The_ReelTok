@@ -17,7 +17,7 @@ namespace reeltok.api.comments.Controllers
             _service = commentService;
         }
 
-        [HttpPost("Create a comment")]
+        [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] CreateDTO dto)
         {
             if (!ModelState.IsValid)
@@ -43,7 +43,7 @@ namespace reeltok.api.comments.Controllers
         }
 
         // TODO: Call Video API to check if the video id is valid or not
-        [HttpGet("User Followers")]
+        [HttpGet("by-video")]
         public async Task<IActionResult> GetAllCommentsByVideoIdAsync([FromQuery] Guid videoId)
         {
             if (!ModelState.IsValid)
