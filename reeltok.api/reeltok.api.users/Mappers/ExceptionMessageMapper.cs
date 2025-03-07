@@ -1,13 +1,14 @@
+using System.Net;
 using reeltok.api.users.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace reeltok.api.users.Mappers
 {
-    public static class ExceptionMessageMapper
+    internal static class ExceptionMessageMapper
     {
         private static readonly Dictionary<Type, (string responseMessage, HttpStatusCode responseStatusCode)> ExceptionMessages = new Dictionary<Type, (string, HttpStatusCode)>
         {
+            { typeof(ArgumentException), ("An argument failed validation", HttpStatusCode.BadRequest) },
             { typeof(DbUpdateException), ("Internal server error.", HttpStatusCode.InternalServerError) },
             { typeof(UnauthorizedAccessException), ("Invalid credentials.", HttpStatusCode.Unauthorized) },
             { typeof(ArgumentNullException), ("A required argument was null.", HttpStatusCode.BadRequest) },
@@ -15,7 +16,7 @@ namespace reeltok.api.users.Mappers
             { typeof(InvalidOperationException), ("An invalid operation was attempted.", HttpStatusCode.BadRequest) },
         };
 
-        public static (string responseMessage, HttpStatusCode responseStatusCode) GetExceptionDetails(Exception exception)
+        internal static (string responseMessage, HttpStatusCode responseStatusCode) GetExceptionDetails(Exception exception)
         {
             // Forwards the exception message itself, to the caller, if it's a FailureNetworkResponseException. 
             // The detailed message would be logged in the api in which it was thrown.
@@ -29,7 +30,7 @@ namespace reeltok.api.users.Mappers
                 : ("An unexpected error occurred.", HttpStatusCode.InternalServerError);
         }
 
-        public static string GetLogMessage(Exception exception)
+        internal static string GetLogMessage(Exception exception)
         {
             return exception.Message ?? $"No log message provided. Exception type: {exception.GetType()}";
         }

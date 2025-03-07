@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using reeltok.api.users.ValueObjects;
 
 namespace reeltok.api.users.Entities
 {
@@ -9,12 +8,17 @@ namespace reeltok.api.users.Entities
         public uint SubscriptionId { get; set; }
 
         [Required]
-        public SubscriptionDetails SubDetails { get; set; }
+        public Guid UserId { get; set; }
 
-        public SubscriptionEntity(SubscriptionDetails subDetails)
+        [Required]
+        public Guid SubscribingToUserId { get; set; }
+
+        public SubscriptionEntity(Guid userId, Guid subscribingToUserId)
         {
-            SubDetails = subDetails;
+            UserId = userId;
+            SubscribingToUserId = subscribingToUserId;
         }
+
         private SubscriptionEntity() { }
     }
 }

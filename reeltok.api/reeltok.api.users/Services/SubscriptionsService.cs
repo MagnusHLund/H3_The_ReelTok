@@ -1,4 +1,5 @@
 using reeltok.api.users.Entities;
+using reeltok.api.users.factories;
 using reeltok.api.users.ValueObjects;
 using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.Interfaces.Repositories;
@@ -48,7 +49,7 @@ namespace reeltok.api.users.Services
             await _usersService.GetUserByIdAsync(subscriptionDetails.UserId).ConfigureAwait(false);
             await _usersService.GetUserByIdAsync(subscriptionDetails.SubscribingToUserId).ConfigureAwait(false);
 
-            SubscriptionEntity subscriptionEntity = new SubscriptionEntity(subscriptionDetails);
+            SubscriptionEntity subscriptionEntity = SubscriptionsFactory.CreateNewSubscriptionEntity(subscriptionDetails);
             bool IsUserSubscribed = await _subscriptionRepository.AddUserToSubscriptionAsync(subscriptionEntity)
                 .ConfigureAwait(false);
 

@@ -1,5 +1,5 @@
-using reeltok.api.users.ValueObjects;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace reeltok.api.users.Entities
 {
@@ -9,10 +9,16 @@ namespace reeltok.api.users.Entities
         public uint LikedVideoId { get; set; }
 
         [Required]
-        public LikedDetails LikedVideoDetails { get; set; }
-        public LikedVideoEntity(LikedDetails likedVideoDetails)
+        [ForeignKey("User")]
+        public Guid UserId { get; set; } = Guid.Empty;
+
+        [Required]
+        public Guid VideoId { get; set; } = Guid.Empty;
+
+        public LikedVideoEntity(Guid userId, Guid videoId)
         {
-            LikedVideoDetails = likedVideoDetails;
+            UserId = userId;
+            VideoId = videoId;
         }
 
         private LikedVideoEntity() { }

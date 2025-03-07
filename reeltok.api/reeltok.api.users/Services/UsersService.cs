@@ -19,6 +19,11 @@ namespace reeltok.api.users.Services
 
         public async Task<UserEntity> CreateUserAsync(string username, string email, string password, byte interests)
         {
+            if (!ValidationUtils.IsValidEmail(email) || !ValidationUtils.IsValidUsername(username))
+            {
+                throw new ArgumentException("User attempted to sign up, with invalid username or email!");
+            }
+
             UserEntity userToCreate = UsersFactory.CreateUserEntity(username, email);
             UserEntity createdUser = await _userRepository.CreateUserAsync(userToCreate).ConfigureAwait(false);
 
