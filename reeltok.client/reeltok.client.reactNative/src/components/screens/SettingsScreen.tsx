@@ -1,10 +1,10 @@
-import RecommendationsSettingsSection from '../LayoutTemp/settings/sections/RecommendationsSettingsSection'
-import UserDetailsSettingsSection from '../LayoutTemp/settings/sections/UserDetailsSettingsSection'
-import LanguageSettingsSection from '../LayoutTemp/settings/sections/LanguageSettingsSection'
-import LogOutSettingsSection from '../LayoutTemp/settings/sections/LogoutSettingsSection'
+import RecommendationsSettingsSection from '../layout/settings/sections/RecommendationsSettingsSection'
+import UserDetailsSettingsSection from '../layout/settings/sections/UserDetailsSettingsSection'
+import LanguageSettingsSection from '../layout/settings/sections/LanguageSettingsSection'
+import LogOutSettingsSection from '../layout/settings/sections/LogoutSettingsSection'
 import useTranslation from '../../hooks/useTranslations'
 import { ScrollView, View } from 'react-native'
-import Header from '../LayoutTemp/common/Header'
+import Header from '../layout/common/Header'
 import React from 'react'
 
 // TODO: Revert the ScrollView back into a FlatList. You can go back in the file version and see how it used to be.

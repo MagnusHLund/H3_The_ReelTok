@@ -7,10 +7,10 @@ import { useRoute } from '@react-navigation/native'
 import useAppSelector from '../../hooks/useAppSelector'
 import useAppDispatch from '../../hooks/useAppDispatch'
 import { Video } from '../../redux/slices/videosSlice'
-import VideoPlayer from '../LayoutTemp/video/VideoPlayer'
+import VideoPlayer from '../layout/video/VideoPlayer'
 import UseOrientation from '../../hooks/useOrientation'
-import VideoListApp from '../LayoutTemp/video/VideoListApp'
-import VideoListWeb from '../LayoutTemp/video/VideoListWeb'
+import VideoListApp from '../layout/video/VideoListApp'
+import VideoListWeb from '../layout/video/VideoListWeb'
 
 interface RenderItemProps {
   item: Video

@@ -41,7 +41,7 @@ const VideoListWeb: React.FC<VideoListWebProps> = ({
       snapToAlignment="center"
       onViewableItemsChanged={handleViewableItemsChanged}
       viewabilityConfig={viewabilityConfig}
-      getItemLayoutTemp={(_, index) => ({
+      getItemlayout={(_, index) => ({
         length: contentHeight,
         offset: contentHeight * index,
         index,
