@@ -14,9 +14,9 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
   password,
   email,
   placeholder,
-  borders,
+  borders = true,
   widthPercentage = 0.8,
-  backgroundColor = '#565656',
+  backgroundColor = 'white',
 }) => {
   const { width } = useWindowDimensions()
   const [isFocused, setIsFocused] = useState(false)
@@ -36,7 +36,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
         placeholder={placeholder}
         secureTextEntry={password}
         keyboardType={email ? 'email-address' : 'default'}
-        placeholderTextColor={'white'}
+        placeholderTextColor={'black'}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
@@ -50,7 +50,8 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     paddingLeft: 10,
     borderRadius: 10,
-    color: 'white',
+    backgroundColor: 'white',
+    color: 'black',
   },
   blurredText: {
     color: 'transparent',
