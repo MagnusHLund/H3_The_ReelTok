@@ -1,5 +1,5 @@
-import ProfileDetails from '../Layout/profile/ProfileDetails'
-import VideoGallery from '../Layout/profile/VideoGallery'
+import ProfileDetails from '../LayoutTemp/profile/ProfileDetails'
+import VideoGallery from '../LayoutTemp/profile/VideoGallery'
 import React from 'react'
 
 const UserProfileScreen: React.FC = () => {

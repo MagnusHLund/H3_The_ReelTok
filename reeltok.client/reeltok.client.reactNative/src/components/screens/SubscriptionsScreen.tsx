@@ -1,7 +1,7 @@
 import useTranslation from '../../hooks/useTranslations'
 import { ScrollView, StyleSheet } from 'react-native'
-import UserList from '../Layout/common/UserList'
-import Header from '../Layout/common/Header'
+import UserList from '../LayoutTemp/common/UserList'
+import Header from '../LayoutTemp/common/Header'
 import React from 'react'
 
 const SubscriptionsScreen: React.FC = () => {

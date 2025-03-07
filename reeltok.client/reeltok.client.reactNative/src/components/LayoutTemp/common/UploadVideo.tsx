@@ -1,13 +1,13 @@
 import CustomDropdown, { DropdownOption } from '../../input/CustomDropdown'
-import UploadedVideo from '../../Layout/upload/UploadedVideo'
+import UploadedVideo from '../../LayoutTemp/upload/UploadedVideo'
 import CustomTextInput from '../../input/CustomTextInput'
 import useAppSelector from '../../../hooks/useAppSelector'
 import { useRoute } from '@react-navigation/native'
 import CustomButton from '../../input/CustomButton'
-import Section from '../../Layout/common/Section'
+import Section from '../../LayoutTemp/common/Section'
 import { View, StyleSheet } from 'react-native'
-import Header from '../../Layout/common/Header'
-import Title from '../../Layout/common/Title'
+import Header from '../../LayoutTemp/common/Header'
+import Title from '../../LayoutTemp/common/Title'
 import { useState } from 'react'
 
 const UploadVideo: React.FC = ({}) => {
