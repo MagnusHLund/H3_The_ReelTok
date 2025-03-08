@@ -9,6 +9,11 @@ import { View, StyleSheet } from 'react-native'
 import Title from '../../layout/common/Title'
 import { useState } from 'react'
 
+export const isImage = (uri: string) => {
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif']
+  return imageExtensions.some((ext) => uri.toLowerCase().endsWith(ext))
+}
+
 const UploadVideo: React.FC = ({}) => {
   const route = useRoute()
   const uploadedVideo = useAppSelector((state) => state.upload.video)
@@ -53,27 +58,31 @@ const UploadVideo: React.FC = ({}) => {
         <UploadedVideo uri={uploadedVideo.fileUri} />
       </View>
       <View style={styles.videoScreenContainer}>
-        <Section displayDivider={false}>
-          <Title title="Title">
-            <CustomTextInput placeholder="Title" />
-          </Title>
-        </Section>
-        <Section displayDivider={false}>
-          <Title title="Description">
-            <CustomTextInput placeholder="Description" />
-          </Title>
-        </Section>
-        <Section displayDivider={false}>
-          <Title title="Category">
-            <CustomDropdown
-              defaultOption={defaultOption}
-              options={categories}
-              onChange={(selectedCategory: DropdownOption) =>
-                handleChangeCategory(selectedCategory)
-              }
-            />
-          </Title>
-        </Section>
+        {!isImage(uploadedVideo.fileUri) && (
+          <>
+            <Section displayDivider={false}>
+              <Title title="Title">
+                <CustomTextInput placeholder="Title" />
+              </Title>
+            </Section>
+            <Section displayDivider={false}>
+              <Title title="Description">
+                <CustomTextInput placeholder="Description" />
+              </Title>
+            </Section>
+            <Section displayDivider={false}>
+              <Title title="Category">
+                <CustomDropdown
+                  defaultOption={defaultOption}
+                  options={categories}
+                  onChange={(selectedCategory: DropdownOption) =>
+                    handleChangeCategory(selectedCategory)
+                  }
+                />
+              </Title>
+            </Section>
+          </>
+        )}
         <Section displayDivider={false}>
           <CustomButton
             widthPercentage={0.8}

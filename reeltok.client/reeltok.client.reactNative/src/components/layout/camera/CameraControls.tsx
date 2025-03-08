@@ -16,6 +16,7 @@ const CameraControls: React.FC<CameraControlsProps> = ({ uri, uploadVideo, reset
       uploadVideo(uri)
     } else {
       console.log('Not a video')
+      uploadVideo(uri)
     }
   }
 
