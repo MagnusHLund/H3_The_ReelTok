@@ -3,10 +3,13 @@ using Serilog.Events;
 using reeltok.api.videos.Data;
 using reeltok.api.videos.Utils;
 using reeltok.api.videos.Services;
+using reeltok.api.videos.Factories;
 using Microsoft.EntityFrameworkCore;
 using reeltok.api.videos.Interfaces;
 using reeltok.api.videos.Middleware;
 using reeltok.api.videos.Repositories;
+using reeltok.api.videos.Interfaces.Services;
+using reeltok.api.videos.Interfaces.Factories;
 
 namespace reeltok.api.videos
 {
@@ -36,7 +39,9 @@ namespace reeltok.api.videos
             builder.Services.AddScoped<IVideosService, VideosService>();
             builder.Services.AddScoped<IStorageService, StorageService>();
             builder.Services.AddScoped<ILikesRepository, LikesRepository>();
+            builder.Services.AddScoped<IEndpointFactory, EndpointFactory>();
             builder.Services.AddScoped<IVideosRepository, VideosRepository>();
+            builder.Services.AddScoped<IExternalApiService, ExternalApiService>();
 
             builder.Services.AddDbContext<VideosDbContext>(
                 options => options.UseSqlServer(builder.Configuration.GetConnectionString("VideosDb")));
@@ -64,8 +69,6 @@ namespace reeltok.api.videos
             app.UseAuthorization();
 
             app.MapControllers();
-
-            app.Run();
 
             try
             {
