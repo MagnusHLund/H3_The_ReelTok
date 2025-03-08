@@ -75,9 +75,18 @@ namespace reeltok.api.videos.Services
 
             // TODO: Call recommendations api to add the video in its database
 
-            await _storageService.UploadVideoToFileServerAsync(
-                video.VideoFile, videoEntity.VideoId, videoEntity.UserId)
-                .ConfigureAwait(false);
+            try
+            {
+                await _storageService.UploadVideoToFileServerAsync(
+                    video.VideoFile, videoEntity.VideoId, videoEntity.UserId)
+                    .ConfigureAwait(false);
+            }
+            catch
+            {
+                // TODO: Uncomment below, once method is implemented!
+                //await _videosRepository.DeleteVideoAsync(videoEntity.VideoId, userId).ConfigureAwait(false);
+                throw;
+            }
 
             return videoEntity;
         }
