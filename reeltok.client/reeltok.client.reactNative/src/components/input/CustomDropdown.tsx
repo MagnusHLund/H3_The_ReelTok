@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   option: {
-    backgroundColor: 'gray',
+    backgroundColor: 'white',
     paddingVertical: 10,
     paddingHorizontal: 20,
   },

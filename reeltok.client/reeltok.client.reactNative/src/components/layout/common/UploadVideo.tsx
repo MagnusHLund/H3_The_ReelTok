@@ -6,14 +6,12 @@ import { useRoute } from '@react-navigation/native'
 import CustomButton from '../../input/CustomButton'
 import Section from '../../layout/common/Section'
 import { View, StyleSheet } from 'react-native'
-import Header from '../../layout/common/Header'
 import Title from '../../layout/common/Title'
 import { useState } from 'react'
 
 const UploadVideo: React.FC = ({}) => {
   const route = useRoute()
   const uploadedVideo = useAppSelector((state) => state.upload.video)
-  //const t = useTranslation();
 
   const [selectedCategory, setSelectedCategory] = useState<DropdownOption>()
 
@@ -68,7 +66,6 @@ const UploadVideo: React.FC = ({}) => {
         <Section displayDivider={false}>
           <Title title="Category">
             <CustomDropdown
-              backgroundColor="white"
               defaultOption={defaultOption}
               options={categories}
               onChange={(selectedCategory: DropdownOption) =>
