@@ -33,5 +33,7 @@ namespace reeltok.api.videos.DTOs
             Category = category;
             VideoFile = videoFile;
         }
+
+        public UploadVideoRequestDto() { }
     }
 }
