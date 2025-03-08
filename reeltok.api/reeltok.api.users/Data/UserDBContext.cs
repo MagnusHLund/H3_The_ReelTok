@@ -5,6 +5,9 @@ namespace reeltok.api.users.Data
 {
     public class UserDbContext : DbContext
     {
+
+        // TODO: Change filename to UserDbContext (you can use "git mv" to do so)
+
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
         public DbSet<UserEntity> Users { get; set; }
@@ -22,7 +25,6 @@ namespace reeltok.api.users.Data
                     ud.Property(u => u.ProfileUrlPath).HasColumnName("ProfileUrlPath");
                     ud.Property(u => u.ProfilePictureUrlPath).HasColumnName("ProfilePictureUrlPath");
 
-                    // Add unique constraints using Fluent API
                     ud.HasIndex(u => u.ProfileUrlPath).IsUnique();
                     ud.HasIndex(u => u.ProfilePictureUrlPath).IsUnique();
                 });
@@ -32,7 +34,6 @@ namespace reeltok.api.users.Data
                 {
                     hd.Property(h => h.Email).HasColumnName("Email");
 
-                    // Add unique constraint using Fluent API
                     hd.HasIndex(h => h.Email).IsUnique();
                 });
 
