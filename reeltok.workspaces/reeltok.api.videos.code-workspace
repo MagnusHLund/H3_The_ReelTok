@@ -29,11 +29,11 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[csharp]": {
-      "editor.defaultFormatter": "ms-dotnettools.csharp"
+      "editor.defaultFormatter": "ms-dotnettools.csharp",
+      "editor.wordWrap": "wordWrapColumn",
+      "editor.wordWrapColumn": 130
     },
-    "cSpell.words": ["reeltok"],
-    "editor.wordWrap": "wordWrapColumn",
-    "editor.wordWrapColumn": 130
+    "cSpell.words": ["reeltok"]
   },
   "launch": {
     "version": "0.2.0",
