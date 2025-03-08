@@ -4,10 +4,9 @@ namespace reeltok.api.recommendations.Data
     using reeltok.api.recommendations.Entities;
     public class RecommendationDbContext : DbContext
     {
-        public RecommendationDbContext(DbContextOptions<RecommendationDbContext> options)
-            : base(options)
-        {
-        }
+        public RecommendationDbContext(
+            DbContextOptions<RecommendationDbContext> options) : base(options) { }
+
         public DbSet<CategoryEntity> CategoryEntities { get; set; }
         public DbSet<UserInterestEntity> UserInterests { get; set; }
         public DbSet<WatchedVideoEntity> WatchedVideoEntities { get; set; }
@@ -29,8 +28,8 @@ namespace reeltok.api.recommendations.Data
             {
                 WatchedVideoDetails.Property(vwd => vwd.UserId).HasColumnName("UserId");
                 WatchedVideoDetails.Property(vwd => vwd.VideoId).HasColumnName("VideoId");
-                WatchedVideoDetails.Property(vwd => vwd.TimeWatched).HasColumnName("TimeWatched");
-                WatchedVideoDetails.Property(vwd => vwd.LastWatched).HasColumnName("Timestamp");
+                WatchedVideoDetails.Property(vwd => vwd.TimesWatched).HasColumnName("TimesWatched");
+                WatchedVideoDetails.Property(vwd => vwd.LastWatched).HasColumnName("LastTimesWatched");
             });
 
             modelBuilder.Entity<UserInterestEntity>().OwnsOne(ur => ur.UserInterestDetails, UserInterestDetails =>

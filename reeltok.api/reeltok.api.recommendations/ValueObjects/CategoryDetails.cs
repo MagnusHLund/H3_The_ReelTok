@@ -6,12 +6,12 @@ namespace reeltok.api.recommendations.ValueObjects
     public class CategoryDetails
     {
         [Required]
-        public RecommendedCategories CategoryName { get; private set; }
+        public CategoryType CategoryName { get; private set; }
 
-        public CategoryDetails(RecommendedCategories categoryName)
+        public CategoryDetails(CategoryType categoryName)
         {
             CategoryName = categoryName;
         }
-        private CategoryDetails () {}
+        private CategoryDetails() { }
     }
 }

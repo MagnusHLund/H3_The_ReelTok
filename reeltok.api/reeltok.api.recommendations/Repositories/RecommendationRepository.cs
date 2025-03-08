@@ -1,8 +1,8 @@
-using reeltok.api.recommendations.Interfaces.Repositories;
-using reeltok.api.recommendations.Data;
 using Microsoft.EntityFrameworkCore;
-using reeltok.api.recommendations.Entities;
+using reeltok.api.recommendations.Data;
 using reeltok.api.recommendations.Enums;
+using reeltok.api.recommendations.Entities;
+using reeltok.api.recommendations.Interfaces.Repositories;
 
 
 namespace reeltok.api.recommendations.Repositories
@@ -16,7 +16,8 @@ namespace reeltok.api.recommendations.Repositories
             _context = context;
         }
 
-        public async Task<CategoryEntity?> GetCategoryAsync(RecommendedCategories category)
+        // TODO: Remove if unused!
+        public async Task<CategoryEntity?> GetCategoryAsync(CategoryType category)
         {
             return await _context.CategoryEntities
                 .FirstOrDefaultAsync(c => c.CategoryDetails.CategoryName == category)

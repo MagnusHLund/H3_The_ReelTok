@@ -1,9 +1,8 @@
+using System.Data.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using reeltok.api.recommendations.Data;
 using reeltok.api.recommendations.Interfaces.Repositories;
-using reeltok.api.recommendations.Middleware;
-using System.Data.Common;
 
 namespace reeltok.api.recommendations.Repositories
 {
@@ -14,7 +13,6 @@ namespace reeltok.api.recommendations.Repositories
         public VideoRecommendationAlgorithmRepository(RecommendationDbContext context)
         {
             _context = context;
-
         }
 
         public async Task<List<Guid>> GetTopVideoByUserInterestAsync(Guid userId, int amount)
@@ -38,14 +36,14 @@ namespace reeltok.api.recommendations.Repositories
                       ELSE 0.3
                   END AS CategoryMultiplier,
                   1.0 /
-                  ((1.0 + ISNULL(vw.TotalTimeWatched, 0))
+                  ((1.0 + ISNULL(vw.TotalTimesWatched, 0))
                   * (1.0 + ABS(@currentTime - ISNULL(vw.LastWatchedTime, @currentTime)))) AS RawScore
               FROM VideoCategories vc
               LEFT JOIN CategoryVideoCategories cvc ON cvc.VideoCategoryId = vc.VideoCategoryId
               LEFT JOIN (
                   SELECT
                       VideoId,
-                      SUM(TimeWatched) AS TotalTimeWatched,
+                      SUM(TimesWatched) AS TotalTimesWatched,
                       MAX(Timestamp) AS LastWatchedTime
                   FROM VideoWatched
                   WHERE UserId = @UserId

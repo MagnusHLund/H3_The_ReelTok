@@ -10,14 +10,14 @@ namespace reeltok.api.recommendations.Entities
         [Required]
         public CategoryDetails CategoryDetails { get; private set; }
 
-        public List<UserInterestEntity>? UserInterestEntities { get; private set; }
-        public List<VideoCategoryEntity>? VideoCategoryEntities { get; private set; }
+        public List<UserInterestEntity>? UserInterestEntities { get; set; }
+        public List<VideoCategoryEntity>? VideoCategoryEntities { get; set; }
 
         public CategoryEntity(CategoryDetails categoryDetails)
         {
             CategoryDetails = categoryDetails;
         }
 
-        private CategoryEntity () {}
+        private CategoryEntity() { }
     }
 }

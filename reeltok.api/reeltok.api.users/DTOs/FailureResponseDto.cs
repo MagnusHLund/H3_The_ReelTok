@@ -6,11 +6,11 @@ namespace reeltok.api.users.DTOs
     public class FailureResponseDto : BaseResponseDto
     {
         [Required]
-        [JsonProperty("message")]
+        [JsonProperty("Message")]
         public string Message { get; set; }
 
         [Required]
-        [JsonProperty("success")]
+        [JsonProperty("Success")]
         public override bool Success { get; set; }
 
         public FailureResponseDto(string message)

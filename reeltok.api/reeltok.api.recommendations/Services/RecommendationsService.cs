@@ -16,7 +16,7 @@ namespace reeltok.api.recommendations.Services
 
         public Task<List<string>> GetAllCategoriesAsync()
         {
-            List<string> categories = Enum.GetNames(typeof(RecommendedCategories)).ToList();
+            List<string> categories = Enum.GetNames(typeof(CategoryType)).ToList();
             return Task.FromResult(categories);
         }
 

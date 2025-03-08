@@ -51,7 +51,7 @@ namespace reeltok.api.recommendations.Services
         {
             try
             {
-                watchRecord.IncrementTimeWatched();
+                watchRecord.IncrementTimesWatched();
                 bool isUpdated = await _watchedVideoRepository.UpdateWatchedVideoAsync(watchRecord);
                 return (isUpdated, isUpdated ? "User update successful" : "Failed to update record");
             }

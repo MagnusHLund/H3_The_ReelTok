@@ -10,14 +10,14 @@ namespace reeltok.api.recommendations.Tests
     {
         private readonly Mock<IWatchedVideoService> _watchedVideoServiceMock;
         private readonly Mock<IRecommendationsService> _recommendationsServiceMock;
-        private readonly Mock<IUserRecommendationService> _userRecommendationServiceMock;
+        private readonly Mock<IUsersService> _userRecommendationServiceMock;
         private readonly Mock<IVideoRecommendationService> _videoRecommendationServiceMock;
 
         public RecommendationsServiceTests()
         {
             _watchedVideoServiceMock = new Mock<IWatchedVideoService>();
             _recommendationsServiceMock = new Mock<IRecommendationsService>();
-            _userRecommendationServiceMock = new Mock<IUserRecommendationService>();
+            _userRecommendationServiceMock = new Mock<IUsersService>();
             _videoRecommendationServiceMock = new Mock<IVideoRecommendationService>();
         }
 
@@ -243,7 +243,7 @@ namespace reeltok.api.recommendations.Tests
             Guid userId = Guid.NewGuid();
 
             _userRecommendationServiceMock.Setup(service => service.GetUserInterestAsync(userId))
-                .ReturnsAsync((UserInterestEntity?) null);
+                .ReturnsAsync((UserInterestEntity?)null);
 
             // Act
             UserInterestEntity? result = await _userRecommendationServiceMock.Object.GetUserInterestAsync(userId);
@@ -279,7 +279,7 @@ namespace reeltok.api.recommendations.Tests
             Guid videoId = Guid.NewGuid();
 
             _videoRecommendationServiceMock.Setup(service => service.GetVideoCategoryAsync(videoId))
-                .ReturnsAsync((VideoCategoryEntity?) null);
+                .ReturnsAsync((VideoCategoryEntity?)null);
 
             // Act
             VideoCategoryEntity? result = await _videoRecommendationServiceMock.Object.GetVideoCategoryAsync(videoId);

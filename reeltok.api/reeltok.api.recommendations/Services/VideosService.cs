@@ -1,14 +1,14 @@
 using reeltok.api.recommendations.Entities;
-using reeltok.api.recommendations.Interfaces.Repositories;
 using reeltok.api.recommendations.Interfaces.Services;
+using reeltok.api.recommendations.Interfaces.Repositories;
 
 namespace reeltok.api.recommendations.Services
 {
-    public class VideoRecommendationService : IVideoRecommendationService
+    public class VideosService : IVideoRecommendationService
     {
         private readonly IVideoRecommendationRepository _videoRecommendationRepository;
 
-        public VideoRecommendationService(IVideoRecommendationRepository videoRecommendationRepository)
+        public VideosService(IVideoRecommendationRepository videoRecommendationRepository)
         {
             _videoRecommendationRepository = videoRecommendationRepository;
         }
