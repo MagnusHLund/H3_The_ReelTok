@@ -6,19 +6,10 @@ namespace reeltok.api.recommendations.Mappers
 {
     public static class UserRecommendationMapper
     {
-        public static UserInterestDetails ToUserInterestDetailsFromDTO(CreateUserInterestDto dto)
+        public static UserInterestDetails ToUserInterestDetailsFromDTO(AddVideoRecommendationResponseDto dto)
         {
             return new UserInterestDetails(dto.UserId);
         }
 
-        public static UserInterestResponseDto ToUserInterestDTOFromEntity
-            (UserInterestEntity userInterest, CategoryEntity category)
-        {
-            return new UserInterestResponseDto
-            (
-                userInterest.UserInterestDetails.UserId,
-                category.CategoryDetails.CategoryName.ToString()
-            );
-        }
     }
 }

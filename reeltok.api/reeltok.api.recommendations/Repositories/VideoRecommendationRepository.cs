@@ -21,7 +21,7 @@ namespace reeltok.api.recommendations.Repositories
         public async Task<bool> AddRecommendationForVideoAsync(VideoCategoryEntity videoCategoryEntity, int categoryId)
         {
             CategoryEntity categoryEntity = await _recommendationsRepository
-                .GetCategoryAsync((RecommendedCategories) categoryId);
+                .GetCategoryAsync((CategoryType)categoryId);
 
             if (categoryEntity == null)
             {

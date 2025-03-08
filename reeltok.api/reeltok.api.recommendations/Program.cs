@@ -1,11 +1,11 @@
 
 using Microsoft.EntityFrameworkCore;
 using reeltok.api.recommendations.Data;
-using reeltok.api.recommendations.Interfaces.Repositories;
-using reeltok.api.recommendations.Interfaces.Services;
+using reeltok.api.recommendations.Services;
 using reeltok.api.recommendations.Middleware;
 using reeltok.api.recommendations.Repositories;
-using reeltok.api.recommendations.Services;
+using reeltok.api.recommendations.Interfaces.Services;
+using reeltok.api.recommendations.Interfaces.Repositories;
 
 namespace RecommendationsServiceApi
 {
@@ -18,8 +18,8 @@ namespace RecommendationsServiceApi
             // Add services to the container.
             builder.Services.AddScoped<IWatchedVideoService, WatchedVideoService>();
             builder.Services.AddScoped<IRecommendationsService, RecommendationsService>();
-            builder.Services.AddScoped<IUserRecommendationService, UserRecommendationService>();
-            builder.Services.AddScoped<IVideoRecommendationService, VideoRecommendationService>();
+            builder.Services.AddScoped<IUsersService, UsersService>();
+            builder.Services.AddScoped<IVideoRecommendationService, VideosService>();
 
             builder.Services.AddScoped<IWatchedVideoRepository, WatchedVideoRepository>();
             builder.Services.AddScoped<IRecommendationsRepository, RecommendationRepository>();
@@ -29,7 +29,7 @@ namespace RecommendationsServiceApi
 
             builder.Services.AddDbContextFactory<RecommendationDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("RecommendationsDb"));
             });
 
             builder.Services.AddControllers();

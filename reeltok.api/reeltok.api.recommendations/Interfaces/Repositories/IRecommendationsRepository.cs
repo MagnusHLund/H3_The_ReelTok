@@ -6,7 +6,7 @@ namespace reeltok.api.recommendations.Interfaces.Repositories
     public interface IRecommendationsRepository
     {
 
-        Task<CategoryEntity> GetCategoryAsync(RecommendedCategories category);
+        Task<CategoryEntity> GetCategoryAsync(CategoryType category);
 
 
         /*

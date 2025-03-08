@@ -1,14 +1,14 @@
 using reeltok.api.recommendations.Entities;
-using reeltok.api.recommendations.Interfaces.Repositories;
 using reeltok.api.recommendations.Interfaces.Services;
+using reeltok.api.recommendations.Interfaces.Repositories;
 
 namespace reeltok.api.recommendations.Services
 {
-    public class UserRecommendationService : IUserRecommendationService
+    public class UsersService : IUsersService
     {
         private readonly IUserRecommendationRepository _userRecommendationRepository;
 
-        public UserRecommendationService(IUserRecommendationRepository userRecommendationRepository)
+        public UsersService(IUserRecommendationRepository userRecommendationRepository)
         {
             _userRecommendationRepository = userRecommendationRepository;
         }

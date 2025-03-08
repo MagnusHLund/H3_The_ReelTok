@@ -20,7 +20,7 @@ namespace reeltok.api.recommendations.Repositories
         public async Task<bool> AddRecommendationForUserAsync(UserInterestEntity userInterest, int categoryId)
         {
             CategoryEntity categoryEntity = await _recommendationsRepository
-                .GetCategoryAsync((RecommendedCategories) categoryId);
+                .GetCategoryAsync((CategoryType)categoryId);
 
             if (categoryEntity == null)
             {
