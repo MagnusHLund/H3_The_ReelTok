@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using reeltok.api.recommendations.DTOs;
-using reeltok.api.recommendations.Mappers;
-using reeltok.api.recommendations.Entities;
-using reeltok.api.recommendations.ValueObjects;
+using reeltok.api.recommendations.Enums;
 using reeltok.api.recommendations.ActionFilters;
 using reeltok.api.recommendations.Interfaces.Services;
-using reeltok.api.recommendations.DTOs.AddVideoRecommendation;
+using reeltok.api.recommendations.DTOs.AddVideoCategory;
 using reeltok.api.recommendations.DTOs.GetRecommendedVideosForUsersFeed;
 using reeltok.api.recommendations.DTOs.UpdateTotalTimesUserWatchedAVideo;
 
@@ -15,22 +12,22 @@ namespace reeltok.api.recommendations.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Consumes("application/json")]
-    public class VideoRecommendationsController : ControllerBase
+    public class VideosController : ControllerBase
     {
-        private readonly IVideoRecommendationService _videoRecommendationService;
+        private readonly IVideosService _videosService;
+        private readonly IWatchedVideosService _watchedVideosService;
 
-        public VideoRecommendationsController(IVideoRecommendationService videoRecommendationService)
+        public VideosController(IVideosService videosService, IWatchedVideosService watchedVideosService)
         {
-            _videoRecommendationService = videoRecommendationService;
+            _videosService = videosService;
+            _watchedVideosService = watchedVideosService;
         }
 
         // Called from Videos api
         [HttpGet]
         public async Task<IActionResult> GetRecommendedVideosForUsersFeedAsync([FromQuery] Guid userId, [FromQuery] byte amount)
         {
-            // TODO: If amount is higher than 20, make the amount 20
-
-            List<Guid> videoIds = await _recommendationsService.GetTopVideoByUserInterestAsync(userId, amount)
+            List<Guid> videoIds = await _videosService.GetRecommendedVideosForUsersFeedAsync(userId, amount)
                 .ConfigureAwait(false);
 
             GetRecommendedVideosForUsersFeedResponseDto response = new GetRecommendedVideosForUsersFeedResponseDto(videoIds);
@@ -39,36 +36,21 @@ namespace reeltok.api.recommendations.Controllers
 
         // Called from Videos api
         [HttpPost]
-        public async Task<IActionResult> AddVideoRecommendationAsync([FromBody] AddVideoRecommendationRequestDto request)
+        public async Task<IActionResult> AddVideoCategoryAsync([FromBody] AddVideoCategoryRequestDto request)
         {
-            VideoCategoryDetails videoCategoryDetails = VideoRecommendationMapper.ToVideoCategoryDetailsFromDTO(request);
+            CategoryType videoCategory = await _videosService.AddVideoCategoryAsync(request.VideoId, request.Category)
+                .ConfigureAwait(false);
 
-            VideoEntity videoCategory = new VideoCategoryEntity(videoCategoryDetails);
-
-            bool isAdded = await _videoRecommendationService.AddRecommendationForVideoAsync(videoCategory, request.CategoryId);
-
-            if (!isAdded)
-            {
-                return BadRequest(new FailureResponseDto("Failed to add video recommendation"));
-            }
-
-            AddVideoRecommendationResponseDto response = new AddVideoRecommendationResponseDto();
+            AddVideoCategoryResponseDto response = new AddVideoCategoryResponseDto(videoCategory);
             return Ok(response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateTotalTimesUserWatchedAVideoAsync(
+        [HttpPut("watched")]
+        public async Task<IActionResult> UpdateTotalTimesUserWatchedVideosAsync(
             [FromBody] UpdateTotalTimesUserWatchedVideosRequestDto request)
         {
-
-            WatchedVideoDetails watchedVideoDetails = WatchedVideosMapper.ToEntity(createWatchedVideoDto);
-            WatchedVideoEntity watchedVideoEntity = new WatchedVideoEntity(watchedVideoDetails);
-            (bool result, string message) = await _watchedVideoService.AddOrUpdateWatchedVideoAsync(watchedVideoEntity);
-
-            if (!result)
-            {
-                return BadRequest(new FailureResponseDto(message));
-            }
+            await _watchedVideosService.UpdateTotalTimesUserWatchedVideosAsync(request.UserId, request.VideoIds)
+                .ConfigureAwait(false);
 
             UpdateTotalTimesUserWatchedVideosResponseDto response = new UpdateTotalTimesUserWatchedVideosResponseDto();
             return Ok(response);

@@ -1,28 +1,23 @@
-using reeltok.api.recommendations.Enums;
-using reeltok.api.recommendations.Interfaces.Repositories;
 using reeltok.api.recommendations.Interfaces.Services;
-using reeltok.api.recommendations.Repositories;
+using reeltok.api.recommendations.Interfaces.Repositories;
 
 namespace reeltok.api.recommendations.Services
 {
     public class RecommendationsService : IRecommendationsService
     {
-        private readonly IVideoRecommendationAlgorithmRepository _videoRecAlgRepo;
+        private readonly IRecommendationsRepository _recommendationsRepository;
 
-        public RecommendationsService(IVideoRecommendationAlgorithmRepository videoRecommendationAlgorithmRepository)
+        public RecommendationsService(IRecommendationsRepository recommendationsRepository)
         {
-            _videoRecAlgRepo = videoRecommendationAlgorithmRepository;
+            _recommendationsRepository = recommendationsRepository;
         }
 
-        public Task<List<string>> GetAllCategoriesAsync()
+        public async Task<List<Guid>> GetVideoRecommendationsForUserAsync(Guid userId, byte amountOfVideos)
         {
-            List<string> categories = Enum.GetNames(typeof(CategoryType)).ToList();
-            return Task.FromResult(categories);
-        }
+            List<Guid> recommendedVideos = await _recommendationsRepository
+                .GetRecommendedVideosByUserAsync(userId, amountOfVideos).ConfigureAwait(false);
 
-        public async Task<List<Guid>> GetTopVideoByUserInterestAsync(Guid userId, int amount)
-        {
-            return await _videoRecAlgRepo.GetTopVideoByUserInterestAsync(userId, amount);
+            return recommendedVideos;
         }
     }
 }

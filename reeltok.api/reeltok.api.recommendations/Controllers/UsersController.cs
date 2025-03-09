@@ -13,11 +13,11 @@ namespace reeltok.api.recommendations.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Consumes("application/json")]
-    public class UserRecommendationsController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IUsersService _userRecommendationService;
 
-        public UserRecommendationsController(IUsersService userRecommendationService)
+        public UsersController(IUsersService userRecommendationService)
         {
             _userRecommendationService = userRecommendationService;
         }
@@ -36,10 +36,10 @@ namespace reeltok.api.recommendations.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUserInterestAsync([FromBody] AddUserInterestRequestDto request)
         {
-            CategoryType interest = await _userRecommendationService
+            CategoryType userInterest = await _userRecommendationService
                 .AddInterestForUserAsync(request.UserId, request.Interest).ConfigureAwait(false);
 
-            AddUserInterestResponseDto response = new AddUserInterestResponseDto(interest);
+            AddUserInterestResponseDto response = new AddUserInterestResponseDto(userInterest);
             return Ok(response);
         }
 
@@ -47,15 +47,10 @@ namespace reeltok.api.recommendations.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateUserInterestAsync(UpdateUserInterestRequestDto request)
         {
-            bool isUpdated = await _userRecommendationService
-            .UpdateInterestForUserAsync(request.UserId, request.OldCategoryId, request.NewCategoryId).ConfigureAwait(false);
+            CategoryType interest = await _userRecommendationService.UpdateInterestForUserAsync(request.UserId, request.Interest)
+                .ConfigureAwait(false);
 
-            if (!isUpdated)
-            {
-                return BadRequest(new FailureResponseDto("Failed to update user recommendation"));
-            }
-
-            UpdateUserInterestResponseDto response = new UpdateUserInterestResponseDto();
+            UpdateUserInterestResponseDto response = new UpdateUserInterestResponseDto(interest);
             return Ok(response);
         }
     }

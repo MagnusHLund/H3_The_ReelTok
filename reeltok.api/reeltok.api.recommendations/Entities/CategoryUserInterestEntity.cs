@@ -10,7 +10,9 @@ namespace reeltok.api.recommendations.Entities
         public CategoryUserInterestEntity(UserEntity userInterest, CategoryEntity category)
         {
             UserInterest = userInterest;
-            category = category;
+            Category = category;
         }
+
+        private CategoryUserInterestEntity() { }
     }
 }

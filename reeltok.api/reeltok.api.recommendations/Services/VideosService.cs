@@ -1,35 +1,53 @@
+using reeltok.api.recommendations.Enums;
 using reeltok.api.recommendations.Entities;
+using reeltok.api.recommendations.Factories;
 using reeltok.api.recommendations.Interfaces.Services;
 using reeltok.api.recommendations.Interfaces.Repositories;
 
 namespace reeltok.api.recommendations.Services
 {
-    public class VideosService : IVideoRecommendationService
+    public class VideosService : IVideosService
     {
-        private readonly IVideoRecommendationRepository _videoRecommendationRepository;
+        private readonly IVideoCategoriesRepository _videoCategoriesRepository;
+        private readonly IRecommendationsService _recommendationsService;
 
-        public VideosService(IVideoRecommendationRepository videoRecommendationRepository)
+        public VideosService(IVideoCategoriesRepository videoCategoriesRepository, IRecommendationsService recommendationsService)
         {
-            _videoRecommendationRepository = videoRecommendationRepository;
+            _videoCategoriesRepository = videoCategoriesRepository;
+            _recommendationsService = recommendationsService;
         }
 
-        public async Task<bool> AddRecommendationForVideoAsync(VideoEntity videoCategory, int categoryId)
+        public async Task<List<Guid>> GetRecommendedVideosForUsersFeedAsync(Guid userId, byte amountOfVideos)
         {
-            bool isAdded = await _videoRecommendationRepository.AddRecommendationForVideoAsync(videoCategory, categoryId);
+            byte maxAmount = 20;
 
-            if (!isAdded)
+            if (amountOfVideos > maxAmount)
             {
-                throw new Exception("Category not found");
+                amountOfVideos = maxAmount;
             }
 
-            return isAdded;
+            List<Guid> videoIds = await _recommendationsService
+                .GetVideoRecommendationsForUserAsync(userId, amountOfVideos)
+                .ConfigureAwait(false);
+
+            return videoIds;
         }
 
-        public async Task<VideoEntity> GetVideoCategoryAsync(Guid videoId)
+        public async Task<CategoryType> AddVideoCategoryAsync(Guid videoId, CategoryType videoCategory)
         {
-            VideoEntity videoCategoryEntity = await _videoRecommendationRepository.GetVideoCategoryEntityAsync(videoId);
+            CategoryEntity categoryEntityToSave = CategoryFactory.CreateCategoryEntity(videoCategory);
+            VideoEntity videoEntity = new VideoEntity(videoId);
 
-            return videoCategoryEntity;
+            CategoryVideoCategoryEntity categoryVideoCategoryEntity = CategoryFactory
+                .CreateCategoryUserInterestEntity(categoryEntityToSave, videoEntity);
+
+            CategoryVideoCategoryEntity savedCategoryVideoCategoryEntity = await _videoCategoriesRepository
+                .AddVideoCategoryAsync(categoryVideoCategoryEntity)
+                .ConfigureAwait(false);
+
+            CategoryType savedVideoCategory = savedCategoryVideoCategoryEntity.Category.CategoryType;
+
+            return savedVideoCategory;
         }
     }
 }

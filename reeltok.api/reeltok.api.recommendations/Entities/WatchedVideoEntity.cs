@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using reeltok.api.recommendations.ValueObjects;
 
 namespace reeltok.api.recommendations.Entities
 {
@@ -10,21 +9,18 @@ namespace reeltok.api.recommendations.Entities
 
         public Guid UserId { get; set; }
         public Guid VideoId { get; set; }
-        public ushort TimesWatched { get; set; }
+        public ushort WatchCount { get; set; }
         public uint LastWatchedAt { get; set; }
 
 
-        public WatchedVideoEntity(Guid userId, Guid videoId, ushort timesWatched, uint lastWatchedAt)
+        public WatchedVideoEntity(Guid userId, Guid videoId, ushort watchCount, uint lastWatchedAt)
         {
             UserId = userId;
             VideoId = videoId;
-            TimesWatched = timesWatched;
+            WatchCount = watchCount;
             LastWatchedAt = lastWatchedAt;
         }
 
-        private WatchedVideoEntity()
-        {
-
-        }
+        private WatchedVideoEntity() { }
     }
 }

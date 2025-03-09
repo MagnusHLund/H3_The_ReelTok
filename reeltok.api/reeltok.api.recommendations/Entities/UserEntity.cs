@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using reeltok.api.recommendations.ValueObjects;
 
 namespace reeltok.api.recommendations.Entities
 {
