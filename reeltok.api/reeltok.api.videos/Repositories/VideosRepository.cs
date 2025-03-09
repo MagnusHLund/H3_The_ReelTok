@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using reeltok.api.videos.Data;
 using reeltok.api.videos.Entities;
 using reeltok.api.videos.Interfaces;
@@ -25,22 +26,43 @@ namespace reeltok.api.videos.Repositories
 
         public async Task<VideoEntity> UpdateVideoStreamPathAsync(Guid videoId, string streamPath)
         {
-            throw new NotImplementedException();
+            VideoEntity video = await _context.Videos.FindAsync(videoId).ConfigureAwait(false)
+                ?? throw new KeyNotFoundException("Video not found!");
+
+            video.StreamPath = streamPath;
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            return video;
         }
 
         public async Task DeleteVideoAsync(Guid userId, Guid videosId)
         {
-            throw new NotImplementedException();
+            VideoEntity video = await _context.Videos.FirstOrDefaultAsync(v => v.VideoId == videosId && v.UserId == userId).ConfigureAwait(false)
+                ?? throw new KeyNotFoundException("Video not found or unauthorized!");
+
+            _context.Videos.Remove(video);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task<List<VideoEntity>> GetVideosForFeedAsync(List<Guid> videoIds)
+        public async Task<List<VideoEntity>> GetVideosForFeedAsync(List<Guid> videoIds, byte amount)
         {
-            throw new NotImplementedException();
+            return await _context.Videos
+                .Where(v => videoIds.Contains(v.VideoId))
+                .AsNoTracking()
+                .Take(amount)
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
 
         public async Task<List<VideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize)
         {
-            throw new NotImplementedException();
+            return await _context.Videos
+                .Where(v => v.UserId == userId)
+                .OrderByDescending(v => v.UploadedAt)
+                .Skip((int) (pageNumber * pageSize))
+                .Take(pageSize)
+                .AsNoTracking()
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
     }
 }
