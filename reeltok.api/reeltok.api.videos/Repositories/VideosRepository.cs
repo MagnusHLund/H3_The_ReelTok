@@ -13,9 +13,7 @@ namespace reeltok.api.videos.Repositories
         {
             _context = context;
         }
-
-        // TODO: Add repository logic
-
+        
         public async Task<VideoEntity> CreateVideoAsync(VideoEntity video)
         {
             VideoEntity videoEntity = (await _context.Videos.AddAsync(video).ConfigureAwait(false)).Entity;
