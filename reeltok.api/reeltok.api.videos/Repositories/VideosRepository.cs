@@ -45,17 +45,19 @@ namespace reeltok.api.videos.Repositories
 
         public async Task<List<VideoEntity>> GetVideosForFeedAsync(List<Guid> videoIds, byte amount)
         {
-            return await _context.Videos
+            List<VideoEntity> videosForFeed = await _context.Videos
                 .Where(v => videoIds.Contains(v.VideoId))
                 .AsNoTracking()
                 .Take(amount)
                 .ToListAsync()
                 .ConfigureAwait(false);
+
+            return videosForFeed;
         }
 
         public async Task<List<VideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize)
         {
-            return await _context.Videos
+            List<VideoEntity> videoForProfile = await _context.Videos
                 .Where(v => v.UserId == userId)
                 .OrderByDescending(v => v.UploadedAt)
                 .Skip((int) (pageNumber * pageSize))
@@ -63,6 +65,8 @@ namespace reeltok.api.videos.Repositories
                 .AsNoTracking()
                 .ToListAsync()
                 .ConfigureAwait(false);
+
+            return videoForProfile;
         }
     }
 }

@@ -16,12 +16,14 @@ namespace reeltok.api.videos.Repositories
         // TODO: Add repository logic
         public async Task<List<TotalVideoLikesEntity>> GetTotalLikesForVideosAsync(List<Guid> videoIds)
         {
-            return await _context.VideosLikes
+            List<TotalVideoLikesEntity> totalLikes = await _context.VideosLikes
                 .Where(v => videoIds.Contains(v.VideoId))
                 .Select(v => new TotalVideoLikesEntity(v.VideoId, v.TotalLikes))
                 .AsNoTracking()
                 .ToListAsync()
                 .ConfigureAwait(false);
+
+            return totalLikes;
         }
     }
 }
