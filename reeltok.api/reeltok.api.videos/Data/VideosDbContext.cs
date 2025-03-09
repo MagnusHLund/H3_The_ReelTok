@@ -7,7 +7,19 @@ namespace reeltok.api.videos.Data
     {
         public DbSet<VideoEntity> Videos { get; set; }
         public DbSet<VideoTotalLikesEntity> VideosLikes { get; set; }
-        // TODO: ensure proper keys in the database
+
         public VideosDbContext(DbContextOptions<VideosDbContext> options) : base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<VideoEntity>()
+                .HasIndex(v => new { v.UserId, v.Title });
+
+            modelBuilder.Entity<VideoTotalLikesEntity>()
+                .HasKey(vl => vl.VideoLikesId);
+        }
+
     }
 }

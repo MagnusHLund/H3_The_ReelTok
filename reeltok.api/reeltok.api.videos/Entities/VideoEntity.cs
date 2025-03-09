@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.Entities
 {
-    [Index(nameof(UserId), nameof(Title))] // TODO: Move indexing into the DbContext instead, using fluent api
     public class VideoEntity : BaseVideoEntity
     {
         [Required]
