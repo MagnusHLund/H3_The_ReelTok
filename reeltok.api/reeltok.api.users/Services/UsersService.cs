@@ -31,13 +31,16 @@ namespace reeltok.api.users.Services
 
             try
             {
-                await _externalApiService.CreateUserInAuthApiAsync(createdUser.UserId, password).ConfigureAwait(false);
-                await _externalApiService.CreateUserInRecommendationsApiAsync(createdUser.UserId, interests).ConfigureAwait(false);
+                await _externalApiService.CreateUserInAuthApiAsync(createdUser.UserId, password)
+                    .ConfigureAwait(false);
+
+                await _externalApiService.CreateUserInRecommendationsApiAsync(createdUser.UserId, interests)
+                    .ConfigureAwait(false);
             }
-            catch (Exception ex)
+            catch
             {
                 await DeleteUserAsync(createdUser.UserId).ConfigureAwait(false);
-                throw new InvalidOperationException($"User creation failed in other API!, {ex}");
+                throw;
             }
 
             return createdUser;
