@@ -5,14 +5,14 @@ namespace reeltok.api.recommendations.ValueObjects
         public Guid UserId { get; private set; }
         public Guid VideoId { get; private set; }
         public ushort TimesWatched { get; private set; }
-        public uint LastWatched { get; private set; }
+        public uint LastWatchedAt { get; private set; }
 
-        public WatchedVideoDetails(Guid userId, Guid videoId, ushort TimesWatched, uint lastWatched)
+        public WatchedVideoDetails(Guid userId, Guid videoId, ushort timesWatched, uint lastWatchedAt)
         {
             UserId = userId;
             VideoId = videoId;
-            TimesWatched = TimesWatched;
-            LastWatched = lastWatched;
+            TimesWatched = timesWatched;
+            LastWatchedAt = lastWatchedAt;
         }
 
         public WatchedVideoDetails UpdateWatchedVideo()

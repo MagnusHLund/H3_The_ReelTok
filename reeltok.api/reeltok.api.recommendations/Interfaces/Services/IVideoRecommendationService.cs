@@ -4,7 +4,7 @@ namespace reeltok.api.recommendations.Interfaces.Services
 {
     public interface IVideoRecommendationService
     {
-        Task<bool> AddRecommendationForVideoAsync(VideoCategoryEntity videoCategory, int categoryId);
-        Task<VideoCategoryEntity> GetVideoCategoryAsync(Guid videoId);
+        Task<bool> AddRecommendationForVideoAsync(VideoEntity videoCategory, int categoryId);
+        Task<VideoEntity> GetVideoCategoryAsync(Guid videoId);
     }
 }

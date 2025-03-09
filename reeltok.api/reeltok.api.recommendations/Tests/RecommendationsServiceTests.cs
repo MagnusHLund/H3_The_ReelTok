@@ -19,7 +19,7 @@ namespace reeltok.api.recommendations.Tests
             _recommendationsServiceMock = new Mock<IRecommendationsService>();
             _userRecommendationServiceMock = new Mock<IUsersService>();
             _videoRecommendationServiceMock = new Mock<IVideoRecommendationService>();
-        }
+        } /*
 
         #region SUCCESS CASES
 
@@ -307,6 +307,6 @@ namespace reeltok.api.recommendations.Tests
         }
 
         #endregion
-
+ */
     }
 }

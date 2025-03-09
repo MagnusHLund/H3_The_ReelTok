@@ -43,7 +43,7 @@ namespace reeltok.api.recommendations.Controllers
         {
             VideoCategoryDetails videoCategoryDetails = VideoRecommendationMapper.ToVideoCategoryDetailsFromDTO(request);
 
-            VideoCategoryEntity videoCategory = new VideoCategoryEntity(videoCategoryDetails);
+            VideoEntity videoCategory = new VideoCategoryEntity(videoCategoryDetails);
 
             bool isAdded = await _videoRecommendationService.AddRecommendationForVideoAsync(videoCategory, request.CategoryId);
 
