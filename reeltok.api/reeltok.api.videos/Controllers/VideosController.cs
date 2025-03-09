@@ -18,7 +18,6 @@ namespace reeltok.api.videos.Controllers
     [Consumes("application/json")]
     public class VideosController : ControllerBase
     {
-        // TODO: Remove unused DTOs
         private readonly IVideosService _videosService;
 
         public VideosController(IVideosService videosService)
