@@ -13,7 +13,7 @@ namespace reeltok.api.recommendations.Services
             _videoRecommendationRepository = videoRecommendationRepository;
         }
 
-        public async Task<bool> AddRecommendationForVideoAsync(VideoCategoryEntity videoCategory, int categoryId)
+        public async Task<bool> AddRecommendationForVideoAsync(VideoEntity videoCategory, int categoryId)
         {
             bool isAdded = await _videoRecommendationRepository.AddRecommendationForVideoAsync(videoCategory, categoryId);
 
@@ -25,9 +25,9 @@ namespace reeltok.api.recommendations.Services
             return isAdded;
         }
 
-        public async Task<VideoCategoryEntity> GetVideoCategoryAsync(Guid videoId)
+        public async Task<VideoEntity> GetVideoCategoryAsync(Guid videoId)
         {
-            VideoCategoryEntity videoCategoryEntity = await _videoRecommendationRepository.GetVideoCategoryEntityAsync(videoId);
+            VideoEntity videoCategoryEntity = await _videoRecommendationRepository.GetVideoCategoryEntityAsync(videoId);
 
             return videoCategoryEntity;
         }

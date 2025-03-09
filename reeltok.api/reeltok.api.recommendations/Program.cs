@@ -9,7 +9,7 @@ using reeltok.api.recommendations.Interfaces.Repositories;
 
 namespace RecommendationsServiceApi
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -27,7 +27,7 @@ namespace RecommendationsServiceApi
             builder.Services.AddScoped<IVideoRecommendationRepository, VideoRecommendationRepository>();
             builder.Services.AddScoped<IVideoRecommendationAlgorithmRepository, VideoRecommendationAlgorithmRepository>();
 
-            builder.Services.AddDbContextFactory<RecommendationDbContext>(options =>
+            builder.Services.AddDbContext<RecommendationDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("RecommendationsDb"));
             });

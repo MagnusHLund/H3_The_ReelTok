@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using reeltok.api.recommendations.DTOs;
-using reeltok.api.recommendations.Entities;
+using reeltok.api.recommendations.Enums;
 using reeltok.api.recommendations.ActionFilters;
 using reeltok.api.recommendations.Interfaces.Services;
 using reeltok.api.recommendations.DTOs.GetUserInterest;
@@ -26,11 +26,9 @@ namespace reeltok.api.recommendations.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserInterestAsync([FromQuery] Guid userId)
         {
-            UserInterestEntity userInterest = await _userRecommendationService.GetUserInterestAsync(userId).ConfigureAwait(false);
+            CategoryType userInterest = await _userRecommendationService.GetUserInterestAsync(userId).ConfigureAwait(false);
 
-            CategoryEntity category = userInterest.Categories.First();
-
-            GetUserInterestResponseDto response = new GetUserInterestResponseDto();
+            GetUserInterestResponseDto response = new GetUserInterestResponseDto(userInterest);
             return Ok(response);
         }
 
@@ -38,22 +36,19 @@ namespace reeltok.api.recommendations.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUserInterestAsync([FromBody] AddUserInterestRequestDto request)
         {
-            UserInterestDetails userInterestDetails = UserRecommendationMapper.ToUserInterestDetailsFromDTO(request);
+            CategoryType interest = await _userRecommendationService
+                .AddInterestForUserAsync(request.UserId, request.Interest).ConfigureAwait(false);
 
-            UserInterestEntity userInterest = new UserInterestEntity(userInterestDetails);
-
-            bool isAdded = await _userRecommendationService.AddRecommendationForUserAsync(userInterest, request.CategoryId);
-
-            AddUserInterestResponseDto response = new AddUserInterestResponseDto();
-            return Ok(isAdded);
+            AddUserInterestResponseDto response = new AddUserInterestResponseDto(interest);
+            return Ok(response);
         }
 
         // Called from Users api
         [HttpPut]
         public async Task<IActionResult> UpdateUserInterestAsync(UpdateUserInterestRequestDto request)
         {
-            bool isUpdated = await _userRecommendationService.UpdateRecommendationForUserAsync
-                (request.UserId, request.OldCategoryId, request.NewCategoryId);
+            bool isUpdated = await _userRecommendationService
+            .UpdateInterestForUserAsync(request.UserId, request.OldCategoryId, request.NewCategoryId).ConfigureAwait(false);
 
             if (!isUpdated)
             {
