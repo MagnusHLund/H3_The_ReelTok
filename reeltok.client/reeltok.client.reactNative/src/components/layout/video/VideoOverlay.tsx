@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons'
 import useOrientation from '../../../hooks/useOrientation'
 import React from 'react'
 import ProfileImage from '../profile/ProfileImage'
-import ProfilePicture from '../common/ProfilePicture'
+import useAppDimensions from '../../../hooks/useAppDimensions'
 
 interface VideoOverlayProps {
   videoDetails: Video
@@ -19,6 +19,7 @@ interface VideoOverlayProps {
 const VideoOverlay: React.FC<VideoOverlayProps> = ({ videoDetails, onCommentsOpen }) => {
   const dispatch = useAppDispatch()
   const orientation = useOrientation('', 'VideoOverlay')
+  const { fullWidth, contentHeight } = useAppDimensions()
   const handleLikeButtonPress = () => {
     dispatch(hasLikedVideoThunk(videoDetails))
   }
@@ -52,13 +53,13 @@ const VideoOverlay: React.FC<VideoOverlayProps> = ({ videoDetails, onCommentsOpe
           <Ionicons name="chatbubble-outline" size={32} color="white" />
         </CustomButton>
       </View>
-      <View style={styles.aboutContainer}>
+      <View style={[styles.aboutContainer, { width: fullWidth }]}>
         <View style={styles.profilePictureContainer}>
           <ProfileImage
             source={require('./../../../../assets/images/placeholders/profile-default-img.png')}
             width={40}
             height={40}
-            allowedToChangePicture={true}
+            allowedToChangePicture={false}
           />
         </View>
         <View style={styles.usernameContainer}>
@@ -86,16 +87,18 @@ const styles = StyleSheet.create({
   aboutContainer: {
     position: 'absolute',
     flexDirection: 'row',
-    zIndex: 100,
-    top: '100%',
-    right: '200%',
+    zIndex: 1,
+    top: '400%',
+    right: '150%',
+    height: '50%',
+    backgroundColor: 'white',
   },
-  profilePictureContainer: {},
-  usernameContainer: {
-    zIndex: 100,
-    color: 'green',
-    fontSize: 30,
+  profilePictureContainer: {
+    width: '30%',
+    top: -30,
+    left: 20,
   },
+  usernameContainer: {},
 })
 
 export default VideoOverlay

@@ -11,7 +11,7 @@ import VideoPlayer from '../layout/video/VideoPlayer'
 import UseOrientation from '../../hooks/useOrientation'
 import VideoListApp from '../layout/video/VideoListApp'
 import VideoListWeb from '../layout/video/VideoListWeb'
-import VideoSpinner from '../layout/video/VideoSpinner'1
+import VideoSpinner from '../layout/video/VideoSpinner'
 
 interface RenderItemProps {
   item: Video
@@ -84,27 +84,27 @@ const VideoFeedScreen: React.FC = () => {
   const handleAutoScroll = useCallback(() => {
     if (videoFeedRef.current) {
       const nextIndex = currentlyDisplayedVideoIndex + 1
-      
+
       if (videos && nextIndex < videos.length) {
         setCurrentlyDisplayedVideoIndex(nextIndex)
         videoFeedRef.current.scrollToIndex({ index: nextIndex, animated: true })
       }
-      
+
       dispatch(addVideoToFeedThunk(videos))
     }
   }, [currentlyDisplayedVideoIndex, videos, dispatch])
-  
+
   const renderItem = useCallback(
     ({ item, index }: RenderItemProps) => (
       <Animated.View
-      style={[styles.videoContainer, { transform: [{ rotate: rotationInterpolation }] }]}
+        style={[styles.videoContainer, { transform: [{ rotate: rotationInterpolation }] }]}
       >
         <VideoPlayer
           videoDetails={item}
           onAutoScroll={handleAutoScroll}
           isDisplayed={currentlyDisplayedVideoIndex === index}
         />
-      {/* <VideoSpinner awaitingVideo={true} /> */}
+        {/* <VideoSpinner awaitingVideo={true} /> */}
       </Animated.View>
     ),
     [currentlyDisplayedVideoIndex, handleAutoScroll]

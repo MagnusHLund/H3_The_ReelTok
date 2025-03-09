@@ -5,8 +5,6 @@ import React, { useState } from 'react'
 import Camera from '../camera/Camera'
 import useAppNavigation from '../../../hooks/useAppNavigation'
 
-const navigateToScreen = useAppNavigation()
-
 interface ProfileImageProps {
   source: ImageSourcePropType
   height?: number
@@ -21,11 +19,14 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   allowedToChangePicture,
 }) => {
   const [showCamera, setShowCamera] = useState(false)
+  const navigateToScreen = useAppNavigation()
 
   const handleShowCamera = () => {
-    if (allowedToChangePicture === true) {
+    if (allowedToChangePicture) {
       setShowCamera(true)
-    } else navigateToScreen('Profile')
+    } else {
+      navigateToScreen('Profile')
+    }
   }
 
   const handleHideCamera = () => {
@@ -56,12 +57,14 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    zIndex: 2,
   },
   ProfilePicture: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingTop: 60,
+    zIndex: 3,
   },
 })
 
