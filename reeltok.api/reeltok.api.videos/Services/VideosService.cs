@@ -38,8 +38,12 @@ namespace reeltok.api.videos.Services
 
         public async Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(Guid userId, byte amount)
         {
+
             List<Guid> videoIds = await _externalApiService.GetRecommendedVideoIdsAsync(userId, amount).ConfigureAwait(false);
-            List<VideoEntity> videos = await _videosRepository.GetVideosForFeedAsync(videoIds).ConfigureAwait(false);
+
+
+            // TODO: please look into that amount that i am using in this method below just make sure that the value given is exactly what we need to send `GetVideosForFeedAsync(videoIds, amount)`.
+            List<VideoEntity> videos = await _videosRepository.GetVideosForFeedAsync(videoIds, amount).ConfigureAwait(false);
 
             List<VideoCreatorEntity> videoCreatorDetails = await _externalApiService.GetVideoCreatorDetailsAsync(videoIds)
                 .ConfigureAwait(false);
@@ -66,14 +70,21 @@ namespace reeltok.api.videos.Services
             return videosUploadedByUser;
         }
 
-        public async Task<VideoEntity> UploadVideoAsync(VideoUpload video, Guid userId)
+        public async Task<VideoEntity> UploadVideoAsync(VideoUpload video, Guid userId, byte category)
         {
             await VideoUtils.EnsureValidVideoFile(video.VideoFile).ConfigureAwait(false);
 
             VideoEntity videoToUpload = VideoMapper.ConvertVideoUploadToVideoEntity(video, userId);
             VideoEntity videoEntity = await _videosRepository.CreateVideoAsync(videoToUpload).ConfigureAwait(false);
 
-            // TODO: Call recommendations api to add the video in its database
+            bool success = await _externalApiService.AddVideoIdToRecommendationAPI(
+                videoEntity.VideoId, category)
+                .ConfigureAwait(false);
+
+            if (success != true)
+            {
+                throw new HttpRequestException("Failed to add video to recommendation API ");
+            }
 
             try
             {
@@ -83,8 +94,7 @@ namespace reeltok.api.videos.Services
             }
             catch
             {
-                // TODO: Uncomment below, once method is implemented!
-                //await _videosRepository.DeleteVideoAsync(videoEntity.VideoId, userId).ConfigureAwait(false);
+                await _videosRepository.DeleteVideoAsync(videoEntity.VideoId, userId).ConfigureAwait(false);
                 throw;
             }
 

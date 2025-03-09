@@ -9,6 +9,7 @@ using reeltok.api.videos.Interfaces.Services;
 using reeltok.api.videos.Interfaces.Factories;
 using reeltok.api.videos.DTOs.GetRecommendedVideos;
 using reeltok.api.videos.DTOs.GetUserDetailsForVideo;
+using reeltok.api.videos.DTOs.UploadVideo;
 
 namespace reeltok.api.videos.Services
 {
@@ -109,6 +110,30 @@ namespace reeltok.api.videos.Services
             }
 
             return new InvalidOperationException("An unknown error has occurred!");
+        }
+
+        public async Task<bool> AddVideoIdToRecommendationAPI(Guid videoId, byte category)
+        {
+            // Prepare the request DTO with the necessary parameters.
+            ServiceAddVideoIdToRecommendationRequestDto requestDto = new ServiceAddVideoIdToRecommendationRequestDto(videoId, category);
+
+            // Get the target URL for the API endpoint using the endpoint factory.
+            Uri targetUrl = _endpointFactory.GetRecommendationsApiUrl("recommendations");
+
+            // Process the HTTP request asynchronously and handle the response.
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceAddVideoIdToRecommendationRequestDto, ServiceAddVideoIdToRecommendationResponseDto>(
+                requestDto, targetUrl, HttpMethod.Post)
+                .ConfigureAwait(false);
+
+            // If the response is successful, return the Success value directly from the response.
+            if (response is ServiceAddVideoIdToRecommendationResponseDto responseDto)
+            {
+                return responseDto.Success;  // Directly return the Success boolean.
+            }
+
+            // If the response indicates an error, throw an appropriate exception.
+            throw HandleNetworkResponseExceptions(response);
+
         }
     }
 }

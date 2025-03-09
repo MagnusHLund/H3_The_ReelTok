@@ -66,7 +66,7 @@ namespace reeltok.api.videos.Tests.Services
             };
 
             _mockExternalApiService.Setup(x => x.GetRecommendedVideoIdsAsync(userId, amount)).ReturnsAsync(videoIds);
-            _mockVideosRepository.Setup(x => x.GetVideosForFeedAsync(videoIds)).ReturnsAsync(videosRepositoryResponse);
+            _mockVideosRepository.Setup(x => x.GetVideosForFeedAsync(videoIds, amount)).ReturnsAsync(videosRepositoryResponse);
             _mockExternalApiService.Setup(x => x.GetVideoCreatorDetailsAsync(videoIds)).ReturnsAsync(videoCreatorDetails);
             _mockLikesService.Setup(x => x.GetLikesForVideos(userId, videoIds)).ReturnsAsync(videoLikes);
 

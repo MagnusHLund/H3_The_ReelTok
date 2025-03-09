@@ -72,7 +72,7 @@ namespace reeltok.api.videos.Controllers
              
             VideoUpload videoUpload = VideoMapper.ConvertUploadVideoRequestDtoToVideoUpload(request);
 
-            await _videosService.UploadVideoAsync(videoUpload, request.UserId).ConfigureAwait(false);
+            await _videosService.UploadVideoAsync(videoUpload, request.UserId, request.Category).ConfigureAwait(false);
 
             UploadVideoResponseDto responseDto = new UploadVideoResponseDto();
             return Ok(responseDto);
