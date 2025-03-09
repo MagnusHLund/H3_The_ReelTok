@@ -13,15 +13,12 @@ namespace reeltok.api.recommendations.Entities
         public ICollection<CategoryUserInterestEntity>? UserInterestCategoryEntities { get; set; }
         public ICollection<CategoryVideoCategoryEntity>? VideoCategoryCategoryEntities { get; set; }
 
-        public CategoryEntity(CategoryType category)
-        {
-            CategoryType = category;
-        }
-
         public CategoryEntity(uint categoryId, CategoryType category)
         {
             CategoryId = categoryId;
-            CategoryType = category
+            CategoryType = category;
         }
+
+        private CategoryEntity() { }
     }
 }

@@ -20,6 +20,7 @@ namespace reeltok.api.recommendations.Repositories
                 .Where(cui => cui.UserInterest.UserId == userId)
                 .Select(cui => cui.Category)
                 .FirstOrDefaultAsync()
+                .ConfigureAwait(false)
                 ?? throw new KeyNotFoundException($"No interest found for user with id: {userId}");
 
             return interests;
@@ -27,34 +28,62 @@ namespace reeltok.api.recommendations.Repositories
 
         public async Task<CategoryUserInterestEntity> AddUserInterestAsync(CategoryUserInterestEntity categoryUserInterestEntity)
         {
-            UserEntity savedUserEntity = (await _context.UserInterests.AddAsync(categoryUserInterestEntity.UserInterest)).Entity;
-            CategoryUserInterestEntity savedCategoryUserInterestEntity = (await _context.CategoryUserInterests
-                .AddAsync(categoryUserInterestEntity)).Entity;
+            UserEntity savedUserEntity = (await _context.UserInterests.AddAsync(categoryUserInterestEntity.UserInterest)
+                .ConfigureAwait(false)).Entity;
 
-            await _context.SaveChangesAsync();
+            CategoryUserInterestEntity savedCategoryUserInterestEntity = (await _context.CategoryUserInterests
+                .AddAsync(categoryUserInterestEntity)
+                .ConfigureAwait(false)).Entity;
+
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             if (savedUserEntity != savedCategoryUserInterestEntity.UserInterest)
             {
                 throw new InvalidOperationException
-                    ("The saved user entity does not match the user interest in the saved category user interest entity.");
+                    ("The saved user entity does not match the user interest in the savedCategoryUserInterestEntity.");
             }
 
             return savedCategoryUserInterestEntity;
         }
 
-        public async Task<bool> UpdateUserInterestAsync(Guid userId, uint categoryId)
+        public async Task<CategoryUserInterestEntity> UpdateUserInterestAsync(UserEntity user, uint newCategoryId)
         {
-            var categoryUserInterest = await _context.CategoryUserInterests
+            using var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false);
+
+            try
+            {
+                await RemoveExistingUserInterest(user.UserId).ConfigureAwait(false);
+
+                CategoryEntity newCategory = await _context.Categories
+                    .FirstOrDefaultAsync(c => c.CategoryId == newCategoryId)
+                    .ConfigureAwait(false)
+                    ?? throw new KeyNotFoundException($"Category not found: {newCategoryId}");
+
+                CategoryUserInterestEntity newUserInterest = new CategoryUserInterestEntity(user, newCategory);
+
+                await _context.CategoryUserInterests.AddAsync(newUserInterest).ConfigureAwait(false);
+
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                await transaction.CommitAsync().ConfigureAwait(false);
+
+                return newUserInterest;
+            }
+            catch
+            {
+                await transaction.RollbackAsync().ConfigureAwait(false);
+                throw;
+            }
+        }
+
+        public async Task RemoveExistingUserInterest(Guid userId)
+        {
+            CategoryUserInterestEntity userInterest = await _context.CategoryUserInterests
                 .Include(cui => cui.UserInterest)
-                .FirstOrDefaultAsync(
-                    cui => cui.UserInterest.UserId == categoryUserInterestEntity.UserInterest.UserId &&
-                    cui.CategoryId == oldCategoryId)
-                ?? throw KeyNotFoundException("");
+                .FirstOrDefaultAsync(cui => cui.UserInterest.UserId == userId).ConfigureAwait(false)
+                ?? throw new KeyNotFoundException($"No interest found for user with id: {userId}");
 
-            categoryUserInterest.CategoryId = newCategoryId;
-            await _context.SaveChangesAsync();
-
-            return true;
+            _context.CategoryUserInterests.Remove(userInterest);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

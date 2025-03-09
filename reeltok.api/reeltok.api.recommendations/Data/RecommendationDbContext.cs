@@ -9,12 +9,12 @@ namespace reeltok.api.recommendations.Data
         public RecommendationDbContext(
             DbContextOptions<RecommendationDbContext> options) : base(options) { }
 
-        public DbSet<VideoEntity> VideoCategories { get; set; }
         public DbSet<CategoryVideoCategoryEntity> CategoryVideoCategories { get; set; }
-        public DbSet<UserEntity> UserInterests { get; set; }
         public DbSet<CategoryUserInterestEntity> CategoryUserInterests { get; set; }
+        public DbSet<WatchedVideoEntity> WatchedVideos { get; set; }
+        public DbSet<VideoEntity> VideoCategories { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }
-        public DbSet<WatchedVideoEntity> WatchedVideo { get; set; }
+        public DbSet<UserEntity> UserInterests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -74,7 +74,7 @@ namespace reeltok.api.recommendations.Data
 
             CategoryEntity[] categories = Enum.GetValues(typeof(CategoryType))
                 .Cast<CategoryType>()
-                .Select((category, index) => new CategoryEntity(category) { CategoryId = (uint)(index + 1) })
+                .Select((category, index) => new CategoryEntity((uint)index + 1, category))
                 .ToArray();
 
             modelBuilder.Entity<CategoryEntity>().HasData(categories);

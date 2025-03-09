@@ -6,5 +6,7 @@ namespace reeltok.api.recommendations.Interfaces.Repositories
     {
         Task<CategoryEntity> GetUserInterestAsync(Guid userId);
         Task<CategoryUserInterestEntity> AddUserInterestAsync(CategoryUserInterestEntity categoryUserInterestEntity);
+        Task<CategoryUserInterestEntity> UpdateUserInterestAsync(UserEntity user, uint newCategoryId);
+        Task RemoveExistingUserInterest(Guid userId);
     }
 }

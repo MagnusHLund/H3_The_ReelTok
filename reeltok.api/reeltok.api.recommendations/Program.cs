@@ -1,4 +1,5 @@
-
+using Serilog;
+using Serilog.Events;
 using Microsoft.EntityFrameworkCore;
 using reeltok.api.recommendations.Data;
 using reeltok.api.recommendations.Services;
@@ -15,17 +16,30 @@ namespace RecommendationsServiceApi
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddScoped<IWatchedVideoService, WatchedVideoService>();
-            builder.Services.AddScoped<IRecommendationsService, RecommendationsService>();
-            builder.Services.AddScoped<IUsersService, UsersService>();
-            builder.Services.AddScoped<IVideoRecommendationService, VideosService>();
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.File(
+                    "./Logs/log-.txt",
+                    rollingInterval: RollingInterval.Day,
+                    outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}"
+                )
+                .CreateLogger();
 
-            builder.Services.AddScoped<IWatchedVideoRepository, WatchedVideoRepository>();
-            builder.Services.AddScoped<IRecommendationsRepository, RecommendationRepository>();
-            builder.Services.AddScoped<IUserRecommendationRepository, UserRecommendationRepository>();
-            builder.Services.AddScoped<IVideoRecommendationRepository, VideoRecommendationRepository>();
-            builder.Services.AddScoped<IVideoRecommendationAlgorithmRepository, VideoRecommendationAlgorithmRepository>();
+            builder.Host.UseSerilog();
+
+            // Add services to the container.
+            builder.Services.AddScoped<IUsersService, UsersService>();
+            builder.Services.AddScoped<IVideosService, VideosService>();
+            builder.Services.AddScoped<IWatchedVideosService, WatchedVideoService>();
+            builder.Services.AddScoped<IRecommendationsService, RecommendationsService>();
+
+            builder.Services.AddScoped<IWatchedVideosRepository, WatchedVideosRepository>();
+            builder.Services.AddScoped<IUserInterestsRepository, UserInterestsRepository>();
+            builder.Services.AddScoped<IRecommendationsRepository, RecommendationsRepository>();
+            builder.Services.AddScoped<IVideoCategoriesRepository, VideoCategoriesRepository>();
 
             builder.Services.AddDbContext<RecommendationDbContext>(options =>
             {
@@ -51,7 +65,19 @@ namespace RecommendationsServiceApi
 
             app.MapControllers();
 
-            app.Run();
+            try
+            {
+                Log.Information("Starting up");
+                app.Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Application start-up failed");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
     }
 }

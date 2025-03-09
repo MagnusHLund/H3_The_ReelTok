@@ -13,12 +13,27 @@ namespace reeltok.api.recommendations.Repositories
             _context = context;
         }
 
-        public async Task<VideoEntity> AddVideoCategoryAsync(VideoEntity videoCategory)
+        public async Task<CategoryVideoCategoryEntity> AddVideoCategoryAsync(
+            CategoryVideoCategoryEntity categoryVideoCategoryEntity
+        )
         {
-            VideoEntity savedVideoCategory = (await _context.VideoCategories.AddAsync(videoCategory)).Entity;
-            await _context.SaveChangesAsync();
+            VideoEntity savedVideoEntity = (await _context.VideoCategories
+                .AddAsync(categoryVideoCategoryEntity.VideoCategory)
+                .ConfigureAwait(false)).Entity;
 
-            return savedVideoCategory;
+            CategoryVideoCategoryEntity savedCategoryVideoCategoryEntity = (await _context.CategoryVideoCategories
+                .AddAsync(categoryVideoCategoryEntity)
+                .ConfigureAwait(false)).Entity;
+
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            if (savedVideoEntity != savedCategoryVideoCategoryEntity.VideoCategory)
+            {
+                throw new InvalidOperationException
+                    ("The saved video entity does not match the video category in the savedCategoryVideoCategoryEntity.");
+            }
+
+            return savedCategoryVideoCategoryEntity;
         }
     }
 }

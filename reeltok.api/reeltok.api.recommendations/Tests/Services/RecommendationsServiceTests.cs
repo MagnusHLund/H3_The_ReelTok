@@ -1,24 +1,26 @@
 using Moq;
 using Xunit;
-using reeltok.api.recommendations.Interfaces.Services;
 using reeltok.api.recommendations.Entities;
-using reeltok.api.recommendations.ValueObjects;
+using reeltok.api.recommendations.Interfaces.Services;
 
 namespace reeltok.api.recommendations.Tests
 {
     public class RecommendationsServiceTests
     {
-        private readonly Mock<IWatchedVideoService> _watchedVideoServiceMock;
+        private readonly Mock<IWatchedVideosService> _watchedVideoServiceMock;
         private readonly Mock<IRecommendationsService> _recommendationsServiceMock;
         private readonly Mock<IUsersService> _userRecommendationServiceMock;
-        private readonly Mock<IVideoRecommendationService> _videoRecommendationServiceMock;
+        private readonly Mock<IVideosService> _videoRecommendationServiceMock;
+
+        // TODO: Create tests for each service. Use the TestDataFactory to generate data that you might need multiple times. 
+        //!^^^^  There should be at least 1 failure test case per service method and obviously a success test
 
         public RecommendationsServiceTests()
         {
-            _watchedVideoServiceMock = new Mock<IWatchedVideoService>();
+            _watchedVideoServiceMock = new Mock<IWatchedVideosService>();
             _recommendationsServiceMock = new Mock<IRecommendationsService>();
             _userRecommendationServiceMock = new Mock<IUsersService>();
-            _videoRecommendationServiceMock = new Mock<IVideoRecommendationService>();
+            _videoRecommendationServiceMock = new Mock<IVideosService>();
         } /*
 
         #region SUCCESS CASES

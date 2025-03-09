@@ -1,6 +1,6 @@
 using System.Net;
-using reeltok.api.recommendations.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using reeltok.api.recommendations.Exceptions;
 
 namespace reeltok.api.recommendations.Mappers
 {

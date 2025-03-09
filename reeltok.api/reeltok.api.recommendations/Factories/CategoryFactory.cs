@@ -1,10 +1,10 @@
-using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Enums;
 using reeltok.api.recommendations.Mappers;
+using reeltok.api.recommendations.Entities;
 
-namespace reeltok.api.recommendations.Factory
+namespace reeltok.api.recommendations.Factories
 {
-    internal static class CategoriesFactory
+    internal static class CategoryFactory
     {
         internal static CategoryEntity CreateCategoryEntity(CategoryType category)
         {
@@ -20,6 +20,14 @@ namespace reeltok.api.recommendations.Factory
         )
         {
             return new CategoryUserInterestEntity(userEntity, categoryEntity);
+        }
+
+        internal static CategoryVideoCategoryEntity CreateCategoryUserInterestEntity(
+            CategoryEntity categoryEntity,
+            VideoEntity videoEntity
+        )
+        {
+            return new CategoryVideoCategoryEntity(videoEntity, categoryEntity);
         }
     }
 }
