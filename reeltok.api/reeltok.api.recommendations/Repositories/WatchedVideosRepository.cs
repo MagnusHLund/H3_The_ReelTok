@@ -22,12 +22,6 @@ namespace reeltok.api.recommendations.Repositories
                 .ToListAsync()
                 .ConfigureAwait(false);
 
-            if (watchedVideos == null || !watchedVideos.Any())
-            {
-                string videoIdsString = string.Join(", ", videoIds);
-                throw new KeyNotFoundException($"Unable to find any videos with the provided ids: {videoIdsString}");
-            }
-
             return watchedVideos;
         }
 

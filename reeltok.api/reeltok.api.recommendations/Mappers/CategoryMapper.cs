@@ -17,5 +17,22 @@ namespace reeltok.api.recommendations.Mappers
 
             return categoryId;
         }
+
+        /// <summary>
+        /// Converts a CategoryId to the corresponding CategoryType enum value.
+        /// </summary>
+        /// <param name="categoryId">The CategoryId to convert</param>
+        /// <returns>The corresponding CategoryType enum value</returns>
+        internal static CategoryType ConvertCategoryIdToCategoryType(uint categoryId)
+        {
+            CategoryType[] enumValues = (CategoryType[])Enum.GetValues(typeof(CategoryType));
+
+            if (categoryId < 1 || categoryId > enumValues.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(categoryId), "Invalid CategoryId");
+            }
+
+            return enumValues[categoryId - 1];
+        }
     }
 }

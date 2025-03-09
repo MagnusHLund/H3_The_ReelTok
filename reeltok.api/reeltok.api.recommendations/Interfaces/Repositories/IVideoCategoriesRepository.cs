@@ -4,6 +4,6 @@ namespace reeltok.api.recommendations.Interfaces.Repositories
 {
     public interface IVideoCategoriesRepository
     {
-        Task<CategoryVideoCategoryEntity> AddVideoCategoryAsync(CategoryVideoCategoryEntity categoryVideoCategoryEntity);
+        Task<uint> AddVideoCategoryAsync(CategoryVideoCategoryEntity categoryVideoCategoryEntity);
     }
 }

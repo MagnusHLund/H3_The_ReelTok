@@ -3,6 +3,7 @@ using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Factories;
 using reeltok.api.recommendations.Interfaces.Services;
 using reeltok.api.recommendations.Interfaces.Repositories;
+using reeltok.api.recommendations.Mappers;
 
 namespace reeltok.api.recommendations.Services
 {
@@ -39,13 +40,13 @@ namespace reeltok.api.recommendations.Services
             VideoEntity videoEntity = new VideoEntity(videoId);
 
             CategoryVideoCategoryEntity categoryVideoCategoryEntity = CategoryFactory
-                .CreateCategoryUserInterestEntity(categoryEntityToSave, videoEntity);
+                .CreateCategoryVideoInterestEntity(categoryEntityToSave, videoEntity);
 
-            CategoryVideoCategoryEntity savedCategoryVideoCategoryEntity = await _videoCategoriesRepository
+            uint savedCategoryId = await _videoCategoriesRepository
                 .AddVideoCategoryAsync(categoryVideoCategoryEntity)
                 .ConfigureAwait(false);
 
-            CategoryType savedVideoCategory = savedCategoryVideoCategoryEntity.Category.CategoryType;
+            CategoryType savedVideoCategory = CategoryMapper.ConvertCategoryIdToCategoryType(savedCategoryId);
 
             return savedVideoCategory;
         }
