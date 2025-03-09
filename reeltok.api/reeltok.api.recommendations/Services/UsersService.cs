@@ -19,7 +19,7 @@ namespace reeltok.api.recommendations.Services
         public async Task<CategoryType> GetUserInterestAsync(Guid userId)
         {
             CategoryEntity categoryEntity = await _userInterestsRepository.GetUserInterestAsync(userId).ConfigureAwait(false);
-            CategoryType userInterest = categoryEntity.CategoryType;
+            CategoryType userInterest = categoryEntity.Category;
 
             return userInterest;
         }
@@ -32,11 +32,11 @@ namespace reeltok.api.recommendations.Services
             CategoryUserInterestEntity categoryUserInterestEntity = CategoryFactory
                 .CreateCategoryUserInterestEntity(categoryEntityToSave, userEntity);
 
-            CategoryUserInterestEntity savedCategoryUserInterestEntity = await _userInterestsRepository
+            uint savedCategoryId = await _userInterestsRepository
                 .AddUserInterestAsync(categoryUserInterestEntity)
                 .ConfigureAwait(false);
 
-            CategoryType savedUserInterest = savedCategoryUserInterestEntity.Category.CategoryType;
+            CategoryType savedUserInterest = CategoryMapper.ConvertCategoryIdToCategoryType(savedCategoryId);
 
             return savedUserInterest;
         }
@@ -46,11 +46,11 @@ namespace reeltok.api.recommendations.Services
             uint categoryId = CategoryMapper.ConvertCategoryTypeToCategoryId(newUserInterest);
             UserEntity userEntity = new UserEntity(userId);
 
-            CategoryUserInterestEntity savedCategoryUserInterestEntity = await _userInterestsRepository
+            uint savedCategoryId = await _userInterestsRepository
                 .UpdateUserInterestAsync(userEntity, categoryId)
                 .ConfigureAwait(false);
 
-            CategoryType savedUserInterest = savedCategoryUserInterestEntity.Category.CategoryType;
+            CategoryType savedUserInterest = CategoryMapper.ConvertCategoryIdToCategoryType(savedCategoryId);
 
             return savedUserInterest;
         }

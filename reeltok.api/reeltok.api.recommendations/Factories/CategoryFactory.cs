@@ -19,15 +19,17 @@ namespace reeltok.api.recommendations.Factories
             UserEntity userEntity
         )
         {
-            return new CategoryUserInterestEntity(userEntity, categoryEntity);
+            uint categoryId = CategoryMapper.ConvertCategoryTypeToCategoryId(categoryEntity.Category);
+            return new CategoryUserInterestEntity(userEntity, categoryId);
         }
 
-        internal static CategoryVideoCategoryEntity CreateCategoryUserInterestEntity(
+        internal static CategoryVideoCategoryEntity CreateCategoryVideoInterestEntity(
             CategoryEntity categoryEntity,
             VideoEntity videoEntity
         )
         {
-            return new CategoryVideoCategoryEntity(videoEntity, categoryEntity);
+            uint categoryId = CategoryMapper.ConvertCategoryTypeToCategoryId(categoryEntity.Category);
+            return new CategoryVideoCategoryEntity(videoEntity, categoryId);
         }
     }
 }

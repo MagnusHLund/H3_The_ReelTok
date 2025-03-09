@@ -7,10 +7,10 @@ namespace reeltok.api.recommendations.Entities
         public uint CategoryId { get; set; }
         public CategoryEntity Category { get; set; }
 
-        public CategoryUserInterestEntity(UserEntity userInterest, CategoryEntity category)
+        public CategoryUserInterestEntity(UserEntity userInterest, uint categoryId)
         {
             UserInterest = userInterest;
-            Category = category;
+            CategoryId = categoryId;
         }
 
         private CategoryUserInterestEntity() { }

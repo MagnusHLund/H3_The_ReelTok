@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using reeltok.api.recommendations.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.recommendations.Entities
 {
@@ -8,7 +8,7 @@ namespace reeltok.api.recommendations.Entities
         [Key]
         public uint CategoryId { get; set; }
         [Required]
-        public CategoryType CategoryType { get; set; }
+        public CategoryType Category { get; set; }
 
         public ICollection<CategoryUserInterestEntity>? UserInterestCategoryEntities { get; set; }
         public ICollection<CategoryVideoCategoryEntity>? VideoCategoryCategoryEntities { get; set; }
@@ -16,7 +16,12 @@ namespace reeltok.api.recommendations.Entities
         public CategoryEntity(uint categoryId, CategoryType category)
         {
             CategoryId = categoryId;
-            CategoryType = category;
+            Category = category;
+        }
+
+        public CategoryEntity(CategoryType category)
+        {
+            Category = category;
         }
 
         private CategoryEntity() { }

@@ -13,9 +13,7 @@ namespace reeltok.api.recommendations.Repositories
             _context = context;
         }
 
-        public async Task<CategoryVideoCategoryEntity> AddVideoCategoryAsync(
-            CategoryVideoCategoryEntity categoryVideoCategoryEntity
-        )
+        public async Task<uint> AddVideoCategoryAsync(CategoryVideoCategoryEntity categoryVideoCategoryEntity)
         {
             VideoEntity savedVideoEntity = (await _context.VideoCategories
                 .AddAsync(categoryVideoCategoryEntity.VideoCategory)
@@ -27,13 +25,13 @@ namespace reeltok.api.recommendations.Repositories
 
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
-            if (savedVideoEntity != savedCategoryVideoCategoryEntity.VideoCategory)
+            if (savedVideoEntity.VideoCategoryId != savedCategoryVideoCategoryEntity.VideoCategoryId)
             {
                 throw new InvalidOperationException
                     ("The saved video entity does not match the video category in the savedCategoryVideoCategoryEntity.");
             }
 
-            return savedCategoryVideoCategoryEntity;
+            return savedCategoryVideoCategoryEntity.CategoryId;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace reeltok.api.recommendations.Repositories
             return interests;
         }
 
-        public async Task<CategoryUserInterestEntity> AddUserInterestAsync(CategoryUserInterestEntity categoryUserInterestEntity)
+        public async Task<uint> AddUserInterestAsync(CategoryUserInterestEntity categoryUserInterestEntity)
         {
             UserEntity savedUserEntity = (await _context.UserInterests.AddAsync(categoryUserInterestEntity.UserInterest)
                 .ConfigureAwait(false)).Entity;
@@ -37,36 +37,32 @@ namespace reeltok.api.recommendations.Repositories
 
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
-            if (savedUserEntity != savedCategoryUserInterestEntity.UserInterest)
+            if (savedUserEntity.UserInterestId != savedCategoryUserInterestEntity.UserInterest.UserInterestId)
             {
                 throw new InvalidOperationException
                     ("The saved user entity does not match the user interest in the savedCategoryUserInterestEntity.");
             }
 
-            return savedCategoryUserInterestEntity;
+            return savedCategoryUserInterestEntity.CategoryId;
         }
 
-        public async Task<CategoryUserInterestEntity> UpdateUserInterestAsync(UserEntity user, uint newCategoryId)
+
+        public async Task<uint> UpdateUserInterestAsync(UserEntity user, uint newCategoryId)
         {
             using var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false);
 
             try
             {
-                await RemoveExistingUserInterest(user.UserId).ConfigureAwait(false);
+                await RemoveExistingUserInterestAsync(user.UserId).ConfigureAwait(false);
 
-                CategoryEntity newCategory = await _context.Categories
-                    .FirstOrDefaultAsync(c => c.CategoryId == newCategoryId)
-                    .ConfigureAwait(false)
-                    ?? throw new KeyNotFoundException($"Category not found: {newCategoryId}");
-
-                CategoryUserInterestEntity newUserInterest = new CategoryUserInterestEntity(user, newCategory);
+                CategoryUserInterestEntity newUserInterest = new CategoryUserInterestEntity(user, newCategoryId);
 
                 await _context.CategoryUserInterests.AddAsync(newUserInterest).ConfigureAwait(false);
 
                 await _context.SaveChangesAsync().ConfigureAwait(false);
                 await transaction.CommitAsync().ConfigureAwait(false);
 
-                return newUserInterest;
+                return newUserInterest.CategoryId;
             }
             catch
             {
@@ -75,14 +71,16 @@ namespace reeltok.api.recommendations.Repositories
             }
         }
 
-        public async Task RemoveExistingUserInterest(Guid userId)
+        public async Task RemoveExistingUserInterestAsync(Guid userId)
         {
-            CategoryUserInterestEntity userInterest = await _context.CategoryUserInterests
-                .Include(cui => cui.UserInterest)
-                .FirstOrDefaultAsync(cui => cui.UserInterest.UserId == userId).ConfigureAwait(false)
+            UserEntity userInterest = await _context.UserInterests
+                .Where(ui => ui.UserId == userId)
+                .FirstOrDefaultAsync()
+                .ConfigureAwait(false)
                 ?? throw new KeyNotFoundException($"No interest found for user with id: {userId}");
 
-            _context.CategoryUserInterests.Remove(userInterest);
+            _context.UserInterests.Remove(userInterest);
+
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
     }

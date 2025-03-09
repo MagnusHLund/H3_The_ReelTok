@@ -24,7 +24,7 @@ namespace reeltok.api.recommendations.Data
             modelBuilder.Entity<VideoEntity>().ToTable("VideoCategories");
 
             modelBuilder.Entity<CategoryUserInterestEntity>().ToTable("CategoryUserInterests");
-            modelBuilder.Entity<CategoryVideoCategoryEntity>().ToTable("CategoryVideoCategory");
+            modelBuilder.Entity<CategoryVideoCategoryEntity>().ToTable("CategoryVideoCategories");
 
             modelBuilder.Entity<CategoryVideoCategoryEntity>()
                 .HasKey(cvc => new { cvc.CategoryId, cvc.VideoCategoryId });
@@ -32,42 +32,64 @@ namespace reeltok.api.recommendations.Data
             modelBuilder.Entity<CategoryVideoCategoryEntity>()
                 .HasOne(cvc => cvc.Category)
                 .WithMany(c => c.VideoCategoryCategoryEntities)
-                .HasForeignKey(cvc => cvc.CategoryId);
+                .HasForeignKey(cvc => cvc.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CategoryVideoCategoryEntity>()
                 .HasOne(cvc => cvc.VideoCategory)
                 .WithMany()
-                .HasForeignKey(cvc => cvc.VideoCategoryId);
+                .HasForeignKey(cvc => cvc.VideoCategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CategoryVideoCategoryEntity>()
+                .HasIndex(cvc => cvc.VideoCategoryId);
+
+            modelBuilder.Entity<CategoryVideoCategoryEntity>()
+                .HasIndex(cvc => cvc.CategoryId);
 
             modelBuilder.Entity<CategoryUserInterestEntity>()
                 .HasKey(cui => new { cui.UserInterestId, cui.CategoryId });
 
             modelBuilder.Entity<CategoryUserInterestEntity>()
+                .HasIndex(cui => cui.UserInterestId);
+
+            modelBuilder.Entity<CategoryUserInterestEntity>()
+                .HasIndex(cui => cui.CategoryId);
+
+            modelBuilder.Entity<CategoryUserInterestEntity>()
                 .HasOne(cui => cui.UserInterest)
                 .WithMany()
-                .HasForeignKey(cui => cui.UserInterestId);
+                .HasForeignKey(cui => cui.UserInterestId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CategoryUserInterestEntity>()
                 .HasOne(cui => cui.Category)
                 .WithMany(c => c.UserInterestCategoryEntities)
-                .HasForeignKey(cui => cui.CategoryId);
-
-            modelBuilder.Entity<CategoryEntity>()
-                .HasIndex(c => c.CategoryType)
-                .IsUnique();
+                .HasForeignKey(cui => cui.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserEntity>()
-                .HasIndex(ui => ui.UserId);
+                .HasIndex(ui => ui.UserId)
+                .IsUnique();
 
             modelBuilder.Entity<VideoEntity>()
-                .HasIndex(vc => vc.VideoId);
+                .HasIndex(vc => vc.VideoId)
+                .IsUnique();
 
             modelBuilder.Entity<WatchedVideoEntity>()
                 .HasIndex(wv => new { wv.UserId, wv.VideoId })
                 .IsUnique();
 
             modelBuilder.Entity<CategoryEntity>()
-                .Property(c => c.CategoryType)
+                .HasIndex(c => c.Category)
+                .IsUnique();
+
+            modelBuilder.Entity<CategoryEntity>()
+                .Property(c => c.CategoryId)
+                .ValueGeneratedNever();
+
+            modelBuilder.Entity<CategoryEntity>()
+                .Property(c => c.Category)
                 .HasConversion(
                     c => c.ToString(),
                     c => (CategoryType)Enum.Parse(typeof(CategoryType), c));
