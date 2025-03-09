@@ -11,6 +11,7 @@ const ProfileDetails = () => {
       <View style={styles.ProfilePictureContainer}>
         <ProfileImage
           source={require('./../../../../assets/images/placeholders/profile-default-img.png')}
+          allowedToChangePicture={true}
         />
       </View>
       <View style={styles.StackedContainer}>

@@ -3,16 +3,29 @@ import CustomButton from '../../input/CustomButton'
 import CustomImage from '../common/CustomImage'
 import React, { useState } from 'react'
 import Camera from '../camera/Camera'
+import useAppNavigation from '../../../hooks/useAppNavigation'
+
+const navigateToScreen = useAppNavigation()
 
 interface ProfileImageProps {
   source: ImageSourcePropType
+  height?: number
+  width?: number
+  allowedToChangePicture: boolean
 }
 
-const ProfileImage: React.FC<ProfileImageProps> = ({ source }) => {
+const ProfileImage: React.FC<ProfileImageProps> = ({
+  source,
+  height = 80,
+  width = 80,
+  allowedToChangePicture,
+}) => {
   const [showCamera, setShowCamera] = useState(false)
 
   const handleShowCamera = () => {
-    setShowCamera(true)
+    if (allowedToChangePicture === true) {
+      setShowCamera(true)
+    } else navigateToScreen('Profile')
   }
 
   const handleHideCamera = () => {
@@ -28,8 +41,8 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ source }) => {
           <CustomButton onPress={handleShowCamera} transparent>
             <CustomImage
               resizeMode="cover"
-              height={80}
-              width={80}
+              height={height}
+              width={width}
               borderRadius={50}
               source={source}
             />

@@ -6,6 +6,8 @@ import CustomButton from '../../input/CustomButton'
 import { Ionicons } from '@expo/vector-icons'
 import useOrientation from '../../../hooks/useOrientation'
 import React from 'react'
+import ProfileImage from '../profile/ProfileImage'
+import ProfilePicture from '../common/ProfilePicture'
 
 interface VideoOverlayProps {
   videoDetails: Video
@@ -50,6 +52,19 @@ const VideoOverlay: React.FC<VideoOverlayProps> = ({ videoDetails, onCommentsOpe
           <Ionicons name="chatbubble-outline" size={32} color="white" />
         </CustomButton>
       </View>
+      <View style={styles.aboutContainer}>
+        <View style={styles.profilePictureContainer}>
+          <ProfileImage
+            source={require('./../../../../assets/images/placeholders/profile-default-img.png')}
+            width={40}
+            height={40}
+            allowedToChangePicture={true}
+          />
+        </View>
+        <View style={styles.usernameContainer}>
+          <Text>username</Text>
+        </View>
+      </View>
     </View>
   )
 }
@@ -67,6 +82,19 @@ const styles = StyleSheet.create({
   },
   iconText: {
     color: 'black',
+  },
+  aboutContainer: {
+    position: 'absolute',
+    flexDirection: 'row',
+    zIndex: 100,
+    top: '100%',
+    right: '200%',
+  },
+  profilePictureContainer: {},
+  usernameContainer: {
+    zIndex: 100,
+    color: 'green',
+    fontSize: 30,
   },
 })
 
