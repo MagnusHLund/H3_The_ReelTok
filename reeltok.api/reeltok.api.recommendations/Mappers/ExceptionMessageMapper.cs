@@ -1,6 +1,5 @@
 using System.Net;
 using Microsoft.EntityFrameworkCore;
-using reeltok.api.recommendations.Exceptions;
 
 namespace reeltok.api.recommendations.Mappers
 {
@@ -18,13 +17,6 @@ namespace reeltok.api.recommendations.Mappers
 
         internal static (string responseMessage, HttpStatusCode responseStatusCode) GetExceptionDetails(Exception exception)
         {
-            // Forwards the exception message itself, to the caller, if it's a FailureNetworkResponseException. 
-            // The detailed message would be logged in the api in which it was thrown.
-            if (exception is FailureNetworkResponseException)
-            {
-                return (exception.Message, HttpStatusCode.InternalServerError);
-            }
-
             return ExceptionMessages.ContainsKey(exception.GetType())
                 ? ExceptionMessages[exception.GetType()]
                 : ("An unexpected error occurred.", HttpStatusCode.InternalServerError);
