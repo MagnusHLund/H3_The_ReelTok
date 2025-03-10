@@ -8,13 +8,13 @@ namespace reeltok.api.comments.DTOs.GetCommentsByVideoId
     {
         [Required]
         [JsonProperty("TotalComments")]
-        public uint TotalVideoComments { get; set; }
+        public int TotalVideoComments { get; set; }
 
         [Required]
         [JsonProperty("Comments")]
         public List<CommentEntity> Comments { get; set; }
 
-        public GetCommentsByVideoIdResponseDto(uint totalVideoComments, List<CommentEntity> comments, bool success = true)
+        public GetCommentsByVideoIdResponseDto(int totalVideoComments, List<CommentEntity> comments, bool success = true)
             : base(success)
         {
             TotalVideoComments = totalVideoComments;

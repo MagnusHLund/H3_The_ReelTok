@@ -44,7 +44,9 @@ namespace reeltok.api.comments.ActionFilters
         private static void ValidateProperties(object model, ModelStateDictionary modelState)
         {
             if (model == null)
+            {
                 return;
+            }
 
             PropertyInfo[] properties = model.GetType().GetProperties();
 

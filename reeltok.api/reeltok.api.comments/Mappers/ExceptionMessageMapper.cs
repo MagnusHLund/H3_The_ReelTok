@@ -1,6 +1,6 @@
 using System.Net;
-using reeltok.api.comments.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using reeltok.api.comments.Exceptions;
 
 namespace reeltok.api.comments.Mappers
 {

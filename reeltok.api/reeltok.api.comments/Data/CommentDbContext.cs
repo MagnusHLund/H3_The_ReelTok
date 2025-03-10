@@ -3,14 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace reeltok.api.comments.Data
 {
-    public class CommentDbContext : DbContext
+    public class CommentsDbContext : DbContext
     {
-
-        public CommentDbContext(DbContextOptions<CommentDbContext> options) : base(options)
-        {
-        }
-
         public DbSet<CommentEntity> Comments { get; set; }
+
+        public CommentsDbContext(DbContextOptions<CommentsDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,11 +15,18 @@ namespace reeltok.api.comments.Data
 
             modelBuilder.Entity<CommentEntity>().OwnsOne(cd => cd.CommentDetails, commentDetails =>
             {
-                commentDetails.Property(c => c.UserId).HasColumnName("UserId");
-                commentDetails.Property(c => c.VideoId).HasColumnName("VideoId");
-                commentDetails.Property(c => c.Message).HasColumnName("Message");
-                commentDetails.Property(c => c.CreatedAt).HasColumnName("CreatedAt");
+                commentDetails.Property(cd => cd.UserId).HasColumnName("UserId");
+                commentDetails.Property(cd => cd.VideoId).HasColumnName("VideoId");
+                commentDetails.Property(cd => cd.Message).HasColumnName("Message");
+                commentDetails.Property(cd => cd.CreatedAt).HasColumnName("CreatedAt");
+
+                commentDetails.HasIndex(cd => cd.UserId);
+                commentDetails.HasIndex(cd => cd.VideoId);
+                commentDetails.HasIndex(cd => cd.CreatedAt);
+
+                commentDetails.HasIndex(cd => new { cd.UserId, cd.VideoId });
             });
+
 
         }
 

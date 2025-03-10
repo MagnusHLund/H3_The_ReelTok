@@ -1,47 +1,45 @@
 using reeltok.api.comments.Entities;
-using reeltok.api.comments.Interface;
+using reeltok.api.comments.Factories;
+using reeltok.api.comments.Interfaces.Services;
+using reeltok.api.comments.Interfaces.Repositories;
 
 namespace reeltok.api.comments.Services
 {
-    public class CommentService : ICommentService
+    public class CommentService : ICommentsService
     {
-        private readonly ICommentRepository _repo;
+        private readonly ICommentsRepository _commentsRepository;
+        private readonly IExternalApiService _externalApisService;
 
-        public CommentService(ICommentRepository repository)
+        public CommentService(ICommentsRepository commentsRepository, IExternalApiService externalApisService)
         {
-            _repo = repository;
+            _commentsRepository = commentsRepository;
+            _externalApisService = externalApisService;
         }
 
-        public async Task<CommentEntity> CreateCommentAsync(CommentEntity comment)
+        public async Task<int> GetTotalCommentsForVideoAsync(Guid videoId)
         {
-            CommentEntity comment1;
+            int totalVideoComments = await _commentsRepository.GetTotalCommentsForVideoAsync(videoId)
+                .ConfigureAwait(false);
 
-            try
-            {
-                comment1 = await _repo.CreateCommentAsync(comment).ConfigureAwait(false);
-            }
-            catch
-            {
-                throw new InvalidOperationException("Couldn't create comments. Please try again");
-            }
-
-            return comment1;
+            return totalVideoComments;
         }
 
-        public async Task<List<CommentEntity>> GetAllCommentByVideoId(Guid videoId)
+        public async Task<List<CommentEntity>> GetCommentsByVideoIdAsync(Guid videoId, int pageNumber, byte pageSize)
         {
-            List<CommentEntity> comments;
-
-            try
-            {
-                comments = await _repo.GetAllCommentByVideoId(videoId).ConfigureAwait(false);
-            }
-            catch
-            {
-                throw new InvalidOperationException("Couldn't fetch comments. Please try again");
-            }
+            List<CommentEntity> comments = await _commentsRepository.GetCommentsByVideoIdAsync(videoId, pageNumber, pageSize)
+                .ConfigureAwait(false);
 
             return comments;
+        }
+
+        public async Task<CommentEntity> CreateCommentAsync(Guid videoId, Guid userId, string commentText)
+        {
+            await _externalApisService.EnsureVideoIdExistAsync(videoId).ConfigureAwait(false);
+
+            CommentEntity commentEntity = CommentFactory.CreateCommentEntity(videoId, userId, commentText);
+            CommentEntity savedCommentEntity = await _commentsRepository.CreateCommentAsync(commentEntity).ConfigureAwait(false);
+
+            return savedCommentEntity;
         }
     }
 }
