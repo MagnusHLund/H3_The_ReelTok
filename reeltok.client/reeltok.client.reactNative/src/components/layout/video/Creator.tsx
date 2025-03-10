@@ -44,7 +44,9 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     flexDirection: 'row',
-    width: 300,
+    width: 400,
+    left: -30,
+    top: '60%',
   },
   pictureContainer: {
     left: -50,
