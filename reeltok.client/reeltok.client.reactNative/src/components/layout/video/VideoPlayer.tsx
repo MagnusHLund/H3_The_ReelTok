@@ -7,9 +7,11 @@ import { useVideoPlayer, VideoView } from 'expo-video'
 import { useEffect, useState, useRef } from 'react'
 import VideoOverlay from './VideoOverlay'
 import VideoSpinner from './VideoSpinner'
+import { UserDetails } from '../../../redux/slices/usersSlice'
 
 interface VideoPlayerProps {
   videoDetails?: Video
+  userDetails: UserDetails
   loopAmount?: number
   isDisplayed: boolean
   onAutoScroll: () => void
@@ -18,6 +20,7 @@ interface VideoPlayerProps {
 // TODO: Add play icon, when video is paused
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
   videoDetails,
+  userDetails,
   loopAmount = 2,
   isDisplayed,
   onAutoScroll,
@@ -26,7 +29,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const { contentHeight } = useAppDimensions()
   const isVideoFocused = useIsFocused()
   const [showCommentsSection, setShowCommentsSection] = useState(false)
-  const showCommentsSectionRef = useRef(showCommentsSection) 
+  const showCommentsSectionRef = useRef(showCommentsSection)
   const player = useVideoPlayer(videoDetails?.streamUrl ?? '', (player) => {
     player.loop = true
     player.play()
@@ -65,7 +68,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       player.removeListener('playToEnd', handlePlayToEnd)
     }
   }, [player])
- 
+
   const changeVideoPlayState = () => {
     if (player.playing) {
       player.pause()
@@ -75,13 +78,14 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   }
 
   if (videoDetails === undefined) {
-    return <VideoSpinner awaitingVideo/>
+    return <VideoSpinner awaitingVideo />
   }
 
   return (
     <View style={[styles.container, { height: contentHeight }]}>
       <VideoOverlay
         videoDetails={videoDetails}
+        userdetails={userDetails}
         onCommentsOpen={() => setShowCommentsSection(true)}
       />
       <TouchableOpacity

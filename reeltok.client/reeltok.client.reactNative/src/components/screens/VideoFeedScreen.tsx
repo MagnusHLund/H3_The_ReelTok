@@ -11,7 +11,6 @@ import VideoPlayer from '../layout/video/VideoPlayer'
 import UseOrientation from '../../hooks/useOrientation'
 import VideoListApp from '../layout/video/VideoListApp'
 import VideoListWeb from '../layout/video/VideoListWeb'
-import VideoSpinner from '../layout/video/VideoSpinner'
 
 interface RenderItemProps {
   item: Video
@@ -103,8 +102,13 @@ const VideoFeedScreen: React.FC = () => {
           videoDetails={item}
           onAutoScroll={handleAutoScroll}
           isDisplayed={currentlyDisplayedVideoIndex === index}
+          userDetails={{
+            userId: 'guidUserId3',
+            username: 'test',
+            profileUrl: 'someurl',
+            profilePictureUrl: 'https://avatars.githubusercontent.com/u/124877369?v=4',
+          }}
         />
-        {/* <VideoSpinner awaitingVideo={true} /> */}
       </Animated.View>
     ),
     [currentlyDisplayedVideoIndex, handleAutoScroll]

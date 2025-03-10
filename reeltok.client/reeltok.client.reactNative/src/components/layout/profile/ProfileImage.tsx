@@ -10,7 +10,6 @@ interface ProfileImageProps {
   height?: number
   width?: number
   allowedToChangePicture: boolean
-
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({
@@ -18,7 +17,6 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   height = 80,
   width = 80,
   allowedToChangePicture,
-
 }) => {
   const [showCamera, setShowCamera] = useState(false)
   const navigateToScreen = useAppNavigation()
@@ -65,7 +63,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: 60,
     zIndex: 3,
   },
 })

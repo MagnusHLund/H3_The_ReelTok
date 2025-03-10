@@ -9,21 +9,30 @@ import React from 'react'
 import ProfileImage from '../profile/ProfileImage'
 import useAppDimensions from '../../../hooks/useAppDimensions'
 import useAppSelector from '../../../hooks/useAppSelector'
-import { Video } from 'expo'
+import Creator from './Creator'
+import { UserDetails } from '../../../redux/slices/usersSlice'
+
+// import { Video } from 'expo' video is getting imported twice i commented this out because im unsure which is being used i just think the other one is more likely
 
 interface VideoOverlayProps {
   videoDetails: Video
+  userdetails: UserDetails
   onCommentsOpen: () => void
 }
 
 // TODO: Use icons & text font with an outline, so they are visible on any video background!
 // TODO: Add video creator and video information to the overlay
-const VideoOverlay: React.FC<VideoOverlayProps> = ({ videoDetails, onCommentsOpen }) => {
+const VideoOverlay: React.FC<VideoOverlayProps> = ({
+  videoDetails,
+  userdetails,
+  onCommentsOpen,
+}) => {
   const dispatch = useAppDispatch()
   const orientation = useOrientation('', 'VideoOverlay')
-  const { fullWidth, contentHeight } = useAppDimensions()
+  const { fullWidth } = useAppDimensions()
 
-  const user = useAppSelector((state) => state.users.users.find((user) => user.userId))
+  const user = useAppSelector((state) => state.users.users.find((user) => user))
+  const video = useAppSelector((state) => state.videos.videos.find((video) => video))
 
   const handleLikeButtonPress = () => {
     dispatch(hasLikedVideoThunk(videoDetails))
@@ -58,22 +67,8 @@ const VideoOverlay: React.FC<VideoOverlayProps> = ({ videoDetails, onCommentsOpe
           <Ionicons name="chatbubble-outline" size={32} color="white" />
         </CustomButton>
       </View>
-      <View style={[styles.aboutContainer, { width: fullWidth }]}>
-        <View style={styles.profilePictureContainer}>
-          <ProfileImage
-            source={
-              videoDetails.creatorUserId === user?.userId && user?.profilePictureUrl
-                ? { uri: user.profilePictureUrl }
-                : require('./../../../../assets/images/placeholders/profile-default-img.png')
-            }
-            width={40}
-            height={40}
-            allowedToChangePicture={false}
-          />
-        </View>
-        <View style={styles.usernameContainer}>
-          <Text>{videoDetails.creatorUserId === user?.userId && user?.username}</Text>
-        </View>
+      <View style={styles.aboutContainer}>
+        <Creator user={userdetails} video={videoDetails} />
       </View>
     </View>
   )
@@ -97,17 +92,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'row',
     zIndex: 1,
-    top: '400%',
-    right: '150%',
+    top: '350%',
+    right: '900%',
     height: '50%',
-    backgroundColor: 'white',
   },
-  profilePictureContainer: {
-    width: '30%',
-    top: -30,
-    left: 20,
-  },
-  usernameContainer: {},
 })
 
 export default VideoOverlay
