@@ -1,4 +1,4 @@
-import { Text } from 'react-native'
+import { Text, StyleSheet } from 'react-native'
 import React from 'react'
 
 interface TitleProps {
@@ -6,7 +6,12 @@ interface TitleProps {
 }
 
 const Title: React.FC<TitleProps> = ({ title }) => {
-  return <Text>{title ? 'Ingen title' : ''}</Text>
+  return <Text style={styles.text}>{title ? 'Ingen title' : ''}</Text>
 }
-
+const styles = StyleSheet.create({
+  text: {
+    color: 'white',
+    fontSize: 15,
+  },
+})
 export default Title

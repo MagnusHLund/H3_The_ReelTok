@@ -1,4 +1,4 @@
-import { Text } from 'react-native'
+import { Text, StyleSheet } from 'react-native'
 import React from 'react'
 
 interface UsernameProps {
@@ -6,7 +6,14 @@ interface UsernameProps {
 }
 
 const Username: React.FC<UsernameProps> = ({ username }) => {
-  return <Text>{username ? 'intet brugernavn' : ''}</Text>
+  return <Text style={styles.text}>{username ? 'intet brugernavn' : ''}</Text>
 }
 
+const styles = StyleSheet.create({
+  text: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+})
 export default Username

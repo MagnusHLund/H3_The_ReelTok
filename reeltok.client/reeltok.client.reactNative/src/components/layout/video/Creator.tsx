@@ -44,8 +44,6 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     flexDirection: 'row',
-    backgroundColor: 'white',
-    padding: 10,
     width: 300,
   },
   pictureContainer: {
