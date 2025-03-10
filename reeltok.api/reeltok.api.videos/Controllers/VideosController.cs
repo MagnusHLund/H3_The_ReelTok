@@ -67,9 +67,6 @@ namespace reeltok.api.videos.Controllers
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadVideoAsync([FromForm] UploadVideoRequestDto request)
         {
-            // TODO: Add byte for handling the category, (see the dto above ^^^^) but do not save it in videos database. 
-            //!^^^^  it goes to recommendations database.
-             
             VideoUpload videoUpload = VideoMapper.ConvertUploadVideoRequestDtoToVideoUpload(request);
 
             await _videosService.UploadVideoAsync(videoUpload, request.UserId, request.Category).ConfigureAwait(false);

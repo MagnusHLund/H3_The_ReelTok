@@ -6,6 +6,8 @@ using reeltok.api.videos.Interfaces;
 using reeltok.api.videos.Tests.Factories;
 using reeltok.api.videos.Interfaces.Factories;
 using reeltok.api.videos.DTOs.GetRecommendedVideos;
+using System.Net;
+using reeltok.api.videos.Exceptions;
 
 namespace reeltok.api.videos.Tests.Services
 {
@@ -22,16 +24,12 @@ namespace reeltok.api.videos.Tests.Services
             _externalApiService = new ExternalApiService(_mockHttpService.Object, _mockEndpointFactory.Object);
         }
 
-        // TODO: Make more tests. I refactored and some are gone now, because they became super whack.
-        //!^^^^  Ensure that all tests are working. (Except for StorageServerTests)
-
         [Fact]
         public async Task GetRecommendedVideoIdsAsync_WithValidRequest_ReturnsExpectedResponse()
         {
             // Arrange
             Guid userId = Guid.NewGuid();
             byte amount = 5;
-            ServiceGetRecommendedVideosRequestDto requestDto = new ServiceGetRecommendedVideosRequestDto(userId, amount);
             Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("recommendations");
             ServiceGetRecommendedVideosResponseDto responseDto = new ServiceGetRecommendedVideosResponseDto
             (
@@ -40,7 +38,8 @@ namespace reeltok.api.videos.Tests.Services
             );
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
-            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetRecommendedVideosRequestDto, ServiceGetRecommendedVideosResponseDto>(It.IsAny<ServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetRecommendedVideosRequestDto, ServiceGetRecommendedVideosResponseDto>(
+                It.IsAny<ServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
                 .ReturnsAsync(responseDto);
 
             // Act
@@ -51,24 +50,69 @@ namespace reeltok.api.videos.Tests.Services
         }
 
         [Fact]
-        public async Task GetRecommendedVideoIdsAsync_WithInvalidRequest_ThrowsException()
+        public async Task GetRecommendedVideoIdsAsync_WithInvalidRequest_ThrowsFailureNetworkResponseException()
         {
             // Arrange
             Guid userId = Guid.NewGuid();
             byte amount = 5;
-            ServiceGetRecommendedVideosRequestDto requestDto = new ServiceGetRecommendedVideosRequestDto(userId, amount);
             Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("recommendations");
             FailureResponseDto responseDto = new FailureResponseDto("Test error");
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetRecommendedVideosRequestDto, BaseResponseDto>(
+                It.IsAny<ServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                .ReturnsAsync(responseDto); // Returning FailureResponseDto
 
-            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetRecommendedVideosRequestDto, FailureResponseDto>(
+            // Act & Assert
+            FailureNetworkResponseException exception = await Assert.ThrowsAsync<FailureNetworkResponseException>(
+                () => _externalApiService.GetRecommendedVideoIdsAsync(userId, amount)
+            );
+
+            Assert.Contains("Test error", exception.Message);
+        }
+
+
+
+        [Fact]
+        public async Task GetRecommendedVideoIdsAsync_WithHttpError_ThrowsHttpRequestException()
+        {
+            // Arrange
+            Guid userId = Guid.NewGuid();
+            byte amount = 5;
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("recommendations");
+
+            _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetRecommendedVideosRequestDto, ServiceGetRecommendedVideosResponseDto>(
+                It.IsAny<ServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                .ThrowsAsync(new HttpRequestException("Service unavailable", null, HttpStatusCode.ServiceUnavailable));
+
+            // Act & Assert
+            await Assert.ThrowsAsync<HttpRequestException>(() => _externalApiService.GetRecommendedVideoIdsAsync(userId, amount));
+        }
+
+        [Fact]
+        public async Task GetRecommendedVideoIdsAsync_WithEmptyResponse_ReturnsEmptyList()
+        {
+            // Arrange
+            Guid userId = Guid.NewGuid();
+            byte amount = 5;
+            Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("recommendations");
+            ServiceGetRecommendedVideosResponseDto responseDto = new ServiceGetRecommendedVideosResponseDto
+            (
+                videoIdList: new List<Guid>(),
+                success: true
+            );
+
+            _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetRecommendedVideosRequestDto, ServiceGetRecommendedVideosResponseDto>(
                 It.IsAny<ServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
                 .ReturnsAsync(responseDto);
 
-            // Act & Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(() => _externalApiService
-                .GetRecommendedVideoIdsAsync(userId, amount));
+            // Act
+            List<Guid> result = await _externalApiService.GetRecommendedVideoIdsAsync(userId, amount);
+
+            // Assert
+            Assert.Empty(result);
         }
     }
 }
