@@ -236,6 +236,9 @@ _Pvt_Extensions
 # Entity framework migrations
 **/Migrations/
 
+# Environment files 
+**/.env
+
 # Production appsettings
 **/appsettings.json
 
