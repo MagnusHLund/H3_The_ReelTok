@@ -7,7 +7,6 @@ interface DialogBoxProps {
   handleModalClose: () => void
   handleConfirmation: () => void
 }
-// TODO: Use dialog box for retaking a picture.
 
 const DialogBox: React.FC<DialogBoxProps> = ({
   text,

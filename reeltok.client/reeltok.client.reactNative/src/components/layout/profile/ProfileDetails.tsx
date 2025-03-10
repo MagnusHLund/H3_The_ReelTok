@@ -9,9 +9,12 @@ const ProfileDetails = () => {
   return (
     <View style={styles.outercontainer}>
       <View style={styles.ProfilePictureContainer}>
-        <ProfileImage
-          source={require('./../../../../assets/images/placeholders/profile-default-img.png')}
-        />
+        <View style={styles.image}>
+          <ProfileImage
+            source={require('./../../../../assets/images/placeholders/profile-default-img.png')}
+            allowedToChangePicture={true}
+          />
+        </View>
       </View>
       <View style={styles.StackedContainer}>
         <View style={styles.UpperContainer}>
@@ -28,7 +31,6 @@ const ProfileDetails = () => {
 const styles = StyleSheet.create({
   outercontainer: {
     flexDirection: 'column',
-    // justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     height: '20%',
@@ -58,6 +60,9 @@ const styles = StyleSheet.create({
     marginLeft: '20%',
     width: '80%',
     top: '-40%',
+  },
+  image: {
+    top: '85%',
   },
 })
 

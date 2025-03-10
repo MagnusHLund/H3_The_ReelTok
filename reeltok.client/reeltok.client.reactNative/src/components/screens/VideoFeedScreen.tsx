@@ -102,6 +102,12 @@ const VideoFeedScreen: React.FC = () => {
           videoDetails={item}
           onAutoScroll={handleAutoScroll}
           isDisplayed={currentlyDisplayedVideoIndex === index}
+          userDetails={{
+            userId: 'guidUserId3',
+            username: 'Magnus',
+            profileUrl: 'someurl',
+            profilePictureUrl: 'https://avatars.githubusercontent.com/u/124877369?v=4',
+          }}
         />
       </Animated.View>
     ),

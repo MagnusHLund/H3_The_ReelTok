@@ -30,7 +30,6 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    console.log('test 1')
     dispatch(setUploadedVideoThunk(uri))
   }, [uri])
 
@@ -78,7 +77,6 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
   }
 
   const renderContent = () => {
-    console.log(uri)
     return (
       <View style={[styles.contentContainer, { height: contentHeight }]}>
         {cameraMode === 'picture' && uri && (

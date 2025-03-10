@@ -30,7 +30,6 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode, onClose }) => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    console.log('test 1')
     dispatch(setUploadedVideoThunk(uri))
   }, [uri])
 

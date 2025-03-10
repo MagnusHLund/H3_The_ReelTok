@@ -28,7 +28,7 @@ export default BackButton
 const styles = StyleSheet.create({
   backButton: {
     position: 'absolute',
-    top: 45, // Adjust for status bar height if necessary
+    top: 45, 
     left: 20,
     zIndex: 10,
     padding: 10,
