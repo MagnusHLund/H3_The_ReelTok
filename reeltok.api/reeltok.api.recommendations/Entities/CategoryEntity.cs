@@ -1,23 +1,29 @@
+using reeltok.api.recommendations.Enums;
 using System.ComponentModel.DataAnnotations;
-using reeltok.api.recommendations.ValueObjects;
 
 namespace reeltok.api.recommendations.Entities
 {
     public class CategoryEntity
     {
         [Key]
-        public uint CategoryId { get; private set; }
+        public uint CategoryId { get; set; }
         [Required]
-        public CategoryDetails CategoryDetails { get; private set; }
+        public CategoryType Category { get; set; }
 
-        public List<UserInterestEntity>? UserInterestEntities { get; private set; }
-        public List<VideoCategoryEntity>? VideoCategoryEntities { get; private set; }
+        public ICollection<CategoryUserInterestEntity>? UserInterestCategoryEntities { get; set; }
+        public ICollection<CategoryVideoCategoryEntity>? VideoCategoryCategoryEntities { get; set; }
 
-        public CategoryEntity(CategoryDetails categoryDetails)
+        public CategoryEntity(uint categoryId, CategoryType category)
         {
-            CategoryDetails = categoryDetails;
+            CategoryId = categoryId;
+            Category = category;
         }
 
-        private CategoryEntity () {}
+        public CategoryEntity(CategoryType category)
+        {
+            Category = category;
+        }
+
+        private CategoryEntity() { }
     }
 }

@@ -1,35 +1,54 @@
+using reeltok.api.recommendations.Enums;
 using reeltok.api.recommendations.Entities;
-using reeltok.api.recommendations.Interfaces.Repositories;
+using reeltok.api.recommendations.Factories;
 using reeltok.api.recommendations.Interfaces.Services;
+using reeltok.api.recommendations.Interfaces.Repositories;
+using reeltok.api.recommendations.Mappers;
 
 namespace reeltok.api.recommendations.Services
 {
-    public class VideoRecommendationService : IVideoRecommendationService
+    public class VideosService : IVideosService
     {
-        private readonly IVideoRecommendationRepository _videoRecommendationRepository;
+        private readonly IVideoCategoriesRepository _videoCategoriesRepository;
+        private readonly IRecommendationsService _recommendationsService;
 
-        public VideoRecommendationService(IVideoRecommendationRepository videoRecommendationRepository)
+        public VideosService(IVideoCategoriesRepository videoCategoriesRepository, IRecommendationsService recommendationsService)
         {
-            _videoRecommendationRepository = videoRecommendationRepository;
+            _videoCategoriesRepository = videoCategoriesRepository;
+            _recommendationsService = recommendationsService;
         }
 
-        public async Task<bool> AddRecommendationForVideoAsync(VideoCategoryEntity videoCategory, int categoryId)
+        public async Task<List<Guid>> GetRecommendedVideosForUsersFeedAsync(Guid userId, byte amountOfVideos)
         {
-            bool isAdded = await _videoRecommendationRepository.AddRecommendationForVideoAsync(videoCategory, categoryId);
+            byte maxAmount = 20;
 
-            if (!isAdded)
+            if (amountOfVideos > maxAmount)
             {
-                throw new Exception("Category not found");
+                amountOfVideos = maxAmount;
             }
 
-            return isAdded;
+            List<Guid> videoIds = await _recommendationsService
+                .GetVideoRecommendationsForUserAsync(userId, amountOfVideos)
+                .ConfigureAwait(false);
+
+            return videoIds;
         }
 
-        public async Task<VideoCategoryEntity> GetVideoCategoryAsync(Guid videoId)
+        public async Task<CategoryType> AddVideoCategoryAsync(Guid videoId, CategoryType videoCategory)
         {
-            VideoCategoryEntity videoCategoryEntity = await _videoRecommendationRepository.GetVideoCategoryEntityAsync(videoId);
+            CategoryEntity categoryEntityToSave = CategoryFactory.CreateCategoryEntity(videoCategory);
+            VideoEntity videoEntity = new VideoEntity(videoId);
 
-            return videoCategoryEntity;
+            CategoryVideoCategoryEntity categoryVideoCategoryEntity = CategoryFactory
+                .CreateCategoryVideoInterestEntity(categoryEntityToSave, videoEntity);
+
+            uint savedCategoryId = await _videoCategoriesRepository
+                .AddVideoCategoryAsync(categoryVideoCategoryEntity)
+                .ConfigureAwait(false);
+
+            CategoryType savedVideoCategory = CategoryMapper.ConvertCategoryIdToCategoryType(savedCategoryId);
+
+            return savedVideoCategory;
         }
     }
 }

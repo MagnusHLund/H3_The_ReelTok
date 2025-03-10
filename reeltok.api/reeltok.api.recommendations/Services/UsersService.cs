@@ -1,49 +1,58 @@
+using reeltok.api.recommendations.Enums;
+using reeltok.api.recommendations.Mappers;
 using reeltok.api.recommendations.Entities;
-using reeltok.api.recommendations.Interfaces.Repositories;
+using reeltok.api.recommendations.Factories;
 using reeltok.api.recommendations.Interfaces.Services;
+using reeltok.api.recommendations.Interfaces.Repositories;
 
 namespace reeltok.api.recommendations.Services
 {
-    public class UserRecommendationService : IUserRecommendationService
+    public class UsersService : IUsersService
     {
-        private readonly IUserRecommendationRepository _userRecommendationRepository;
+        private readonly IUserInterestsRepository _userInterestsRepository;
 
-        public UserRecommendationService(IUserRecommendationRepository userRecommendationRepository)
+        public UsersService(IUserInterestsRepository userRecommendationRepository)
         {
-            _userRecommendationRepository = userRecommendationRepository;
+            _userInterestsRepository = userRecommendationRepository;
         }
 
-        public async Task<bool> AddRecommendationForUserAsync(UserInterestEntity userInterest, int categoryId)
+        public async Task<CategoryType> GetUserInterestAsync(Guid userId)
         {
-            bool isAdded = await _userRecommendationRepository.AddRecommendationForUserAsync(userInterest, categoryId);
+            CategoryEntity categoryEntity = await _userInterestsRepository.GetUserInterestAsync(userId).ConfigureAwait(false);
+            CategoryType userInterest = categoryEntity.Category;
 
-            if (!isAdded)
-            {
-                throw new Exception("Category not found");
-            }
-
-            return isAdded;
+            return userInterest;
         }
 
-        public async Task<UserInterestEntity?> GetUserInterestAsync(Guid userId)
+        public async Task<CategoryType> AddInterestForUserAsync(Guid userId, CategoryType userInterest)
         {
-            UserInterestEntity userInterestEntity = await _userRecommendationRepository.GetUserInterestAsync(userId);
+            CategoryEntity categoryEntityToSave = CategoryFactory.CreateCategoryEntity(userInterest);
+            UserEntity userEntity = new UserEntity(userId);
 
-            return userInterestEntity;
+            CategoryUserInterestEntity categoryUserInterestEntity = CategoryFactory
+                .CreateCategoryUserInterestEntity(categoryEntityToSave, userEntity);
+
+            uint savedCategoryId = await _userInterestsRepository
+                .AddUserInterestAsync(categoryUserInterestEntity)
+                .ConfigureAwait(false);
+
+            CategoryType savedUserInterest = CategoryMapper.ConvertCategoryIdToCategoryType(savedCategoryId);
+
+            return savedUserInterest;
         }
 
-        public async Task<bool> UpdateRecommendationForUserAsync(Guid userId, int oldCategoryId, int newCategoryId)
+        public async Task<CategoryType> UpdateInterestForUserAsync(Guid userId, CategoryType newUserInterest)
         {
-            UserInterestEntity userInterestEntity = await _userRecommendationRepository.GetUserInterestAsync(userId);
+            uint categoryId = CategoryMapper.ConvertCategoryTypeToCategoryId(newUserInterest);
+            UserEntity userEntity = new UserEntity(userId);
 
-            bool isUpdated = await _userRecommendationRepository.UpdateRecommendationForUserAsync(userInterestEntity, oldCategoryId, newCategoryId);
+            uint savedCategoryId = await _userInterestsRepository
+                .UpdateUserInterestAsync(userEntity, categoryId)
+                .ConfigureAwait(false);
 
-            if (!isUpdated)
-            {
-                throw new Exception("Category not found");
-            }
+            CategoryType savedUserInterest = CategoryMapper.ConvertCategoryIdToCategoryType(savedCategoryId);
 
-            return isUpdated;
+            return savedUserInterest;
         }
     }
 }

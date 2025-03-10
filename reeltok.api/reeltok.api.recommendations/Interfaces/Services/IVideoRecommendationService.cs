@@ -1,10 +1,10 @@
-using reeltok.api.recommendations.Entities;
+using reeltok.api.recommendations.Enums;
 
 namespace reeltok.api.recommendations.Interfaces.Services
 {
-    public interface IVideoRecommendationService
+    public interface IVideosService
     {
-        Task<bool> AddRecommendationForVideoAsync(VideoCategoryEntity videoCategory, int categoryId);
-        Task<VideoCategoryEntity> GetVideoCategoryAsync(Guid videoId);
+        Task<List<Guid>> GetRecommendedVideosForUsersFeedAsync(Guid userId, byte amountOfVideos);
+        Task<CategoryType> AddVideoCategoryAsync(Guid videoId, CategoryType videoCategory);
     }
 }

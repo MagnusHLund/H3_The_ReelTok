@@ -1,6 +1,7 @@
 using System.Net;
-using System.Xml.Serialization;
-using reeltok.api.auth.DTOs;
+using System.Text.Json;
+using reeltok.api.recommendations.DTOs;
+using reeltok.api.recommendations.Mappers;
 
 namespace reeltok.api.recommendations.Middleware
 {
@@ -23,25 +24,23 @@ namespace reeltok.api.recommendations.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError($"An exception has occurred: {ex}");
-                await HandleExceptionAsync(context).ConfigureAwait(false);
+                string logMessage = ExceptionMessageMapper.GetLogMessage(ex);
+                var (responseMessage, statusCode) = ExceptionMessageMapper.GetExceptionDetails(ex);
+
+                _logger.LogError(ex, "An exception has occurred: {0}", logMessage);
+                await HandleExceptionAsync(context, responseMessage, statusCode).ConfigureAwait(false);
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context)
+        private static Task HandleExceptionAsync(HttpContext context, string responseMessage, HttpStatusCode statusCode)
         {
-            context.Response.ContentType = "application/xml";
-            context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)statusCode;
 
-            FailureResponseDto response = new FailureResponseDto("Internal server error!");
+            FailureResponseDto response = new FailureResponseDto(responseMessage);
 
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(FailureResponseDto));
-            using (StringWriter stringWriter = new StringWriter())
-            {
-                xmlSerializer.Serialize(stringWriter, response);
-                string responseXml = stringWriter.ToString();
-                return context.Response.WriteAsync(responseXml);
-            }
+            string responseJson = JsonSerializer.Serialize(response);
+            return context.Response.WriteAsync(responseJson);
         }
     }
 }

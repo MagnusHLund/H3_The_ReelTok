@@ -33,7 +33,10 @@
       "editor.wordWrap": "wordWrapColumn",
       "editor.wordWrapColumn": 130
     },
-    "cSpell.words": ["reeltok"]
+    "cSpell.words": ["reeltok"],
+    "[sql]": {
+      "editor.defaultFormatter": "inferrinizzard.prettier-sql-vscode"
+    }
   },
   "launch": {
     "version": "0.2.0",
