@@ -4,7 +4,6 @@ namespace reeltok.api.recommendations.Utils
     {
         internal static string GetRecommendedVideosByUser()
         {
-            // TODO: @MagnusHLund Math is wrong.
             return @"
                 DECLARE @currentTime BIGINT = DATEDIFF(SECOND, '1970-01-01', GETUTCDATE());
                 DECLARE @MatchingCategoryMultiplier FLOAT = 1.0;
@@ -16,7 +15,6 @@ namespace reeltok.api.recommendations.Utils
                     JOIN UserInterests ui ON ui.UserInterestId = cui.UserInterestId
                     WHERE ui.UserId = @UserId
                 ),
-                
                 VideoScores AS (
                     SELECT
                         vc.VideoId,
@@ -25,7 +23,7 @@ namespace reeltok.api.recommendations.Utils
                                 THEN @MatchingCategoryMultiplier
                             ELSE @DifferentCategoryMultiplier
                         END *
-                        ((1.0 + ISNULL(vw.TotalTimeWatched, 0))
+                        ((1.0 / (1.0 + ISNULL(vw.TotalTimeWatched, 0)))
                         * (1.0 + ABS(@currentTime - ISNULL(vw.LastWatchedTime, @currentTime)))) AS RawScore
                     FROM VideoCategories vc
                     LEFT JOIN CategoryVideoCategories cvc ON cvc.VideoCategoryId = vc.VideoCategoryId
@@ -39,7 +37,7 @@ namespace reeltok.api.recommendations.Utils
                         GROUP BY VideoId
                     ) vw ON vw.VideoId = vc.VideoId
                 )
-                
+
                 SELECT TOP (@Amount) VideoId
                 FROM VideoScores
                 ORDER BY RawScore DESC;
