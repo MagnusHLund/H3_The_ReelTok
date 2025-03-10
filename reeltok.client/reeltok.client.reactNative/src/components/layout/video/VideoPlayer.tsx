@@ -6,6 +6,7 @@ import { useIsFocused } from '@react-navigation/native'
 import { useVideoPlayer, VideoView } from 'expo-video'
 import { useEffect, useState, useRef } from 'react'
 import VideoOverlay from './VideoOverlay'
+import VideoSpinner from './VideoSpinner'
 
 interface VideoPlayerProps {
   videoDetails?: Video
@@ -74,7 +75,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   }
 
   if (videoDetails === undefined) {
-    return <></> // TODO: Use VideoSpinner
+    return <VideoSpinner awaitingVideo/>
   }
 
   return (

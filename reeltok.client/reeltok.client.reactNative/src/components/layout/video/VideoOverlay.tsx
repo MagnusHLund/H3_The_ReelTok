@@ -8,6 +8,8 @@ import useOrientation from '../../../hooks/useOrientation'
 import React from 'react'
 import ProfileImage from '../profile/ProfileImage'
 import useAppDimensions from '../../../hooks/useAppDimensions'
+import useAppSelector from '../../../hooks/useAppSelector'
+import { Video } from 'expo'
 
 interface VideoOverlayProps {
   videoDetails: Video
@@ -20,6 +22,9 @@ const VideoOverlay: React.FC<VideoOverlayProps> = ({ videoDetails, onCommentsOpe
   const dispatch = useAppDispatch()
   const orientation = useOrientation('', 'VideoOverlay')
   const { fullWidth, contentHeight } = useAppDimensions()
+
+  const user = useAppSelector((state) => state.users.users.find((user) => user.userId))
+
   const handleLikeButtonPress = () => {
     dispatch(hasLikedVideoThunk(videoDetails))
   }
@@ -56,14 +61,18 @@ const VideoOverlay: React.FC<VideoOverlayProps> = ({ videoDetails, onCommentsOpe
       <View style={[styles.aboutContainer, { width: fullWidth }]}>
         <View style={styles.profilePictureContainer}>
           <ProfileImage
-            source={require('./../../../../assets/images/placeholders/profile-default-img.png')}
+            source={
+              videoDetails.creatorUserId === user?.userId && user?.profilePictureUrl
+                ? { uri: user.profilePictureUrl }
+                : require('./../../../../assets/images/placeholders/profile-default-img.png')
+            }
             width={40}
             height={40}
             allowedToChangePicture={false}
           />
         </View>
         <View style={styles.usernameContainer}>
-          <Text>username</Text>
+          <Text>{videoDetails.creatorUserId === user?.userId && user?.username}</Text>
         </View>
       </View>
     </View>
