@@ -33,7 +33,8 @@ namespace reeltok.api.videos.Tests.Services
             );
         }
 
-        // TODO: Create tests that fail as well
+
+        #region Success Tests
 
         [Fact]
         public async Task GetVideosForFeedAsync_WithValidParameters_ReturnVideosForFeed()
@@ -113,19 +114,34 @@ namespace reeltok.api.videos.Tests.Services
             Assert.Equal(expectedVideos, result);
         }
 
+        // TODO: Fix// system.io.ioexception: an error occured while getting media info!
         [Fact]
         public async Task UploadVideoAsync_WithValidParameters_SuccessfullyUploadVideo()
         {
             // Arrange
             Guid userId = Guid.NewGuid();
             VideoUpload videoUpload = TestDataFactory.CreateVideoUpload();
+            Assert.NotNull(videoUpload); // Ensure videoUpload is not null
+            Assert.NotNull(videoUpload.VideoFile); // Ensure video file is not null
+
             VideoEntity expectedVideo = TestDataFactory.CreateVideoEntity();
 
-            _mockVideosRepository.Setup(x => x.CreateVideoAsync(It.IsAny<VideoEntity>())).ReturnsAsync(expectedVideo);
-            _mockStorageService.Setup(x => x.UploadVideoToFileServerAsync(videoUpload.VideoFile, expectedVideo.VideoId, userId)).Returns(Task.CompletedTask);
+            // Ensure the videoUpload object and its VideoFile are not null
+            Assert.NotNull(videoUpload);
+            Assert.NotNull(videoUpload.VideoFile);
+
+            // Mock repository to return the expected video entity when CreateVideoAsync is called
+            _mockVideosRepository
+                .Setup(x => x.CreateVideoAsync(It.IsAny<VideoEntity>()))
+                .ReturnsAsync(expectedVideo);
+
+            // Mock storage service to successfully upload the video file
+            _mockStorageService
+                .Setup(x => x.UploadVideoToFileServerAsync(videoUpload.VideoFile, expectedVideo.VideoId, userId))
+                .Returns(Task.CompletedTask);
 
             // Act
-            VideoEntity result = await _videosService.UploadVideoAsync(videoUpload, userId);
+            VideoEntity result = await _videosService.UploadVideoAsync(videoUpload, userId, 1);
 
             // Assert
             Assert.Equal(expectedVideo, result);
@@ -149,5 +165,83 @@ namespace reeltok.api.videos.Tests.Services
             _mockVideosRepository.Verify(x => x.DeleteVideoAsync(userId, videoId), Times.Once);
             _mockStorageService.Verify(x => x.RemoveVideoFromFileServerAsync(streamPath), Times.Once);
         }
+
+        #endregion
+
+        #region Failure Tests
+
+        [Fact]
+        public async Task GetVideosForFeedAsync_WithInvalidParameters_ReturnsEmptyList()
+        {
+            // Arrange
+            Guid userId = Guid.NewGuid();
+            byte amount = 2;
+
+            // Mock external API service to return an empty list of video IDs
+            _mockExternalApiService
+                .Setup(x => x.GetRecommendedVideoIdsAsync(userId, amount))
+                .ReturnsAsync(new List<Guid>());
+
+            // Mock videos repository to return an empty list when called with empty video IDs list
+            _mockVideosRepository
+                .Setup(x => x.GetVideosForFeedAsync(It.IsAny<List<Guid>>(), amount))
+                .ReturnsAsync(new List<VideoEntity>());
+
+            // Mock other dependencies to return empty lists
+            _mockExternalApiService
+                .Setup(x => x.GetVideoCreatorDetailsAsync(It.IsAny<List<Guid>>()))
+                .ReturnsAsync(new List<VideoCreatorEntity>());
+
+            _mockLikesService
+                .Setup(x => x.GetLikesForVideos(userId, It.IsAny<List<Guid>>()))
+                .ReturnsAsync(new List<VideoLikesEntity>());
+
+            // Act
+            List<VideoForFeedEntity> result = await _videosService.GetVideosForFeedAsync(userId, amount);
+
+            // Assert
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetVideosForProfileAsync_WithInvalidUserId_ReturnsEmptyList()
+        {
+            // Arrange
+            Guid invalidUserId = Guid.Empty;
+            uint pageNumber = 1;
+            byte pageSize = 10;
+            _mockVideosRepository.Setup(x => x.GetVideosForProfileAsync(invalidUserId, pageNumber, pageSize)).ReturnsAsync(new List<VideoEntity>());
+
+            // Act
+            List<VideoEntity> result = await _videosService.GetVideosForProfileAsync(invalidUserId, pageNumber, pageSize);
+
+            // Assert
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task UploadVideoAsync_WithNullVideoUpload_ThrowsException()
+        {
+            // Arrange
+            Guid userId = Guid.NewGuid();
+
+            // Act & Assert
+            await Assert.ThrowsAsync<NullReferenceException>(async () => await _videosService.UploadVideoAsync(null, userId, 1).ConfigureAwait(false));
+
+        }
+
+        [Fact]
+        public async Task DeleteVideoAsync_WithNonExistentVideo_ThrowsException()
+        {
+            // Arrange
+            Guid userId = Guid.NewGuid();
+            Guid videoId = Guid.NewGuid();
+            _mockVideosRepository.Setup(x => x.DeleteVideoAsync(userId, videoId)).ThrowsAsync(new Exception("Video not found"));
+
+            // Act & Assert
+            await Assert.ThrowsAsync<Exception>(async () => await _videosService.DeleteVideoAsync(userId, videoId));
+        }
+
+        #endregion
     }
 }

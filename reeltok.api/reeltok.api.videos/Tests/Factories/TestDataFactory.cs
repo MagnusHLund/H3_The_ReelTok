@@ -94,11 +94,23 @@ namespace reeltok.api.videos.Tests.Factories
 
         public static VideoUpload CreateVideoUpload()
         {
+            // Mocking a valid file
+            Mock<IFormFile> fileMock = new Mock<IFormFile>();
+            byte[] fileContent = new byte[100]; // Arbitrary byte content (you can replace this with real file content if necessary)
+            MemoryStream stream = new MemoryStream(fileContent);
+
+            fileMock.Setup(f => f.OpenReadStream()).Returns(stream);
+            fileMock.Setup(f => f.Length).Returns(fileContent.Length);
+            fileMock.Setup(f => f.FileName).Returns("test_video.mp4");
+            fileMock.Setup(f => f.ContentType).Returns("video/mp4");
+
+            // Returning the VideoUpload with the mocked file
             return new VideoUpload(
-                videoFile: new Mock<IFormFile>().Object,
+                videoFile: fileMock.Object, // Injecting the mock file
                 videoDetails: CreateVideoDetails()
             );
         }
+
 
         public static VideoForFeedEntity CreateVideoForFeedEntity()
         {
