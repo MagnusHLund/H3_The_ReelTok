@@ -1,5 +1,5 @@
+using reeltok.api.auth.Interfaces.Entities;
 using System.ComponentModel.DataAnnotations;
-using reeltok.api.auth.Interfaces;
 
 namespace reeltok.api.auth.ValueObjects
 {

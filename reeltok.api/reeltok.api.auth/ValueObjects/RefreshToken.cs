@@ -1,6 +1,6 @@
-using System.ComponentModel.DataAnnotations;
+using reeltok.api.auth.Interfaces.Entities;
 using Microsoft.EntityFrameworkCore;
-using reeltok.api.auth.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.auth.ValueObjects
 {

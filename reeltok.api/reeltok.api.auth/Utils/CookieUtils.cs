@@ -1,5 +1,5 @@
 using reeltok.api.auth.Enums;
-using reeltok.api.auth.Interfaces;
+using reeltok.api.auth.Interfaces.Entities;
 
 namespace reeltok.api.auth.Utils
 {
@@ -16,7 +16,7 @@ namespace reeltok.api.auth.Utils
                     Expires = expireDateTime,
                     HttpOnly = true,
                     Secure = true,
-                    // TODO: Learn more about samesite
+                    // TODO: @MagnusHLund Experiment with SameSite and Domain, when running in docker infrastructure
                 }
             );
         }
@@ -27,7 +27,8 @@ namespace reeltok.api.auth.Utils
             httpContext.Response.Cookies.Delete(cookieName);
         }
 
-        internal static string? GetCookieValue(HttpContext httpContext, TokenName cookieNameEnum) {
+        internal static string? GetCookieValue(HttpContext httpContext, TokenName cookieNameEnum)
+        {
             string cookieName = cookieNameEnum.ToString();
             return httpContext.Request.Cookies[cookieName];
         }

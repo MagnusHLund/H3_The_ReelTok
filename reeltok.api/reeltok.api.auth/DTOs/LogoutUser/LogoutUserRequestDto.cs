@@ -1,4 +1,4 @@
-namespace reeltok.api.auth.DTOs
+namespace reeltok.api.auth.DTOs.LogoutUser
 {
     public class LogoutUserRequestDto
     {

@@ -2,15 +2,16 @@ using System.Text;
 using System.Security.Claims;
 using reeltok.api.auth.Utils;
 using reeltok.api.auth.Entities;
-using reeltok.api.auth.Interfaces;
 using System.Security.Cryptography;
 using reeltok.api.auth.ValueObjects;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using reeltok.api.auth.Interfaces.Services;
+using reeltok.api.auth.Interfaces.Repositories;
 
 namespace reeltok.api.auth.Services
 {
-    public class TokensService : ITokensService
+    public class TokenGenerationService : ITokenGenerationService
     {
         private const string SecretKeyConfig = "JWTSettings:SecretKey";
         private const string AudienceConfig = "JWTSettings:Audience";
@@ -19,7 +20,7 @@ namespace reeltok.api.auth.Services
         private readonly AppSettingsUtils _appSettingsUtils;
         private readonly ITokensRepository _tokensRepository;
 
-        public TokensService(AppSettingsUtils appSettingsUtils, ITokensRepository tokensRepository)
+        public TokenGenerationService(AppSettingsUtils appSettingsUtils, ITokensRepository tokensRepository)
         {
             _appSettingsUtils = appSettingsUtils;
             _tokensRepository = tokensRepository;
@@ -42,8 +43,8 @@ namespace reeltok.api.auth.Services
 
             Claim[] claims = new Claim[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
@@ -70,28 +71,10 @@ namespace reeltok.api.auth.Services
                 Token = accessToken
             };
 
-            AccessTokenEntity accessTokenDatabaseResult = await _tokensRepository.SaveToken<AccessTokenEntity, AccessToken>(accessTokenEntity).ConfigureAwait(false);
+            AccessTokenEntity accessTokenDatabaseResult = await _tokensRepository
+                .SaveToken<AccessTokenEntity, AccessToken>(accessTokenEntity).ConfigureAwait(false);
+
             return accessTokenDatabaseResult.Token;
-        }
-
-        public ClaimsPrincipal DecodeAccessToken(string accessTokenValue)
-        {
-            string secretKey = _appSettingsUtils.GetConfigurationValue(SecretKeyConfig);
-            byte[] encodedSecretKey = Encoding.UTF8.GetBytes(secretKey);
-
-            TokenValidationParameters validationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(encodedSecretKey),
-                ValidateIssuer = false, // Specify true and add valid issuer if needed
-                ValidateAudience = false, // Specify true and add valid audience if needed
-                ValidateLifetime = true, // Validate token lifetime
-                ClockSkew = TimeSpan.Zero // Reduce clock skew
-            };
-
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            ClaimsPrincipal principal = tokenHandler.ValidateToken(accessTokenValue, validationParameters, out SecurityToken validatedToken);
-            return principal;
         }
 
         public async Task<RefreshToken> GenerateRefreshToken(Guid userId)
@@ -120,20 +103,10 @@ namespace reeltok.api.auth.Services
                 Token = refreshToken
             };
 
-            RefreshTokenEntity refreshTokenDatabaseResult = await _tokensRepository.SaveToken<RefreshTokenEntity, RefreshToken>(RefreshTokenEntity).ConfigureAwait(false);
+            RefreshTokenEntity refreshTokenDatabaseResult = await _tokensRepository
+                .SaveToken<RefreshTokenEntity, RefreshToken>(RefreshTokenEntity).ConfigureAwait(false);
+
             return refreshTokenDatabaseResult.Token;
-        }
-
-        public async Task<Guid> GetUserIdByRefreshToken(string refreshTokenValue)
-        {
-            Guid userId = await _tokensRepository.GetUserIdByRefreshToken(refreshTokenValue).ConfigureAwait(false);
-            return userId;
-        }
-
-        public async Task RevokeTokens(string accessTokenValue, string refreshTokenValue)
-        {
-            await _tokensRepository.RevokeToken<AccessTokenEntity, AccessToken>(accessTokenValue).ConfigureAwait(false);
-            await _tokensRepository.RevokeToken<RefreshTokenEntity, RefreshToken>(refreshTokenValue).ConfigureAwait(false);
         }
     }
 }

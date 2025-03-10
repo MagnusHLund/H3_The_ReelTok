@@ -1,7 +1,7 @@
 using reeltok.api.auth.Data;
 using reeltok.api.auth.Entities;
-using reeltok.api.auth.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using reeltok.api.auth.Interfaces.Repositories;
 
 namespace reeltok.api.auth.Repositories
 {
@@ -16,14 +16,18 @@ namespace reeltok.api.auth.Repositories
 
         public async Task<UserCredentialsEntity> CreateUser(UserCredentialsEntity userCredentials)
         {
-            UserCredentialsEntity userCredentialsDatabaseResult = (await _context.AddAsync(userCredentials).ConfigureAwait(false)).Entity;
+            UserCredentialsEntity userCredentialsDatabaseResult = (await _context.AddAsync(userCredentials)
+                .ConfigureAwait(false)).Entity;
+
             await _context.SaveChangesAsync().ConfigureAwait(false);
             return userCredentialsDatabaseResult;
         }
 
         public async Task DeleteUser(Guid userId)
         {
-            UserCredentialsEntity userToDelete = await _context.UserCredentials.Where(e => e.UserId == userId).FirstOrDefaultAsync().ConfigureAwait(false)
+            UserCredentialsEntity userToDelete = await _context.UserCredentials.Where(e => e.UserId == userId)
+                .FirstOrDefaultAsync()
+                .ConfigureAwait(false)
                 ?? throw new KeyNotFoundException($"Unable to find user: {userId} in the database!");
 
             _context.Remove<UserCredentialsEntity>(userToDelete);
@@ -32,7 +36,9 @@ namespace reeltok.api.auth.Repositories
 
         public async Task<UserCredentialsEntity> GetUserCredentialsByUserId(Guid userId)
         {
-            UserCredentialsEntity userCredentials = await _context.UserCredentials.Where(a => a.UserId == userId).FirstOrDefaultAsync().ConfigureAwait(false)
+            UserCredentialsEntity userCredentials = await _context.UserCredentials.Where(a => a.UserId == userId)
+                .FirstOrDefaultAsync()
+                .ConfigureAwait(false)
                 ?? throw new KeyNotFoundException($"Unable to find user: {userId} in the database!");
 
             return userCredentials;
@@ -40,7 +46,9 @@ namespace reeltok.api.auth.Repositories
 
         public async Task<bool> DoesUserExist(Guid userId)
         {
-            bool userExists = await _context.UserCredentials.AnyAsync(a => a.UserId == userId).ConfigureAwait(false);
+            bool userExists = await _context.UserCredentials.AnyAsync(a => a.UserId == userId)
+                .ConfigureAwait(false);
+
             return userExists;
         }
     }

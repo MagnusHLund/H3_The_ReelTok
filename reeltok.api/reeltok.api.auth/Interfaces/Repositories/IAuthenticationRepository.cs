@@ -1,6 +1,6 @@
 using reeltok.api.auth.Entities;
 
-namespace reeltok.api.auth.Interfaces
+namespace reeltok.api.auth.Interfaces.Repositories
 {
     public interface IAuthRepository
     {

@@ -43,7 +43,9 @@ namespace reeltok.api.auth.ActionFilters
         private static void ValidateProperties(object model, ModelStateDictionary modelState)
         {
             if (model == null)
+            {
                 return;
+            }
 
             PropertyInfo[] properties = model.GetType().GetProperties();
 
@@ -51,11 +53,11 @@ namespace reeltok.api.auth.ActionFilters
             {
                 object? value = property.GetValue(model);
 
-                if (property.PropertyType == typeof(Guid) && (Guid) value == Guid.Empty)
+                if (property.PropertyType == typeof(Guid) && (Guid)value == Guid.Empty)
                 {
                     modelState.AddModelError(property.Name, $"{property.Name} cannot be an empty GUID.");
                 }
-                else if (property.PropertyType == typeof(DateTime) && (DateTime) value == DateTime.MinValue)
+                else if (property.PropertyType == typeof(DateTime) && (DateTime)value == DateTime.MinValue)
                 {
                     modelState.AddModelError(property.Name, $"{property.Name} cannot be the minimum DateTime value.");
                 }

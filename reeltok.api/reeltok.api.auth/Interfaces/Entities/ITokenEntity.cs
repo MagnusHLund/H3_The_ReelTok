@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace reeltok.api.auth.Interfaces
+namespace reeltok.api.auth.Interfaces.Entities
 {
     public interface ITokenEntity<TToken> where TToken : IToken
     {

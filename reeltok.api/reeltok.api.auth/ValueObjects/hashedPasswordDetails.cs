@@ -2,15 +2,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.auth.ValueObjects
 {
-    public class HashedPasswordData
+    public class HashedPasswordDetails
     {
         [Required]
         public string Password { get; private set; }
 
         [Required]
-        public string Salt { get; private set  ; }
+        public string Salt { get; private set; }
 
-        public HashedPasswordData(string password, string salt)
+        public HashedPasswordDetails(string password, string salt)
         {
             Password = password;
             Salt = salt;
