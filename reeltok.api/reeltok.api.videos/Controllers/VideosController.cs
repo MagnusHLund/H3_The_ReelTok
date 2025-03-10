@@ -29,7 +29,8 @@ namespace reeltok.api.videos.Controllers
         [Route("feed")]
         public async Task<IActionResult> GetVideosForFeedAsync(
             [FromQuery] Guid userId,
-            [FromQuery] byte amount)
+            [FromQuery] byte amount
+        )
         {
             List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(userId, amount).ConfigureAwait(false);
 
@@ -48,7 +49,8 @@ namespace reeltok.api.videos.Controllers
         public async Task<IActionResult> GetVideosForProfileAsync(
             [FromQuery] Guid userId,
             [FromQuery] uint pageNumber,
-            [FromQuery] byte pageSize)
+            [FromQuery] byte pageSize
+        )
         {
             List<VideoEntity> videos = await _videosService.GetVideosForProfileAsync(
                 userId, pageNumber, pageSize).ConfigureAwait(false);
@@ -78,7 +80,8 @@ namespace reeltok.api.videos.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteVideoAsync(
             [FromQuery] Guid userId,
-            [FromQuery] Guid videoId)
+            [FromQuery] Guid videoId
+        )
         {
             await _videosService.DeleteVideoAsync(userId, videoId).ConfigureAwait(false);
 
