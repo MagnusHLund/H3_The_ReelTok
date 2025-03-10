@@ -12,9 +12,9 @@ namespace reeltok.api.comments.Services
             _repo = repository;
         }
 
-        public async Task<Comment> CreateCommentAsync(Comment comment)
+        public async Task<CommentEntity> CreateCommentAsync(CommentEntity comment)
         {
-            Comment comment1;
+            CommentEntity comment1;
 
             try
             {
@@ -28,9 +28,9 @@ namespace reeltok.api.comments.Services
             return comment1;
         }
 
-        public async Task<List<Comment>> GetAllCommentByVideoId(Guid videoId)
+        public async Task<List<CommentEntity>> GetAllCommentByVideoId(Guid videoId)
         {
-            List<Comment> comments;
+            List<CommentEntity> comments;
 
             try
             {

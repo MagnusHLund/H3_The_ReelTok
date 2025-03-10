@@ -4,7 +4,7 @@ namespace reeltok.api.comments.Interface
 {
     public interface ICommentRepository
     {
-        Task<Comment> CreateCommentAsync(Comment comment);
-        Task<List<Comment>> GetAllCommentByVideoId(Guid videoId);
+        Task<CommentEntity> CreateCommentAsync(CommentEntity comment);
+        Task<List<CommentEntity>> GetAllCommentByVideoId(Guid videoId);
     }
 }

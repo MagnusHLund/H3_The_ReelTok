@@ -1,22 +1,22 @@
-using System.ComponentModel.DataAnnotations;
 using reeltok.api.comments.ValueObjects;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.comments.Entities
 {
-    public class Comment
+    public class CommentEntity
     {
         [Key]
-        public int CommentId { get; private set; }
+        public uint CommentId { get; private set; }
 
         [Required]
         public CommentDetails CommentDetails { get; set; }
 
-        public Comment(CommentDetails commentDetails)
+        public CommentEntity(CommentDetails commentDetails)
         {
             CommentDetails = commentDetails;
         }
 
-        private Comment()
+        private CommentEntity()
         {
         }
     }

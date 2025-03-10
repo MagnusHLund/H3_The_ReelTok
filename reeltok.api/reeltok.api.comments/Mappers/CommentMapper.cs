@@ -17,7 +17,7 @@ namespace reeltok.api.comments.Mappers
             );
         }
 
-        public static ReadDTO ToDTOFromCommentEntity(this Comment comment)
+        public static ReadDTO ToDTOFromCommentEntity(this CommentEntity comment)
         {
             return new ReadDTO(
                 comment.CommentDetails.UserId,
@@ -26,7 +26,7 @@ namespace reeltok.api.comments.Mappers
             );
         }
 
-        public static ReturnCreateDTO ToReturnCreateCommentResponseDTO(this Comment comment)
+        public static ReturnCreateDTO ToReturnCreateCommentResponseDTO(this CommentEntity comment)
         {
             return new ReturnCreateDTO
             {

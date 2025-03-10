@@ -10,13 +10,13 @@ namespace reeltok.api.comments.Data
         {
         }
 
-        public DbSet<Comment> Comments { get; set; }
+        public DbSet<CommentEntity> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Comment>().ToTable("Comments");
+            modelBuilder.Entity<CommentEntity>().ToTable("Comments");
 
-            modelBuilder.Entity<Comment>().OwnsOne(cd => cd.CommentDetails, commentDetails =>
+            modelBuilder.Entity<CommentEntity>().OwnsOne(cd => cd.CommentDetails, commentDetails =>
             {
                 commentDetails.Property(c => c.UserId).HasColumnName("UserId");
                 commentDetails.Property(c => c.VideoId).HasColumnName("VideoId");

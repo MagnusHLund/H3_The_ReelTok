@@ -13,14 +13,14 @@ namespace reeltok.api.comments.Repositories
         {
             _context = context;
         }
-        public async Task<Comment> CreateCommentAsync(Comment comment)
+        public async Task<CommentEntity> CreateCommentAsync(CommentEntity comment)
         {
-            Comment comment1 = (await _context.Comments.AddAsync(comment).ConfigureAwait(false)).Entity;
+            CommentEntity comment1 = (await _context.Comments.AddAsync(comment).ConfigureAwait(false)).Entity;
             await _context.SaveChangesAsync().ConfigureAwait(false);
             return comment1;
         }
 
-        public async Task<List<Comment>> GetAllCommentByVideoId(Guid videoId)
+        public async Task<List<CommentEntity>> GetAllCommentByVideoId(Guid videoId)
         {
             return await _context.Comments.Where(c => c.CommentDetails.VideoId == videoId).ToListAsync().ConfigureAwait(false);
         }

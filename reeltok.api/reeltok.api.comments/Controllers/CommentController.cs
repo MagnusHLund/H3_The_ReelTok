@@ -1,14 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
-using reeltok.api.comments.DTOs;
+using reeltok.api.comments.Mappers;
 using reeltok.api.comments.Entities;
 using reeltok.api.comments.Interface;
-using reeltok.api.comments.Mappers;
 using reeltok.api.comments.ValueObjects;
+using reeltok.api.comments.ActionFilters;
+using reeltok.api.comments.DTOs.CreateComment;
 
 namespace reeltok.api.comments.Controllers
 {
-    [Route("api/comment")]
+    [ValidateModel]
     [ApiController]
+    [Route("api/[controller]")]
+    [Consumes("application/json")]
     public class CommentController : ControllerBase
     {
         private readonly ICommentService _service;
@@ -17,34 +20,28 @@ namespace reeltok.api.comments.Controllers
             _service = commentService;
         }
 
+        // TODO: Call video api to ensure that the video exists
         [HttpPost]
-        public async Task<IActionResult> CreateCommentAsync([FromBody] CreateDTO dto)
+        public async Task<IActionResult> CreateCommentAsync([FromBody] CreateCommentRequestDto request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (dto == null)
-            {
-                return BadRequest("Comment cannot be null");
-            }
 
             CommentDetails commentDetails = dto.ToCommentFromCreateDTO();
 
-            Comment comment = new Comment(commentDetails);
+            CommentEntity comment = new CommentEntity(commentDetails);
 
-            Comment dbComment = await _service.CreateCommentAsync(comment).ConfigureAwait(false);
+            CommentEntity dbComment = await _service.CreateCommentAsync(comment).ConfigureAwait(false);
 
             ReturnCreateDTO returnCreateDTO = CommentMapper.ToReturnCreateCommentResponseDTO(dbComment);
 
             return Ok(returnCreateDTO);
-
         }
 
-        // TODO: Call Video API to check if the video id is valid or not
         [HttpGet]
-        public async Task<IActionResult> GetAllCommentsByVideoIdAsync([FromQuery] Guid videoId)
+        public async Task<IActionResult> GetAllCommentsByVideoIdAsync(
+            [FromQuery] Guid videoId,
+            [FromQuery] uint pageNumber,
+            [FromQuery] byte pageSize
+        )
         {
             if (!ModelState.IsValid)
             {
@@ -60,7 +57,7 @@ namespace reeltok.api.comments.Controllers
 
             try
             {
-                List<Comment> comments = await _service.GetAllCommentByVideoId(videoId).ConfigureAwait(false);
+                List<CommentEntity> comments = await _service.GetAllCommentByVideoId(videoId).ConfigureAwait(false);
                 List<ReadDTO> mappedComments = comments.Select(comment => comment.ToDTOFromCommentEntity()).ToList();
 
                 return Ok(mappedComments);
