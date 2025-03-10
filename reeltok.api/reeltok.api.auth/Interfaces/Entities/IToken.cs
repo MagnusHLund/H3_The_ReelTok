@@ -1,4 +1,4 @@
-namespace reeltok.api.auth.Interfaces
+namespace reeltok.api.auth.Interfaces.Entities
 {
     public interface IToken
     {

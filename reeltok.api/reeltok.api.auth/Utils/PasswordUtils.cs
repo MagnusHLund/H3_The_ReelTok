@@ -22,7 +22,7 @@ namespace reeltok.api.auth.Utils
             return saltBytes;
         }
 
-        internal static HashedPasswordData HashPassword(string password)
+        internal static HashedPasswordDetails HashPassword(string password)
         {
             byte[] saltBytes = GenerateSalt();
 
@@ -37,12 +37,12 @@ namespace reeltok.api.auth.Utils
             string hashedPassword = Convert.ToBase64String(hashedBytes);
             string salt = Convert.ToBase64String(saltBytes);
 
-            return new HashedPasswordData(hashedPassword, salt);
+            return new HashedPasswordDetails(hashedPassword, salt);
         }
 
-        internal static bool VerifyPassword(string password, string storedHash, string storedSalt)
+        internal static bool VerifyPassword(string password, HashedPasswordDetails hashedPasswordDetails)
         {
-            byte[] saltBytes = Convert.FromBase64String(storedSalt);
+            byte[] saltBytes = Convert.FromBase64String(hashedPasswordDetails.Salt);
 
             byte[] hashedBytes = Rfc2898DeriveBytes.Pbkdf2(
                 Encoding.UTF8.GetBytes(password),
@@ -52,19 +52,19 @@ namespace reeltok.api.auth.Utils
                 KeySize
             );
 
-            return Convert.ToBase64String(hashedBytes) == storedHash;
+            return Convert.ToBase64String(hashedBytes) == hashedPasswordDetails.Password;
         }
 
-    /// <summary>
-    /// This method ensures that the passwords follow the minimum password requirements.
-    /// 1. Ensures length is minimum 8 characters long.
-    /// 2. Ensures that the password contains at least 1 number.
-    /// 3. Ensures that the password contains at least 1 uppercase character.
-    /// 4. Ensures that the password contains at least 1 lowercase character.
-    /// 5. Ensures that the password does not repeat the same character 3 or more times in a row.
-    /// </summary>
-    /// <param name="password">Plain text password, which gets validated, to ensure that the minimum password requirements are being followed</param>
-    /// <returns></returns>
+        /// <summary>
+        /// This method ensures that the passwords follow the minimum password requirements.
+        /// 1. Ensures length is minimum 8 characters long.
+        /// 2. Ensures that the password contains at least 1 number.
+        /// 3. Ensures that the password contains at least 1 uppercase character.
+        /// 4. Ensures that the password contains at least 1 lowercase character.
+        /// 5. Ensures that the password does not repeat the same character 3 or more times in a row.
+        /// </summary>
+        /// <param name="password">Plain text password, which gets validated, to ensure that the minimum password requirements are being followed</param>
+        /// <returns></returns>
         internal static bool IsValid(string password)
         {
             return password.Length >= 8 &&

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.auth.ValueObjects
 {
-  public class CreateDetails
+  public class Credentials
   {
     [Required]
     public Guid UserId { get; private set; }
@@ -10,10 +10,10 @@ namespace reeltok.api.auth.ValueObjects
     [Required]
     public string PlainTextPassword { get; private set; }
 
-    public CreateDetails(Guid userId, string plainTextPassword)
+    public Credentials(Guid userId, string plainTextPassword)
     {
-       UserId = userId;
-       PlainTextPassword = plainTextPassword;
+      UserId = userId;
+      PlainTextPassword = plainTextPassword;
     }
   }
 }

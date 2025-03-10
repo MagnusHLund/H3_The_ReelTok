@@ -1,8 +1,10 @@
 using reeltok.api.auth.Data;
 using reeltok.api.auth.Utils;
 using reeltok.api.auth.Entities;
-using reeltok.api.auth.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using reeltok.api.auth.Interfaces.Entities;
+using reeltok.api.auth.Interfaces.Repositories;
+using reeltok.api.auth.ValueObjects;
 
 namespace reeltok.api.auth.Repositories
 {
@@ -19,8 +21,14 @@ namespace reeltok.api.auth.Repositories
             where TTokenEntity : class, ITokenEntity<TToken>
             where TToken : IToken
         {
-            TTokenEntity tokenToRevoke = await _context.Set<TTokenEntity>().FirstOrDefaultAsync(e => e.Token.TokenValue == tokenValue).ConfigureAwait(false)
-                ?? throw new KeyNotFoundException("Unable to find the token in the database!");
+            TTokenEntity? tokenToRevoke = await _context.Set<TTokenEntity>()
+                .FirstOrDefaultAsync(e => e.Token.TokenValue == tokenValue)
+                .ConfigureAwait(false);
+
+            if (tokenToRevoke == null)
+            {
+                return;
+            }
 
             if (tokenToRevoke.RevokedAt != null)
             {
@@ -37,21 +45,61 @@ namespace reeltok.api.auth.Repositories
             where TToken : IToken
         {
 
-            TTokenEntity tokenDatabaseResult = (await _context.AddAsync(tokenEntity).ConfigureAwait(false)).Entity;
+            TTokenEntity savedToken = (await _context.AddAsync(tokenEntity)
+                .ConfigureAwait(false)).Entity;
+
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
-            return tokenDatabaseResult;
+            return savedToken;
         }
 
-        // TODO: When reworking exception middleware, make this remove tokens on exception!
-        public async Task<Guid> GetUserIdByRefreshToken(string refreshTokenValue)
+        public async Task<Guid?> GetUserIdByRefreshToken(string refreshTokenValue)
         {
-            RefreshTokenEntity refreshTokenDatabaseResult = await _context.RefreshTokens.Where(r => r.Token.TokenValue == refreshTokenValue).FirstOrDefaultAsync().ConfigureAwait(false)
-                ?? throw new KeyNotFoundException("Unable to find the token in the database!");
+            RefreshTokenEntity? refreshToken = await _context.RefreshTokens
+                .Where(r => r.Token.TokenValue == refreshTokenValue && r.RevokedAt == null)
+                .FirstOrDefaultAsync()
+                .ConfigureAwait(false);
 
-            Guid userId = refreshTokenDatabaseResult.UserId;
+            refreshToken = await MaybeExpireToken<RefreshTokenEntity, RefreshToken>(refreshToken)
+                .ConfigureAwait(false);
+
+            Guid? userId = refreshToken?.UserId;
 
             return userId;
+        }
+
+        public async Task<bool> IsAccessTokenRevokedAsync(string accessTokenValue)
+        {
+            AccessTokenEntity? accessToken = await _context.AccessTokens
+                .Where(a => a.Token.TokenValue == accessTokenValue && a.RevokedAt == null)
+                .FirstOrDefaultAsync()
+                .ConfigureAwait(false);
+
+            accessToken = await MaybeExpireToken<AccessTokenEntity, AccessToken>(accessToken)
+                .ConfigureAwait(false);
+
+            return accessToken == null;
+        }
+
+        private async Task<TTokenEntity?> MaybeExpireToken<TTokenEntity, TToken>(TTokenEntity tokenEntity)
+            where TTokenEntity : class, ITokenEntity<TToken>
+            where TToken : IToken
+        {
+            if (tokenEntity == null)
+            {
+                return null;
+            }
+
+            uint currentUnixTime = DateTimeUtils.DateTimeToUnixTime(DateTime.UtcNow);
+
+            if (tokenEntity.Token.ExpiresAt <= currentUnixTime)
+            {
+                tokenEntity.RevokedAt = currentUnixTime;
+                _context.Update(tokenEntity);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+            }
+
+            return tokenEntity.RevokedAt.HasValue ? null : tokenEntity;
         }
     }
 }

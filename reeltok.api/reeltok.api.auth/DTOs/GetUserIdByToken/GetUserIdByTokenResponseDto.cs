@@ -1,4 +1,4 @@
-namespace reeltok.api.auth.DTOs
+namespace reeltok.api.auth.DTOs.GetUserIdByToken
 {
     public class GetUserIdByTokenResponseDto : BaseResponseDto
     {

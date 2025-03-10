@@ -1,3 +1,4 @@
+using reeltok.api.auth.ValueObjects;
 using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.auth.Entities
@@ -8,16 +9,14 @@ namespace reeltok.api.auth.Entities
         public Guid UserId { get; set; }
 
         [Required]
-        public string HashedPassword { get; set; }
+        public HashedPasswordDetails HashedPasswordDetails { get; set; }
 
-        [Required]
-        public string Salt { get; set; }
-
-        public UserCredentialsEntity(Guid userId, string hashedPassword, string salt)
+        public UserCredentialsEntity(Guid userId, HashedPasswordDetails hashedPasswordDetails)
         {
             UserId = userId;
-            HashedPassword = hashedPassword;
-            Salt = salt;
+            HashedPasswordDetails = hashedPasswordDetails;
         }
+
+        private UserCredentialsEntity() { }
     }
 }

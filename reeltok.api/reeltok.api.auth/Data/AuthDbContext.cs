@@ -1,6 +1,5 @@
 using reeltok.api.auth.Entities;
 using Microsoft.EntityFrameworkCore;
-using reeltok.api.auth.ValueObjects;
 
 namespace reeltok.api.auth.Data
 {
@@ -16,33 +15,45 @@ namespace reeltok.api.auth.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Explicitly ignore the value objects
-            modelBuilder.Ignore<AccessToken>();
-            modelBuilder.Ignore<RefreshToken>();
+            modelBuilder.Entity<RefreshTokenEntity>().Property(p => p.TokenId)
+                .HasColumnName("RefreshTokenId");
+
+            modelBuilder.Entity<AccessTokenEntity>().Property(p => p.TokenId)
+                .HasColumnName("AccessTokenId");
 
             // Configure value objects within entities
             modelBuilder.Entity<RefreshTokenEntity>().OwnsOne(rt => rt.Token, rt =>
             {
-                rt.Property(p => p.TokenValue).HasColumnName("RefreshTokenValue").IsRequired();
-                rt.Property(p => p.CreatedAt).HasColumnName("RefreshTokenCreatedAt").IsRequired();
-                rt.Property(p => p.ExpiresAt).HasColumnName("RefreshTokenExpiresAt").IsRequired();
+                rt.Property(p => p.TokenValue).HasColumnName("TokenValue");
+                rt.Property(p => p.CreatedAt).HasColumnName("CreatedAt");
+                rt.Property(p => p.ExpiresAt).HasColumnName("ExpiresAt");
+
+                rt.HasIndex(p => p.TokenValue)
+                    .IsUnique();
+
+                rt.HasIndex(p => p.ExpiresAt);
             });
 
             modelBuilder.Entity<AccessTokenEntity>().OwnsOne(at => at.Token, at =>
             {
-                at.Property(p => p.TokenValue).HasColumnName("AccessTokenValue").IsRequired();
-                at.Property(p => p.CreatedAt).HasColumnName("AccessTokenCreatedAt").IsRequired();
-                at.Property(p => p.ExpiresAt).HasColumnName("AccessTokenExpiresAt").IsRequired();
+                at.Property(p => p.TokenValue).HasColumnName("TokenValue");
+                at.Property(p => p.CreatedAt).HasColumnName("CreatedAt");
+                at.Property(p => p.ExpiresAt).HasColumnName("ExpiresAt");
+
+                at.HasIndex(p => p.TokenValue)
+                    .IsUnique();
+
+                at.HasIndex(p => p.ExpiresAt);
             });
 
-            modelBuilder.Entity<AccessTokenEntity>().OwnsOne(at => at.Token, at =>
-            {
-                at.Property(p => p.TokenValue).HasColumnName("AccessTokenValue").IsRequired();
-                at.Property(p => p.CreatedAt).HasColumnName("AccessTokenCreatedAt").IsRequired();
-                at.Property(p => p.ExpiresAt).HasColumnName("AccessTokenExpiresAt").IsRequired();
+            modelBuilder.Entity<RefreshTokenEntity>().HasIndex(rt => rt.RevokedAt);
 
-                at.HasIndex(p => p.TokenValue).IsUnique().HasDatabaseName("UX_AccessToken_TokenValue");
-                at.HasIndex(p => p.ExpiresAt).HasDatabaseName("IX_AccessToken_ExpiresAt");
+            modelBuilder.Entity<AccessTokenEntity>().HasIndex(at => at.RevokedAt);
+
+            modelBuilder.Entity<UserCredentialsEntity>().OwnsOne(uc => uc.HashedPasswordDetails, uc =>
+            {
+                uc.Property(p => p.Password).HasColumnName("HashedPassword");
+                uc.Property(p => p.Salt).HasColumnName("Salt");
             });
 
             modelBuilder.Entity<UserCredentialsEntity>()
