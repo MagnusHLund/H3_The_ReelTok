@@ -246,4 +246,4 @@ _Pvt_Extensions
 reeltok.api/**/Logs/
 
 # Docker appsettings
-reeltok.docker/config/appsettings/
+reeltok.docker/config/appsettings**
