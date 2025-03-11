@@ -34,12 +34,6 @@ namespace reeltok.api.videos.Controllers
         {
             List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(userId, amount).ConfigureAwait(false);
 
-            if (videos.Count == 0)
-            {
-                FailureResponseDto failureResponseDto = new FailureResponseDto("Unable to get videos for the video feed!");
-                return BadRequest(failureResponseDto);
-            }
-
             GetVideosForFeedResponseDto responseDto = new GetVideosForFeedResponseDto(videos);
             return Ok(responseDto);
         }
@@ -54,12 +48,6 @@ namespace reeltok.api.videos.Controllers
         {
             List<VideoEntity> videos = await _videosService.GetVideosForProfileAsync(
                 userId, pageNumber, pageSize).ConfigureAwait(false);
-
-            if (videos.Count == 0)
-            {
-                FailureResponseDto failureResponseDto = new FailureResponseDto("Unable to get profile videos!");
-                return BadRequest(failureResponseDto);
-            }
 
             GetVideosForProfileResponseDto responseDto = VideoMapper.ConvertVideoEntityToGetVideosForProfileResponseDto(videos);
             return Ok(responseDto);
