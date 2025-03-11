@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs.GetRecommendedVideos
 {
-    public class RecommendedServiceGetRecommendedVideosRequestDto
+    public class RecommendationsServiceGetRecommendedVideosRequestDto
     {
         [Required]
         [JsonProperty("UserId")]
@@ -13,7 +13,7 @@ namespace reeltok.api.videos.DTOs.GetRecommendedVideos
         [JsonProperty("Amount")]
         public byte Amount { get; set; }
 
-        public RecommendedServiceGetRecommendedVideosRequestDto(Guid userId, byte amount)
+        public RecommendationsServiceGetRecommendedVideosRequestDto(Guid userId, byte amount)
         {
             UserId = userId;
             Amount = amount;

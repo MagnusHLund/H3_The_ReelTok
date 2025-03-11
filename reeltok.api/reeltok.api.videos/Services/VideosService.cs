@@ -62,7 +62,6 @@ namespace reeltok.api.videos.Services
 
         public async Task<List<VideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize)
         {
-            // Gets videos uploaded by the user that you're currently on
             List<VideoEntity> videosUploadedByUser = await _videosRepository
                 .GetVideosForProfileAsync(userId, pageNumber, pageSize)
                 .ConfigureAwait(false);
@@ -77,14 +76,9 @@ namespace reeltok.api.videos.Services
             VideoEntity videoToUpload = VideoMapper.ConvertVideoUploadToVideoEntity(video, userId);
             VideoEntity videoEntity = await _videosRepository.CreateVideoAsync(videoToUpload).ConfigureAwait(false);
 
-            bool success = await _externalApiService.AddVideoIdToRecommendationAPI(
+            await _externalApiService.AddVideoToRecommendationsApi(
                 videoEntity.VideoId, category)
                 .ConfigureAwait(false);
-
-            if (success != true)
-            {
-                throw new HttpRequestException("Failed to add video to recommendation API ");
-            }
 
             try
             {

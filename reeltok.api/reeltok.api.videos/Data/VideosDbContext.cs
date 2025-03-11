@@ -15,7 +15,10 @@ namespace reeltok.api.videos.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<VideoEntity>()
-                .HasIndex(v => new { v.UserId, v.Title });
+                .HasIndex(v => v.UserId); // Separate index on UserId
+
+            modelBuilder.Entity<VideoEntity>()
+                .HasIndex(v => v.Title); // Separate index on Title
 
             modelBuilder.Entity<VideoTotalLikesEntity>()
                 .HasKey(vl => vl.VideoLikesId);

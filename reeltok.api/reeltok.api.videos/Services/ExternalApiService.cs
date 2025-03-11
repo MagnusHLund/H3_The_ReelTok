@@ -26,10 +26,10 @@ namespace reeltok.api.videos.Services
 
         public async Task<List<Guid>> GetRecommendedVideoIdsAsync(Guid userId, byte amount)
         {
-            RecommendedServiceGetRecommendedVideosRequestDto requestDto = new RecommendedServiceGetRecommendedVideosRequestDto(userId, amount);
+            RecommendationsServiceGetRecommendedVideosRequestDto requestDto = new RecommendationsServiceGetRecommendedVideosRequestDto(userId, amount);
             Uri targetUrl = _endpointFactory.GetRecommendationsApiUrl("recommendations");
 
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<RecommendedServiceGetRecommendedVideosRequestDto, RecommendedServiceGetRecommendedVideosResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<RecommendationsServiceGetRecommendedVideosRequestDto, RecommendedServiceGetRecommendedVideosResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 
             if (response.Success && response is RecommendedServiceGetRecommendedVideosResponseDto responseDto)
             {
@@ -41,10 +41,10 @@ namespace reeltok.api.videos.Services
 
         public async Task<List<VideoCreatorEntity>> GetVideoCreatorDetailsAsync(List<Guid> videoIds)
         {
-            UserServiceGetUserDetailsForVideoRequestDto requestDto = new UserServiceGetUserDetailsForVideoRequestDto(videoIds);
+            UsersServiceGetUserDetailsForVideoRequestDto requestDto = new UsersServiceGetUserDetailsForVideoRequestDto(videoIds);
             Uri targetUrl = _endpointFactory.GetUsersApiEndpoint("users");
 
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<UserServiceGetUserDetailsForVideoRequestDto, UserServiceGetUserDetailsForVideoResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<UsersServiceGetUserDetailsForVideoRequestDto, UserServiceGetUserDetailsForVideoResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 
             if (response.Success && response is UserServiceGetUserDetailsForVideoResponseDto responseDto)
             {
@@ -91,7 +91,16 @@ namespace reeltok.api.videos.Services
             UserServiceHasUserLikedVideosRequestDto requestDto = new UserServiceHasUserLikedVideosRequestDto(userId, videoIds);
             Uri targetUrl = _endpointFactory.GetUsersApiEndpoint("likes");
 
-            BaseResponseDto response = await _httpService.ProcessRequestAsync<UserServiceHasUserLikedVideosRequestDto, UserServiceHasUserLikedVideosResponseDto>(requestDto, targetUrl, HttpMethod.Get)
+            BaseResponseDto response = await _httpService
+                .ProcessRequestAsync<
+                    UserServiceHasUserLikedVideosRequestDto,
+                    UserServiceHasUserLikedVideosResponseDto
+                >
+                (
+                    requestDto,
+                    targetUrl,
+                    HttpMethod.Get
+                )
                 .ConfigureAwait(false);
 
             if (response.Success && response is UserServiceHasUserLikedVideosResponseDto responseDto)
@@ -112,26 +121,21 @@ namespace reeltok.api.videos.Services
             return new InvalidOperationException("An unknown error has occurred!");
         }
 
-        public async Task<bool> AddVideoIdToRecommendationAPI(Guid videoId, byte category)
+        public async Task<bool> AddVideoToRecommendationsApi(Guid videoId, byte category)
         {
-            // Prepare the request DTO with the necessary parameters.
             RecommendationServiceAddVideoIdToRecommendationRequestDto requestDto = new RecommendationServiceAddVideoIdToRecommendationRequestDto(videoId, category);
 
-            // Get the target URL for the API endpoint using the endpoint factory.
             Uri targetUrl = _endpointFactory.GetRecommendationsApiUrl("recommendations");
 
-            // Process the HTTP request asynchronously and handle the response.
             BaseResponseDto response = await _httpService.ProcessRequestAsync<RecommendationServiceAddVideoIdToRecommendationRequestDto, RecommendationServiceAddVideoIdToRecommendationResponseDto>(
                 requestDto, targetUrl, HttpMethod.Post)
                 .ConfigureAwait(false);
 
-            // If the response is successful, return the Success value directly from the response.
             if (response is RecommendationServiceAddVideoIdToRecommendationResponseDto responseDto)
             {
-                return responseDto.Success;  // Directly return the Success boolean.
+                return responseDto.Success;
             }
 
-            // If the response indicates an error, throw an appropriate exception.
             throw HandleNetworkResponseExceptions(response);
 
         }
