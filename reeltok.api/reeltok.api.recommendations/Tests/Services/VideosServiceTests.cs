@@ -57,10 +57,9 @@ namespace reeltok.api.recommendations.Tests.Services
             CategoryType categoryType = CategoryType.Gaming;
             CategoryEntity categoryEntity = TestDataFactory.CreateCategoryEntity(categoryType);
 
-            // Set up the mock to return a uint when AddVideoCategoryAsync is called
             _mockVideoCategoriesRepository
                 .Setup(x => x.AddVideoCategoryAsync(It.IsAny<CategoryVideoCategoryEntity>()))
-                .ReturnsAsync((uint) 1);  // Make sure the return value is of type uint
+                .ReturnsAsync((uint) 1); 
 
             // Act
             CategoryType result = await _videosService.AddVideoCategoryAsync(videoId, categoryType);
@@ -79,7 +78,7 @@ namespace reeltok.api.recommendations.Tests.Services
         {
             // Arrange
             Guid userId = TestDataFactory.CreateGuid();
-            byte amount = 0; // Invalid amount (zero or negative)
+            byte amount = 0; 
             List<Guid> recommendedVideoIds = new List<Guid>();
 
             _mockRecommendationsService.Setup(x => x.GetVideoRecommendationsForUserAsync(userId, amount)).ReturnsAsync(recommendedVideoIds);
@@ -96,7 +95,7 @@ namespace reeltok.api.recommendations.Tests.Services
         {
             // Arrange
             Guid videoId = TestDataFactory.CreateGuid();
-            CategoryType invalidCategory = (CategoryType) 999; // Invalid category value
+            CategoryType invalidCategory = (CategoryType) 999; 
 
             _mockVideoCategoriesRepository.Setup(x => x.AddVideoCategoryAsync(It.IsAny<CategoryVideoCategoryEntity>())).ThrowsAsync(new Exception("Invalid category"));
 
