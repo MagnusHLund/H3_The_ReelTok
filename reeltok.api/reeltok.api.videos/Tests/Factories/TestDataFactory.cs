@@ -24,29 +24,29 @@ namespace reeltok.api.videos.Tests.Factories
             );
         }
 
-        public static UserServiceAddLikeRequestDto CreateAddLikeRequest()
+        public static UsersServiceAddLikeRequestDto CreateAddLikeRequest()
         {
             Guid userId = Guid.NewGuid();
             Guid videoId = Guid.NewGuid();
 
-            return new UserServiceAddLikeRequestDto
+            return new UsersServiceAddLikeRequestDto
             (
                 userId: userId,
                 videoId: videoId
             );
         }
 
-        public static UserServiceAddLikeResponseDto CreateAddLikeResponse()
+        public static UsersServiceAddLikeResponseDto CreateAddLikeResponse()
         {
-            return new UserServiceAddLikeResponseDto
+            return new UsersServiceAddLikeResponseDto
             (
                 success: true
             );
         }
 
-        public static UserServiceRemoveLikeResponseDto CreateRemoveLikeResponse()
+        public static UsersServiceRemoveLikeResponseDto CreateRemoveLikeResponse()
         {
-            return new UserServiceRemoveLikeResponseDto
+            return new UsersServiceRemoveLikeResponseDto
             (
                 success: true
             );

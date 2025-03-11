@@ -65,7 +65,7 @@ namespace reeltok.api.gateway.Services
         }
 
         public async Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(byte amount)
-        {// TODO: ensure that the user does not require a user, to get a video
+        {
             Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
             ServiceGetVideosForFeedRequestDto requestDto = new ServiceGetVideosForFeedRequestDto(userId, amount);

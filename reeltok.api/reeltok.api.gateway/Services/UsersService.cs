@@ -64,6 +64,7 @@ namespace reeltok.api.gateway.Services
         public async Task<ExternalUserEntity> GetUserByIdAsync(Guid userId)
         {
             ServiceGetUserByIdRequestDto requestDto = new ServiceGetUserByIdRequestDto(userId);
+
             Uri targetUrl = _endpointFactory.GetUsersApiUrl("users");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync
@@ -85,6 +86,7 @@ namespace reeltok.api.gateway.Services
 
             ServiceUpdateUserDetailsRequestDto requestDto =
                 new ServiceUpdateUserDetailsRequestDto(userId, username, email, interest);
+
             Uri targetUrl = _endpointFactory.GetUsersApiUrl("users");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync

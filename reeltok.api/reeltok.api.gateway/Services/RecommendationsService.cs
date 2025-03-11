@@ -18,6 +18,7 @@ namespace reeltok.api.gateway.Services
             _endpointFactory = endpointFactory;
         }
 
+
         public async Task<bool> UpdateTotalTimesUserWatchedVideosAsync(List<Guid> videoIds)
         {
             Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);

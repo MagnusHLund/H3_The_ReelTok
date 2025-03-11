@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
-namespace reeltok.api.videos.DTOs.GetUserDetailsForVideo
+namespace reeltok.api.videos.DTOs.GetUserDetails
 {
     public class UsersServiceGetUserDetailsForVideoRequestDto
     {

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs.LikeVideo
 {
-    public class UserServiceAddLikeRequestDto
+    public class UsersServiceAddLikeRequestDto
     {
         [Required]
         [JsonProperty("UserId")]
@@ -13,7 +13,7 @@ namespace reeltok.api.videos.DTOs.LikeVideo
         [JsonProperty("VideoId")]
         public Guid VideoId { get; set; }
 
-        public UserServiceAddLikeRequestDto(Guid userId, Guid videoId)
+        public UsersServiceAddLikeRequestDto(Guid userId, Guid videoId)
         {
             UserId = userId;
             VideoId = videoId;

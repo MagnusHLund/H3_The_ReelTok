@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs.RemoveLike
 {
-    public class UserServiceRemoveLikeRequestDto
+    public class UsersServiceRemoveLikeRequestDto
     {
         [Required]
         [JsonProperty("UserId")]
@@ -13,7 +13,7 @@ namespace reeltok.api.videos.DTOs.RemoveLike
         [JsonProperty("VideoId")]
         public Guid VideoId { get; set; }
 
-        public UserServiceRemoveLikeRequestDto(Guid userId, Guid videoId)
+        public UsersServiceRemoveLikeRequestDto(Guid userId, Guid videoId)
         {
             UserId = userId;
             VideoId = videoId;

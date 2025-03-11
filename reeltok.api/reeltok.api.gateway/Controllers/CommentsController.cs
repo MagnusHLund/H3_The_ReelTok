@@ -31,6 +31,7 @@ namespace reeltok.api.gateway.Controllers
                 .ConfigureAwait(false);
 
             GatewayLoadCommentsResponseDto responseDto = new GatewayLoadCommentsResponseDto(comments);
+
             return Ok(responseDto);
         }
 
