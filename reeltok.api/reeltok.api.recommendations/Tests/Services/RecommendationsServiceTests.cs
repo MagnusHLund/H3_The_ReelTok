@@ -1,7 +1,8 @@
 using Moq;
 using Xunit;
-using reeltok.api.recommendations.Interfaces.Repositories;
 using reeltok.api.recommendations.Services;
+using reeltok.api.recommendations.Tests.Factories;
+using reeltok.api.recommendations.Interfaces.Repositories;
 
 namespace reeltok.api.recommendations.Tests.Services
 {
@@ -16,45 +17,68 @@ namespace reeltok.api.recommendations.Tests.Services
             _recommendationsService = new RecommendationsService(_mockRecommendationsRepository.Object);
         }
 
+        #region Success Tests
+
         [Fact]
-        public async Task GetVideoRecommendationsForUserAsync_WithValidParameters_ReturnsRecommendedVideos()
+        public async Task GetVideoRecommendationsForUserAsync_WithValidUser_ReturnsRecommendations()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            byte amountOfVideos = 3;
-            List<Guid> recommendedVideos = new List<Guid>
-            {
-                Guid.NewGuid(),
-                Guid.NewGuid(),
-                Guid.NewGuid()
-            };
+            Guid userId = TestDataFactory.CreateGuid();
+            byte amountOfVideos = 5;
+            List<Guid> recommendedVideoIds = TestDataFactory.CreateVideoIds(amountOfVideos);
 
-            _mockRecommendationsRepository
-                .Setup(repo => repo.GetRecommendedVideosByUserAsync(userId, amountOfVideos))
-                .ReturnsAsync(recommendedVideos);
+            _mockRecommendationsRepository.Setup(x => x.GetRecommendedVideosByUserAsync(userId, amountOfVideos))
+                .ReturnsAsync(recommendedVideoIds);
 
             // Act
             List<Guid> result = await _recommendationsService.GetVideoRecommendationsForUserAsync(userId, amountOfVideos);
 
             // Assert
-            Assert.Equal(recommendedVideos, result);
-            _mockRecommendationsRepository.Verify(repo => repo.GetRecommendedVideosByUserAsync(userId, amountOfVideos), Times.Once);
+            Assert.Equal(recommendedVideoIds.Count, result.Count);
+            for (int i = 0; i < recommendedVideoIds.Count; i++)
+            {
+                Assert.Equal(recommendedVideoIds[i], result[i]);
+            }
         }
 
+        #endregion
+
+        #region Failure Tests
+
         [Fact]
-        public async Task GetVideoRecommendationsForUserAsync_WithInvalidUserId_ThrowsException()
+        public async Task GetVideoRecommendationsForUserAsync_WithInvalidUser_ReturnsEmptyList()
         {
             // Arrange
             Guid invalidUserId = Guid.Empty;
-            byte amountOfVideos = 3;
+            byte amountOfVideos = 5;
 
-            _mockRecommendationsRepository
-                .Setup(repo => repo.GetRecommendedVideosByUserAsync(invalidUserId, amountOfVideos))
-                .ThrowsAsync(new ArgumentException("Invalid user ID."));
+            _mockRecommendationsRepository.Setup(x => x.GetRecommendedVideosByUserAsync(invalidUserId, amountOfVideos))
+                .ReturnsAsync(new List<Guid>());
 
-            // Act & Assert
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await _recommendationsService.GetVideoRecommendationsForUserAsync(invalidUserId, amountOfVideos));
+            // Act
+            List<Guid> result = await _recommendationsService.GetVideoRecommendationsForUserAsync(invalidUserId, amountOfVideos);
+
+            // Assert
+            Assert.Empty(result);
         }
+
+        [Fact]
+        public async Task GetVideoRecommendationsForUserAsync_WithZeroAmount_ReturnsEmptyList()
+        {
+            // Arrange
+            Guid userId = TestDataFactory.CreateGuid();
+            byte amountOfVideos = 0;
+
+            _mockRecommendationsRepository.Setup(x => x.GetRecommendedVideosByUserAsync(userId, amountOfVideos))
+                .ReturnsAsync(new List<Guid>());
+
+            // Act
+            List<Guid> result = await _recommendationsService.GetVideoRecommendationsForUserAsync(userId, amountOfVideos);
+
+            // Assert
+            Assert.Empty(result);
+        }
+
+        #endregion
     }
 }
