@@ -1,7 +1,7 @@
-using reeltok.api.gateway.DTOs.Interfaces;
-using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Utils;
+using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.ValueObjects;
+using reeltok.api.gateway.Interfaces.DTOs;
 
 namespace reeltok.api.gateway.Mappers
 {
@@ -33,7 +33,8 @@ namespace reeltok.api.gateway.Mappers
             );
         }
 
-        internal static TResponseDto ConvertToResponseDto<TResponseDto>(CommentUsingDateTime commentToConvert) where TResponseDto : ICommentUsingDateTimeDto, new()
+        internal static TResponseDto ConvertToResponseDto<TResponseDto>(CommentUsingDateTime commentToConvert)
+            where TResponseDto : ICommentUsingDateTimeDto, new()
         {
             return new TResponseDto
             {
@@ -44,7 +45,8 @@ namespace reeltok.api.gateway.Mappers
             };
         }
 
-        internal static CommentUsingDateTime ConvertResponseDtoToCommentUsingDateTime<TResponseDto>(TResponseDto responseDto) where TResponseDto : ICommentUsingUnixTimeDto
+        internal static CommentUsingDateTime ConvertResponseDtoToCommentUsingDateTime<TResponseDto>(TResponseDto responseDto)
+            where TResponseDto : ICommentUsingUnixTimeDto
         {
             CommentDetailsUsingDateTime details = new CommentDetailsUsingDateTime(
                 userId: responseDto.UserId,

@@ -1,4 +1,4 @@
-namespace reeltok.api.gateway.Interfaces
+namespace reeltok.api.gateway.Interfaces.Services
 {
     public interface IAuthService
     {

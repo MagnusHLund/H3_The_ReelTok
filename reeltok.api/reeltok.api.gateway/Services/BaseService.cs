@@ -1,5 +1,4 @@
 using reeltok.api.gateway.DTOs;
-using reeltok.api.gateway.Interfaces;
 
 namespace reeltok.api.gateway.Services
 {

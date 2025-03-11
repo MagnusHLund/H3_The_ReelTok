@@ -1,12 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
 
-namespace reeltok.api.gateway.DTOs.Users
+namespace reeltok.api.gateway.DTOs.Users.GetAllSubscribingToUser
 {
-    [XmlRoot("GetAllSubscribingToUserRequestDto")]
     public class ServiceGetAllSubscribingToUserRequestDto
     {
-        [XmlElement("UserId")]
         [Required]
         public Guid UserId { get; set; }
 

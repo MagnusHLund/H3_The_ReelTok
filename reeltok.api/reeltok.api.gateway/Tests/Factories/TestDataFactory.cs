@@ -1,19 +1,27 @@
 using System.Net;
 using System.Text;
 using reeltok.api.gateway.DTOs;
-using reeltok.api.gateway.DTOs.Auth;
-using reeltok.api.gateway.DTOs.Comments;
-using reeltok.api.gateway.DTOs.Recommendations;
-using reeltok.api.gateway.DTOs.Users;
-using reeltok.api.gateway.DTOs.Videos.DeleteVideo;
-using reeltok.api.gateway.DTOs.Videos.GetVideosForFeed;
-using reeltok.api.gateway.DTOs.Videos.LikeVideo;
-using reeltok.api.gateway.DTOs.Videos.RemoveLike;
-using reeltok.api.gateway.DTOs.Videos.UploadVideo;
-using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Enums;
 using reeltok.api.gateway.Utils;
+using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.ValueObjects;
+using reeltok.api.gateway.DTOs.Users.Login;
+using reeltok.api.gateway.DTOs.Auth.LogOutUser;
+using reeltok.api.gateway.DTOs.Videos.LikeVideo;
+using reeltok.api.gateway.DTOs.Users.CreateUser;
+using reeltok.api.gateway.DTOs.Videos.RemoveLike;
+using reeltok.api.gateway.DTOs.Videos.UploadVideo;
+using reeltok.api.gateway.DTOs.Videos.DeleteVideo;
+using reeltok.api.gateway.DTOs.Comments.AddComment;
+using reeltok.api.gateway.DTOs.Comments.LoadComments;
+using reeltok.api.gateway.DTOs.Auth.GetUserIdByToken;
+using reeltok.api.gateway.DTOs.Users.UpdateUserDetails;
+using reeltok.api.gateway.DTOs.Videos.GetVideosForFeed;
+using reeltok.api.gateway.DTOs.Users.GetUserProfileData;
+using reeltok.api.gateway.DTOs.Users.UpdateProfilePicture;
+using reeltok.api.gateway.DTOs.Users.GetAllSubscribingToUser;
+using reeltok.api.gateway.DTOs.Users.GetAllSubscriptionsForUser;
+using reeltok.api.gateway.DTOs.Recommendations.ChangeRecommendations;
 
 namespace reeltok.api.gateway.Factories
 {
@@ -72,7 +80,7 @@ namespace reeltok.api.gateway.Factories
             Guid commentId = Guid.NewGuid();
             Guid userId = Guid.NewGuid();
             string commentText = "Amazing test!";
-            uint createdAt = (uint) new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+            uint createdAt = (uint)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
 
             return new ServiceAddCommentResponseDto
             (
@@ -137,14 +145,14 @@ namespace reeltok.api.gateway.Factories
         {
             return new HttpResponseMessage(statusCode)
             {
-                Content = new StringContent(responseContent, Encoding.UTF8, "application/xml")
+                Content = new StringContent(responseContent, Encoding.UTF8, "application/json")
             };
         }
 
         public static Recommendations CreateVideoRecommendations()
         {
             Guid userId = Guid.NewGuid();
-            List<RecommendedCategories> testRecommendations = new List<RecommendedCategories> { RecommendedCategories.Gaming };
+            List<CategoryType> testRecommendations = new List<CategoryType> { CategoryType.Gaming };
             return new Recommendations(userId, testRecommendations);
         }
 
@@ -251,9 +259,9 @@ namespace reeltok.api.gateway.Factories
         {
             return new List<Video>
             {
-                new Video(Guid.NewGuid(), new VideoDetails("Title1", "Description1", RecommendedCategories.Tech), 0, false, "url1", DateTime.UtcNow, new UserDetails("username1", "profilePictureUrl1", "profileUrl1")),
-                new Video(Guid.NewGuid(), new VideoDetails("Title2", "Description2", RecommendedCategories.Gaming), 0, false, "url2", DateTime.UtcNow, new UserDetails("username2", "profilePictureUrl2", "profileUrl2")),
-                new Video(Guid.NewGuid(), new VideoDetails("Title3", "Description3", RecommendedCategories.Sport), 0, false, "url3", DateTime.UtcNow, new UserDetails("username3", "profilePictureUrl3", "profileUrl3"))
+                new Video(Guid.NewGuid(), new VideoDetails("Title1", "Description1", CategoryType.Tech), 0, false, "url1", DateTime.UtcNow, new UserDetails("username1", "profilePictureUrl1", "profileUrl1")),
+                new Video(Guid.NewGuid(), new VideoDetails("Title2", "Description2", CategoryType.Gaming), 0, false, "url2", DateTime.UtcNow, new UserDetails("username2", "profilePictureUrl2", "profileUrl2")),
+                new Video(Guid.NewGuid(), new VideoDetails("Title3", "Description3", CategoryType.Sport), 0, false, "url3", DateTime.UtcNow, new UserDetails("username3", "profilePictureUrl3", "profileUrl3"))
             };
         }
 
@@ -277,7 +285,7 @@ namespace reeltok.api.gateway.Factories
 
         public static VideoUpload CreateVideoUpload(IFormFile? videoFile)
         {
-            VideoDetails videoDetails = new VideoDetails("test video", "description", RecommendedCategories.Comedy);
+            VideoDetails videoDetails = new VideoDetails("test video", "description", CategoryType.Comedy);
             return new VideoUpload
             (
                 videoDetails: videoDetails,
@@ -287,7 +295,7 @@ namespace reeltok.api.gateway.Factories
 
         public static Video CreateVideo()
         {
-            return new Video(Guid.NewGuid(), new VideoDetails("Title1", "Description1", RecommendedCategories.Tech), 0, false, "url1", DateTime.UtcNow, new UserDetails("username1", "profilePictureUrl1", "profileUrl1"));
+            return new Video(Guid.NewGuid(), new VideoDetails("Title1", "Description1", CategoryType.Tech), 0, false, "url1", DateTime.UtcNow, new UserDetails("username1", "profilePictureUrl1", "profileUrl1"));
         }
 
         public static ServiceUploadVideoResponseDto CreateUploadVideoResponse(Video video)

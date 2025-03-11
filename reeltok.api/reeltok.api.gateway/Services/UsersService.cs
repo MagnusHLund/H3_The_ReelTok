@@ -1,9 +1,15 @@
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.Mappers;
 using reeltok.api.gateway.Entities;
-using reeltok.api.gateway.Interfaces;
-using reeltok.api.gateway.DTOs.Users;
 using reeltok.api.gateway.ValueObjects;
+using reeltok.api.gateway.DTOs.Users.Login;
+using reeltok.api.gateway.Interfaces.Services;
+using reeltok.api.gateway.DTOs.Users.CreateUser;
+using reeltok.api.gateway.DTOs.Users.UpdateUserDetails;
+using reeltok.api.gateway.DTOs.Users.GetUserProfileData;
+using reeltok.api.gateway.DTOs.Users.UpdateProfilePicture;
+using reeltok.api.gateway.DTOs.Users.GetAllSubscribingToUser;
+using reeltok.api.gateway.DTOs.Users.GetAllSubscriptionsForUser;
 
 namespace reeltok.api.gateway.Services
 {

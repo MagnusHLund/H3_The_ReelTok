@@ -1,12 +1,12 @@
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.Entities;
-using reeltok.api.gateway.Interfaces;
 using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.DTOs.Videos.LikeVideo;
 using reeltok.api.gateway.DTOs.Videos.RemoveLike;
 using reeltok.api.gateway.DTOs.Videos.DeleteVideo;
 using reeltok.api.gateway.DTOs.Videos.UploadVideo;
 using reeltok.api.gateway.DTOs.Videos.GetVideosForFeed;
+using reeltok.api.gateway.Interfaces.Services;
 
 namespace reeltok.api.gateway.Services
 {

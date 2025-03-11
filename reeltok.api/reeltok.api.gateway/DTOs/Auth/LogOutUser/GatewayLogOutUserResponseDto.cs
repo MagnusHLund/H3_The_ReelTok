@@ -1,8 +1,5 @@
-using System.Xml.Serialization;
-
-namespace reeltok.api.gateway.DTOs.Auth
+namespace reeltok.api.gateway.DTOs.Auth.LogOutUser
 {
-    [XmlRoot("LogOutUserResponseDto")]
     public class GatewayLogOutUserResponseDto : BaseResponseDto
     {
         public GatewayLogOutUserResponseDto(bool success = true) : base(success) { }

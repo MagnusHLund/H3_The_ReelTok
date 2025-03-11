@@ -18,7 +18,7 @@ namespace reeltok.api.videos.Factories
             return EndpointUriBuilder(baseUrl, route);
         }
 
-        public Uri GetUsersApiEndpoint(string route)
+        public Uri GetUsersApiUrl(string route)
         {
             string baseUrl = GetConfigurationValue("UsersApi");
             return EndpointUriBuilder(baseUrl, route);

@@ -1,6 +1,6 @@
 using reeltok.api.gateway.DTOs;
 
-namespace reeltok.api.gateway.Interfaces
+namespace reeltok.api.gateway.Interfaces.Services
 {
     public interface IHttpService
     {

@@ -1,7 +1,7 @@
 using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.Entities;
 
-namespace reeltok.api.gateway.Interfaces
+namespace reeltok.api.gateway.Interfaces.Services
 {
     public interface IUsersService
     {

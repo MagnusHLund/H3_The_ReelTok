@@ -1,25 +1,34 @@
+using reeltok.api.gateway.Interfaces.DTOs;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
-using reeltok.api.gateway.DTOs.Interfaces;
 
-namespace reeltok.api.gateway.DTOs.Comments
+namespace reeltok.api.gateway.DTOs.Comments.AddComment
 {
-    [XmlRoot("AddCommentResponseDto")]
     public class GatewayAddCommentResponseDto : BaseResponseDto, ICommentUsingDateTimeDto
     {
-        [XmlElement("CommentId")]
+        [Required]
         public Guid CommentId { get; set; }
-        [XmlElement("UserId")]
+
+        [Required]
         public Guid UserId { get; set; }
-        [XmlElement("VideoId")]
+
+        [Required]
         public Guid VideoId { get; set; }
-        [XmlElement("CommentText")]
+
+        [Required]
         [Range(1, 1024)]
         public string CommentText { get; set; }
-        [XmlElement("CreatedAt")]
+
+        [Required]
         public DateTime CreatedAt { get; set; }
 
-        public GatewayAddCommentResponseDto(Guid commentId, Guid userId, Guid videoId, string commentText, DateTime createdAt, bool success = true) : base(success)
+        public GatewayAddCommentResponseDto(
+            Guid commentId,
+            Guid userId,
+            Guid videoId,
+            string commentText,
+            DateTime createdAt,
+            bool success = true
+        ) : base(success)
         {
             CommentId = commentId;
             UserId = userId;
@@ -27,6 +36,7 @@ namespace reeltok.api.gateway.DTOs.Comments
             CommentText = commentText;
             CreatedAt = createdAt;
         }
+
         public GatewayAddCommentResponseDto() { }
     }
 }

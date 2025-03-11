@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace reeltok.api.gateway.DTOs.Interfaces
+namespace reeltok.api.gateway.Interfaces.DTOs
 {
     public interface IUserProfileDataDto
     {

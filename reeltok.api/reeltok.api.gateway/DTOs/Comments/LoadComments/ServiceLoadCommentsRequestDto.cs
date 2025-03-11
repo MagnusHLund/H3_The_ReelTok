@@ -1,15 +1,12 @@
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
 
-namespace reeltok.api.gateway.DTOs.Comments
+namespace reeltok.api.gateway.DTOs.Comments.LoadComments
 {
-    [XmlRoot("LoadCommentsRequestDto")]
     public class ServiceLoadCommentsRequestDto
     {
-        [XmlElement(elementName: "VideoId")]
         [Required]
         public Guid VideoId { get; set; }
-        [XmlElement(elementName: "Amount")]
+
         [Required]
         public byte Amount { get; set; }
 

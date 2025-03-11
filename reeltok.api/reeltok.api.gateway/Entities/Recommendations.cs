@@ -5,15 +5,15 @@ namespace reeltok.api.gateway.Entities
     public class Recommendations
     {
         public Guid UserId { get; set; }
-        public List<RecommendedCategories> RecommendationCategory { get; set; }
+        public List<CategoryType> RecommendationCategory { get; set; }
 
-        public Recommendations(Guid userId, List<RecommendedCategories> recommendationsEnum)
+        public Recommendations(Guid userId, List<CategoryType> recommendationsEnum)
         {
             UserId = userId;
             RecommendationCategory = recommendationsEnum;
         }
 
-        public void AddRecommendation(RecommendedCategories recommendation)
+        public void AddRecommendation(CategoryType recommendation)
         {
             RecommendationCategory.Add(recommendation);
         }

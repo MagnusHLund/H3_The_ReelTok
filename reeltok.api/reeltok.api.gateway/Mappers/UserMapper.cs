@@ -1,19 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using reeltok.api.gateway.DTOs.Interfaces;
-using reeltok.api.gateway.DTOs.Users;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.ValueObjects;
+using reeltok.api.gateway.Interfaces.DTOs;
 
 namespace reeltok.api.gateway.Mappers
 {
     internal static class UserMapper
     {
-        internal static T ConvertUserProfileDataToResponseDto<T>(UserProfileData userProfileData) where T : IUserProfileDataDto, new()
+        internal static TDto ConvertUserProfileDataToResponseDto<TDto>(UserProfileData userProfileData)
+            where TDto : IUserProfileDataDto, new()
         {
-            return new T
+            return new TDto
             {
                 UserId = userProfileData.UserId,
                 Email = userProfileData.HiddenUserDetails.Email,
@@ -23,9 +19,10 @@ namespace reeltok.api.gateway.Mappers
             };
         }
 
-        internal static T ConvertEditableUserDetailsToDto<T>(EditableUserDetails userDetails) where T : IEditableUserDetailsDto, new()
+        internal static TDto ConvertEditableUserDetailsToDto<TDto>(EditableUserDetails userDetails)
+            where TDto : IEditableUserDetailsDto, new()
         {
-            return new T
+            return new TDto
             {
                 Username = userDetails.Username,
                 Email = userDetails.Email

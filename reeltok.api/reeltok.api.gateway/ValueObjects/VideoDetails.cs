@@ -6,9 +6,9 @@ namespace reeltok.api.gateway.ValueObjects
     {
         public string Title { get; }
         public string Description { get; }
-        public RecommendedCategories Tag { get; }
+        public CategoryType Tag { get; }
 
-        public VideoDetails(string title, string description, RecommendedCategories tag)
+        public VideoDetails(string title, string description, CategoryType tag)
         {
             Title = title;
             Description = description;

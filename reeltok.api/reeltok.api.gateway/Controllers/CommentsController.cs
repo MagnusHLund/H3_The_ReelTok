@@ -1,16 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
-using reeltok.api.gateway.ActionFilters;
 using reeltok.api.gateway.DTOs;
-using reeltok.api.gateway.DTOs.Comments;
-using reeltok.api.gateway.Entities;
-using reeltok.api.gateway.Interfaces;
 using reeltok.api.gateway.Mappers;
+using reeltok.api.gateway.Entities;
+using reeltok.api.gateway.ActionFilters;
+using reeltok.api.gateway.Interfaces.Services;
+using reeltok.api.gateway.DTOs.Comments.AddComment;
+using reeltok.api.gateway.DTOs.Comments.LoadComments;
 
 namespace reeltok.api.gateway.Controllers
 {
     [ApiController]
     [ValidateModel]
     [Route("api/[controller]")]
+    [Consumes("application/json")]
     public class CommentsController : ControllerBase
     {
         private readonly ICommentsService _commentsService;
@@ -20,7 +22,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddComment([FromBody] GatewayAddCommentRequestDto request)
+        public async Task<IActionResult> AddCommentAsync([FromBody] GatewayAddCommentRequestDto request)
         {
 
             CommentUsingDateTime comment = await _commentsService.AddComment(request.VideoId, request.CommentText).ConfigureAwait(false);
@@ -31,7 +33,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LoadComments([FromBody] GatewayLoadCommentsRequestDto request)
+        public async Task<IActionResult> LoadCommentsAsync([FromBody] GatewayLoadCommentsRequestDto request)
         {
             if (request.Amount <= 0)
             {

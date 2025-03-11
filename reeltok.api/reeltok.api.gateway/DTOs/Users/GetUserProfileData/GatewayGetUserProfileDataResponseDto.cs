@@ -1,29 +1,38 @@
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
-using reeltok.api.gateway.DTOs.Interfaces;
+using reeltok.api.gateway.Interfaces.DTOs;
 
-namespace reeltok.api.gateway.DTOs.Users
+namespace reeltok.api.gateway.DTOs.Users.GetUserProfileData
 {
-    [XmlRoot("GetUserProfileDataResponseDto")]
     public class GatewayGetUserProfileDataResponseDto : BaseResponseDto, IUserProfileDataDto
     {
-        [XmlElement("UserId")]
+        [Required]
         public Guid UserId { get; set; }
-        [XmlElement("Username")]
+
+        [Required]
         [StringLength(25)]
         public string Username { get; set; }
-        [XmlElement("Email")]
+
+        [Required]
         [EmailAddress]
         [Range(1, 320)]
         public string Email { get; set; }
-        [XmlElement("ProfileUrl")]
+
+        [Required]
         [StringLength(30)]
         public string ProfileUrl { get; set; }
-        [XmlElement("ProfilePictureUrl")]
+
+        [Required]
         [StringLength(50)]
         public string ProfilePictureUrl { get; set; }
 
-        public GatewayGetUserProfileDataResponseDto(Guid userId, string username, string profileUrl, string profilePictureUrl, string email = "", bool success = true) : base(success)
+        public GatewayGetUserProfileDataResponseDto(
+            Guid userId,
+            string username,
+            string profileUrl,
+            string profilePictureUrl,
+            string email,
+            bool success = true
+        ) : base(success)
         {
             UserId = userId;
             Username = username;

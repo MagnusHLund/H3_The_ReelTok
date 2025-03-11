@@ -1,8 +1,9 @@
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.Mappers;
 using reeltok.api.gateway.Entities;
-using reeltok.api.gateway.Interfaces;
-using reeltok.api.gateway.DTOs.Comments;
+using reeltok.api.gateway.Interfaces.Services;
+using reeltok.api.gateway.DTOs.Comments.AddComment;
+using reeltok.api.gateway.DTOs.Comments.LoadComments;
 
 namespace reeltok.api.gateway.Services
 {

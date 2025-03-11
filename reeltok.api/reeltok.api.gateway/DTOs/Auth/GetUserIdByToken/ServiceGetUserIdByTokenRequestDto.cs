@@ -1,8 +1,5 @@
-using System.Xml.Serialization;
-
-namespace reeltok.api.gateway.DTOs.Auth
+namespace reeltok.api.gateway.DTOs.Auth.GetUserIdByToken
 {
-    [XmlRoot("GetUserIdByTokenRequestDto")]
     public class ServiceGetUserIdByTokenRequestDto
     {
     }

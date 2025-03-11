@@ -1,6 +1,6 @@
 using reeltok.api.gateway.Entities;
 
-namespace reeltok.api.gateway.Interfaces
+namespace reeltok.api.gateway.Interfaces.Services
 {
     public interface ICommentsService
     {

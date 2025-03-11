@@ -1,6 +1,6 @@
 namespace reeltok.api.gateway.DTOs.Videos.GetVideosForProfile
 {
-    public class ServiceGetVideosForProfileResponseDto
+    public class ServiceGetVideosForProfileResponseDto : BaseResponseDto
     {
 
     }

@@ -1,28 +1,30 @@
+using reeltok.api.gateway.Interfaces.DTOs;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
-using reeltok.api.gateway.DTOs.Interfaces;
 
-namespace reeltok.api.gateway.DTOs.Users
+namespace reeltok.api.gateway.DTOs.Users.Login
 {
-    [XmlRoot("LoginResponseDto")]
     public class ServiceLoginResponseDto : BaseResponseDto, IUserProfileDataDto
     {
-        [XmlElement("UserId")]
+        [Required]
         public Guid UserId { get; set; }
-        [XmlElement("Email")]
+
+        [Required]
         [EmailAddress]
         [Range(1, 320)]
         public string Email { get; set; }
-        [XmlElement("Username")]
-        [StringLength(25, MinimumLength = 3)]
 
+        [Required]
+        [StringLength(25, MinimumLength = 3)]
         public string Username { get; set; }
-        [XmlElement("ProfileUrl")]
+
+        [Required]
         [StringLength(30)]
         public string ProfileUrl { get; set; }
-        [XmlElement("ProfilePictureUrl")]
+
+        [Required]
         [StringLength(50)]
         public string ProfilePictureUrl { get; set; }
+
         public ServiceLoginResponseDto(Guid userId, string email, string username, string profileUrl, string profilePictureUrl, bool success = true) : base(success)
         {
             UserId = userId;
@@ -31,7 +33,5 @@ namespace reeltok.api.gateway.DTOs.Users
             ProfileUrl = profileUrl;
             ProfilePictureUrl = profilePictureUrl;
         }
-
-        public ServiceLoginResponseDto() { }
     }
 }

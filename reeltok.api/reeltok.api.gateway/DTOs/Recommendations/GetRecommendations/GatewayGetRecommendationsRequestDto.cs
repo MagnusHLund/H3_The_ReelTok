@@ -1,18 +1,15 @@
-using System.Xml.Serialization;
+using System.ComponentModel.DataAnnotations;
 
-namespace reeltok.api.gateway.DTOs.Recommendations
+namespace reeltok.api.gateway.DTOs.Recommendations.GetRecommendations
 {
-    [XmlRoot("GetRecommendationsRequestDto")]
     public class GatewayGetRecommendationsRequestDto
     {
-        [XmlElement(elementName: "Category")]
-        [XmlArray]
-        [XmlArrayItem("Category")]
-        public string Category { get; set; }
-        public GatewayGetRecommendationsRequestDto(string category)
+        [Required]
+        public Guid UserId { get; set; }
+
+        public GatewayGetRecommendationsRequestDto(Guid userId)
         {
-            Category = category;
+            UserId = userId;
         }
-        public GatewayGetRecommendationsRequestDto() { }
     }
 }

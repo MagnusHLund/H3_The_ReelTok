@@ -1,17 +1,13 @@
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
 
-namespace reeltok.api.gateway.DTOs.Users
+namespace reeltok.api.gateway.DTOs.Users.Login
 {
-    [XmlRoot("LoginRequestDto")]
     public class ServiceLoginRequestDto
     {
-        [XmlElement("Email")]
         [Required]
         [Range(1, 320)]
         [EmailAddress]
         public string Email { get; set; }
-        [XmlElement("Password")]
 
         [Required]
         [StringLength(64, MinimumLength = 8)]

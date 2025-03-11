@@ -1,10 +1,10 @@
-using System.Xml.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.gateway.DTOs
 {
     public abstract class BaseResponseDto
     {
-        [XmlElement(elementName: "Success")]
+        [Required]
         public virtual bool Success { get; set; } = true;
 
         protected BaseResponseDto(bool success)

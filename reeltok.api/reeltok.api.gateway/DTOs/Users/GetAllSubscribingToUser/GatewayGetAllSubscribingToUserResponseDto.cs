@@ -1,14 +1,11 @@
-using System.Xml.Serialization;
+using System.ComponentModel.DataAnnotations;
 using reeltok.api.gateway.ValueObjects;
 
-namespace reeltok.api.gateway.DTOs.Users
+namespace reeltok.api.gateway.DTOs.Users.GetAllSubscribingToUser
 {
-    [XmlRoot("GetAllSubscribingToUserResponseDto")]
     public class GatewayGetAllSubscribingToUserResponseDto : BaseResponseDto
     {
-        [XmlElement("Users")]
-        [XmlArray("Users")]
-        [XmlArrayItem("UserDetails")]
+        [Required]
         public List<UserDetails> Users { get; set; }
 
         public GatewayGetAllSubscribingToUserResponseDto(List<UserDetails> users, bool success = true) : base(success)

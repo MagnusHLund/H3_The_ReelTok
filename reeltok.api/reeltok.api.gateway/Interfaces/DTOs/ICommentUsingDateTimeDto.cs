@@ -1,11 +1,11 @@
-namespace reeltok.api.gateway.DTOs.Interfaces
+namespace reeltok.api.gateway.Interfaces.DTOs
 {
-    public interface ICommentUsingUnixTimeDto
+    public interface ICommentUsingDateTimeDto
     {
         Guid CommentId { get; set; }
         Guid UserId { get; set; }
         Guid VideoId { get; set; }
         string CommentText { get; set; }
-        uint CreatedAt { get; set; }
+        DateTime CreatedAt { get; set; }
     }
 }
