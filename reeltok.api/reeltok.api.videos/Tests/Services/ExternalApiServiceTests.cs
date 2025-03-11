@@ -31,15 +31,15 @@ namespace reeltok.api.videos.Tests.Services
             Guid userId = Guid.NewGuid();
             byte amount = 5;
             Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("recommendations");
-            ServiceGetRecommendedVideosResponseDto responseDto = new ServiceGetRecommendedVideosResponseDto
+            RecommendedServiceGetRecommendedVideosResponseDto responseDto = new RecommendedServiceGetRecommendedVideosResponseDto
             (
                 videoIdList: new List<Guid> { Guid.NewGuid(), Guid.NewGuid() },
                 success: true
             );
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
-            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetRecommendedVideosRequestDto, ServiceGetRecommendedVideosResponseDto>(
-                It.IsAny<ServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<RecommendedServiceGetRecommendedVideosRequestDto, RecommendedServiceGetRecommendedVideosResponseDto>(
+                It.IsAny<RecommendedServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
                 .ReturnsAsync(responseDto);
 
             // Act
@@ -59,8 +59,8 @@ namespace reeltok.api.videos.Tests.Services
             FailureResponseDto responseDto = new FailureResponseDto("Test error");
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
-            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetRecommendedVideosRequestDto, BaseResponseDto>(
-                It.IsAny<ServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<RecommendedServiceGetRecommendedVideosRequestDto, BaseResponseDto>(
+                It.IsAny<RecommendedServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
                 .ReturnsAsync(responseDto); // Returning FailureResponseDto
 
             // Act & Assert
@@ -82,8 +82,8 @@ namespace reeltok.api.videos.Tests.Services
             Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("recommendations");
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
-            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetRecommendedVideosRequestDto, ServiceGetRecommendedVideosResponseDto>(
-                It.IsAny<ServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<RecommendedServiceGetRecommendedVideosRequestDto, RecommendedServiceGetRecommendedVideosResponseDto>(
+                It.IsAny<RecommendedServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
                 .ThrowsAsync(new HttpRequestException("Service unavailable", null, HttpStatusCode.ServiceUnavailable));
 
             // Act & Assert
@@ -97,15 +97,15 @@ namespace reeltok.api.videos.Tests.Services
             Guid userId = Guid.NewGuid();
             byte amount = 5;
             Uri targetUrl = TestDataFactory.CreateUsersMicroserviceTestUri("recommendations");
-            ServiceGetRecommendedVideosResponseDto responseDto = new ServiceGetRecommendedVideosResponseDto
+            RecommendedServiceGetRecommendedVideosResponseDto responseDto = new RecommendedServiceGetRecommendedVideosResponseDto
             (
                 videoIdList: new List<Guid>(),
                 success: true
             );
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
-            _mockHttpService.Setup(x => x.ProcessRequestAsync<ServiceGetRecommendedVideosRequestDto, ServiceGetRecommendedVideosResponseDto>(
-                It.IsAny<ServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+            _mockHttpService.Setup(x => x.ProcessRequestAsync<RecommendedServiceGetRecommendedVideosRequestDto, RecommendedServiceGetRecommendedVideosResponseDto>(
+                It.IsAny<RecommendedServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
                 .ReturnsAsync(responseDto);
 
             // Act

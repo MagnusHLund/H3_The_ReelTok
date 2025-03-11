@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs.GetUserDetailsForVideo
 {
-    public class ServiceGetUserDetailsForVideoRequestDto
+    public class UserServiceGetUserDetailsForVideoRequestDto
     {
         [Required]
         [JsonProperty("VideoIds")]
         public List<Guid> VideoIds { get; set; }
 
-        public ServiceGetUserDetailsForVideoRequestDto(List<Guid> videoIds)
+        public UserServiceGetUserDetailsForVideoRequestDto(List<Guid> videoIds)
         {
             VideoIds = videoIds;
         }
