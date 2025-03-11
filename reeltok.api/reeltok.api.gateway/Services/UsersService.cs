@@ -4,6 +4,7 @@ using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.DTOs.Users.Login;
 using reeltok.api.gateway.Interfaces.Services;
+using reeltok.api.gateway.Interfaces.Factories;
 using reeltok.api.gateway.DTOs.Users.CreateUser;
 using reeltok.api.gateway.DTOs.Users.UpdateUserDetails;
 using reeltok.api.gateway.DTOs.Users.GetUserProfileData;
@@ -15,20 +16,21 @@ namespace reeltok.api.gateway.Services
 {
     internal class UsersService : BaseService, IUsersService
     {
-        private const string UsersMicroServiceBaseUrl = "http://localhost:5001/api/users";
         private readonly IAuthService _authService;
         private readonly IHttpService _httpService;
+        private readonly IEndpointFactory _endpointFactory;
 
-        internal UsersService(IAuthService authService, IHttpService httpService)
+        internal UsersService(IAuthService authService, IHttpService httpService, IEndpointFactory endpointFactory)
         {
             _authService = authService;
             _httpService = httpService;
+            _endpointFactory = endpointFactory;
         }
 
         public async Task<UserProfileData> LoginUser(string email, string password)
         {
             ServiceLoginRequestDto requestDto = new ServiceLoginRequestDto(email, password);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/login");
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("login");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceLoginRequestDto, ServiceLoginResponseDto>(requestDto, targetUrl, HttpMethod.Post).ConfigureAwait(false);
 
@@ -37,12 +39,12 @@ namespace reeltok.api.gateway.Services
                 return UserMapper.ConvertResponseDtoToUserProfileData(responseDto);
             }
 
-            throw HandleExceptions(response);
+            throw HandleNetworkResponseExceptions(response);
         }
         public async Task<UserProfileData> CreateUser(string email, string username, string password)
         {
             ServiceCreateUserRequestDto requestDto = new ServiceCreateUserRequestDto(email, username, password);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/create");
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("users");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceCreateUserRequestDto, ServiceCreateUserResponseDto>(requestDto, targetUrl, HttpMethod.Post).ConfigureAwait(false);
 
@@ -51,12 +53,12 @@ namespace reeltok.api.gateway.Services
                 return UserMapper.ConvertResponseDtoToUserProfileData(responseDto);
             }
 
-            throw HandleExceptions(response);
+            throw HandleNetworkResponseExceptions(response);
         }
         public async Task<UserProfileData> GetUserProfileData(Guid userId)
         {
             ServiceGetUserProfileDataRequestDto requestDto = new ServiceGetUserProfileDataRequestDto(userId);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/getProfileData");
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("users");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetUserProfileDataRequestDto, ServiceGetUserProfileDataResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 
@@ -65,14 +67,14 @@ namespace reeltok.api.gateway.Services
                 return UserMapper.ConvertResponseDtoToUserProfileData(responseDto);
             }
 
-            throw HandleExceptions(response);
+            throw HandleNetworkResponseExceptions(response);
         }
         public async Task<EditableUserDetails> UpdateUserDetails(string username, string email)
         {
-            Guid userId = await _authService.GetUserIdByToken().ConfigureAwait(false);
+            Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
 
             ServiceUpdateUserDetailsRequestDto requestDto = new ServiceUpdateUserDetailsRequestDto(userId, username, email);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/updateDetails");
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("users");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceUpdateUserDetailsRequestDto, ServiceUpdateUserDetailsResponseDto>(requestDto, targetUrl, HttpMethod.Put).ConfigureAwait(false);
 
@@ -81,15 +83,15 @@ namespace reeltok.api.gateway.Services
                 return new EditableUserDetails(responseDto.Username, responseDto.Email);
             }
 
-            throw HandleExceptions(response);
+            throw HandleNetworkResponseExceptions(response);
         }
 
         public async Task<string> UpdateProfilePicture(IFormFile image)
         {
-            Guid userId = await _authService.GetUserIdByToken().ConfigureAwait(false);
+            Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
 
             ServiceUpdateProfilePictureRequestDto requestDto = new ServiceUpdateProfilePictureRequestDto(userId, image);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/updateProfilePicture");
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("users/profile-picture");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(requestDto, targetUrl, HttpMethod.Put).ConfigureAwait(false);
 
@@ -98,13 +100,13 @@ namespace reeltok.api.gateway.Services
                 return responseDto.ProfilePictureUrl;
             }
 
-            throw HandleExceptions(response);
+            throw HandleNetworkResponseExceptions(response);
         }
 
         public async Task<List<UserDetails>> GetAllSubscriptionsForUser(Guid userId)
         {
             ServiceGetAllSubscriptionsForUserRequestDto requestDto = new ServiceGetAllSubscriptionsForUserRequestDto(userId);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/getSubscriptions");
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscriptions");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetAllSubscriptionsForUserRequestDto, ServiceGetAllSubscriptionsForUserResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 
@@ -113,12 +115,12 @@ namespace reeltok.api.gateway.Services
                 return responseDto.Users;
             }
 
-            throw HandleExceptions(response);
+            throw HandleNetworkResponseExceptions(response);
         }
         public async Task<List<UserDetails>> GetAllSubscribingToUser(Guid userId)
         {
             ServiceGetAllSubscribingToUserRequestDto requestDto = new ServiceGetAllSubscribingToUserRequestDto(userId);
-            Uri targetUrl = new Uri($"{UsersMicroServiceBaseUrl}/getSubscribers");
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscribers");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetAllSubscribingToUserRequestDto, ServiceGetAllSubscribingToUserResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 
@@ -127,7 +129,7 @@ namespace reeltok.api.gateway.Services
                 return responseDto.Users;
             }
 
-            throw HandleExceptions(response);
+            throw HandleNetworkResponseExceptions(response);
         }
     }
 }

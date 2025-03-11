@@ -15,7 +15,7 @@ namespace reeltok.api.gateway.Services
         {
             _httpClient = httpClient;
         }
-
+        // TODO: allow HttpService to send multipart/form-data requests
         public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(
             TRequest requestDto,
             Uri targetUrl,

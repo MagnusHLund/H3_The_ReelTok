@@ -17,5 +17,7 @@ namespace reeltok.api.gateway.DTOs.Users.UpdateUserDetails
             Username = username;
             Email = email;
         }
+
+        public GatewayUpdateUserDetailsResponseDto() { }
     }
 }

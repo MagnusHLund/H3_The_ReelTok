@@ -46,6 +46,8 @@ namespace reeltok.api.users.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserRequestDto request)
         {
+            // TODO: Make this include updating their recommendations!
+
             UserEntity updatedUser = await _usersService.UpdateUserAsync(request.UserId, request.Username, request.Email)
                 .ConfigureAwait(false);
 

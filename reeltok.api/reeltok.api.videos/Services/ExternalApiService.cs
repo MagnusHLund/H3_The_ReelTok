@@ -41,7 +41,7 @@ namespace reeltok.api.videos.Services
         public async Task<List<VideoCreatorEntity>> GetVideoCreatorDetailsAsync(List<Guid> videoIds)
         {
             ServiceGetUserDetailsForVideoRequestDto requestDto = new ServiceGetUserDetailsForVideoRequestDto(videoIds);
-            Uri targetUrl = _endpointFactory.GetUsersApiEndpoint("users");
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("users");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceGetUserDetailsForVideoRequestDto, ServiceGetUserDetailsForVideoResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 
@@ -56,7 +56,7 @@ namespace reeltok.api.videos.Services
         public async Task<bool> LikeVideoAsync(Guid userId, Guid videoId)
         {
             ServiceAddLikeRequestDto requestDto = new ServiceAddLikeRequestDto(userId, videoId);
-            Uri targetUrl = _endpointFactory.GetUsersApiEndpoint("likes");
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("likes");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceAddLikeRequestDto, ServiceAddLikeResponseDto>(requestDto, targetUrl, HttpMethod.Post)
                 .ConfigureAwait(false);
@@ -72,7 +72,7 @@ namespace reeltok.api.videos.Services
         public async Task<bool> RemoveLikeFromVideoAsync(Guid userId, Guid videoId)
         {
             ServiceRemoveLikeRequestDto requestDto = new ServiceRemoveLikeRequestDto(userId, videoId);
-            Uri targetUrl = _endpointFactory.GetUsersApiEndpoint("likes");
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("likes");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceRemoveLikeRequestDto, ServiceRemoveLikeResponseDto>(requestDto, targetUrl, HttpMethod.Delete)
                 .ConfigureAwait(false);
@@ -88,7 +88,7 @@ namespace reeltok.api.videos.Services
         public async Task<List<HasUserLikedVideoEntity>> HasUserLikedVideosAsync(Guid userId, List<Guid> videoIds)
         {
             ServiceHasUserLikedVideosRequestDto requestDto = new ServiceHasUserLikedVideosRequestDto(userId, videoIds);
-            Uri targetUrl = _endpointFactory.GetUsersApiEndpoint("likes");
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("likes");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceHasUserLikedVideosRequestDto, ServiceHasUserLikedVideosResponseDto>(requestDto, targetUrl, HttpMethod.Get)
                 .ConfigureAwait(false);
