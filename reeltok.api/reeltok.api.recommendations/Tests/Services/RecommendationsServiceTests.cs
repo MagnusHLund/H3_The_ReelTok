@@ -34,11 +34,7 @@ namespace reeltok.api.recommendations.Tests.Services
             List<Guid> result = await _recommendationsService.GetVideoRecommendationsForUserAsync(userId, amountOfVideos);
 
             // Assert
-            Assert.Equal(recommendedVideoIds.Count, result.Count);
-            for (int i = 0; i < recommendedVideoIds.Count; i++)
-            {
-                Assert.Equal(recommendedVideoIds[i], result[i]);
-            }
+            Assert.Equal(recommendedVideoIds, result);
         }
 
         #endregion

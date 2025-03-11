@@ -7,7 +7,6 @@ using reeltok.api.recommendations.Tests.Factories;
 using reeltok.api.recommendations.Interfaces.Services;
 using reeltok.api.recommendations.Interfaces.Repositories;
 
-
 namespace reeltok.api.recommendations.Tests.Services
 {
     public class VideosServiceTests
@@ -36,7 +35,8 @@ namespace reeltok.api.recommendations.Tests.Services
             byte amount = 2;
             List<Guid> recommendedVideoIds = TestDataFactory.CreateVideoIds(amount);
 
-            _mockRecommendationsService.Setup(x => x.GetVideoRecommendationsForUserAsync(userId, amount)).ReturnsAsync(recommendedVideoIds);
+            _mockRecommendationsService.Setup(x => x.GetVideoRecommendationsForUserAsync(userId, amount))
+                .ReturnsAsync(recommendedVideoIds);
 
             // Act
             List<Guid> result = await _videosService.GetRecommendedVideosForUsersFeedAsync(userId, amount);
@@ -59,7 +59,7 @@ namespace reeltok.api.recommendations.Tests.Services
 
             _mockVideoCategoriesRepository
                 .Setup(x => x.AddVideoCategoryAsync(It.IsAny<CategoryVideoCategoryEntity>()))
-                .ReturnsAsync((uint) 1); 
+                .ReturnsAsync((uint) 1);
 
             // Act
             CategoryType result = await _videosService.AddVideoCategoryAsync(videoId, categoryType);
@@ -67,7 +67,6 @@ namespace reeltok.api.recommendations.Tests.Services
             // Assert
             Assert.Equal(categoryType, result);
         }
-
 
         #endregion
 
@@ -78,10 +77,11 @@ namespace reeltok.api.recommendations.Tests.Services
         {
             // Arrange
             Guid userId = TestDataFactory.CreateGuid();
-            byte amount = 0; 
+            byte amount = 0;
             List<Guid> recommendedVideoIds = new List<Guid>();
 
-            _mockRecommendationsService.Setup(x => x.GetVideoRecommendationsForUserAsync(userId, amount)).ReturnsAsync(recommendedVideoIds);
+            _mockRecommendationsService.Setup(x => x.GetVideoRecommendationsForUserAsync(userId, amount))
+                .ReturnsAsync(recommendedVideoIds);
 
             // Act
             List<Guid> result = await _videosService.GetRecommendedVideosForUsersFeedAsync(userId, amount);
@@ -95,12 +95,14 @@ namespace reeltok.api.recommendations.Tests.Services
         {
             // Arrange
             Guid videoId = TestDataFactory.CreateGuid();
-            CategoryType invalidCategory = (CategoryType) 999; 
+            CategoryType invalidCategory = (CategoryType) 999;
 
-            _mockVideoCategoriesRepository.Setup(x => x.AddVideoCategoryAsync(It.IsAny<CategoryVideoCategoryEntity>())).ThrowsAsync(new Exception("Invalid category"));
+            _mockVideoCategoriesRepository.Setup(x => x.AddVideoCategoryAsync(It.IsAny<CategoryVideoCategoryEntity>()))
+                .ThrowsAsync(new Exception("Invalid category"));
 
             // Act & Assert
-            await Assert.ThrowsAsync<Exception>(async () => await _videosService.AddVideoCategoryAsync(videoId, invalidCategory));
+            await Assert.ThrowsAsync<Exception>(async () =>
+                await _videosService.AddVideoCategoryAsync(videoId, invalidCategory));
         }
 
         #endregion

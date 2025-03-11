@@ -1,11 +1,10 @@
 using Moq;
 using Xunit;
+using reeltok.api.recommendations.Enums;
 using reeltok.api.recommendations.Services;
-using reeltok.api.recommendations.Interfaces.Repositories;
 using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Tests.Factories;
-using reeltok.api.recommendations.Enums;
-
+using reeltok.api.recommendations.Interfaces.Repositories;
 
 namespace reeltok.api.recommendations.Tests.Services
 {
@@ -27,7 +26,7 @@ namespace reeltok.api.recommendations.Tests.Services
         {
             // Arrange
             Guid userId = TestDataFactory.CreateGuid();
-            CategoryEntity categoryEntity = new CategoryEntity(CategoryType.Gaming);
+            CategoryEntity categoryEntity = TestDataFactory.CreateCategoryEntity(CategoryType.Gaming);
             _mockUserInterestsRepository.Setup(repo => repo.GetUserInterestAsync(userId))
                 .ReturnsAsync(categoryEntity);
 
@@ -44,7 +43,6 @@ namespace reeltok.api.recommendations.Tests.Services
             // Arrange
             Guid userId = TestDataFactory.CreateGuid();
             CategoryType categoryType = CategoryType.Gaming;
-            CategoryEntity categoryEntityToSave = TestDataFactory.CreateCategoryEntity(categoryType);
             CategoryUserInterestEntity categoryUserInterestEntity = TestDataFactory.CreateCategoryUserInterestEntity();
             uint savedCategoryId = 1;
 
@@ -98,7 +96,7 @@ namespace reeltok.api.recommendations.Tests.Services
         {
             // Arrange
             Guid userId = TestDataFactory.CreateGuid();
-            CategoryType invalidCategory = CategoryType.Gaming; // assuming Invalid is a non-valid CategoryType
+            CategoryType invalidCategory = (CategoryType) 999;
             _mockUserInterestsRepository.Setup(repo => repo.AddUserInterestAsync(It.IsAny<CategoryUserInterestEntity>()))
                 .ThrowsAsync(new InvalidOperationException("Invalid category"));
 

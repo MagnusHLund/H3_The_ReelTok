@@ -1,12 +1,9 @@
 using Moq;
 using Xunit;
 using reeltok.api.recommendations.Services;
-using reeltok.api.recommendations.Interfaces.Repositories;
 using reeltok.api.recommendations.Entities;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using reeltok.api.recommendations.Enums;
+using reeltok.api.recommendations.Tests.Factories;
+using reeltok.api.recommendations.Interfaces.Repositories;
 
 namespace reeltok.api.recommendations.Tests.Services
 {
@@ -27,15 +24,16 @@ namespace reeltok.api.recommendations.Tests.Services
         public async Task UpdateTotalTimesUserWatchedVideosAsync_WithValidData_UpdatesExistingVideosAndAddsNew()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            List<Guid> watchedVideoIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+            Guid userId = TestDataFactory.CreateGuid();
+            List<Guid> watchedVideoIds = TestDataFactory.CreateVideoIds(3);
 
             List<WatchedVideoEntity> existingWatchedVideos = new List<WatchedVideoEntity>
             {
-                new WatchedVideoEntity(userId, watchedVideoIds[0], 1, 123456),
-                new WatchedVideoEntity(userId, watchedVideoIds[1], 1, 123456) 
+                TestDataFactory.CreateWatchedVideoEntity(),
+                TestDataFactory.CreateWatchedVideoEntity()
             };
 
+            // Setup mock repository methods
             _mockWatchedVideosRepository.Setup(repo => repo.GetExistingWatchedVideosAsync(userId, watchedVideoIds))
                 .ReturnsAsync(existingWatchedVideos);
 
@@ -61,9 +59,10 @@ namespace reeltok.api.recommendations.Tests.Services
         public async Task UpdateTotalTimesUserWatchedVideosAsync_WhenRepositoryThrowsException_ThrowsException()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            List<Guid> watchedVideoIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+            Guid userId = TestDataFactory.CreateGuid();
+            List<Guid> watchedVideoIds = TestDataFactory.CreateVideoIds(2);
 
+            // Mock repository to throw exception
             _mockWatchedVideosRepository.Setup(repo => repo.GetExistingWatchedVideosAsync(userId, watchedVideoIds))
                 .ThrowsAsync(new Exception("Repository error"));
 
