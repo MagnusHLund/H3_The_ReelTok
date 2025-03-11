@@ -1,8 +1,8 @@
 {
   "folders": [
     {
-      "path": "./../reeltok.client/reeltok.client.reactNative",
-      "name": "ReelTok client React-native"
+      "path": "./../reeltok.docker/",
+      "name": "ReelTok docker"
     },
     {
       "path": "./../.git"

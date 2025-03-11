@@ -20,7 +20,8 @@
       "api.comments",
       "client.reactNative",
       "database",
-      "documentation"
+      "documentation",
+      "docker"
     ],
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
