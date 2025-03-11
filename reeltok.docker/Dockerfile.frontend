@@ -1,0 +1,15 @@
+FROM node:20
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y git
+
+RUN git clone https://github.com/MagnusHLund/H3_The_ReelTok.git /app
+
+WORKDIR /app/reeltok.client/reeltok.client.reactNative
+
+RUN npm install
+
+EXPOSE 8081
+
+CMD ["npx", "expo", "start", "--no-dev", "--minify"]
