@@ -53,6 +53,7 @@ namespace reeltok.api.recommendations.Tests.Services
                 await _usersService.GetUserInterestAsync(invalidUserId));
         }
 
+        // TODO: fix this one
         [Fact]
         public async Task AddInterestForUserAsync_WithValidParameters_ReturnsSavedUserInterest()
         {
@@ -75,6 +76,8 @@ namespace reeltok.api.recommendations.Tests.Services
             _mockUserInterestsRepository.Verify(repo => repo.AddUserInterestAsync(It.IsAny<CategoryUserInterestEntity>()), Times.Once);
         }
 
+        // TODO: fix this one
+        // TODO: fix this one
         [Fact]
         public async Task UpdateInterestForUserAsync_WithValidParameters_ReturnsUpdatedUserInterest()
         {
