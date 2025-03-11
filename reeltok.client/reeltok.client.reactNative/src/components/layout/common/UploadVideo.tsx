@@ -27,12 +27,12 @@ const UploadVideo: React.FC = ({}) => {
   }
 
   const categories: DropdownOption[] = [
-    { label: t('genre.Gaming'), value: 'Gaming' },
-    { label: t('genre.Tech'), value: 'Tech' },
-    { label: t('genre.Dance'), value: 'Dance' },
-    { label: t('genre.Fight'), value: 'Fight' },
-    { label: t('genre.Sport'), value: 'Sport' },
-    { label: t('genre.Comedy'), value: 'Comedy' },
+    { label: t('genre.gaming'), value: 'Gaming' },
+    { label: t('genre.tech'), value: 'Tech' },
+    { label: t('genre.dance'), value: 'Dance' },
+    { label: t('genre.fight'), value: 'Fight' },
+    { label: t('genre.sport'), value: 'Sport' },
+    { label: t('genre.comedy'), value: 'Comedy' },
   ]
 
   const defaultOption: DropdownOption = {
