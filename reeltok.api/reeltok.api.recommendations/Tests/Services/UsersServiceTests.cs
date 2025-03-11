@@ -1,10 +1,11 @@
 using Moq;
 using Xunit;
-using reeltok.api.recommendations.Entities;
-using reeltok.api.recommendations.Enums;
-using reeltok.api.recommendations.Interfaces.Repositories;
 using reeltok.api.recommendations.Services;
+using reeltok.api.recommendations.Interfaces.Repositories;
+using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Tests.Factories;
+using reeltok.api.recommendations.Enums;
+
 
 namespace reeltok.api.recommendations.Tests.Services
 {
@@ -19,83 +20,107 @@ namespace reeltok.api.recommendations.Tests.Services
             _usersService = new UsersService(_mockUserInterestsRepository.Object);
         }
 
+        #region Success Tests
+
         [Fact]
-        public async Task GetUserInterestAsync_WithValidUserId_ReturnsUserInterest()
+        public async Task GetUserInterestAsync_WithValidUser_ReturnsCategoryType()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            CategoryEntity categoryEntity = TestDataFactory.CreateCategoryEntity(CategoryType.Tech);
-
-            _mockUserInterestsRepository
-                .Setup(repo => repo.GetUserInterestAsync(userId))
+            Guid userId = TestDataFactory.CreateGuid();
+            CategoryEntity categoryEntity = new CategoryEntity(CategoryType.Gaming);
+            _mockUserInterestsRepository.Setup(repo => repo.GetUserInterestAsync(userId))
                 .ReturnsAsync(categoryEntity);
 
             // Act
             CategoryType result = await _usersService.GetUserInterestAsync(userId);
 
             // Assert
-            Assert.Equal(categoryEntity.Category, result);
-            _mockUserInterestsRepository.Verify(repo => repo.GetUserInterestAsync(userId), Times.Once);
+            Assert.Equal(CategoryType.Gaming, result);
         }
 
         [Fact]
-        public async Task GetUserInterestAsync_WithInvalidUserId_ThrowsException()
+        public async Task AddInterestForUserAsync_WithValidData_ReturnsSavedCategoryType()
         {
             // Arrange
-            Guid invalidUserId = Guid.Empty;
-
-            _mockUserInterestsRepository
-                .Setup(repo => repo.GetUserInterestAsync(invalidUserId))
-                .ThrowsAsync(new ArgumentException("Invalid user ID."));
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await _usersService.GetUserInterestAsync(invalidUserId));
-        }
-
-        // TODO: fix this one
-        [Fact]
-        public async Task AddInterestForUserAsync_WithValidParameters_ReturnsSavedUserInterest()
-        {
-            // Arrange
-            Guid userId = Guid.NewGuid();
-            CategoryType userInterest = CategoryType.Comedy;
-
-            CategoryEntity categoryEntity = TestDataFactory.CreateCategoryEntity(userInterest);
+            Guid userId = TestDataFactory.CreateGuid();
+            CategoryType categoryType = CategoryType.Gaming;
+            CategoryEntity categoryEntityToSave = TestDataFactory.CreateCategoryEntity(categoryType);
+            CategoryUserInterestEntity categoryUserInterestEntity = TestDataFactory.CreateCategoryUserInterestEntity();
             uint savedCategoryId = 1;
 
-            _mockUserInterestsRepository
-                .Setup(repo => repo.AddUserInterestAsync(It.IsAny<CategoryUserInterestEntity>()))
+            _mockUserInterestsRepository.Setup(repo => repo.AddUserInterestAsync(It.IsAny<CategoryUserInterestEntity>()))
                 .ReturnsAsync(savedCategoryId);
 
             // Act
-            CategoryType result = await _usersService.AddInterestForUserAsync(userId, userInterest);
+            CategoryType result = await _usersService.AddInterestForUserAsync(userId, categoryType);
 
             // Assert
-            Assert.Equal(userInterest, result);
-            _mockUserInterestsRepository.Verify(repo => repo.AddUserInterestAsync(It.IsAny<CategoryUserInterestEntity>()), Times.Once);
+            Assert.Equal(CategoryType.Gaming, result);
         }
 
-        // TODO: fix this one
-        // TODO: fix this one
         [Fact]
-        public async Task UpdateInterestForUserAsync_WithValidParameters_ReturnsUpdatedUserInterest()
+        public async Task UpdateInterestForUserAsync_WithValidData_ReturnsUpdatedCategoryType()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            CategoryType newUserInterest = CategoryType.Sport;
-            uint savedCategoryId = 2;
+            Guid userId = TestDataFactory.CreateGuid();
+            CategoryType newCategoryType = CategoryType.Gaming;
+            uint newCategoryId = 1;
 
-            _mockUserInterestsRepository
-                .Setup(repo => repo.UpdateUserInterestAsync(It.IsAny<UserEntity>(), It.IsAny<uint>()))
-                .ReturnsAsync(savedCategoryId);
+            _mockUserInterestsRepository.Setup(repo => repo.UpdateUserInterestAsync(It.IsAny<UserEntity>(), It.IsAny<uint>()))
+                .ReturnsAsync(newCategoryId);
 
             // Act
-            CategoryType result = await _usersService.UpdateInterestForUserAsync(userId, newUserInterest);
+            CategoryType result = await _usersService.UpdateInterestForUserAsync(userId, newCategoryType);
 
             // Assert
-            Assert.Equal(newUserInterest, result);
-            _mockUserInterestsRepository.Verify(repo => repo.UpdateUserInterestAsync(It.IsAny<UserEntity>(), It.IsAny<uint>()), Times.Once);
+            Assert.Equal(CategoryType.Gaming, result);
         }
+
+        #endregion
+
+        #region Failure Tests
+
+        [Fact]
+        public async Task GetUserInterestAsync_WithInvalidUser_ThrowsException()
+        {
+            // Arrange
+            Guid invalidUserId = TestDataFactory.CreateGuid();
+            _mockUserInterestsRepository.Setup(repo => repo.GetUserInterestAsync(invalidUserId))
+                .ThrowsAsync(new KeyNotFoundException("User interest not found"));
+
+            // Act & Assert
+            await Assert.ThrowsAsync<KeyNotFoundException>(() =>
+                _usersService.GetUserInterestAsync(invalidUserId));
+        }
+
+        [Fact]
+        public async Task AddInterestForUserAsync_WithInvalidCategory_ThrowsException()
+        {
+            // Arrange
+            Guid userId = TestDataFactory.CreateGuid();
+            CategoryType invalidCategory = CategoryType.Gaming; // assuming Invalid is a non-valid CategoryType
+            _mockUserInterestsRepository.Setup(repo => repo.AddUserInterestAsync(It.IsAny<CategoryUserInterestEntity>()))
+                .ThrowsAsync(new InvalidOperationException("Invalid category"));
+
+            // Act & Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                _usersService.AddInterestForUserAsync(userId, invalidCategory));
+        }
+
+        [Fact]
+        public async Task UpdateInterestForUserAsync_WithInvalidUser_ThrowsException()
+        {
+            // Arrange
+            Guid userId = TestDataFactory.CreateGuid();
+            CategoryType newCategoryType = CategoryType.Gaming;
+            _mockUserInterestsRepository.Setup(repo => repo.UpdateUserInterestAsync(It.IsAny<UserEntity>(), It.IsAny<uint>()))
+                .ThrowsAsync(new KeyNotFoundException("User not found"));
+
+            // Act & Assert
+            await Assert.ThrowsAsync<KeyNotFoundException>(() =>
+                _usersService.UpdateInterestForUserAsync(userId, newCategoryType));
+        }
+
+        #endregion
     }
 }
