@@ -26,4 +26,22 @@
   <profile>
     <posts>Posts</posts>
   </profile>
+  <video>
+    <username>No username</username>
+    <title>No title.</title>
+    <description>No description.</description>
+  </video>
+     <upload>
+      <title>Title</title>
+    <description>Description</description>
+    <category>Category</category>
+  </upload>
+  <genre>
+      <gaming>Gaming</gaming>
+    <tech>Tech</tech>
+    <dance>Dance</dance>
+    <fight>Fight</fight>
+    <sport>Sport</sport>
+    <comedy>Comedy</comedy>
+  </genre>
 </translations>

@@ -7,6 +7,7 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native'
+import useTranslation from '../../hooks/useTranslations'
 
 // TODO: Clean up this mess. I have been working on this garbage for so long, that it might not all be needed. Specifically styling
 // TODO: Add arrow icon to dropdown
@@ -32,6 +33,7 @@ const CustomPicker: React.FC<DropdownProps> = ({
   const { width } = useWindowDimensions()
   const [selectedValue, setSelectedValue] = useState<DropdownOption>(defaultOption)
   const [listVisible, setListVisible] = useState(false)
+  const t = useTranslation()
 
   const handleSelect = (selectedOption: DropdownOption) => {
     setSelectedValue(selectedOption)
@@ -53,7 +55,7 @@ const CustomPicker: React.FC<DropdownProps> = ({
             keyExtractor={(item) => item.value}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => handleSelect(item)} style={styles.option}>
-                <Text style={styles.optionText}>{item.label}</Text>
+                <Text style={styles.optionText}>{t(item.label)}</Text>
               </TouchableOpacity>
             )}
           />

@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     left: -50,
     width: '20%',
     justifyContent: 'flex-start',
+    top: -100,
   },
   textContainer: {
     flexDirection: 'column',

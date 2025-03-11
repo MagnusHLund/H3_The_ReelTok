@@ -60,9 +60,10 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   ProfilePicture: {
+    top: 100,
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     zIndex: 3,
   },
 })

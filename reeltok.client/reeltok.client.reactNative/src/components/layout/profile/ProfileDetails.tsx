@@ -61,9 +61,6 @@ const styles = StyleSheet.create({
     width: '80%',
     top: '-40%',
   },
-  image: {
-    top: '85%',
-  },
 })
 
 export default ProfileDetails
