@@ -1,7 +1,5 @@
 using reeltok.api.gateway.DTOs;
-using reeltok.api.gateway.Mappers;
-using reeltok.api.gateway.Entities;
-using reeltok.api.gateway.ValueObjects;
+using reeltok.api.gateway.Enums;
 using reeltok.api.gateway.Entities.Users;
 using reeltok.api.gateway.DTOs.Users.Login;
 using reeltok.api.gateway.Interfaces.Services;
@@ -81,11 +79,12 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<EditableUserDetails> UpdateUserDetailsAsync(string username, string email)
+        public async Task<UserEntity> UpdateUserDetailsAsync(string? username, string? email, CategoryType? interest)
         {
             Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
 
-            ServiceUpdateUserDetailsRequestDto requestDto = new ServiceUpdateUserDetailsRequestDto(userId, username, email);
+            ServiceUpdateUserDetailsRequestDto requestDto =
+                new ServiceUpdateUserDetailsRequestDto(userId, username, email, interest);
             Uri targetUrl = _endpointFactory.GetUsersApiUrl("users");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync
@@ -95,13 +94,13 @@ namespace reeltok.api.gateway.Services
 
             if (response.Success && response is ServiceUpdateUserDetailsResponseDto responseDto)
             {
-                return new EditableUserDetails(responseDto.Username, responseDto.Email);
+                return responseDto.User;
             }
 
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<string> UpdateProfilePictureAsync(IFormFile image)
+        public async Task<UserEntity> UpdateProfilePictureAsync(IFormFile image)
         {
             Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
 
@@ -115,15 +114,17 @@ namespace reeltok.api.gateway.Services
 
             if (response.Success && response is ServiceUpdateProfilePictureResponseDto responseDto)
             {
-                return responseDto.ProfilePictureUrl;
+                return responseDto.User;
             }
 
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<List<UserDetails>> GetAllSubscriptionsForUserAsync(Guid userId)
+        public async Task<List<ExternalUserEntity>> GetUserSubscriptionsAsync(Guid userId, uint pageNumber, byte pageSize)
         {
-            ServiceGetAllSubscriptionsForUserRequestDto requestDto = new ServiceGetAllSubscriptionsForUserRequestDto(userId);
+            ServiceGetAllSubscriptionsForUserRequestDto requestDto =
+                new ServiceGetAllSubscriptionsForUserRequestDto(userId, pageNumber, pageSize);
+
             Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscriptions");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync
@@ -139,9 +140,11 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<List<UserDetails>> GetAllSubscribingToUserAsync(Guid userId)
+        public async Task<List<ExternalUserEntity>> GetUserSubscribersAsync(Guid userId, uint pageNumber, byte pageSize)
         {
-            ServiceGetAllSubscribingToUserRequestDto requestDto = new ServiceGetAllSubscribingToUserRequestDto(userId);
+            ServiceGetAllSubscribingToUserRequestDto requestDto =
+                new ServiceGetAllSubscribingToUserRequestDto(userId, pageNumber, pageSize);
+
             Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscribers");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync

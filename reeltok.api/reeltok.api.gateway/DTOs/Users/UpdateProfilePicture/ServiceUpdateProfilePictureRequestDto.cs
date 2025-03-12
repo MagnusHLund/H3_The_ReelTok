@@ -15,5 +15,8 @@ namespace reeltok.api.gateway.DTOs.Users.UpdateProfilePicture
             UserId = userId;
             ProfilePicture = profilePicture;
         }
+
+        // Parameterless constructor required for multipart/form-data requests
+        public ServiceUpdateProfilePictureRequestDto() { }
     }
 }

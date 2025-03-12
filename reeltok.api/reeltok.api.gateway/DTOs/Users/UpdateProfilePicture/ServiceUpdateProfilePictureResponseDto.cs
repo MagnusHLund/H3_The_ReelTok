@@ -1,16 +1,16 @@
 using System.ComponentModel.DataAnnotations;
+using reeltok.api.gateway.Entities.Users;
 
 namespace reeltok.api.gateway.DTOs.Users.UpdateProfilePicture
 {
     public class ServiceUpdateProfilePictureResponseDto : BaseResponseDto
     {
         [Required]
-        [StringLength(50)]
-        public string ProfilePictureUrl { get; set; }
+        public UserEntity User { get; set; }
 
-        public ServiceUpdateProfilePictureResponseDto(string profilePictureUrl, bool success = true) : base(success)
+        public ServiceUpdateProfilePictureResponseDto(UserEntity user, bool success = true) : base(success)
         {
-            ProfilePictureUrl = profilePictureUrl;
+            User = user;
         }
     }
 }

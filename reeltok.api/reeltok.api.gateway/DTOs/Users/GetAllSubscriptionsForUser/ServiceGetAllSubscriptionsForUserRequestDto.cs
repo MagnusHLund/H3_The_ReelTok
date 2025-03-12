@@ -7,9 +7,17 @@ namespace reeltok.api.gateway.DTOs.Users.GetAllSubscriptionsForUser
         [Required]
         public Guid UserId { get; set; }
 
-        public ServiceGetAllSubscriptionsForUserRequestDto(Guid userId)
+        [Required]
+        public uint PageNumber {get; set;}
+
+        [Required]
+        public byte PageSize {get; set;}
+
+        public ServiceGetAllSubscriptionsForUserRequestDto(Guid userId, uint pageNumber, byte pageSize)
         {
             UserId = userId;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
         }
     }
 }

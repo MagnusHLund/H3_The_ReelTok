@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using reeltok.api.gateway.Entities.Users;
 using reeltok.api.gateway.ValueObjects;
 
 namespace reeltok.api.gateway.DTOs.Users.GetAllSubscribingToUser
@@ -6,9 +8,10 @@ namespace reeltok.api.gateway.DTOs.Users.GetAllSubscribingToUser
     public class ServiceGetAllSubscribingToUserResponseDto : BaseResponseDto
     {
         [Required]
-        public List<UserDetails> Users { get; set; }
+        [JsonProperty("Subscriptions")]
+        public List<ExternalUserEntity> Users { get; set; }
 
-        public ServiceGetAllSubscribingToUserResponseDto(List<UserDetails> users, bool success = true) : base(success)
+        public ServiceGetAllSubscribingToUserResponseDto(List<ExternalUserEntity> users, bool success = true) : base(success)
         {
             Users = users;
         }

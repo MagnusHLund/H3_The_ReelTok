@@ -5,6 +5,6 @@ namespace reeltok.api.gateway.Interfaces.Services
 {
     public interface IRecommendationsService
     {
-        Task<bool> UpdateRecommendation(Recommendations recommendationCategory);
+        Task<bool> UpdateTotalTimesUserWatchedVideosAsync(List<Guid> videoIds)
     }
 }

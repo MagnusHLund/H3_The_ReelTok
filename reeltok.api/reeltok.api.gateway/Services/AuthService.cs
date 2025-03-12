@@ -1,8 +1,8 @@
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.Interfaces.Services;
+using reeltok.api.gateway.Interfaces.Factories;
 using reeltok.api.gateway.DTOs.Auth.LogOutUser;
 using reeltok.api.gateway.DTOs.Auth.GetUserIdByToken;
-using reeltok.api.gateway.Interfaces.Factories;
 
 namespace reeltok.api.gateway.Services
 {
