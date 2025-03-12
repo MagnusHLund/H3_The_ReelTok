@@ -23,10 +23,12 @@ namespace reeltok.api.gateway.Controllers
         [HttpGet("{videoId}")]
         public async Task<IActionResult> LoadCommentsAsync(
             [FromRoute] Guid videoId,
-            [FromQuery, Range(1, byte.MaxValue)] byte amount = 15
+            [FromQuery, Range(1, int.MaxValue)] int pageNumber = 15,
+            [FromQuery, Range(1, byte.MaxValue)] byte pageSize = 15
             )
         {
-            List<CommentUsingDateTime> comments = await _commentsService.LoadComments(videoId, amount).ConfigureAwait(false);
+            List<CommentUsingDateTime> comments = await _commentsService.LoadCommentsAsync(videoId, pageNumber, pageSize)
+                .ConfigureAwait(false);
 
             GatewayLoadCommentsResponseDto responseDto = new GatewayLoadCommentsResponseDto(comments);
             return Ok(responseDto);
@@ -35,7 +37,7 @@ namespace reeltok.api.gateway.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCommentAsync([FromBody] GatewayAddCommentRequestDto request)
         {
-            CommentUsingDateTime comment = await _commentsService.AddComment(request.VideoId, request.Message)
+            CommentUsingDateTime comment = await _commentsService.AddCommentAsync(request.VideoId, request.Message)
                 .ConfigureAwait(false);
 
             GatewayAddCommentResponseDto responseDto = new GatewayAddCommentResponseDto(comment);

@@ -1,7 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+
 namespace reeltok.api.gateway.ValueObjects
 {
     public class CommentDetailsUsingDateTime : BaseCommentDetails<DateTime>
     {
+        [Required]
+        [JsonProperty("CreatedAt")]
         public override DateTime CreatedAt { get; }
 
         public CommentDetailsUsingDateTime(

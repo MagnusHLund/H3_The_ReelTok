@@ -8,8 +8,10 @@ namespace reeltok.api.users.DTOs.UpdateUser
         [Required]
         [JsonProperty("UserId")]
         public Guid UserId { get; }
+
         [JsonProperty("Username")]
         public string? Username { get; }
+        
         [JsonProperty("Email")]
         public string? Email { get; }
 

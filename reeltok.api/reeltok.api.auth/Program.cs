@@ -10,6 +10,7 @@ using Newtonsoft.Json.Serialization;
 using reeltok.api.auth.Interfaces.Services;
 using reeltok.api.auth.Interfaces.Repositories;
 using reeltok.api.auth.BackgroundServices;
+using Newtonsoft.Json;
 
 namespace AuthServiceApi
 {
@@ -55,7 +56,8 @@ namespace AuthServiceApi
             builder.Services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
-                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
                 });
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

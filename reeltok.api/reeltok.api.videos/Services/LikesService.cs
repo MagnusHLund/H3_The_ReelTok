@@ -45,7 +45,7 @@ namespace reeltok.api.videos.Services
             }
         }
 
-        public async Task<List<VideoLikesEntity>> GetLikesForVideos(Guid userId, List<Guid> videoIds)
+        public async Task<List<VideoLikesEntity>> GetLikesForVideosAsync(Guid userId, List<Guid> videoIds)
         {
             List<HasUserLikedVideoEntity> hasUserLikedVideo = await _externalApiService.HasUserLikedVideosAsync(
                 userId, videoIds).ConfigureAwait(false);

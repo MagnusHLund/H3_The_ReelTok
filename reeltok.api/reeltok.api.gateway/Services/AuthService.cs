@@ -17,7 +17,7 @@ namespace reeltok.api.gateway.Services
             _endpointFactory = endpointFactory;
         }
 
-        public async Task<bool> LogOutUser()
+        public async Task<bool> LogOutUserAsync()
         {
             ServiceLogOutUserRequestDto requestDto = new ServiceLogOutUserRequestDto();
             Uri targetUrl = _endpointFactory.GetAuthApiUrl("auth/login");
@@ -32,7 +32,7 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<Guid> GetUserIdByAccessToken()
+        public async Task<Guid> GetUserIdByAccessTokenAsync()
         {
             ServiceGetUserIdByTokenRequestDto requestDto = new ServiceGetUserIdByTokenRequestDto();
             Uri targetUrl = _endpointFactory.GetAuthApiUrl("users");

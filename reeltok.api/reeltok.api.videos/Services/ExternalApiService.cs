@@ -110,17 +110,7 @@ namespace reeltok.api.videos.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        private static Exception HandleNetworkResponseExceptions(BaseResponseDto response)
-        {
-            if (response is FailureResponseDto failureResponse)
-            {
-                return new FailureNetworkResponseException(failureResponse.Message);
-            }
-
-            return new InvalidOperationException("An unknown error has occurred!");
-        }
-
-        public async Task<bool> AddVideoToRecommendationsApi(Guid videoId, byte category)
+        public async Task<bool> AddVideoToRecommendationsApiAsync(Guid videoId, byte category)
         {
             RecommendationServiceAddVideoIdToRecommendationRequestDto requestDto = new RecommendationServiceAddVideoIdToRecommendationRequestDto(videoId, category);
 
@@ -136,7 +126,16 @@ namespace reeltok.api.videos.Services
             }
 
             throw HandleNetworkResponseExceptions(response);
+        }
 
+        private static Exception HandleNetworkResponseExceptions(BaseResponseDto response)
+        {
+            if (response is FailureResponseDto failureResponse)
+            {
+                return new FailureNetworkResponseException(failureResponse.Message);
+            }
+
+            return new InvalidOperationException("An unknown error has occurred!");
         }
     }
 }

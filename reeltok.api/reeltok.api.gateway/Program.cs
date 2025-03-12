@@ -1,9 +1,9 @@
 using Serilog;
 using Serilog.Events;
+using Newtonsoft.Json;
 using reeltok.api.gateway.Utils;
 using reeltok.api.gateway.Services;
 using reeltok.api.gateway.Factories;
-using Newtonsoft.Json.Serialization;
 using reeltok.api.gateway.Middleware;
 using reeltok.api.gateway.Interfaces.Services;
 using reeltok.api.gateway.Interfaces.Factories;
@@ -44,7 +44,8 @@ namespace reeltok.api.gateway
             builder.Services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
-                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
                 });
 
             builder.Services.AddSingleton(sp => new AppSettingsUtils(builder.Configuration));

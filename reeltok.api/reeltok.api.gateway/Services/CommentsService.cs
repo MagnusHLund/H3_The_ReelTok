@@ -21,9 +21,9 @@ namespace reeltok.api.gateway.Services
             _endpointFactory = endpointFactory;
         }
 
-        public async Task<CommentUsingDateTime> AddComment(Guid videoId, string message)
+        public async Task<CommentUsingDateTime> AddCommentAsync(Guid videoId, string message)
         {
-            Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
+            Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
             ServiceAddCommentRequestDto requestDto = new ServiceAddCommentRequestDto(userId, videoId, message);
             Uri targetUrl = _endpointFactory.GetCommentsApiUrl("comments");
@@ -39,9 +39,9 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<List<CommentUsingDateTime>> LoadComments(Guid videoId, byte amount)
+        public async Task<List<CommentUsingDateTime>> LoadCommentsAsync(Guid videoId, int pageNumber, byte pageSize)
         {
-            ServiceLoadCommentsRequestDto requestDto = new ServiceLoadCommentsRequestDto(videoId, amount);
+            ServiceLoadCommentsRequestDto requestDto = new ServiceLoadCommentsRequestDto(videoId, pageNumber, pageSize);
             Uri targetUrl = _endpointFactory.GetCommentsApiUrl("comments");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceLoadCommentsRequestDto, ServiceLoadCommentsResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);

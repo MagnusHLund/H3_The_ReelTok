@@ -1,7 +1,7 @@
-using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using reeltok.api.gateway.Entities.Users;
-using reeltok.api.gateway.ValueObjects;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace reeltok.api.gateway.DTOs.Users.GetAllSubscriptionsForUser
 {

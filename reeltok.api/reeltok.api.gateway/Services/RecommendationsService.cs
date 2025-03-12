@@ -20,7 +20,7 @@ namespace reeltok.api.gateway.Services
 
         public async Task<bool> UpdateTotalTimesUserWatchedVideosAsync(List<Guid> videoIds)
         {
-            Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
+            Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
             ServiceUpdateTotalTimesUserWatchedVideosRequestDto requestDto =
                 new ServiceUpdateTotalTimesUserWatchedVideosRequestDto(userId, videoIds);

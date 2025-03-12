@@ -4,7 +4,7 @@ namespace reeltok.api.gateway.Interfaces.Services
 {
     public interface ICommentsService
     {
-        Task<CommentUsingDateTime> AddComment(Guid videoId, string message);
-        Task<List<CommentUsingDateTime>> LoadComments(Guid videoId, byte amount);
+        Task<CommentUsingDateTime> AddCommentAsync(Guid videoId, string message);
+        Task<List<CommentUsingDateTime>> LoadCommentsAsync(Guid videoId, int pageNumber, byte pageSize);
     }
 }

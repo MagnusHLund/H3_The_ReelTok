@@ -16,14 +16,14 @@ namespace reeltok.api.users.DTOs.CreateUser
         public string Password { get; }
         [Required]
         [JsonProperty("Interests")]
-        public byte Interests { get; }
+        public byte Interest { get; }
 
-        public CreateUserRequestDto(string username, string email, string password, byte interests)
+        public CreateUserRequestDto(string username, string email, string password, byte interest)
         {
             Username = username;
             Email = email;
             Password = password;
-            Interests = interests;
+            Interest = interest;
         }
     }
 }

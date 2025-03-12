@@ -26,7 +26,7 @@ namespace reeltok.api.users.Controllers
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequestDto request)
         {
             UserEntity user = await _usersService
-                .CreateUserAsync(request.Username, request.Email, request.Password, request.Interests)
+                .CreateUserAsync(request.Username, request.Email, request.Password, request.Interest)
                 .ConfigureAwait(false);
 
             CreateUserResponseDto response = new CreateUserResponseDto(user);

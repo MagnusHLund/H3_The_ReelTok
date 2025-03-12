@@ -23,15 +23,15 @@ namespace reeltok.api.gateway.DTOs.Users.CreateUser
         public string Password { get; set; }
 
         [Required]
-        [JsonProperty("Interests")]
-        public CategoryType Interests { get; set; }
+        [JsonProperty("Interest")]
+        public CategoryType Interest { get; set; }
 
-        public ServiceCreateUserRequestDto(string email, string username, string password, CategoryType interests)
+        public ServiceCreateUserRequestDto(string email, string username, string password, CategoryType interest)
         {
             Email = email;
             Username = username;
             Password = password;
-            Interests = interests;
+            Interest = interest;
         }
     }
 }

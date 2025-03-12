@@ -23,7 +23,7 @@ namespace reeltok.api.users.Services
                 .GetUserInterestFromRecommendationsApiAsync(user.UserId)
                 .ConfigureAwait(false);
 
-            return new UserWithInterestEntity(user, interest);
+            return new UserWithInterestEntity(user.UserId, user.UserDetails, interest);
         }
     }
 }

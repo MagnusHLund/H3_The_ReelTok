@@ -17,12 +17,12 @@ namespace reeltok.api.gateway.Controllers
         {
             _authService = authService;
         }
-        // TODO: Overall in this api, reduce complexity of generics, if possible
+
         [HttpPost]
         [Route("logout")]
         public async Task<IActionResult> LogOutUserAsync()
         {
-            bool success = await _authService.LogOutUser().ConfigureAwait(false);
+            bool success = await _authService.LogOutUserAsync().ConfigureAwait(false);
             GatewayLogOutUserResponseDto responseDto = new GatewayLogOutUserResponseDto(success);
 
             return Ok(responseDto);

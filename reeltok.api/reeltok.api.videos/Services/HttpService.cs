@@ -44,8 +44,8 @@ namespace reeltok.api.videos.Services
             HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
 
             return response.IsSuccessStatusCode
-                ? await DeserializeJsonToDto<TResponse>(response).ConfigureAwait(false)
-                : await DeserializeJsonToDto<FailureResponseDto>(response).ConfigureAwait(false);
+                ? await DeserializeJsonToDtoAsync<TResponse>(response).ConfigureAwait(false)
+                : await DeserializeJsonToDtoAsync<FailureResponseDto>(response).ConfigureAwait(false);
         }
 
         private static HttpRequestMessage PrepareHttpRequestBody<TRequest>(
@@ -74,7 +74,7 @@ namespace reeltok.api.videos.Services
             return new StringContent(content, Encoding.UTF8, "application/json");
         }
 
-        private static async Task<BaseResponseDto> DeserializeJsonToDto<TResponse>(HttpResponseMessage response)
+        private static async Task<BaseResponseDto> DeserializeJsonToDtoAsync<TResponse>(HttpResponseMessage response)
             where TResponse : BaseResponseDto
         {
             string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

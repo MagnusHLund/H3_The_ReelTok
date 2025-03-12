@@ -28,7 +28,7 @@ namespace reeltok.api.gateway.Services
 
         public async Task<bool> LikeVideoAsync(Guid videoId)
         {
-            Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
+            Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
             ServiceAddLikeRequestDto requestDto = new ServiceAddLikeRequestDto(userId, videoId);
             Uri targetUrl = _endpointFactory.GetVideosApiUrl("likes");
@@ -47,7 +47,7 @@ namespace reeltok.api.gateway.Services
 
         public async Task<bool> RemoveLikeFromVideoAsync(Guid videoId)
         {
-            Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
+            Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
             ServiceRemoveLikeRequestDto requestDto = new ServiceRemoveLikeRequestDto(userId, videoId);
             Uri targetUrl = _endpointFactory.GetVideosApiUrl("likes");
@@ -66,7 +66,7 @@ namespace reeltok.api.gateway.Services
 
         public async Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(byte amount)
         {// TODO: ensure that the user does not require a user, to get a video
-            Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
+            Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
             ServiceGetVideosForFeedRequestDto requestDto = new ServiceGetVideosForFeedRequestDto(userId, amount);
             Uri targetUrl = _endpointFactory.GetVideosApiUrl("videos/feed");
@@ -85,7 +85,7 @@ namespace reeltok.api.gateway.Services
 
         public async Task<bool> UploadVideoAsync(VideoUpload video)
         {
-            Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
+            Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
             video.UserId = userId;
 
             ServiceUploadVideoRequestDto requestDto = VideoMapper.ConvertVideoUploadToUploadVideoRequestDto(video);
@@ -105,7 +105,7 @@ namespace reeltok.api.gateway.Services
 
         public async Task<bool> DeleteVideoAsync(Guid videoId)
         {
-            Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
+            Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
             ServiceDeleteVideoRequestDto requestDto = new ServiceDeleteVideoRequestDto(userId, videoId);
             Uri targetUrl = _endpointFactory.GetVideosApiUrl("videos");

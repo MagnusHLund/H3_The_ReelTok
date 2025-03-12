@@ -9,6 +9,6 @@ namespace reeltok.api.videos.Interfaces.Services
         Task<bool> LikeVideoAsync(Guid userId, Guid videoId);
         Task<bool> RemoveLikeFromVideoAsync(Guid userId, Guid videoId);
         Task<List<HasUserLikedVideoEntity>> HasUserLikedVideosAsync(Guid userId, List<Guid> videoIds);
-        Task<bool> AddVideoToRecommendationsApi(Guid videoId, byte category);
+        Task<bool> AddVideoToRecommendationsApiAsync(Guid videoId, byte category);
     }
 }

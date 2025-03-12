@@ -1,5 +1,6 @@
 using Serilog;
 using Serilog.Events;
+using Newtonsoft.Json;
 using reeltok.api.comments.Data;
 using reeltok.api.comments.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -50,7 +51,14 @@ namespace reeltok.api.comments
 
             builder.Services.AddHttpClient<IHttpService, HttpService>();
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
+                });
+
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 

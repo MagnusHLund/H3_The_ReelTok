@@ -81,7 +81,7 @@ namespace reeltok.api.gateway.Services
 
         public async Task<UserEntity> UpdateUserDetailsAsync(string? username, string? email, CategoryType? interest)
         {
-            Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
+            Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
             ServiceUpdateUserDetailsRequestDto requestDto =
                 new ServiceUpdateUserDetailsRequestDto(userId, username, email, interest);
@@ -102,7 +102,7 @@ namespace reeltok.api.gateway.Services
 
         public async Task<UserEntity> UpdateProfilePictureAsync(IFormFile image)
         {
-            Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
+            Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
             ServiceUpdateProfilePictureRequestDto requestDto = new ServiceUpdateProfilePictureRequestDto(userId, image);
             Uri targetUrl = _endpointFactory.GetUsersApiUrl("users/profile-picture");
@@ -163,7 +163,7 @@ namespace reeltok.api.gateway.Services
         // TODO: Implement in controller as well!
         public async Task<bool> SubscribeToUserAsync(Guid subscribeToUserId)
         {
-            Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
+            Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
             ServiceSubscribeToUserRequestDto requestDto = new ServiceSubscribeToUserRequestDto(userId, subscribeToUserId);
             Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscribers");
@@ -184,7 +184,7 @@ namespace reeltok.api.gateway.Services
         // TODO: Implement in controller as well!
         public async Task<bool> UnsubscribeToUserAsync(Guid subscribeToUserId)
         {
-            Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
+            Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
             ServiceUnsubscribeToUserRequestDto requestDto = new ServiceUnsubscribeToUserRequestDto(userId, subscribeToUserId);
             Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscribers");

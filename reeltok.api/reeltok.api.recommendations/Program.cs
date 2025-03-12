@@ -1,5 +1,6 @@
 using Serilog;
 using Serilog.Events;
+using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using reeltok.api.recommendations.Data;
 using reeltok.api.recommendations.Services;
@@ -46,7 +47,14 @@ namespace RecommendationsServiceApi
                 options.UseSqlServer(builder.Configuration.GetConnectionString("RecommendationsDb"));
             });
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
+                });
+
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 

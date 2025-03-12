@@ -69,7 +69,7 @@ namespace reeltok.api.videos.Services
 
         public async Task<VideoEntity> UploadVideoAsync(VideoUpload video, Guid userId, byte category)
         {
-            await VideoUtils.EnsureValidVideoFile(video.VideoFile).ConfigureAwait(false);
+            await VideoUtils.EnsureValidVideoFileAsync(video.VideoFile).ConfigureAwait(false);
 
             VideoEntity videoToUpload = VideoMapper.ConvertVideoUploadToVideoEntity(video, userId);
             VideoEntity videoEntity = await _videosRepository.CreateVideoAsync(videoToUpload).ConfigureAwait(false);
