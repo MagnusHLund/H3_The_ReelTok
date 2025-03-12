@@ -9,7 +9,6 @@ namespace reeltok.api.videos.Tests.Services
 {
     public class StorageServiceTests
     {
-        // TODO: @MagnusHLund Ensure all these tests work
 
         private readonly Mock<IConfiguration> _mockConfiguration;
         private readonly AppSettingsUtils _appSettingsUtils;

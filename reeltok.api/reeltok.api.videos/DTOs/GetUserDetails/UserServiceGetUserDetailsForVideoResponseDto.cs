@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.videos.DTOs.GetUserDetailsForVideo
 {
-    public class ServiceGetUserDetailsForVideoResponseDto : BaseResponseDto
+    public class UserServiceGetUserDetailsForVideoResponseDto : BaseResponseDto
     {
         [Required]
         [JsonProperty("VideoCreator")]
         public List<VideoCreatorEntity> VideoCreators { get; set; }
 
-        public ServiceGetUserDetailsForVideoResponseDto(List<VideoCreatorEntity> videoCreators, bool success) : base(success)
+        public UserServiceGetUserDetailsForVideoResponseDto(List<VideoCreatorEntity> videoCreators, bool success) : base(success)
         {
             VideoCreators = videoCreators;
         }
