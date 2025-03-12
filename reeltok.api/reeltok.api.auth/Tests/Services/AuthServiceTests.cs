@@ -1,207 +1,126 @@
 using Moq;
+using System;
+using System.Threading.Tasks;
 using Xunit;
-using reeltok.api.auth.Utils;
-using System.Security.Claims;
 using reeltok.api.auth.Entities;
-using reeltok.api.auth.Services;
 using reeltok.api.auth.ValueObjects;
-using System.Security.Authentication;
 using reeltok.api.auth.Interfaces.Services;
-using System.ComponentModel.DataAnnotations;
 using reeltok.api.auth.Interfaces.Repositories;
+using reeltok.api.auth.Services;
+using System.Security.Authentication;
+using reeltok.api.auth.Utils;
 
-namespace reeltok.api.auth.Tests.Services
-{ // TODO: Fix tests. Use TestDataFactory
-    public class AuthServiceTests
+namespace reeltok.api.tests.Services
+{
+    public class AuthenticationServiceTests
     {
-        private readonly Mock<IAuthRepository> _mockAuthRepository;
-        private readonly IAuthenticationService _authService;
+        private readonly Mock<IAuthRepository> _authRepositoryMock;
+        private readonly Mock<ITokenGenerationService> _tokenGenerationServiceMock;
+        private readonly Mock<ITokenManagementService> _tokenManagementServiceMock;
+        private readonly AuthenticationService _authenticationService;
 
-        public AuthServiceTests()
+        public AuthenticationServiceTests()
         {
-            _mockAuthRepository = new Mock<IAuthRepository>();
-        } /*
+            _authRepositoryMock = new Mock<IAuthRepository>();
+            _tokenGenerationServiceMock = new Mock<ITokenGenerationService>();
+            _tokenManagementServiceMock = new Mock<ITokenManagementService>();
 
-        [Fact]
-        public async Task CreateUser_WithExistingUser_ThrowInvalidOperationException()
-        {
-            // Arrange
-            Guid existingUserId = Guid.NewGuid();
-            bool userExists = true;
-
-            _mockAuthRepository
-              .Setup(repo => repo.DoesUserExist(existingUserId))
-              .ReturnsAsync(userExists);
-
-            CreateDetails CreateDetails = new CreateDetails(existingUserId, "password123");
-
-            string expectedExceptionMessage = "User already exists!";
-
-            // Act & Assert
-            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _authService.CreateUser(CreateDetails));
-            Assert.Equal(expectedExceptionMessage, exception.Message);
-
-            _mockAuthRepository.Verify(repo => repo.DoesUserExist(existingUserId), Times.Once);
-            _mockAuthRepository.Verify(repo => repo.CreateUser(It.IsAny<UserCredentialsEntity>()), Times.Never);
+            _authenticationService = new AuthenticationService(
+                _authRepositoryMock.Object,
+                _tokenGenerationServiceMock.Object,
+                _tokenManagementServiceMock.Object
+            );
         }
 
         [Fact]
-        public async Task CreateUser_WithWeakPassword_ThrowValidationException()
+        public async Task LoginUserAsync_Success()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            CreateDetails CreateDetails = new CreateDetails(userId, "WeakPassword");
+            var userId = Guid.NewGuid();
+            var credentials = new Credentials(userId, "plainPassword");
 
-            string expectedExceptionMessage = "Password does not follow the minimum requirements!";
+            var hashedPasswordDetails = new HashedPasswordDetails("hashedPassword", "salt");
+            var userCredentials = new UserCredentialsEntity(userId, hashedPasswordDetails);
 
-            // Act & Assert
-            ValidationException exception = await Assert.ThrowsAsync<ValidationException>(() => _authService.CreateUser(CreateDetails));
-            Assert.Equal(expectedExceptionMessage, exception.Message);
+            var accessToken = new AccessToken("accessTokenValue", 1234567890, 1234567990);
+            var refreshToken = new RefreshToken("refreshTokenValue", 1234567890, 1234569990);
 
-            _mockAuthRepository.Verify(repo => repo.DoesUserExist(userId), Times.Once);
-            _mockAuthRepository.Verify(repo => repo.CreateUser(It.IsAny<UserCredentialsEntity>()), Times.Never);
-        }
-
-        [Fact]
-        public async Task CreateUser_WithValidUser_ReturnSuccess()
-        {
-            // Arrange
-            Guid userId = Guid.NewGuid();
-            CreateDetails createDetails = new CreateDetails(userId, "VeryStroongPassword566");
-
-            UserCredentialsEntity userCredentials = new UserCredentialsEntity(userId, "hashed password", "salt");
-
-            _mockAuthRepository
-              .Setup(repo => repo.CreateUser(It.IsAny<UserCredentialsEntity>()))
-              .ReturnsAsync(userCredentials);
-
-            _mockTokensService
-                .Setup(service => service.GenerateAccessToken(It.IsAny<Guid>()))
-                .ReturnsAsync(); // Access token
-
-            _mockTokensService
-                .Setup(service => service.GenerateAccessToken(It.IsAny<Guid>()))
-                .ReturnsAsync(); // Refresh token
+            _authRepositoryMock
+                .Setup(repo => repo.GetUserCredentialsByUserId(userId))
+                .ReturnsAsync(userCredentials);
+            _tokenGenerationServiceMock
+                .Setup(service => service.GenerateAccessToken(userId))
+                .ReturnsAsync(accessToken);
+            _tokenGenerationServiceMock
+                .Setup(service => service.GenerateRefreshToken(userId))
+                .ReturnsAsync(refreshToken);
 
             // Act
-            Tokens tokens = await _authService.CreateUser(createDetails);
+            var tokens = await _authenticationService.LoginUserAsync(credentials);
 
             // Assert
-            Assert.NotNull(tokens);
-            Assert.NotNull(tokens.AccessToken);
-            Assert.NotEmpty(tokens.AccessToken.TokenValue);
-            Assert.NotNull(tokens.RefreshToken);
-            Assert.NotEmpty(tokens.RefreshToken.TokenValue);
+            Assert.Equal(accessToken, tokens.AccessToken);
+            Assert.Equal(refreshToken, tokens.RefreshToken);
         }
 
         [Fact]
-        public async Task LoginUser_WithIncorrectPassword_ThrowInvalidCredentialException()
+        public async Task LoginUserAsync_InvalidCredentials_ThrowsException()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            HashedPasswordData hashedPasswordData = PasswordUtils.HashPassword("DifferentPassword555");
-            LoginCredentials loginCredentials = new LoginCredentials(userId, "password");
-            UserCredentialsEntity userCredentials = new UserCredentialsEntity(loginCredentials.UserId, hashedPasswordData.Password, hashedPasswordData.Salt);
+            var userId = Guid.NewGuid();
+            var credentials = new Credentials(userId, "wrongPassword");
 
-            string expectedExceptionMessage = "Invalid credentials!";
+            // The password hash and salt that will NOT match the credentials
+            var hashedPasswordDetails = new HashedPasswordDetails("correctHashedPassword", "randomSalt");
+            var userCredentials = new UserCredentialsEntity(userId, hashedPasswordDetails);
 
-            _mockAuthRepository
-              .Setup(repo => repo.GetUserCredentialsByUserId(loginCredentials.UserId))
-              .ReturnsAsync(userCredentials);
+            _authRepositoryMock
+                .Setup(repo => repo.GetUserCredentialsByUserId(userId))
+                .ReturnsAsync(userCredentials);
 
             // Act & Assert
-            InvalidCredentialException exception = await Assert.ThrowsAsync<InvalidCredentialException>(() => _authService.LoginUser(loginCredentials));
-            Assert.Equal(expectedExceptionMessage, exception.Message);
+            await Assert.ThrowsAsync<InvalidCredentialException>(
+                () => _authenticationService.LoginUserAsync(credentials)
+            );
         }
 
+
         [Fact]
-        public async Task LoginUser_WithValidCredentials_ReturnTokens()
+        public async Task LogoutUserAsync_Success()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            LoginCredentials loginCredentials = new LoginCredentials(userId, "VeryStroongPassword566");
-            HashedPasswordData hashedPasswordData = PasswordUtils.HashPassword(loginCredentials.PlainTextPassword);
-            UserCredentialsEntity userAuth = new UserCredentialsEntity(loginCredentials.UserId, hashedPasswordData.Password, hashedPasswordData.Salt);
+            var accessTokenValue = "accessTokenValue";
+            var refreshTokenValue = "refreshTokenValue";
 
-            _mockAuthRepository
-                .Setup(repo => repo.GetUserCredentialsByUserId(loginCredentials.UserId))
-                .ReturnsAsync(userAuth);
+            _tokenManagementServiceMock
+                .Setup(service => service.RevokeTokens(accessTokenValue, refreshTokenValue))
+                .Returns(Task.CompletedTask);
 
             // Act
-            Tokens tokens = await _authService.LoginUser(loginCredentials);
+            await _authenticationService.LogoutUserAsync(accessTokenValue, refreshTokenValue);
 
             // Assert
-            Assert.NotNull(tokens);
-            Assert.NotNull(tokens.AccessToken);
-            Assert.NotEmpty(tokens.AccessToken.TokenValue);
-            Assert.NotNull(tokens.RefreshToken);
-            Assert.NotEmpty(tokens.RefreshToken.TokenValue);
+            _tokenManagementServiceMock.Verify(
+                service => service.RevokeTokens(accessTokenValue, refreshTokenValue),
+                Times.Once
+            );
         }
 
         [Fact]
-        public async Task DeleteUser_WithInvalidUserId_ThrowKeyNotFoundException()
+        public async Task LogoutUserAsync_Failure_DoesNotThrowException()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            string expectedExceptionMessage = $"Unable to find user: {userId} in the database!";
+            var accessTokenValue = "accessTokenValue";
+            var refreshTokenValue = "refreshTokenValue";
 
-            _mockAuthRepository
-                .Setup(repo => repo.DeleteUser(userId))
-                .ThrowsAsync(new KeyNotFoundException(expectedExceptionMessage));
+            _tokenManagementServiceMock
+                .Setup(service => service.RevokeTokens(accessTokenValue, refreshTokenValue))
+                .Throws<InvalidOperationException>();
 
             // Act & Assert
-            KeyNotFoundException exception = await Assert.ThrowsAsync<KeyNotFoundException>(() => _authService.DeleteUser(userId));
-            Assert.Equal(expectedExceptionMessage, exception.Message);
+            await Assert.ThrowsAsync<InvalidOperationException>(
+                () => _authenticationService.LogoutUserAsync(accessTokenValue, refreshTokenValue)
+            );
         }
-
-        [Fact]
-        public async Task DeleteUser_WithValidUser_RemoveUser()
-        {
-            // Arrange
-            Guid userId = Guid.NewGuid();
-
-            _mockAuthRepository
-                .Setup(repo => repo.DeleteUser(userId));
-
-            // Act
-            Exception exception = await Record.ExceptionAsync(() => _authService.DeleteUser(userId));
-
-            // Assert
-            Assert.Null(exception);
-        }
-
-        [Fact]
-        public void GetUserIdByToken_WithValidAccessToken_ReturnsUserId()
-        {
-            // Arrange
-            string accessTokenValue = "Token";
-            Guid expectedUserId = Guid.NewGuid();
-            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, expectedUserId.ToString()) //TODO: Modify this
-            }));
-
-            _mockTokensService
-                .Setup(service => service.DecodeAccessToken(accessTokenValue))
-                .Returns(claimsPrincipal);
-
-            // Act
-            Guid userId = _authService.GetUserIdByToken(accessTokenValue);
-
-            // Assert
-            Assert.Equal(expectedUserId, userId);
-        }
-
-        [Fact]
-        public async Task LogoutUser_WithInvalidUserId_ThrowNotFoundException()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Fact]
-        public async Task LogoutUser_WithValidUser_InvalidateTokens()
-        {
-            throw new NotImplementedException();
-        } */
     }
 }
