@@ -4,6 +4,7 @@ using reeltok.api.users.DTOs.Login;
 using reeltok.api.users.DTOs.CreateUser;
 using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.Interfaces.Factories;
+using reeltok.api.users.DTOs.GetUserInterest;
 
 namespace reeltok.api.users.Services
 {
@@ -77,6 +78,24 @@ namespace reeltok.api.users.Services
 
             throw HandleNetworkResponseExceptions(response);
         }
+
+        public async Task<byte> GetUserInterestFromRecommendationsApiAsync(Guid userId)
+        {
+            RecommendationServiceGetUserInterestRequestDto requestDto = new RecommendationServiceGetUserInterestRequestDto(userId);
+            Uri targetUrl = _endpointFactory.GetRecommendationsApiUrl("users");
+
+            BaseResponseDto response = await _httpService.ProcessRequestAsync<RecommendationServiceGetUserInterestRequestDto, RecommendationServiceGetUserInterestResponseDto>(
+                requestDto, targetUrl, HttpMethod.Get)
+                .ConfigureAwait(false);
+
+            if (response.Success && response is RecommendationServiceGetUserInterestResponseDto recommendationUserInterest)
+            {
+                return recommendationUserInterest.UserInterest;
+            }
+
+            throw HandleNetworkResponseExceptions(response);
+        }
+
 
         private static Exception HandleNetworkResponseExceptions(BaseResponseDto response)
         {
