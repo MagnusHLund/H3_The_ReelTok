@@ -33,5 +33,16 @@ namespace reeltok.api.users.Repositories
 
             return true;
         }
+
+        public async Task<List<HasUserLikedVideoEntity>> CheckUserLikesForVideosAsync(Guid userId, List<Guid> videoIds)
+        {
+            List<HasUserLikedVideoEntity> likedVideos = await _context.LikedVideos
+                .Where(lv => lv.UserId == userId && videoIds.Contains(lv.VideoId))
+                .Select(lv => new HasUserLikedVideoEntity(lv.VideoId, true))
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            return likedVideos;
+        }
     }
 }

@@ -36,5 +36,19 @@ namespace reeltok.api.users.Services
 
             return IsLikedVideoRemoved;
         }
+
+        public async Task<List<HasUserLikedVideoEntity>> GetHasUserLikedVideosAsync(Guid userId, List<Guid> videoIds)
+        {
+            List<HasUserLikedVideoEntity> likedVideos = await _likeVideoRepository.CheckUserLikesForVideosAsync(userId, videoIds).ConfigureAwait(false);
+
+            Dictionary<Guid, bool> likedVideosDictionary = likedVideos.ToDictionary(lv => lv.VideoId, lv => lv.HasUserLikedVideo);
+
+            List<HasUserLikedVideoEntity> HasUserLikedVideos = videoIds
+                .Select(videoId => new HasUserLikedVideoEntity(videoId,likedVideosDictionary
+                .ContainsKey(videoId) && likedVideosDictionary[videoId]))
+                .ToList();
+
+            return HasUserLikedVideos;
+        }
     }
 }
