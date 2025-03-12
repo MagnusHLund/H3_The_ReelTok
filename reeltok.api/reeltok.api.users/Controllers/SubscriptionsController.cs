@@ -48,8 +48,11 @@ namespace reeltok.api.users.Controllers
 
 
         [HttpGet("subscribers")]
-        public async Task<IActionResult> GetUserSubscribersAsync([FromQuery] Guid userId, [FromQuery] int pageNumber,
-            [FromQuery] byte pageSize)
+        public async Task<IActionResult> GetUserSubscribersAsync(
+            [FromQuery] Guid userId,
+            [FromQuery] int pageNumber,
+            [FromQuery] byte pageSize
+        )
         {
             List<ExternalUserEntity> subscribers = await _subscriptionService
                 .GetSubscribersByUserIdAsync(userId, pageNumber, pageSize)
@@ -61,8 +64,11 @@ namespace reeltok.api.users.Controllers
 
         // TODO: Make this method support lazy loading
         [HttpGet("subscriptions")]
-        public async Task<IActionResult> GetUserSubscriptionsAsync([FromQuery] Guid userId, [FromQuery] int pageNumber,
-            [FromQuery] byte pageSize)
+        public async Task<IActionResult> GetUserSubscriptionsAsync(
+            [FromQuery] Guid userId,
+            [FromQuery] int pageNumber,
+            [FromQuery] byte pageSize
+        )
         {
             List<ExternalUserEntity> subscriptions = await _subscriptionService
                 .GetSubscriptionsByUserIdAsync(userId, pageNumber, pageSize)
