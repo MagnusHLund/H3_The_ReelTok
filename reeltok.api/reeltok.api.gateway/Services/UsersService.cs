@@ -15,13 +15,13 @@ using reeltok.api.gateway.DTOs.Users.GetAllSubscriptionsForUser;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class UsersService : BaseService, IUsersService
+    public class UsersService : BaseService, IUsersService
     {
         private readonly IAuthService _authService;
         private readonly IHttpService _httpService;
         private readonly IEndpointFactory _endpointFactory;
 
-        internal UsersService(IAuthService authService, IHttpService httpService, IEndpointFactory endpointFactory)
+        public UsersService(IAuthService authService, IHttpService httpService, IEndpointFactory endpointFactory)
         {
             _authService = authService;
             _httpService = httpService;
@@ -43,7 +43,7 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<UserEntity> CreateUserAsync(string email, string username, string password, byte userInterest)
+        public async Task<UserEntity> CreateUserAsync(string email, string username, string password, CategoryType userInterest)
         {
             ServiceCreateUserRequestDto requestDto = new ServiceCreateUserRequestDto(email, username, password, userInterest);
             Uri targetUrl = _endpointFactory.GetUsersApiUrl("users");
@@ -61,7 +61,7 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<ExternalUserEntity> GetUserById(Guid userId)
+        public async Task<ExternalUserEntity> GetUserByIdAsync(Guid userId)
         {
             ServiceGetUserByIdRequestDto requestDto = new ServiceGetUserByIdRequestDto(userId);
             Uri targetUrl = _endpointFactory.GetUsersApiUrl("users");
@@ -120,7 +120,7 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<List<ExternalUserEntity>> GetUserSubscriptionsAsync(Guid userId, uint pageNumber, byte pageSize)
+        public async Task<List<ExternalUserEntity>> GetUserSubscriptionsAsync(Guid userId, int pageNumber, byte pageSize)
         {
             ServiceGetAllSubscriptionsForUserRequestDto requestDto =
                 new ServiceGetAllSubscriptionsForUserRequestDto(userId, pageNumber, pageSize);
@@ -140,7 +140,7 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<List<ExternalUserEntity>> GetUserSubscribersAsync(Guid userId, uint pageNumber, byte pageSize)
+        public async Task<List<ExternalUserEntity>> GetUserSubscribersAsync(Guid userId, int pageNumber, byte pageSize)
         {
             ServiceGetAllSubscribingToUserRequestDto requestDto =
                 new ServiceGetAllSubscribingToUserRequestDto(userId, pageNumber, pageSize);

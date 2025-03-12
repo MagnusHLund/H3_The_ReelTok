@@ -8,13 +8,13 @@ using reeltok.api.gateway.DTOs.Comments.LoadComments;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class CommentsService : BaseService, ICommentsService
+    public class CommentsService : BaseService, ICommentsService
     {
         private readonly IAuthService _authService;
         private readonly IHttpService _httpService;
         private readonly IEndpointFactory _endpointFactory;
 
-        internal CommentsService(IAuthService authService, IHttpService httpService, IEndpointFactory endpointFactory)
+        public CommentsService(IAuthService authService, IHttpService httpService, IEndpointFactory endpointFactory)
         {
             _authService = authService;
             _httpService = httpService;
@@ -32,7 +32,7 @@ namespace reeltok.api.gateway.Services
 
             if (response.Success && response is ServiceAddCommentResponseDto responseDto)
             {
-                return CommentMapper.ConvertResponseDtoToCommentUsingDateTime<ServiceAddCommentResponseDto>(responseDto);
+                return CommentMapper.ConvertResponseDtoToCommentUsingDateTime(responseDto);
             }
 
             throw HandleNetworkResponseExceptions(response);

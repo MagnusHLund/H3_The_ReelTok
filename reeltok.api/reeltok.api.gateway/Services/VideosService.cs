@@ -13,7 +13,7 @@ using reeltok.api.gateway.DTOs.Videos.GetVideosForProfile;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class VideosService : BaseService, IVideosService
+    public class VideosService : BaseService, IVideosService
     {
         private readonly IAuthService _authService;
         private readonly IHttpService _httpService;
@@ -65,7 +65,7 @@ namespace reeltok.api.gateway.Services
         }
 
         public async Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(byte amount)
-        {
+        {// TODO: ensure that the user does not require a user, to get a video
             Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
 
             ServiceGetVideosForFeedRequestDto requestDto = new ServiceGetVideosForFeedRequestDto(userId, amount);
@@ -122,7 +122,7 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<List<BaseVideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize)
+        public async Task<List<BaseVideoEntity>> GetVideosForProfileAsync(Guid userId, int pageNumber, byte pageSize)
         {
             ServiceGetVideosForProfileRequestDto requestDto = new
                 ServiceGetVideosForProfileRequestDto(userId, pageNumber, pageSize);

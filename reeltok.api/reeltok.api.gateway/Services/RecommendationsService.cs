@@ -5,13 +5,13 @@ using reeltok.api.gateway.DTOs.Recommendations.UpdateTotalTimesUserWatchedVideos
 
 namespace reeltok.api.gateway.Services
 {
-    internal class RecommendationsService : BaseService, IRecommendationsService
+    public class RecommendationsService : BaseService, IRecommendationsService
     {
         private readonly IAuthService _authService;
         private readonly IHttpService _httpService;
         private readonly IEndpointFactory _endpointFactory;
 
-        internal RecommendationsService(IAuthService authService, IHttpService httpService, IEndpointFactory endpointFactory)
+        public RecommendationsService(IAuthService authService, IHttpService httpService, IEndpointFactory endpointFactory)
         {
             _authService = authService;
             _httpService = httpService;

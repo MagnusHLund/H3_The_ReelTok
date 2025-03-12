@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.Mappers;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.ActionFilters;
+using System.ComponentModel.DataAnnotations;
 using reeltok.api.gateway.Interfaces.Services;
 using reeltok.api.gateway.DTOs.Comments.AddComment;
 using reeltok.api.gateway.DTOs.Comments.LoadComments;
@@ -25,22 +25,20 @@ namespace reeltok.api.gateway.Controllers
         public async Task<IActionResult> AddCommentAsync([FromBody] GatewayAddCommentRequestDto request)
         {
 
-            CommentUsingDateTime comment = await _commentsService.AddComment(request.VideoId, request.CommentText).ConfigureAwait(false);
+            CommentUsingDateTime comment = await _commentsService.AddComment(request.VideoId, request.CommentText)
+                .ConfigureAwait(false);
 
-            GatewayAddCommentResponseDto responseDto = CommentMapper.ConvertToResponseDto<GatewayAddCommentResponseDto>(comment);
-
+            GatewayAddCommentResponseDto responseDto = new GatewayAddCommentResponseDto(comment);
             return Ok(responseDto);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> LoadCommentsAsync([FromBody] GatewayLoadCommentsRequestDto request)
+        [HttpGet("{videoId}")]
+        public async Task<IActionResult> LoadCommentsAsync(
+            [FromRoute] Guid videoId,
+            [FromQuery, Range(1, byte.MaxValue)] byte amount = 15
+        )
         {
-            if (request.Amount <= 0)
-            {
-                return BadRequest(new FailureResponseDto("Amount should be greater than zero!"));
-            }
-
-            List<CommentUsingDateTime> comments = await _commentsService.LoadComments(request.VideoId, request.Amount).ConfigureAwait(false);
+            List<CommentUsingDateTime> comments = await _commentsService.LoadComments(videoId, amount).ConfigureAwait(false);
 
             if (comments.Count.Equals(0))
             {

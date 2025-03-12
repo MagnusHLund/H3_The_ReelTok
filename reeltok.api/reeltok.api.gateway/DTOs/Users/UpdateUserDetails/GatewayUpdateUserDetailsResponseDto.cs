@@ -1,23 +1,17 @@
+using reeltok.api.gateway.Entities.Users;
 using reeltok.api.gateway.Interfaces.DTOs;
 using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.gateway.DTOs.Users.UpdateUserDetails
 {
-    public class GatewayUpdateUserDetailsResponseDto : BaseResponseDto, IEditableUserDetailsDto
+    public class GatewayUpdateUserDetailsResponseDto : BaseResponseDto
     {
-        [StringLength(25, MinimumLength = 3)]
-        public string Username { get; set; }
+        [Required]
+        public UserEntity User { get; set; }
 
-        [EmailAddress]
-        [Range(1, 320)]
-        public string Email { get; set; }
-
-        public GatewayUpdateUserDetailsResponseDto(string username, string email, bool success = true) : base(success)
+        public GatewayUpdateUserDetailsResponseDto(UserEntity user, bool success = true) : base(success)
         {
-            Username = username;
-            Email = email;
+            User = user;
         }
-
-        public GatewayUpdateUserDetailsResponseDto() { }
     }
 }

@@ -3,7 +3,7 @@ using reeltok.api.gateway.Exceptions;
 
 namespace reeltok.api.gateway.Services
 {
-    internal abstract class BaseService
+    public abstract class BaseService
     {
         private protected static Exception HandleNetworkResponseExceptions(BaseResponseDto response)
         {

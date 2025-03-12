@@ -6,7 +6,7 @@ namespace reeltok.api.gateway.Entities
         public string StreamPath { get; set; }
         public uint UploadedAt { get; set; }
 
-        public BaseVideoEntity(Guid videoId, string streamPath, uint uploadedAt)
+        protected BaseVideoEntity(Guid videoId, string streamPath, uint uploadedAt)
         {
             VideoId = videoId;
             StreamPath = streamPath;

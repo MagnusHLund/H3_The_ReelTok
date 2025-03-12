@@ -32,7 +32,7 @@ namespace reeltok.api.gateway.Mappers
 
         internal static string GetLogMessage(Exception exception)
         {
-            return exception.Message ?? $"No log message provided. Exception type: {exception.GetType()}";
+            return exception.Message;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace reeltok.api.gateway.DTOs.Users.UpdateUserDetails
     {
         public UserEntity User { get; set; }
 
-        public ServiceUpdateUserDetailsResponseDto(UserEntity user, success = true) : base(success)
+        public ServiceUpdateUserDetailsResponseDto(UserEntity user, bool success = true) : base(success)
         {
             User = user;
         }

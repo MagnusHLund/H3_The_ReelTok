@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using reeltok.api.gateway.Enums;
 
 namespace reeltok.api.gateway.DTOs.Users.CreateUser
 {
@@ -7,7 +8,6 @@ namespace reeltok.api.gateway.DTOs.Users.CreateUser
         [Required]
         [EmailAddress]
         [Range(1, 320)]
-
         public string Email { get; set; }
 
         [Required]
@@ -18,11 +18,15 @@ namespace reeltok.api.gateway.DTOs.Users.CreateUser
         [MinLength(8)]
         public string Password { get; set; }
 
-        public GatewayCreateUserRequestDto(string email, string username, string password)
+        [Required]
+        public CategoryType Interest { get; set; }
+
+        public GatewayCreateUserRequestDto(string email, string username, string password, CategoryType interest)
         {
             Email = email;
             Username = username;
             Password = password;
+            Interest = interest;
         }
     }
 }

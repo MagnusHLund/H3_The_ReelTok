@@ -1,8 +1,9 @@
+using reeltok.api.gateway.Interfaces.Factories;
 using reeltok.api.gateway.Utils;
 
 namespace reeltok.api.gateway.Factories
 {
-    public class EndpointFactory
+    public class EndpointFactory : IEndpointFactory
     {
         private readonly AppSettingsUtils _appSettingsUtils;
 

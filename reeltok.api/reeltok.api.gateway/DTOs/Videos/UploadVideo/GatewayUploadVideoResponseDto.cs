@@ -5,12 +5,6 @@ namespace reeltok.api.gateway.DTOs.Videos.UploadVideo
 {
     public class GatewayUploadVideoResponseDto : BaseResponseDto
     {
-        [Required]
-        public Video Video { get; set; }
-
-        public GatewayUploadVideoResponseDto(Video video)
-        {
-            Video = video;
-        }
+        public GatewayUploadVideoResponseDto(bool success = true) : base(success) { }
     }
 }

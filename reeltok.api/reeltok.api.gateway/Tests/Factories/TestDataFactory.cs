@@ -21,12 +21,11 @@ using reeltok.api.gateway.DTOs.Users.GetUserProfileData;
 using reeltok.api.gateway.DTOs.Users.UpdateProfilePicture;
 using reeltok.api.gateway.DTOs.Users.GetAllSubscribingToUser;
 using reeltok.api.gateway.DTOs.Users.GetAllSubscriptionsForUser;
-using reeltok.api.gateway.DTOs.Recommendations.ChangeRecommendations;
 
 namespace reeltok.api.gateway.Factories
 {
     public static class TestDataFactory
-    {
+    { /*
         public static ServiceLogOutUserRequestDto CreateLogOutUserRequest()
         {
             return new ServiceLogOutUserRequestDto();
@@ -80,7 +79,7 @@ namespace reeltok.api.gateway.Factories
             Guid commentId = Guid.NewGuid();
             Guid userId = Guid.NewGuid();
             string commentText = "Amazing test!";
-            uint createdAt = (uint) new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+            uint createdAt = (uint)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
 
             return new ServiceAddCommentResponseDto
             (
@@ -255,17 +254,15 @@ namespace reeltok.api.gateway.Factories
             );
         }
 
-        public static List<Video> CreateVideoList()
+        public static List<VideoEntity> CreateVideoList()
         {
-            return new List<Video>
+            return new List<VideoEntity>
             {
-                new Video(Guid.NewGuid(), new VideoDetails("Title1", "Description1", CategoryType.Tech), 0, false, "url1", DateTime.UtcNow, new UserDetails("username1", "profilePictureUrl1", "profileUrl1")),
-                new Video(Guid.NewGuid(), new VideoDetails("Title2", "Description2", CategoryType.Gaming), 0, false, "url2", DateTime.UtcNow, new UserDetails("username2", "profilePictureUrl2", "profileUrl2")),
-                new Video(Guid.NewGuid(), new VideoDetails("Title3", "Description3", CategoryType.Sport), 0, false, "url3", DateTime.UtcNow, new UserDetails("username3", "profilePictureUrl3", "profileUrl3"))
+                // TODO: add videos in here
             };
         }
 
-        public static ServiceGetVideosForFeedResponseDto CreateGetVideosForFeedResponse(List<Video> videos)
+        public static ServiceGetVideosForFeedResponseDto CreateGetVideosForFeedResponse(List<VideoEntity> videos)
         {
             return new ServiceGetVideosForFeedResponseDto
             (
@@ -331,6 +328,6 @@ namespace reeltok.api.gateway.Factories
         public static Uri CreateCommentsMicroserviceTestUri(string path)
         {
             return new Uri($"http://localhost:5005/api/comments/{path}");
-        }
+        } */
     }
 }

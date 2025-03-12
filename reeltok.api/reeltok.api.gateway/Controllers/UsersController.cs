@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using reeltok.api.gateway.Mappers;
-using reeltok.api.gateway.Entities;
-using Microsoft.IdentityModel.Tokens;
-using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.ActionFilters;
+using reeltok.api.gateway.Entities.Users;
 using reeltok.api.gateway.DTOs.Users.Login;
+using System.ComponentModel.DataAnnotations;
 using reeltok.api.gateway.Interfaces.Services;
 using reeltok.api.gateway.DTOs.Users.CreateUser;
 using reeltok.api.gateway.DTOs.Users.UpdateUserDetails;
@@ -29,78 +27,81 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpGet("{userId}/subscriptions")]
-        public async Task<IActionResult> GetAllSubscriptionsForUserAsync([FromRoute] Guid userId)
+        public async Task<IActionResult> GetUserSubscriptionsAsync(
+            [FromRoute] Guid userId,
+            [FromQuery, Range(1, int.MaxValue)] int pageNumber,
+            [FromQuery, Range(1, byte.MaxValue)] byte pageSize = 15
+        )
         {
-            List<UserDetails> users = await _usersService.GetAllSubscriptionsForUser(userId).ConfigureAwait(false);
+            List<ExternalUserEntity> users = await _usersService.GetUserSubscriptionsAsync(userId, pageNumber, pageSize)
+                .ConfigureAwait(false);
+
             GatewayGetAllSubscriptionsForUserResponseDto responseDto = new GatewayGetAllSubscriptionsForUserResponseDto(users);
-
-            if (users.IsNullOrEmpty())
-            {
-                return NoContent();
-            }
-
             return Ok(responseDto);
         }
 
         [HttpGet("{userId}/subscribers")]
-        public async Task<IActionResult> GetAllSubscribingToUserAsync([FromRoute] Guid userId)
+        public async Task<IActionResult> GetUserSubscribersAsync(
+            [FromRoute] Guid userId,
+            [FromQuery, Range(1, int.MaxValue)] int pageNumber,
+            [FromQuery, Range(1, byte.MaxValue)] byte pageSize = 15
+        )
         {
-            List<UserDetails> users = await _usersService.GetAllSubscribingToUser(userId).ConfigureAwait(false);
+            List<ExternalUserEntity> users = await _usersService.GetUserSubscribersAsync(userId, pageNumber, pageSize)
+                .ConfigureAwait(false);
+
             GatewayGetAllSubscribingToUserResponseDto responseDto = new GatewayGetAllSubscribingToUserResponseDto(users);
-
-            if (users.IsNullOrEmpty())
-            {
-                return NoContent();
-            }
-
             return Ok(responseDto);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateUserAsync([FromBody] GatewayCreateUserRequestDto request)
         {
-            UserProfileData userProfileData = await _usersService.CreateUser(request.Email, request.Username, request.Password).ConfigureAwait(false);
-            GatewayCreateUserResponseDto responseDto = UserMapper.ConvertUserProfileDataToResponseDto<GatewayCreateUserResponseDto>(userProfileData);
+            UserEntity createdUser = await _usersService
+                .CreateUserAsync(request.Email, request.Username, request.Password, request.Interest)
+                .ConfigureAwait(false);
 
+            GatewayCreateUserResponseDto responseDto = new GatewayCreateUserResponseDto(createdUser);
             return Ok(responseDto);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> LoginUserAsync([FromBody] GatewayLoginRequestDto request)
         {
-            UserProfileData userProfileData = await _usersService.LoginUser(request.Email, request.Password).ConfigureAwait(false);
-            GatewayLoginResponseDto responseDto = UserMapper.ConvertUserProfileDataToResponseDto<GatewayLoginResponseDto>(userProfileData);
+            UserEntity user = await _usersService.LoginUserAsync(request.Email, request.Password)
+                .ConfigureAwait(false);
 
+            GatewayLoginResponseDto responseDto = new GatewayLoginResponseDto(user);
             return Ok(responseDto);
         }
 
         [HttpPost("{userId}")]
-        public async Task<IActionResult> GetUserProfileDataAsync([FromRoute] Guid userId)
+        public async Task<IActionResult> GetUserByIdAsync([FromRoute] Guid userId)
         {
-            UserProfileData userProfileData = await _usersService.GetUserProfileData(userId).ConfigureAwait(false);
-            GatewayGetUserByIdResponseDto responseDto = UserMapper.ConvertUserProfileDataToResponseDto<GatewayGetUserByIdResponseDto>(userProfileData);
+            ExternalUserEntity user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
 
+            GatewayGetUserByIdResponseDto responseDto = new GatewayGetUserByIdResponseDto(user);
             return Ok(responseDto);
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateUserDetailsAsync([FromBody] GatewayUpdateUserDetailsRequestDto request)
         {
-            EditableUserDetails userProfileData = await _usersService.UpdateUserDetails(request.Username, request.Email)
+            UserEntity user = await _usersService
+                .UpdateUserDetailsAsync(request.Username, request.Email, request.Interest)
                 .ConfigureAwait(false);
 
-            GatewayUpdateUserDetailsResponseDto responseDto = UserMapper.
-                ConvertEditableUserDetailsToDto<GatewayUpdateUserDetailsResponseDto>(userProfileData);
-
+            GatewayUpdateUserDetailsResponseDto responseDto = new GatewayUpdateUserDetailsResponseDto(user);
             return Ok(responseDto);
         }
 
         [HttpPut("profile-picture")]
         public async Task<IActionResult> UpdateProfilePictureAsync([FromBody] GatewayUpdateProfilePictureRequestDto request)
         {
-            string profilePictureUrl = await _usersService.UpdateProfilePicture(request.ProfilePicture).ConfigureAwait(false);
+            UserEntity user = await _usersService.UpdateProfilePictureAsync(request.ProfilePicture)
+                .ConfigureAwait(false);
 
-            GatewayUpdateProfilePictureResponseDto responseDto = new GatewayUpdateProfilePictureResponseDto(profilePictureUrl);
+            GatewayUpdateProfilePictureResponseDto responseDto = new GatewayUpdateProfilePictureResponseDto(user);
             return Ok(responseDto);
         }
     }

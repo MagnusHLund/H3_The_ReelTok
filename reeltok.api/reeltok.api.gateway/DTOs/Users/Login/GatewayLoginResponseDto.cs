@@ -1,46 +1,17 @@
-using System.ComponentModel.DataAnnotations;
+using reeltok.api.gateway.Entities.Users;
 using reeltok.api.gateway.Interfaces.DTOs;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.gateway.DTOs.Users.Login
 {
-    public class GatewayLoginResponseDto : BaseResponseDto, IUserProfileDataDto
+    public class GatewayLoginResponseDto : BaseResponseDto
     {
         [Required]
-        public Guid UserId { get; set; }
+        public UserEntity User { get; set; }
 
-        [Required]
-        [EmailAddress]
-        [Range(1, 320)]
-        public string Email { get; set; }
-
-        [Required]
-        [StringLength(25, MinimumLength = 3)]
-        public string Username { get; set; }
-
-        [Required]
-        [StringLength(30)]
-        public string ProfileUrl { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string ProfilePictureUrl { get; set; }
-
-        public GatewayLoginResponseDto(
-            Guid userId,
-            string email,
-            string username,
-            string profileUrl,
-            string profilePictureUrl,
-            bool success = true
-        ) : base(success)
+        public GatewayLoginResponseDto(UserEntity user, bool success = true) : base(success)
         {
-            UserId = userId;
-            Email = email;
-            Username = username;
-            ProfileUrl = profileUrl;
-            ProfilePictureUrl = profilePictureUrl;
+            User = user;
         }
-
-        public GatewayLoginResponseDto() { }
     }
 }

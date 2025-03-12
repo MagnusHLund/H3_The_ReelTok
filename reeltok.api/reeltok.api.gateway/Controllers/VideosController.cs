@@ -3,6 +3,7 @@ using reeltok.api.gateway.Mappers;
 using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.ActionFilters;
+using System.ComponentModel.DataAnnotations;
 using reeltok.api.gateway.Interfaces.Services;
 using reeltok.api.gateway.DTOs.Videos.LikeVideo;
 using reeltok.api.gateway.DTOs.Videos.RemoveLike;
@@ -27,18 +28,23 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpGet("profile")]
-        internal async Task<IActionResult> GetVideosForProfileAsync([FromBody] GatewayGetVideosForProfileRequestDto gatewayGetVideosForProfileRequestDto)
+        public async Task<IActionResult> GetVideosForProfileAsync(
+            [FromRoute] Guid userId,
+            [FromQuery] int pageNumber,
+            [FromQuery] byte pageSize
+        )
         {
-            List<Video> videos = await _videosService.GetVideosForProfile(gatewayGetVideosForProfileRequestDto.UserId, gatewayGetVideosForProfileRequestDto.Amount, gatewayGetVideosForProfileRequestDto.AmountReceived).ConfigureAwait(false);
-            GatewayGetVideosForProfileResponseDto responseDto = new GatewayGetVideosForProfileResponseDto(videos);
+            List<BaseVideoEntity> videos = await _videosService.GetVideosForProfileAsync(userId, pageNumber, pageSize)
+                .ConfigureAwait(false);
 
+            GatewayGetVideosForProfileResponseDto responseDto = new GatewayGetVideosForProfileResponseDto(videos);
             return Ok(responseDto);
         }
 
         [HttpGet("feed")]
-        public async Task<IActionResult> GetVideosForFeedAsync([FromQuery] byte amount)
+        public async Task<IActionResult> GetVideosForFeedAsync([FromQuery, Range(1, byte.MaxValue)] byte amount)
         {
-            List<Video> videos = await _videosService.GetVideosForFeed(amount).ConfigureAwait(false);
+            List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(amount).ConfigureAwait(false);
             GatewayGetVideosForFeedResponseDto responseDto = new GatewayGetVideosForFeedResponseDto(videos);
 
             return Ok(responseDto);
@@ -48,36 +54,36 @@ namespace reeltok.api.gateway.Controllers
         public async Task<IActionResult> UploadVideoAsync([FromBody] GatewayUploadVideoRequestDto request)
         {
             VideoUpload videoUpload = VideoMapper.ConvertRequestDtoToVideoUpload(request);
-            Video video = await _videosService.UploadVideo(videoUpload).ConfigureAwait(false);
-            GatewayUploadVideoResponseDto responseDto = new GatewayUploadVideoResponseDto(video);
+            bool success = await _videosService.UploadVideoAsync(videoUpload).ConfigureAwait(false);
 
+            GatewayUploadVideoResponseDto responseDto = new GatewayUploadVideoResponseDto(success);
             return Ok(responseDto);
         }
 
         [HttpPost("{videoId}/like")]
         public async Task<IActionResult> LikeVideoAsync([FromRoute] Guid videoId)
         {
-            bool success = await _videosService.LikeVideo(videoId).ConfigureAwait(false);
-            GatewayAddLikeResponseDto responseDto = new GatewayAddLikeResponseDto(success);
+            bool success = await _videosService.LikeVideoAsync(videoId).ConfigureAwait(false);
 
+            GatewayAddLikeResponseDto responseDto = new GatewayAddLikeResponseDto(success);
             return Ok(responseDto);
         }
 
         [HttpDelete("{videoId}/like")]
         public async Task<IActionResult> RemoveLikeFromVideoAsync([FromRoute] Guid videoId)
         {
-            bool success = await _videosService.RemoveLikeFromVideo(videoId).ConfigureAwait(false);
-            GatewayRemoveLikeResponseDto responseDto = new GatewayRemoveLikeResponseDto(success);
+            bool success = await _videosService.RemoveLikeFromVideoAsync(videoId).ConfigureAwait(false);
 
+            GatewayRemoveLikeResponseDto responseDto = new GatewayRemoveLikeResponseDto(success);
             return Ok(responseDto);
         }
 
         [HttpDelete("{videoId}")]
         public async Task<IActionResult> DeleteVideoAsync([FromRoute] Guid videoId)
         {
-            bool success = await _videosService.DeleteVideo(videoId).ConfigureAwait(false);
-            GatewayDeleteVideoResponseDto responseDto = new GatewayDeleteVideoResponseDto(success);
+            bool success = await _videosService.DeleteVideoAsync(videoId).ConfigureAwait(false);
 
+            GatewayDeleteVideoResponseDto responseDto = new GatewayDeleteVideoResponseDto(success);
             return Ok(responseDto);
         }
     }

@@ -27,5 +27,8 @@ namespace reeltok.api.gateway.DTOs.Videos.UploadVideo
             Category = category;
             Video = video;
         }
+
+        // Parameterless constructor required for multipart/form-data requests
+        public GatewayUploadVideoRequestDto() { }
     }
 }

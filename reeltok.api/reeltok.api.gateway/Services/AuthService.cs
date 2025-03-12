@@ -6,7 +6,7 @@ using reeltok.api.gateway.DTOs.Auth.GetUserIdByToken;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class AuthService : BaseService, IAuthService
+    public class AuthService : BaseService, IAuthService
     {
         private readonly IHttpService _httpService;
         private readonly IEndpointFactory _endpointFactory;

@@ -1,4 +1,3 @@
-using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.DTOs.Videos.UploadVideo;
 
@@ -8,14 +7,10 @@ namespace reeltok.api.gateway.Mappers
     {
         internal static VideoUpload ConvertRequestDtoToVideoUpload(GatewayUploadVideoRequestDto requestDto)
         {
-            VideoDetails videoDetails = new VideoDetails(
-                requestDto.Title,
-                requestDto.Description,
-                requestDto.Category
-            );
-
             return new VideoUpload(
-                videoDetails: videoDetails,
+                title: requestDto.Title,
+                description: requestDto.Description,
+                category: requestDto.Category,
                 videoFile: requestDto.Video
             );
         }
@@ -29,11 +24,6 @@ namespace reeltok.api.gateway.Mappers
                 category: videoUpload.Category,
                 videoFile: videoUpload.VideoFile
             );
-        }
-
-        internal static VideoEntity ConvertResponseDtoToVideoEntity()
-        {
-
         }
     }
 }
