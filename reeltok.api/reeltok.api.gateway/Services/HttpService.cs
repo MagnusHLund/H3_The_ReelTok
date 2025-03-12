@@ -52,7 +52,7 @@ namespace reeltok.api.gateway.Services
             }
         }
 
-        public async Task<BaseResponseDto> RouteRequestAsync<TResponse>(HttpRequestMessage request)
+        private async Task<BaseResponseDto> RouteRequestAsync<TResponse>(HttpRequestMessage request)
             where TResponse : BaseResponseDto
         {
             HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);

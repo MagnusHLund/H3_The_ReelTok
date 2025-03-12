@@ -79,7 +79,7 @@ namespace reeltok.api.gateway.Factories
             Guid commentId = Guid.NewGuid();
             Guid userId = Guid.NewGuid();
             string commentText = "Amazing test!";
-            uint createdAt = (uint) new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+            uint createdAt = (uint)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
 
             return new ServiceAddCommentResponseDto
             (

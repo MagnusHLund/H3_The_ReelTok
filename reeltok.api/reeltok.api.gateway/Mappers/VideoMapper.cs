@@ -1,4 +1,3 @@
-using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.DTOs.Videos.UploadVideo;
 
