@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using reeltok.api.users.Entities;
 using System.ComponentModel.DataAnnotations;
 
@@ -5,10 +6,14 @@ namespace reeltok.api.users.DTOs.Login
 {
     public class LoginResponseDto : BaseResponseDto
     {
-        [Required]
-        public UserEntity User { get; set; }
+        private UserWithInterestEntity user;
 
-        public LoginResponseDto(UserEntity user)
+        [Required]
+        [JsonProperty("User")]
+        public UserWithInterestEntity User { get; set; }
+
+
+        public LoginResponseDto(UserWithInterestEntity user, bool success = true) : base(success)
         {
             User = user;
         }

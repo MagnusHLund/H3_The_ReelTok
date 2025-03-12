@@ -22,10 +22,9 @@ namespace reeltok.api.users.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginUserAsync([FromBody] LoginRequestDto request)
         {
-            UserEntity user = await _loginService.LoginUserAsync(request.Email, request.Password)
+            UserWithInterestEntity user = await _loginService.LoginUserAsync(request.Email, request.Password)
                 .ConfigureAwait(false);
 
-            // TODO: When logging in, we need to return their interest as well. Use a byte, not enum.
             LoginResponseDto response = new LoginResponseDto(user);
             return Ok(response);
         }

@@ -9,7 +9,6 @@ namespace reeltok.api.users.Entities
         public Guid UserId { get; set; } = Guid.Empty;
         public UserDetails UserDetails { get; set; }
 
-
         public ExternalUserEntity(Guid userId, UserDetails details)
         {
             UserId = userId;

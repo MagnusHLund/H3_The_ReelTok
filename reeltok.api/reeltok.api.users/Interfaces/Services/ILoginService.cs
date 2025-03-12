@@ -4,6 +4,6 @@ namespace reeltok.api.users.Interfaces.Services
 {
     public interface ILoginService
     {
-        Task<UserEntity> LoginUserAsync(string email, string password);
+        Task<UserWithInterestEntity> LoginUserAsync(string email, string password);
     }
 }

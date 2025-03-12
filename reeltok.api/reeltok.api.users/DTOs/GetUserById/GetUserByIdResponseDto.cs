@@ -1,6 +1,7 @@
 using System.Xml.Serialization;
 using reeltok.api.users.Entities;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace reeltok.api.users.DTOs.GetUserById
 {
@@ -8,11 +9,13 @@ namespace reeltok.api.users.DTOs.GetUserById
     public class GetUserByIdResponseDto : BaseResponseDto
     {
         [Required]
-        public ExternalUserEntity User { get; set; }
+        [JsonProperty("User")]
+        public UserWithSubscriptionCounts User { get; set; }
 
-        public GetUserByIdResponseDto(ExternalUserEntity user, bool success = true) : base(success)
+        public GetUserByIdResponseDto(UserWithSubscriptionCounts user, bool success = true) : base(success)
         {
             User = user;
         }
     }
+
 }

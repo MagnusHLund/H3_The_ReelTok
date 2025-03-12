@@ -8,6 +8,8 @@ namespace reeltok.api.users.Interfaces.Repositories
         Task<List<Guid>> GetSubscriptionsByUserIdAsync(Guid userId, int pageNumber, byte pageSize); // All who User follows
         Task<bool> AddUserToSubscriptionAsync(SubscriptionEntity subscription);
         Task<bool> RemoveUserFromSubscriptionAsync(Guid userId, Guid subscriptionUserId);
+        Task<int> GetSubscribersCountAsync(Guid userId);
+        Task<int> GetSubscriptionsCountAsync(Guid userId);
 
     }
 }
