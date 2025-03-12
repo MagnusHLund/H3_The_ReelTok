@@ -78,7 +78,7 @@ namespace reeltok.api.gateway.Controllers
         public async Task<IActionResult> GetUserProfileDataAsync([FromRoute] Guid userId)
         {
             UserProfileData userProfileData = await _usersService.GetUserProfileData(userId).ConfigureAwait(false);
-            GatewayGetUserProfileDataResponseDto responseDto = UserMapper.ConvertUserProfileDataToResponseDto<GatewayGetUserProfileDataResponseDto>(userProfileData);
+            GatewayGetUserByIdResponseDto responseDto = UserMapper.ConvertUserProfileDataToResponseDto<GatewayGetUserByIdResponseDto>(userProfileData);
 
             return Ok(responseDto);
         }

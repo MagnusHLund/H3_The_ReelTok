@@ -9,7 +9,6 @@ using reeltok.api.videos.Interfaces.Services;
 using reeltok.api.videos.Interfaces.Factories;
 using reeltok.api.videos.DTOs.GetRecommendedVideos;
 using reeltok.api.videos.DTOs.GetUserDetailsForVideo;
-using reeltok.api.videos.DTOs.UploadVideo;
 
 namespace reeltok.api.videos.Services
 {

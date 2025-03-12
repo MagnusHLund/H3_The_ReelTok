@@ -80,7 +80,7 @@ namespace reeltok.api.gateway.Factories
             Guid commentId = Guid.NewGuid();
             Guid userId = Guid.NewGuid();
             string commentText = "Amazing test!";
-            uint createdAt = (uint)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+            uint createdAt = (uint) new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
 
             return new ServiceAddCommentResponseDto
             (
@@ -192,14 +192,14 @@ namespace reeltok.api.gateway.Factories
             );
         }
 
-        public static ServiceGetUserProfileDataResponseDto CreateGetUserProfileDataResponse()
+        public static ServiceGetUserByIdResponseDto CreateGetUserProfileDataResponse()
         {
             Guid userId = Guid.NewGuid();
             string username = "xX_TestName_Xx";
             string profileUrl = "testUrl.com";
             string profilePictureUrl = "testurl.com";
 
-            return new ServiceGetUserProfileDataResponseDto
+            return new ServiceGetUserByIdResponseDto
             (
                 userId: userId,
                 username: username,

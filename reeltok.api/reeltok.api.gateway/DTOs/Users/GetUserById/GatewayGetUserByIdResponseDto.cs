@@ -1,15 +1,15 @@
-using reeltok.api.gateway.Interfaces.DTOs;
 using System.ComponentModel.DataAnnotations;
+using reeltok.api.gateway.Interfaces.DTOs;
 
 namespace reeltok.api.gateway.DTOs.Users.GetUserProfileData
 {
-    public class ServiceGetUserProfileDataResponseDto : BaseResponseDto, IUserProfileDataDto
+    public class GatewayGetUserByIdResponseDto : BaseResponseDto, IUserProfileDataDto
     {
         [Required]
         public Guid UserId { get; set; }
 
         [Required]
-        [StringLength(50, MinimumLength = 3)]
+        [StringLength(25)]
         public string Username { get; set; }
 
         [Required]
@@ -25,7 +25,14 @@ namespace reeltok.api.gateway.DTOs.Users.GetUserProfileData
         [StringLength(50)]
         public string ProfilePictureUrl { get; set; }
 
-        public ServiceGetUserProfileDataResponseDto(Guid userId, string username, string profileUrl, string profilePictureUrl, string email = "", bool success = true) : base(success)
+        public GatewayGetUserByIdResponseDto(
+            Guid userId,
+            string username,
+            string profileUrl,
+            string profilePictureUrl,
+            string email,
+            bool success = true
+        ) : base(success)
         {
             UserId = userId;
             Username = username;
@@ -33,5 +40,7 @@ namespace reeltok.api.gateway.DTOs.Users.GetUserProfileData
             ProfileUrl = profileUrl;
             ProfilePictureUrl = profilePictureUrl;
         }
+
+        public GatewayGetUserByIdResponseDto() { }
     }
 }

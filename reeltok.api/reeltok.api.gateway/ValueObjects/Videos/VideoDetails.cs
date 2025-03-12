@@ -6,13 +6,13 @@ namespace reeltok.api.gateway.ValueObjects
     {
         public string Title { get; }
         public string Description { get; }
-        public CategoryType Tag { get; }
+        public CategoryType Category { get; }
 
-        public VideoDetails(string title, string description, CategoryType tag)
+        public VideoDetails(string title, string description, CategoryType category)
         {
             Title = title;
             Description = description;
-            Tag = tag;
+            Category = category;
         }
     }
 }

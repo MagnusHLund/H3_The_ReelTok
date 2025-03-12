@@ -5,12 +5,12 @@ namespace reeltok.api.gateway.Interfaces.Services
 {
     public interface IVideosService
     {
-        Task<bool> LikeVideo(Guid VideoId);
-        Task<bool> RemoveLikeFromVideo(Guid VideoId);
-        Task<List<Video>> GetVideosForFeed(byte amount);
-        Task<Video> UploadVideo(VideoUpload video);
-        Task<bool> DeleteVideo(Guid videoId);
-        Task<List<Video>> GetVideosForProfile(Guid userId, byte amountToReturn, uint amountReceived);
+        Task<bool> LikeVideoAsync(Guid VideoId);
+        Task<bool> RemoveLikeFromVideoAsync(Guid VideoId);
+        Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(byte amount);
+        Task<bool> UploadVideoAsync(VideoUpload video);
+        Task<bool> DeleteVideoAsync(Guid videoId);
+        Task<List<BaseVideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize);
 
     }
 }

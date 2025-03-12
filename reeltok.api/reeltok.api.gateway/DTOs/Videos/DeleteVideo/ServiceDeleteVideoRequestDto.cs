@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.gateway.DTOs.Videos.DeleteVideo
@@ -5,9 +6,11 @@ namespace reeltok.api.gateway.DTOs.Videos.DeleteVideo
     public class ServiceDeleteVideoRequestDto
     {
         [Required]
+        [JsonProperty("VideoId")]
         public Guid UserId { get; set; }
 
         [Required]
+        [JsonProperty("VideoId")]
         public Guid VideoId { get; set; }
 
         public ServiceDeleteVideoRequestDto(Guid userId, Guid videoId)

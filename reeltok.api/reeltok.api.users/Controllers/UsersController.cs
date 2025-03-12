@@ -25,7 +25,8 @@ namespace reeltok.api.users.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequestDto request)
         {
-            UserEntity user = await _usersService.CreateUserAsync(request.Username, request.Email, request.Password, request.Interests)
+            UserEntity user = await _usersService
+                .CreateUserAsync(request.Username, request.Email, request.Password, request.Interests)
                 .ConfigureAwait(false);
 
             CreateUserResponseDto response = new CreateUserResponseDto(user);
@@ -35,8 +36,6 @@ namespace reeltok.api.users.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserByIdAsync([FromQuery] Guid userId)
         {
-            // TODO: Also return total amount of subscribers and total amount of subscriptions
-
             UserEntity user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
 
             GetUserByIdResponseDto response = new GetUserByIdResponseDto(user);

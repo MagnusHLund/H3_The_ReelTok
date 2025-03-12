@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace reeltok.api.videos.Entities
+namespace reeltok.api.gateway.Entities
 {
     public class VideoEntity : BaseVideoEntity
     {

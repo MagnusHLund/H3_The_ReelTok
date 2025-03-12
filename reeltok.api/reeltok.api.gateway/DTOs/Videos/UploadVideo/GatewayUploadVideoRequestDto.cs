@@ -15,16 +15,16 @@ namespace reeltok.api.gateway.DTOs.Videos.UploadVideo
 
         [Required]
         [StringLength(30)]
-        public CategoryType Tag { get; set; }
+        public CategoryType Category { get; set; }
 
         [Required]
         public IFormFile Video { get; set; }
 
-        public GatewayUploadVideoRequestDto(string title, string description, CategoryType tag, IFormFile video)
+        public GatewayUploadVideoRequestDto(string title, string description, CategoryType category, IFormFile video)
         {
             Title = title;
             Description = description;
-            Tag = tag;
+            Category = category;
             Video = video;
         }
     }

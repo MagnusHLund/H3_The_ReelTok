@@ -17,11 +17,15 @@ namespace reeltok.api.gateway.DTOs.Users.CreateUser
         [MinLength(8)]
         public string Password { get; set; }
 
-        public ServiceCreateUserRequestDto(string email, string username, string password)
+        [Required]
+        public byte Interests { get; set; }
+
+        public ServiceCreateUserRequestDto(string email, string username, string password, byte interests)
         {
             Email = email;
             Username = username;
             Password = password;
+            Interests = interests;
         }
     }
 }

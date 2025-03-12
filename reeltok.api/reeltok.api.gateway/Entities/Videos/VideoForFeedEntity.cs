@@ -1,18 +1,18 @@
-using reeltok.api.videos.ValueObjects;
+using reeltok.api.gateway.ValueObjects;
 
-namespace reeltok.api.videos.Entities
+namespace reeltok.api.gateway.Entities
 {
     public class VideoForFeedEntity : BaseVideoEntity
     {
         public VideoDetails VideoDetails { get; set; }
         public VideoLikes VideoLikes { get; set; }
-        public UserEntity VideoCreator { get; set; }
+        public VideoForFeedEntity VideoCreator { get; set; }
 
         public VideoForFeedEntity(
             Guid videoId,
             VideoDetails videoDetails,
             VideoLikes videoLikes,
-            UserEntity videoCreator,
+            VideoForFeedEntity videoCreator,
             string streamPath,
             uint uploadedAt
         ) : base(videoId, streamPath, uploadedAt)
