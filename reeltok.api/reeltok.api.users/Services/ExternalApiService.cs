@@ -22,7 +22,7 @@ namespace reeltok.api.users.Services
         public async Task CreateUserInAuthApiAsync(Guid userId, string password)
         {
             AuthServiceCreateUserRequestDto requestDto = new AuthServiceCreateUserRequestDto(userId, password);
-            Uri targetUrl = _endpointFactory.GetAuthApiUrl("users");
+            Uri targetUrl = _endpointFactory.GetAuthApiUrl("users/signup");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<AuthServiceCreateUserRequestDto, AuthServiceCreateUserResponseDto>(
                 requestDto, targetUrl, HttpMethod.Post)

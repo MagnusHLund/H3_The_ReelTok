@@ -16,6 +16,7 @@ namespace reeltok.api.gateway.Services
         {
             _httpClient = httpClient;
         }
+        // TODO: Refactor this class
 
         public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(
             TRequest requestDto,
