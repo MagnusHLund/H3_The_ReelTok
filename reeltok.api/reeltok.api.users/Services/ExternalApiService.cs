@@ -21,11 +21,8 @@ namespace reeltok.api.users.Services
 
         public async Task CreateUserInAuthApiAsync(Guid userId, string password)
         {
-            // TODO: Remove this return, once auth api is ready
-            return;
-
             AuthServiceCreateUserRequestDto requestDto = new AuthServiceCreateUserRequestDto(userId, password);
-            Uri targetUrl = _endpointFactory.GetAuthApiUrl(""); // TODO: @MagnusHLund correct the endpoint
+            Uri targetUrl = _endpointFactory.GetAuthApiUrl("users");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<AuthServiceCreateUserRequestDto, AuthServiceCreateUserResponseDto>(
                 requestDto, targetUrl, HttpMethod.Post)
@@ -41,11 +38,9 @@ namespace reeltok.api.users.Services
 
         public async Task CreateUserInRecommendationsApiAsync(Guid userId, byte userInterests)
         {
-            // TODO: Remove this return, once recommendations api is ready
-            return;
-
-            RecommendationsServiceCreateUserRequestDto requestDto = new RecommendationsServiceCreateUserRequestDto(userId, userInterests);
-            Uri targetUrl = _endpointFactory.GetRecommendationsApiUrl(""); // TODO: @MagnusHLund correct the endpoint
+            RecommendationsServiceCreateUserRequestDto requestDto =
+                new RecommendationsServiceCreateUserRequestDto(userId, userInterests);
+            Uri targetUrl = _endpointFactory.GetRecommendationsApiUrl("users");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<RecommendationsServiceCreateUserRequestDto, RecommendationsServiceCreateUserResponseDto>(
                 requestDto, targetUrl, HttpMethod.Post)
@@ -61,11 +56,8 @@ namespace reeltok.api.users.Services
 
         public async Task LoginUserInAuthApiAsync(Guid userId, string password)
         {
-            // TODO: Remove this return, once auth api is ready
-            return;
-
             AuthServiceLoginRequestDto requestDto = new AuthServiceLoginRequestDto(userId, password);
-            Uri targetUrl = _endpointFactory.GetAuthApiUrl(""); // TODO: @MagnusHLund correct the endpoint
+            Uri targetUrl = _endpointFactory.GetAuthApiUrl("auth");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<AuthServiceLoginRequestDto, AuthServiceLoginResponseDto>(
                 requestDto, targetUrl, HttpMethod.Post)
@@ -81,7 +73,8 @@ namespace reeltok.api.users.Services
 
         public async Task<byte> GetUserInterestFromRecommendationsApiAsync(Guid userId)
         {
-            RecommendationServiceGetUserInterestRequestDto requestDto = new RecommendationServiceGetUserInterestRequestDto(userId);
+            RecommendationServiceGetUserInterestRequestDto requestDto =
+                new RecommendationServiceGetUserInterestRequestDto(userId);
             Uri targetUrl = _endpointFactory.GetRecommendationsApiUrl("users");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<RecommendationServiceGetUserInterestRequestDto, RecommendationServiceGetUserInterestResponseDto>(
