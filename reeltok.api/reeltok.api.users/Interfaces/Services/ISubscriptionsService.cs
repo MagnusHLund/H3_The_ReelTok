@@ -7,8 +7,8 @@ namespace reeltok.api.users.Interfaces.Services
     {
         Task<bool> SubscribeAsync(SubscriptionDetails subscriptionDetails);
         Task<bool> UnsubscribeAsync(SubscriptionDetails subscriptionDetails);
-        Task<List<ExternalUserEntity>> GetSubscribersByUserIdAsync(Guid userId);
-        Task<List<ExternalUserEntity>> GetSubscriptionsByUserIdAsync(Guid userId);
+        Task<List<ExternalUserEntity>> GetSubscribersByUserIdAsync(Guid userId, int pageNumber, byte pageSize);
+        Task<List<ExternalUserEntity>> GetSubscriptionsByUserIdAsync(Guid userId, int pageNumber, byte pageSize);
 
     }
 }

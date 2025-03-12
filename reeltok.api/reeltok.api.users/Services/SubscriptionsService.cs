@@ -17,9 +17,10 @@ namespace reeltok.api.users.Services
             _usersService = usersService;
         }
 
-        public async Task<List<ExternalUserEntity>> GetSubscribersByUserIdAsync(Guid userId)
+        public async Task<List<ExternalUserEntity>> GetSubscribersByUserIdAsync(Guid userId, int pageNumber, byte pageSize)
         {
-            List<Guid> SubscribersUserIds = await _subscriptionRepository.GetSubscribersByUserIdAsync(userId)
+            List<Guid> SubscribersUserIds = await _subscriptionRepository
+                .GetSubscribersByUserIdAsync(userId, pageNumber, pageSize)
                 .ConfigureAwait(false);
 
             List<UserEntity> userEntities = await _usersService.GetUsersByIdsAsync(SubscribersUserIds).ConfigureAwait(false);
@@ -28,9 +29,10 @@ namespace reeltok.api.users.Services
             return subscribers;
         }
 
-        public async Task<List<ExternalUserEntity>> GetSubscriptionsByUserIdAsync(Guid userId)
+        public async Task<List<ExternalUserEntity>> GetSubscriptionsByUserIdAsync(Guid userId, int pageNumber, byte pageSize)
         {
-            List<Guid> SubscriptionsUserIds = await _subscriptionRepository.GetSubscriptionsByUserIdAsync(userId)
+            List<Guid> SubscriptionsUserIds = await _subscriptionRepository
+                .GetSubscriptionsByUserIdAsync(userId, pageNumber, pageSize)
                 .ConfigureAwait(false);
 
             List<UserEntity> userEntities = await _usersService.GetUsersByIdsAsync(SubscriptionsUserIds).ConfigureAwait(false);
