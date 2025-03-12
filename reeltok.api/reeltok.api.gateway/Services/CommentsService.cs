@@ -1,10 +1,10 @@
 using reeltok.api.gateway.DTOs;
 using reeltok.api.gateway.Mappers;
-using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.Interfaces.Services;
 using reeltok.api.gateway.Interfaces.Factories;
 using reeltok.api.gateway.DTOs.Comments.AddComment;
 using reeltok.api.gateway.DTOs.Comments.LoadComments;
+using reeltok.api.gateway.Entities.comments;
 
 namespace reeltok.api.gateway.Services
 {
@@ -21,18 +21,19 @@ namespace reeltok.api.gateway.Services
             _endpointFactory = endpointFactory;
         }
 
-        public async Task<CommentUsingDateTime> AddComment(Guid videoId, string commentText)
+        public async Task<CommentUsingDateTime> AddComment(Guid videoId, string message)
         {
             Guid userId = await _authService.GetUserIdByAccessToken().ConfigureAwait(false);
 
-            ServiceAddCommentRequestDto requestDto = new ServiceAddCommentRequestDto(userId, videoId, commentText);
+            ServiceAddCommentRequestDto requestDto = new ServiceAddCommentRequestDto(userId, videoId, message);
             Uri targetUrl = _endpointFactory.GetCommentsApiUrl("comments");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceAddCommentRequestDto, ServiceAddCommentResponseDto>(requestDto, targetUrl, HttpMethod.Post).ConfigureAwait(false);
 
             if (response.Success && response is ServiceAddCommentResponseDto responseDto)
             {
-                return CommentMapper.ConvertResponseDtoToCommentUsingDateTime(responseDto);
+                CommentUsingUnixTime comment = responseDto.Comment;
+                return CommentMapper.ConvertToDateTime(comment);
             }
 
             throw HandleNetworkResponseExceptions(response);
@@ -47,7 +48,8 @@ namespace reeltok.api.gateway.Services
 
             if (response.Success && response is ServiceLoadCommentsResponseDto responseDto)
             {
-                return responseDto.Comments.Select(comment => CommentMapper.ConvertToDateTime(comment)).ToList();
+                List<CommentUsingUnixTime> comments = responseDto.Comments;
+                return comments.Select(comment => CommentMapper.ConvertToDateTime(comment)).ToList();
             }
 
             throw HandleNetworkResponseExceptions(response);

@@ -4,7 +4,12 @@ namespace reeltok.api.gateway.ValueObjects
     {
         public override uint CreatedAt { get; }
 
-        public CommentDetailsUsingUnixTime(Guid userId, Guid videoId, string commentText, uint createdAt) : base(userId, videoId, commentText)
+        public CommentDetailsUsingUnixTime(
+            Guid userId,
+            Guid videoId,
+            string message,
+            uint createdAt
+        ) : base(userId, videoId, message)
         {
             CreatedAt = createdAt;
         }

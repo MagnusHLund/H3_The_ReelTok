@@ -1,17 +1,21 @@
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace reeltok.api.gateway.DTOs.Users.GetAllSubscriptionsForUser
 {
     public class ServiceGetAllSubscriptionsForUserRequestDto
     {
         [Required]
+        [JsonProperty("UserId")]
         public Guid UserId { get; set; }
 
         [Required]
-        public int PageNumber {get; set;}
+        [JsonProperty("PageNumber")]
+        public int PageNumber { get; set; }
 
         [Required]
-        public byte PageSize {get; set;}
+        [JsonProperty("PageSize")]
+        public byte PageSize { get; set; }
 
         public ServiceGetAllSubscriptionsForUserRequestDto(Guid userId, int pageNumber, byte pageSize)
         {

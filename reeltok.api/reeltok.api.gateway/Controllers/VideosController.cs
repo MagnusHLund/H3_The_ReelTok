@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using reeltok.api.gateway.Mappers;
-using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.ActionFilters;
+using reeltok.api.gateway.Entities.Videos;
 using System.ComponentModel.DataAnnotations;
 using reeltok.api.gateway.Interfaces.Services;
 using reeltok.api.gateway.DTOs.Videos.LikeVideo;

@@ -6,7 +6,7 @@ namespace reeltok.api.gateway.DTOs.Videos.DeleteVideo
     public class ServiceDeleteVideoRequestDto
     {
         [Required]
-        [JsonProperty("VideoId")]
+        [JsonProperty("UserId")]
         public Guid UserId { get; set; }
 
         [Required]

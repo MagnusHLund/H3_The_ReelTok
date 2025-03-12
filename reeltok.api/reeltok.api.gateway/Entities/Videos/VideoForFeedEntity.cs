@@ -1,6 +1,6 @@
 using reeltok.api.gateway.ValueObjects;
 
-namespace reeltok.api.gateway.Entities
+namespace reeltok.api.gateway.Entities.Videos
 {
     public class VideoForFeedEntity : BaseVideoEntity
     {

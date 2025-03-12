@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using reeltok.api.gateway.Entities;
+using reeltok.api.gateway.Entities.comments;
 
 namespace reeltok.api.gateway.DTOs.Comments.LoadComments
 {

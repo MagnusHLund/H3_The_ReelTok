@@ -1,5 +1,4 @@
-using reeltok.api.gateway.Entities;
-using reeltok.api.gateway.Interfaces.DTOs;
+using reeltok.api.gateway.Entities.comments;
 using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.gateway.DTOs.Comments.AddComment

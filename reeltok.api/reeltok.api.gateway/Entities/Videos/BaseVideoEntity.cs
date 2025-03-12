@@ -1,4 +1,4 @@
-namespace reeltok.api.gateway.Entities
+namespace reeltok.api.gateway.Entities.Videos
 {
     public class BaseVideoEntity
     {

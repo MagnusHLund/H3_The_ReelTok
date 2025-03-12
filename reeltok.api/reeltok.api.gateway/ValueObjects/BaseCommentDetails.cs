@@ -4,14 +4,14 @@ namespace reeltok.api.gateway.ValueObjects
     {
         public Guid UserId { get; }
         public Guid VideoId { get; }
-        public string CommentText { get; }
+        public string Message { get; }
         public abstract T CreatedAt { get; }
 
-        protected BaseCommentDetails(Guid userId, Guid videoId, string commentText)
+        protected BaseCommentDetails(Guid userId, Guid videoId, string message)
         {
             UserId = userId;
             VideoId = videoId;
-            CommentText = commentText;
+            Message = message;
         }
     }
 }

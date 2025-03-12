@@ -2,9 +2,11 @@ using Serilog;
 using Serilog.Events;
 using reeltok.api.gateway.Utils;
 using reeltok.api.gateway.Services;
+using reeltok.api.gateway.Factories;
 using Newtonsoft.Json.Serialization;
 using reeltok.api.gateway.Middleware;
 using reeltok.api.gateway.Interfaces.Services;
+using reeltok.api.gateway.Interfaces.Factories;
 
 namespace reeltok.api.gateway
 {
@@ -29,8 +31,13 @@ namespace reeltok.api.gateway
             builder.Host.UseSerilog();
 
             // Add services to the container.
-            builder.Services.AddTransient<IHttpService, HttpService>();
-            builder.Services.AddTransient<IAuthService, AuthService>();
+            builder.Services.AddScoped<IHttpService, HttpService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IUsersService, UsersService>();
+            builder.Services.AddScoped<IVideosService, VideosService>();
+            builder.Services.AddScoped<ICommentsService, CommentsService>();
+
+            builder.Services.AddScoped<IEndpointFactory, EndpointFactory>();
 
             builder.Services.AddHttpClient();
 

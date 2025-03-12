@@ -1,5 +1,5 @@
-using reeltok.api.gateway.Entities;
 using reeltok.api.gateway.ValueObjects;
+using reeltok.api.gateway.Entities.Videos;
 
 namespace reeltok.api.gateway.Interfaces.Services
 {

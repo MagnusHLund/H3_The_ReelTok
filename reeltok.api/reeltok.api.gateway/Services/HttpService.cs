@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Reflection;
+using System.Net.Http.Headers;
 using reeltok.api.gateway.DTOs;
 using Microsoft.AspNetCore.WebUtilities;
 using reeltok.api.gateway.Interfaces.Services;
@@ -15,11 +16,12 @@ namespace reeltok.api.gateway.Services
         {
             _httpClient = httpClient;
         }
-        // TODO: allow HttpService to send multipart/form-data requests
+
         public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(
             TRequest requestDto,
             Uri targetUrl,
-            HttpMethod httpMethod
+            HttpMethod httpMethod,
+            bool isMultipartFormData = false
         ) where TResponse : BaseResponseDto
         {
             if (Equals(requestDto, default(TRequest)))
@@ -27,9 +29,20 @@ namespace reeltok.api.gateway.Services
                 throw new ArgumentNullException(nameof(requestDto));
             }
 
-            HttpRequestMessage request = httpMethod == HttpMethod.Get || httpMethod == HttpMethod.Delete
-                ? PrepareHttpRequestWithQueryParameters(requestDto, targetUrl)
-                : PrepareHttpRequestBody(requestDto, targetUrl, httpMethod);
+            HttpRequestMessage request;
+
+            if (httpMethod == HttpMethod.Get || httpMethod == HttpMethod.Delete)
+            {
+                request = PrepareHttpRequestWithQueryParameters(requestDto, targetUrl);
+            }
+            else if (isMultipartFormData)
+            {
+                request = PrepareMultipartFormDataRequest(requestDto, targetUrl, httpMethod);
+            }
+            else
+            {
+                request = PrepareHttpRequestBody(requestDto, targetUrl, httpMethod);
+            }
 
             using (request)
             {
@@ -38,7 +51,7 @@ namespace reeltok.api.gateway.Services
             }
         }
 
-        private async Task<BaseResponseDto> RouteRequestAsync<TResponse>(HttpRequestMessage request)
+        public async Task<BaseResponseDto> RouteRequestAsync<TResponse>(HttpRequestMessage request)
             where TResponse : BaseResponseDto
         {
             HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
@@ -58,6 +71,32 @@ namespace reeltok.api.gateway.Services
             return new HttpRequestMessage(httpMethod, targetUrl)
             {
                 Content = CreateStringContent(requestContent)
+            };
+        }
+
+        private static HttpRequestMessage PrepareMultipartFormDataRequest<TRequest>(
+            TRequest requestDto,
+            Uri targetUrl,
+            HttpMethod httpMethod
+        )
+        {
+            MultipartFormDataContent formDataContent = new MultipartFormDataContent();
+            foreach (PropertyInfo property in typeof(TRequest).GetProperties())
+            {
+                object? value = property.GetValue(requestDto);
+                if (value != null)
+                {
+                    StringContent stringContent = new StringContent(value.ToString() ?? string.Empty);
+                    stringContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                    {
+                        Name = property.Name
+                    };
+                    formDataContent.Add(stringContent);
+                }
+            }
+            return new HttpRequestMessage(httpMethod, targetUrl)
+            {
+                Content = formDataContent
             };
         }
 

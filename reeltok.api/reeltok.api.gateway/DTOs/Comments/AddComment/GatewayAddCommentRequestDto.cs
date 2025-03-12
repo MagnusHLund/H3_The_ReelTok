@@ -9,12 +9,12 @@ namespace reeltok.api.gateway.DTOs.Comments.AddComment
 
         [Required]
         [Range(1, 1024)]
-        public string CommentText { get; set; }
+        public string Message { get; set; }
 
-        public GatewayAddCommentRequestDto(Guid videoId, string commentText)
+        public GatewayAddCommentRequestDto(Guid videoId, string message)
         {
             VideoId = videoId;
-            CommentText = commentText;
+            Message = message;
         }
     }
 }
