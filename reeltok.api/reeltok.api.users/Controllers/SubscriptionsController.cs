@@ -46,7 +46,6 @@ namespace reeltok.api.users.Controllers
             return Ok(response);
         }
 
-
         [HttpGet("subscribers")]
         public async Task<IActionResult> GetUserSubscribersAsync(
             [FromQuery] Guid userId,
@@ -62,7 +61,6 @@ namespace reeltok.api.users.Controllers
             return Ok(response);
         }
 
-        // TODO: Make this method support lazy loading
         [HttpGet("subscriptions")]
         public async Task<IActionResult> GetUserSubscriptionsAsync(
             [FromQuery] Guid userId,
