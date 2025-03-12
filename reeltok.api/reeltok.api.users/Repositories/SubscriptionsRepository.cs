@@ -34,11 +34,18 @@ namespace reeltok.api.users.Repositories
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<List<Guid>> GetSubscribersByUserIdAsync(Guid userId)
+        public async Task<List<Guid>> GetSubscribersByUserIdAsync(Guid userId, int pageNumber, byte pageSize)
         {
-            return await _context.Subscriptions.Where(s => s.UserId == userId).Select(s => s.SubscribingToUserId)
-                .ToListAsync().ConfigureAwait(false)
-                ?? new List<Guid>();
+            int skip = pageNumber * pageSize;
+
+            List<Guid> subscriberList = await _context.Subscriptions
+                .Where(s => s.UserId == userId)
+                .Skip(skip)
+                .Select(s => s.SubscribingToUserId)
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            return subscriberList;
         }
 
         /// <summary>
@@ -46,11 +53,18 @@ namespace reeltok.api.users.Repositories
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<List<Guid>> GetSubscriptionsByUserIdAsync(Guid userId)
+        public async Task<List<Guid>> GetSubscriptionsByUserIdAsync(Guid userId, int pageNumber, byte pageSize)
         {
-            return await _context.Subscriptions.Where(s => s.SubscribingToUserId == userId)
-                .Select(s => s.UserId).ToListAsync().ConfigureAwait(false)
-                ?? new List<Guid>();
+            int skip = pageNumber * pageSize;
+
+            List<Guid> subscriptionList = await _context.Subscriptions
+                .Where(s => s.SubscribingToUserId == userId)
+                .Skip(skip)
+                .Select(s => s.UserId)
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            return subscriptionList;
         }
 
         /// <summary>
@@ -72,5 +86,30 @@ namespace reeltok.api.users.Repositories
 
             return true;
         }
+
+        /// <summary>
+        /// Gets the total number of subscribers (followers) for a user.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<int> GetSubscribersCountAsync(Guid userId)
+        {
+            return await _context.Subscriptions
+                .CountAsync(s => s.UserId == userId)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Gets the total number of users that a user is following (subscriptions).
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<int> GetSubscriptionsCountAsync(Guid userId)
+        {
+            return await _context.Subscriptions
+                .CountAsync(s => s.SubscribingToUserId == userId)
+                .ConfigureAwait(false);
+        }
+
     }
 }

@@ -11,12 +11,19 @@ namespace reeltok.api.users.Services
         private readonly IUsersRepository _userRepository;
         private readonly IExternalApiService _externalApiService;
         private readonly IStorageService _storageService;
+        private readonly ISubscriptionsRepository _subscriptions;
 
-        public UsersService(IUsersRepository userRepository, IExternalApiService externalApiService, IStorageService storageService)
+        public UsersService(
+            IUsersRepository userRepository,
+            IExternalApiService externalApiService,
+            IStorageService storageService,
+            ISubscriptionsRepository subscriptionsRepository
+        )
         {
             _userRepository = userRepository;
             _externalApiService = externalApiService;
             _storageService = storageService;
+            _subscriptions = subscriptionsRepository;
         }
 
         public async Task<UserEntity> CreateUserAsync(string username, string email, string password, byte interests)
@@ -46,10 +53,14 @@ namespace reeltok.api.users.Services
             return createdUser;
         }
 
-        public async Task<UserEntity> GetUserByIdAsync(Guid userId)
+        public async Task<UserWithSubscriptionCounts> GetUserByIdAsync(Guid userId)
         {
-            UserEntity user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
-            return user;
+            ExternalUserEntity user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
+
+            int totalSubscriber = await _subscriptions.GetSubscribersCountAsync(userId).ConfigureAwait(false);
+            int totalSubscription = await _subscriptions.GetSubscriptionsCountAsync(userId).ConfigureAwait(false);
+
+            return new UserWithSubscriptionCounts(user, totalSubscriber, totalSubscription);
         }
 
         public async Task<UserEntity> UpdateUserAsync(Guid userId, string? username, string? email)

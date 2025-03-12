@@ -36,7 +36,9 @@ namespace reeltok.api.users.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserByIdAsync([FromQuery] Guid userId)
         {
-            UserEntity user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
+            UserWithSubscriptionCounts user = await _usersService
+                .GetUserByIdAsync(userId)
+                .ConfigureAwait(false);
 
             GetUserByIdResponseDto response = new GetUserByIdResponseDto(user);
             return Ok(response);

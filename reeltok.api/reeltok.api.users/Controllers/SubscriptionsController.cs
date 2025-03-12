@@ -47,21 +47,31 @@ namespace reeltok.api.users.Controllers
             return Ok(response);
         }
 
-        // TODO: Make this method support lazy loading
         [HttpGet("subscribers")]
-        public async Task<IActionResult> GetUserSubscribersAsync([FromQuery] Guid userId)
+        public async Task<IActionResult> GetUserSubscribersAsync(
+            [FromQuery] Guid userId,
+            [FromQuery] int pageNumber,
+            [FromQuery] byte pageSize
+        )
         {
-            List<ExternalUserEntity> subscribers = await _subscriptionService.GetSubscribersByUserIdAsync(userId).ConfigureAwait(false);
+            List<ExternalUserEntity> subscribers = await _subscriptionService
+                .GetSubscribersByUserIdAsync(userId, pageNumber, pageSize)
+                .ConfigureAwait(false);
 
             GetSubscribersResponseDto response = new GetSubscribersResponseDto(subscribers);
             return Ok(response);
         }
 
-        // TODO: Make this method support lazy loading
         [HttpGet("subscriptions")]
-        public async Task<IActionResult> GetUserSubscriptionsAsync([FromQuery] Guid userId)
+        public async Task<IActionResult> GetUserSubscriptionsAsync(
+            [FromQuery] Guid userId,
+            [FromQuery] int pageNumber,
+            [FromQuery] byte pageSize
+        )
         {
-            List<ExternalUserEntity> subscriptions = await _subscriptionService.GetSubscriptionsByUserIdAsync(userId).ConfigureAwait(false);
+            List<ExternalUserEntity> subscriptions = await _subscriptionService
+                .GetSubscriptionsByUserIdAsync(userId, pageNumber, pageSize)
+                .ConfigureAwait(false);
 
             GetSubscriptionsResponseDto response = new GetSubscriptionsResponseDto(subscriptions);
             return Ok(response);

@@ -8,12 +8,12 @@ import Setting from '../Setting'
 import React from 'react'
 
 const categories = [
-  { label: 'Gaming', value: 'Gaming' },
-  { label: 'Tech', value: 'Tech' },
-  { label: 'Dance', value: 'Dance' },
-  { label: 'Fight', value: 'Fight' },
-  { label: 'Sport', value: 'Sport' },
-  { label: 'Comedy', value: 'Comedy' },
+  { label: 'genre.gaming', value: 'Gaming' },
+  { label: 'genre.tech', value: 'Tech' },
+  { label: 'genre.dance', value: 'Dance' },
+  { label: 'genre.fight', value: 'Fight' },
+  { label: 'genre.sport', value: 'Sport' },
+  { label: 'genre.comedy', value: 'Comedy' },
 ]
 
 const RecommendationsSettingsSection: React.FC = () => {

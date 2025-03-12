@@ -14,12 +14,16 @@ namespace reeltok.api.users.Services
             _externalApiService = externalApiService;
         }
 
-        public async Task<UserEntity> LoginUserAsync(string email, string password)
+        public async Task<UserWithInterestEntity> LoginUserAsync(string email, string password)
         {
             UserEntity user = await _usersService.GetUserByEmail(email).ConfigureAwait(false);
             await _externalApiService.LoginUserInAuthApiAsync(user.UserId, password).ConfigureAwait(false);
 
-            return user;
+            byte interest = await _externalApiService
+                .GetUserInterestFromRecommendationsApiAsync(user.UserId)
+                .ConfigureAwait(false);
+
+            return new UserWithInterestEntity(user, interest);
         }
     }
 }

@@ -6,6 +6,7 @@ using reeltok.api.users.DTOs.LikeVideo;
 using reeltok.api.users.DTOs.RemoveLike;
 using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.DTOs.GetHasLikedVideoAsync;
+using reeltok.api.users.Entities;
 
 namespace reeltok.api.users.Controllers
 {
@@ -15,8 +16,6 @@ namespace reeltok.api.users.Controllers
     [Consumes("application/json")]
     public class LikesController : ControllerBase
     {
-        // TODO: Overall, add JsonProperty names to the DTOs. Do not use typeof! Look at video api for "inspiration".  
-
         private readonly ILikesService _likeVideoService;
 
         public LikesController(ILikesService likeVideoService)
@@ -28,10 +27,12 @@ namespace reeltok.api.users.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHasUserLikedVideosAsync([FromQuery] Guid userId, [FromQuery] List<Guid> videoIds)
         {
-            // TODO: Implement this! Follow the same code style, as elsewhere in the codebase.
+            List<HasUserLikedVideoEntity> likedVideos = await _likeVideoService
+                .GetHasUserLikedVideosAsync(userId, videoIds)
+                .ConfigureAwait(false);
 
-            //HasUserLikedVideosResponseDto response = new HasUserLikedVideosResponseDto();
-            return Ok(/* response */);
+            HasUserLikedVideosResponseDto response = new HasUserLikedVideosResponseDto(likedVideos);
+            return Ok(response);
         }
 
         // Called from Video API
