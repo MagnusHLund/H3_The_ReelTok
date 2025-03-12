@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using reeltok.api.gateway.Entities.Users;
 using System.ComponentModel.DataAnnotations;
 
-
 namespace reeltok.api.gateway.DTOs.Users.GetAllSubscriptionsForUser
 {
     public class ServiceGetAllSubscriptionsForUserResponseDto : BaseResponseDto
