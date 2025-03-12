@@ -45,7 +45,7 @@ namespace reeltok.api.gateway.Factories
         private string GetConfigurationValue(string apiName)
         {
             string baseMicroserviceAppSettingsConfigurationKey = "Microservices";
-            string configurationKey = $"{baseMicroserviceAppSettingsConfigurationKey}::{apiName}::Url";
+            string configurationKey = $"{baseMicroserviceAppSettingsConfigurationKey}:{apiName}:Url";
 
             return _appSettingsUtils.GetConfigurationValue(configurationKey);
         }
