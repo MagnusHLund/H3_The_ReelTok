@@ -15,8 +15,6 @@ namespace reeltok.api.users.Controllers
     [Consumes("application/json")]
     public class LikesController : ControllerBase
     {
-        // TODO: Overall, add JsonProperty names to the DTOs. Do not use typeof! Look at video api for "inspiration".  
-
         private readonly ILikesService _likeVideoService;
 
         public LikesController(ILikesService likeVideoService)

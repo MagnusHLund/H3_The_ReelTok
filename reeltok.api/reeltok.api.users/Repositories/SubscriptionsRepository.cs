@@ -86,5 +86,30 @@ namespace reeltok.api.users.Repositories
 
             return true;
         }
+
+        /// <summary>
+        /// Gets the total number of subscribers (followers) for a user.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<int> GetSubscribersCountAsync(Guid userId)
+        {
+            return await _context.Subscriptions
+                .CountAsync(s => s.UserId == userId)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Gets the total number of users that a user is following (subscriptions).
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<int> GetSubscriptionsCountAsync(Guid userId)
+        {
+            return await _context.Subscriptions
+                .CountAsync(s => s.SubscribingToUserId == userId)
+                .ConfigureAwait(false);
+        }
+
     }
 }
