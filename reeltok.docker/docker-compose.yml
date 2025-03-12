@@ -109,8 +109,7 @@ services:
     networks:
       - backend
     depends_on:
-      mssql:
-        condition: service_healthy
+      - mssql
 
   api-comments:
     build:
@@ -126,8 +125,7 @@ services:
     networks:
       - backend
     depends_on:
-      mssql:
-        condition: service_healthy
+      - mssql
 
   api-gateway:
     build:
@@ -148,8 +146,7 @@ services:
       - traefik
       - backend
     depends_on:
-      mssql:
-        condition: service_healthy
+      - mssql
 
   api-recommendations:
     build:
@@ -165,8 +162,7 @@ services:
     volumes:
       - ./config/appsettings.recommendations.json:/app/H3_The_ReelTok/reeltok.api/reeltok.api.recommendations/appsettings.json
     depends_on:
-      mssql:
-        condition: service_healthy
+      - mssql
 
   api-users:
     build:
@@ -182,8 +178,7 @@ services:
     networks:
       - backend
     depends_on:
-      mssql:
-        condition: service_healthy
+      - mssql
 
   api-videos:
     build:
@@ -199,8 +194,7 @@ services:
     networks:
       - backend
     depends_on:
-      mssql:
-        condition: service_healthy
+      - mssql
 
 networks:
   backend:
