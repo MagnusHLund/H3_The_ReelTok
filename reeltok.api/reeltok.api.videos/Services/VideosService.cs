@@ -41,8 +41,6 @@ namespace reeltok.api.videos.Services
 
             List<Guid> videoIds = await _externalApiService.GetRecommendedVideoIdsAsync(userId, amount).ConfigureAwait(false);
 
-
-            // TODO: please look into that amount that i am using in this method below just make sure that the value given is exactly what we need to send `GetVideosForFeedAsync(videoIds, amount)`.
             List<VideoEntity> videos = await _videosRepository.GetVideosForFeedAsync(videoIds, amount).ConfigureAwait(false);
 
             List<VideoCreatorEntity> videoCreatorDetails = await _externalApiService.GetVideoCreatorDetailsAsync(videoIds)
