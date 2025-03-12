@@ -8,6 +8,7 @@ import Section from '../../layout/common/Section'
 import { View, StyleSheet } from 'react-native'
 import Title from '../../layout/common/Title'
 import { useState } from 'react'
+import useTranslation from '../../../hooks/useTranslations'
 
 export const isImage = (uri: string) => {
   const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif']
@@ -16,6 +17,7 @@ export const isImage = (uri: string) => {
 
 const UploadVideo: React.FC = ({}) => {
   const route = useRoute()
+  const t = useTranslation()
   const uploadedVideo = useAppSelector((state) => state.upload.video)
 
   const [selectedCategory, setSelectedCategory] = useState<DropdownOption>()
@@ -25,12 +27,12 @@ const UploadVideo: React.FC = ({}) => {
   }
 
   const categories: DropdownOption[] = [
-    { label: 'Gaming', value: 'Gaming' },
-    { label: 'Tech', value: 'Tech' },
-    { label: 'Dance', value: 'Dance' },
-    { label: 'Fight', value: 'Fight' },
-    { label: 'Sport', value: 'Sport' },
-    { label: 'Comedy', value: 'Comedy' },
+    { label: t('genre.gaming'), value: 'Gaming' },
+    { label: t('genre.tech'), value: 'Tech' },
+    { label: t('genre.dance'), value: 'Dance' },
+    { label: t('genre.fight'), value: 'Fight' },
+    { label: t('genre.sport'), value: 'Sport' },
+    { label: t('genre.comedy'), value: 'Comedy' },
   ]
 
   const defaultOption: DropdownOption = {

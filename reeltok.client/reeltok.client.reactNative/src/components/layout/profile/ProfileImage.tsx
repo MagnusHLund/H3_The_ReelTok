@@ -3,16 +3,30 @@ import CustomButton from '../../input/CustomButton'
 import CustomImage from '../common/CustomImage'
 import React, { useState } from 'react'
 import Camera from '../camera/Camera'
+import useAppNavigation from '../../../hooks/useAppNavigation'
 
 interface ProfileImageProps {
   source: ImageSourcePropType
+  height?: number
+  width?: number
+  allowedToChangePicture: boolean
 }
 
-const ProfileImage: React.FC<ProfileImageProps> = ({ source }) => {
+const ProfileImage: React.FC<ProfileImageProps> = ({
+  source,
+  height = 80,
+  width = 80,
+  allowedToChangePicture,
+}) => {
   const [showCamera, setShowCamera] = useState(false)
+  const navigateToScreen = useAppNavigation()
 
   const handleShowCamera = () => {
-    setShowCamera(true)
+    if (allowedToChangePicture) {
+      setShowCamera(true)
+    } else {
+      navigateToScreen('Profile')
+    }
   }
 
   const handleHideCamera = () => {
@@ -28,8 +42,8 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ source }) => {
           <CustomButton onPress={handleShowCamera} transparent>
             <CustomImage
               resizeMode="cover"
-              height={80}
-              width={80}
+              height={height}
+              width={width}
               borderRadius={50}
               source={source}
             />
@@ -43,12 +57,14 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ source }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    zIndex: 2,
   },
   ProfilePicture: {
+    top: 100,
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingTop: 60,
+    alignItems: 'flex-start',
+    zIndex: 3,
   },
 })
 

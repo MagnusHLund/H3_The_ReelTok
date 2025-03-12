@@ -25,6 +25,23 @@
   </settings>
   <profile>
     <posts>Indlæg</posts>
-    
   </profile>
+    <video>
+    <username>Intet brugernavn</username>
+    <title>Ingen title.</title>
+    <description>Ingen beskrivelse.</description>
+  </video>
+    <upload>
+      <title>Title</title>
+    <description>Beskrivelse</description>
+    <category>Kategori</category>
+  </upload>
+  <genre>
+      <gaming>Computer spil</gaming>
+    <tech>Teknik</tech>
+    <dance>Danse</dance>
+    <fight>Slåskamp</fight>
+    <sport>Sport</sport>
+    <comedy>Komedie</comedy>
+  </genre>
 </translations>
