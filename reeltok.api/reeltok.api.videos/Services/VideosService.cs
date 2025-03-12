@@ -38,8 +38,16 @@ namespace reeltok.api.videos.Services
 
         public async Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(Guid userId, byte amount)
         {
+            List<Guid> videoIds;
 
-            List<Guid> videoIds = await _externalApiService.GetRecommendedVideoIdsAsync(userId, amount).ConfigureAwait(false);
+            if (userId == Guid.Empty)
+            {
+                videoIds = await _externalApiService.GetRecommendedVideoIdsAsync(userId, amount).ConfigureAwait(false);
+            }
+            else
+            {
+                videoIds = await _videosRepository.GetRandomVideoIdsAsync(userId, amount).ConfigureAwait(false);
+            }
 
             List<VideoEntity> videos = await _videosRepository.GetVideosForFeedAsync(videoIds, amount).ConfigureAwait(false);
 

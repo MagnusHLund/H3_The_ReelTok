@@ -13,7 +13,7 @@ namespace reeltok.api.videos.Repositories
         {
             _context = context;
         }
-        
+
         public async Task<VideoEntity> CreateVideoAsync(VideoEntity video)
         {
             VideoEntity videoEntity = (await _context.Videos.AddAsync(video).ConfigureAwait(false)).Entity;
@@ -65,6 +65,19 @@ namespace reeltok.api.videos.Repositories
                 .ConfigureAwait(false);
 
             return videoForProfile;
+        }
+
+        public async Task<List<Guid>> GetRandomVideoIdsAsync(Guid userId, byte amount)
+        {
+            List<Guid> randomVideoIds = await _context.Videos
+                .Where(v => v.UserId != userId)
+                .OrderBy(r => Guid.NewGuid())
+                .Select(v => v.VideoId)
+                .Take(amount)
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            return randomVideoIds;
         }
     }
 }

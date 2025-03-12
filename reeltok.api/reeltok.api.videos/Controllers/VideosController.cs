@@ -28,11 +28,12 @@ namespace reeltok.api.videos.Controllers
         [HttpGet]
         [Route("feed")]
         public async Task<IActionResult> GetVideosForFeedAsync(
-            [FromQuery] Guid userId,
-            [FromQuery] byte amount
+            [FromQuery] byte amount,
+            [FromQuery] Guid? userId = null
         )
         {
-            List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(userId, amount).ConfigureAwait(false);
+            Guid userIdOrDefault = userId ?? Guid.Empty;
+            List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(userIdOrDefault, amount).ConfigureAwait(false);
 
             GetVideosForFeedResponseDto responseDto = new GetVideosForFeedResponseDto(videos);
             return Ok(responseDto);
