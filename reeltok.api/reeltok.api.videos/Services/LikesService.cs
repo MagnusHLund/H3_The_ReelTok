@@ -17,18 +17,32 @@ namespace reeltok.api.videos.Services
 
         public async Task<bool> LikeVideoAsync(Guid userId, Guid videoId)
         {
-            // TODO: Modify total video likes in the database
+            await _likesRepository.IncrementTotalLikesAsync(videoId).ConfigureAwait(false);
 
-            bool success = await _externalApiService.LikeVideoAsync(userId, videoId).ConfigureAwait(false);
-            return success;
+            try
+            {
+                return await _externalApiService.LikeVideoAsync(userId, videoId).ConfigureAwait(false);
+            }
+            catch
+            {
+                await _likesRepository.DecrementTotalLikesAsync(videoId).ConfigureAwait(false);
+                throw;
+            }
         }
 
         public async Task<bool> RemoveLikeFromVideoAsync(Guid userId, Guid videoId)
         {
-            // TODO: Modify total video likes in the database
+            await _likesRepository.DecrementTotalLikesAsync(videoId).ConfigureAwait(false);
 
-            bool success = await _externalApiService.RemoveLikeFromVideoAsync(userId, videoId).ConfigureAwait(false);
-            return success;
+            try
+            {
+                return await _externalApiService.RemoveLikeFromVideoAsync(userId, videoId).ConfigureAwait(false);
+            }
+            catch
+            {
+                await _likesRepository.IncrementTotalLikesAsync(videoId).ConfigureAwait(false);
+                throw;
+            }
         }
 
         public async Task<List<VideoLikesEntity>> GetLikesForVideos(Guid userId, List<Guid> videoIds)
@@ -44,5 +58,7 @@ namespace reeltok.api.videos.Services
 
             return videoLikes;
         }
+
+
     }
 }

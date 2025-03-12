@@ -13,18 +13,44 @@ namespace reeltok.api.videos.Repositories
             _context = context;
         }
 
-        // TODO: Add repository logic
         public async Task<List<TotalVideoLikesEntity>> GetTotalLikesForVideosAsync(List<Guid> videoIds)
-        { /*
-            VideoTotalLikesEntity video = await _context.VideosLikes
+        {
+            List<TotalVideoLikesEntity> totalLikes = await _context.VideosLikes
+                .Where(v => videoIds.Contains(v.VideoId))
+                .Select(v => new TotalVideoLikesEntity(v.VideoId, v.TotalLikes))
                 .AsNoTracking()
-                .FirstOrDefaultAsync(v => v.VideoId == videoIds)
-                .ConfigureAwait(false)
-                ?? throw new InvalidOperationException("Unable to find video!");
+                .ToListAsync()
+                .ConfigureAwait(false);
 
-            return video.TotalLikes; */
+            return totalLikes;
+        }
 
-            throw new NotImplementedException("");
+        // Increment TotalLikes
+        public async Task IncrementTotalLikesAsync(Guid videoId)
+        {
+            VideoTotalLikesEntity? videoLikeEntity = await _context.VideosLikes
+                .FirstOrDefaultAsync(vl => vl.VideoId == videoId).ConfigureAwait(false)
+                ?? throw new KeyNotFoundException($"Unable to find likes for video id: {videoId}");
+
+            videoLikeEntity.TotalLikes += 1;
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+
+        }
+
+        // Decrement TotalLikes
+        public async Task DecrementTotalLikesAsync(Guid videoId)
+        {
+            VideoTotalLikesEntity? videoLikeEntity = await _context.VideosLikes
+                .FirstOrDefaultAsync(vl => vl.VideoId == videoId).ConfigureAwait(false)
+                ?? throw new KeyNotFoundException($"Unable to find likes for video id: {videoId}");
+
+            if (videoLikeEntity.TotalLikes < 0)
+            {
+                throw new Exception("Cannot decrement likes. Total likes are already 0.");
+            }
+
+            videoLikeEntity.TotalLikes -= 1;
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

@@ -38,8 +38,10 @@ namespace reeltok.api.videos.Services
 
         public async Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(Guid userId, byte amount)
         {
+
             List<Guid> videoIds = await _externalApiService.GetRecommendedVideoIdsAsync(userId, amount).ConfigureAwait(false);
-            List<VideoEntity> videos = await _videosRepository.GetVideosForFeedAsync(videoIds).ConfigureAwait(false);
+
+            List<VideoEntity> videos = await _videosRepository.GetVideosForFeedAsync(videoIds, amount).ConfigureAwait(false);
 
             List<VideoCreatorEntity> videoCreatorDetails = await _externalApiService.GetVideoCreatorDetailsAsync(videoIds)
                 .ConfigureAwait(false);
@@ -58,7 +60,6 @@ namespace reeltok.api.videos.Services
 
         public async Task<List<VideoEntity>> GetVideosForProfileAsync(Guid userId, uint pageNumber, byte pageSize)
         {
-            // Gets videos uploaded by the user that you're currently on
             List<VideoEntity> videosUploadedByUser = await _videosRepository
                 .GetVideosForProfileAsync(userId, pageNumber, pageSize)
                 .ConfigureAwait(false);
@@ -66,14 +67,16 @@ namespace reeltok.api.videos.Services
             return videosUploadedByUser;
         }
 
-        public async Task<VideoEntity> UploadVideoAsync(VideoUpload video, Guid userId)
+        public async Task<VideoEntity> UploadVideoAsync(VideoUpload video, Guid userId, byte category)
         {
             await VideoUtils.EnsureValidVideoFile(video.VideoFile).ConfigureAwait(false);
 
             VideoEntity videoToUpload = VideoMapper.ConvertVideoUploadToVideoEntity(video, userId);
             VideoEntity videoEntity = await _videosRepository.CreateVideoAsync(videoToUpload).ConfigureAwait(false);
 
-            // TODO: Call recommendations api to add the video in its database
+            await _externalApiService.AddVideoToRecommendationsApi(
+                videoEntity.VideoId, category)
+                .ConfigureAwait(false);
 
             try
             {
@@ -83,8 +86,7 @@ namespace reeltok.api.videos.Services
             }
             catch
             {
-                // TODO: Uncomment below, once method is implemented!
-                //await _videosRepository.DeleteVideoAsync(videoEntity.VideoId, userId).ConfigureAwait(false);
+                await _videosRepository.DeleteVideoAsync(videoEntity.VideoId, userId).ConfigureAwait(false);
                 throw;
             }
 
