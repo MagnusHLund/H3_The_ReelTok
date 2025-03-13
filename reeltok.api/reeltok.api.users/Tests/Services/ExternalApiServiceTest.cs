@@ -38,7 +38,7 @@ namespace reeltok.api.users.Tests.Services
 
             _mockEndpointFactory.Setup(x => x.GetAuthApiUrl(It.IsAny<string>())).Returns(targetUrl);
             _mockHttpService.Setup(x => x.ProcessRequestAsync<AuthServiceCreateUserRequestDto, AuthServiceCreateUserResponseDto>(
-                It.IsAny<AuthServiceCreateUserRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                It.IsAny<AuthServiceCreateUserRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false))
                 .ReturnsAsync(responseDto);
 
             // Act
@@ -46,7 +46,7 @@ namespace reeltok.api.users.Tests.Services
 
             // Assert
             _mockHttpService.Verify(x => x.ProcessRequestAsync<AuthServiceCreateUserRequestDto, AuthServiceCreateUserResponseDto>(
-                It.IsAny<AuthServiceCreateUserRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()), Times.Once);
+                It.IsAny<AuthServiceCreateUserRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false), Times.Once);
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace reeltok.api.users.Tests.Services
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
             _mockHttpService.Setup(x => x.ProcessRequestAsync<RecommendationsServiceCreateUserRequestDto, RecommendationsServiceCreateUserResponseDto>(
-                It.IsAny<RecommendationsServiceCreateUserRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                It.IsAny<RecommendationsServiceCreateUserRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false))
                 .ReturnsAsync(responseDto);
 
             // Act
@@ -68,7 +68,7 @@ namespace reeltok.api.users.Tests.Services
 
             // Assert
             _mockHttpService.Verify(x => x.ProcessRequestAsync<RecommendationsServiceCreateUserRequestDto, RecommendationsServiceCreateUserResponseDto>(
-                It.IsAny<RecommendationsServiceCreateUserRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()), Times.Once);
+                It.IsAny<RecommendationsServiceCreateUserRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false), Times.Once);
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace reeltok.api.users.Tests.Services
 
             _mockEndpointFactory.Setup(x => x.GetAuthApiUrl(It.IsAny<string>())).Returns(targetUrl);
             _mockHttpService.Setup(x => x.ProcessRequestAsync<AuthServiceLoginRequestDto, AuthServiceLoginResponseDto>(
-                It.IsAny<AuthServiceLoginRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                It.IsAny<AuthServiceLoginRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false))
                 .ReturnsAsync(responseDto);
 
             // Act
@@ -90,7 +90,7 @@ namespace reeltok.api.users.Tests.Services
 
             // Assert
             _mockHttpService.Verify(x => x.ProcessRequestAsync<AuthServiceLoginRequestDto, AuthServiceLoginResponseDto>(
-                It.IsAny<AuthServiceLoginRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()), Times.Once);
+                It.IsAny<AuthServiceLoginRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false), Times.Once);
         }
 
         [Fact]
@@ -103,7 +103,7 @@ namespace reeltok.api.users.Tests.Services
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
             _mockHttpService.Setup(x => x.ProcessRequestAsync<RecommendationServiceGetUserInterestRequestDto, RecommendationServiceGetUserInterestResponseDto>(
-                It.IsAny<RecommendationServiceGetUserInterestRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                It.IsAny<RecommendationServiceGetUserInterestRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false))
                 .ReturnsAsync(responseDto);
 
             // Act
@@ -128,7 +128,7 @@ namespace reeltok.api.users.Tests.Services
 
             _mockEndpointFactory.Setup(x => x.GetAuthApiUrl(It.IsAny<string>())).Returns(targetUrl);
             _mockHttpService.Setup(x => x.ProcessRequestAsync<AuthServiceCreateUserRequestDto, BaseResponseDto>(
-                It.IsAny<AuthServiceCreateUserRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                It.IsAny<AuthServiceCreateUserRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false))
                 .ReturnsAsync(responseDto);
 
             // Act & Assert
@@ -147,7 +147,7 @@ namespace reeltok.api.users.Tests.Services
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
             _mockHttpService.Setup(x => x.ProcessRequestAsync<RecommendationsServiceCreateUserRequestDto, BaseResponseDto>(
-                It.IsAny<RecommendationsServiceCreateUserRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                It.IsAny<RecommendationsServiceCreateUserRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false))
                 .ReturnsAsync(responseDto);
 
             // Act & Assert
@@ -166,7 +166,7 @@ namespace reeltok.api.users.Tests.Services
 
             _mockEndpointFactory.Setup(x => x.GetAuthApiUrl(It.IsAny<string>())).Returns(targetUrl);
             _mockHttpService.Setup(x => x.ProcessRequestAsync<AuthServiceLoginRequestDto, BaseResponseDto>(
-                It.IsAny<AuthServiceLoginRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                It.IsAny<AuthServiceLoginRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false))
                 .ReturnsAsync(responseDto);
 
             // Act & Assert
@@ -184,7 +184,7 @@ namespace reeltok.api.users.Tests.Services
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
             _mockHttpService.Setup(x => x.ProcessRequestAsync<RecommendationServiceGetUserInterestRequestDto, BaseResponseDto>(
-                It.IsAny<RecommendationServiceGetUserInterestRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                It.IsAny<RecommendationServiceGetUserInterestRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false))
                 .ReturnsAsync(responseDto);
 
             // Act & Assert

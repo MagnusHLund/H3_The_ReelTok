@@ -1,11 +1,6 @@
 using Moq;
 using reeltok.api.users.Entities;
 using reeltok.api.users.ValueObjects;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.Interfaces.Repositories;
 
 namespace reeltok.api.users.Tests.Factories
@@ -45,9 +40,7 @@ namespace reeltok.api.users.Tests.Factories
         public static UserWithSubscriptionCounts CreateMockUserWithSubscriptionCounts(Guid userId, string username, string email, int subscriptionCount, int otherCount)
         {
             UserDetails userDetails = new UserDetails(username, email, "http://example.com/profile.jpg");
-            HiddenUserDetails hiddenUserDetails = new HiddenUserDetails(email);
-            ExternalUserEntity externalUserEntity = new ExternalUserEntity(userId, userDetails);
-            return new UserWithSubscriptionCounts(externalUserEntity, subscriptionCount, otherCount);
+            return new UserWithSubscriptionCounts(userId, userDetails, subscriptionCount, otherCount);
         }
 
         public static List<HasUserLikedVideoEntity> CreateHasUserLikedVideoEntities(List<Guid> videoIds)
