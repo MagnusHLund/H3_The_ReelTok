@@ -26,7 +26,9 @@ namespace reeltok.api.auth.Services
 
         public async Task<Tokens> LoginUserAsync(Credentials loginCredentials)
         {
-            UserCredentialsEntity existingUser = await _authRepository.GetUserCredentialsByUserId(loginCredentials.UserId).ConfigureAwait(false);
+            UserCredentialsEntity existingUser = await _authRepository
+                .GetUserCredentialsByUserId(loginCredentials.UserId)
+                .ConfigureAwait(false);
 
             bool isPasswordValid = PasswordUtils
                 .VerifyPassword(loginCredentials.PlainTextPassword, existingUser.HashedPasswordDetails);
@@ -36,10 +38,12 @@ namespace reeltok.api.auth.Services
                 throw new InvalidCredentialException("Invalid credentials!");
             }
 
-            AccessToken accessToken = await _tokenGenerationService.GenerateAccessToken(existingUser.UserId)
+            AccessToken accessToken = await _tokenGenerationService
+                .GenerateAccessToken(existingUser.UserId)
                 .ConfigureAwait(false);
 
-            RefreshToken refreshToken = await _tokenGenerationService.GenerateRefreshToken(existingUser.UserId)
+            RefreshToken refreshToken = await _tokenGenerationService
+                .GenerateRefreshToken(existingUser.UserId)
                 .ConfigureAwait(false);
 
             return new Tokens(
