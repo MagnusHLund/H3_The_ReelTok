@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using reeltok.api.users.Interfaces.Services;
 
 namespace reeltok.api.users.Tests.Factories
 {
@@ -57,6 +58,44 @@ namespace reeltok.api.users.Tests.Factories
         public static LikedDetails CreateLikedDetails(Guid userId, Guid videoId)
         {
             return new LikedDetails(userId, videoId);
+        }
+
+        public static UserEntity CreateUserEntity(Guid userId, string username, string email)
+        {
+            UserDetails userDetails = new UserDetails(username, "https://example.com/profile", "ProfilePictureUrlPath");
+            HiddenUserDetails hiddenUserDetails = new HiddenUserDetails(email);
+            return new UserEntity(userId, userDetails, hiddenUserDetails);
+        }
+
+        public static UserWithInterestEntity CreateUserWithInterestEntity(Guid userId, byte interest)
+        {
+            UserDetails userDetails = new UserDetails("Test User", "https://example.com/profile", "ProfilePictureUrlPath");
+            ExternalUserEntity externalUserEntity = new ExternalUserEntity(userId, userDetails);
+            return new UserWithInterestEntity(externalUserEntity, interest);
+        }
+
+        public static Mock<IUsersService> CreateMockUsersService(UserEntity userEntity)
+        {
+            Mock<IUsersService> mockUsersService = new Mock<IUsersService>();
+            mockUsersService.Setup(x => x.GetUserByEmail(It.IsAny<string>())).ReturnsAsync(userEntity);
+            return mockUsersService;
+        }
+
+        public static Mock<IExternalApiService> CreateMockExternalApiService(Guid userId, byte userInterest, string password)
+        {
+            Mock<IExternalApiService> mockExternalApiService = new Mock<IExternalApiService>();
+            mockExternalApiService.Setup(x => x.LoginUserInAuthApiAsync(userId, password)).Returns(Task.CompletedTask);
+            mockExternalApiService.Setup(x => x.GetUserInterestFromRecommendationsApiAsync(userId)).ReturnsAsync(userInterest);
+            return mockExternalApiService;
+        }
+
+        // Optionally, you can create mock failure cases as well.
+        public static Mock<IExternalApiService> CreateMockExternalApiServiceWithFailure(Guid userId)
+        {
+            Mock<IExternalApiService> mockExternalApiService = new Mock<IExternalApiService>();
+            mockExternalApiService.Setup(x => x.GetUserInterestFromRecommendationsApiAsync(userId))
+                                   .ThrowsAsync(new Exception("Failed to retrieve interest"));
+            return mockExternalApiService;
         }
     }
 }
