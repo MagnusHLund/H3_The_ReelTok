@@ -31,7 +31,7 @@ namespace reeltok.api.users.Tests.Services
             // Arrange
             string email = "test@example.com";
             string password = "password";
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
             byte userInterest = 5;
             UserEntity userEntity = TestDataFactory.CreateUserEntity(userId, "Manike", "test@example.com");
 
@@ -72,7 +72,7 @@ namespace reeltok.api.users.Tests.Services
             // Arrange
             string email = "test@example.com";
             string password = "wrongPassword";
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
             UserEntity userEntity = TestDataFactory.CreateUserEntity(userId, "Manike", "test@example.com");
 
             _mockUsersService.Setup(x => x.GetUserByEmail(email)).ReturnsAsync(userEntity);
@@ -90,7 +90,7 @@ namespace reeltok.api.users.Tests.Services
             // Arrange
             string email = "test@example.com";
             string password = "password";
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
             UserEntity userEntity = TestDataFactory.CreateUserEntity(userId, "Manike", "test@example.com");
 
             _mockUsersService.Setup(x => x.GetUserByEmail(email)).ReturnsAsync(userEntity);
