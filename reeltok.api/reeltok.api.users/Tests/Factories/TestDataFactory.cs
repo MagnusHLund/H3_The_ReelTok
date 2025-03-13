@@ -6,13 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using reeltok.api.users.Interfaces.Services;
+using reeltok.api.users.Interfaces.Repositories;
 
 namespace reeltok.api.users.Tests.Factories
 {
     public static class TestDataFactory
     {
         // Generates a new User ID
-        public static Guid GenerateUserId()
+        public static Guid GenerateGuid()
         {
             return Guid.NewGuid();
         }
@@ -97,5 +98,37 @@ namespace reeltok.api.users.Tests.Factories
                                    .ThrowsAsync(new Exception("Failed to retrieve interest"));
             return mockExternalApiService;
         }
+
+        public static LikedVideoEntity CreateLikedVideoEntity(Guid userId, Guid videoId)
+        {
+            return new LikedVideoEntity(userId, videoId);
+        }
+
+        public static UserWithSubscriptionCounts CreateMockUserWithSubscriptionCounts(Guid userId, string username, string email, int subscriptionCount, int otherCount)
+        {
+            UserDetails userDetails = new UserDetails(username, email, "http://example.com/profile.jpg");
+            HiddenUserDetails hiddenUserDetails = new HiddenUserDetails(email);
+            ExternalUserEntity externalUserEntity = new ExternalUserEntity(userId, userDetails);
+            return new UserWithSubscriptionCounts(externalUserEntity, subscriptionCount, otherCount);
+        }
+
+        public static List<HasUserLikedVideoEntity> CreateHasUserLikedVideoEntities(List<Guid> videoIds)
+        {
+            return videoIds.Select((videoId, index) => new HasUserLikedVideoEntity(videoId, index % 2 == 0)).ToList();
+        }
+
+        public static Mock<ILikesRepository> CreateMockLikesRepository()
+        {
+            var mockLikesRepository = new Mock<ILikesRepository>();
+            return mockLikesRepository;
+        }
+
+        public static Mock<IUsersService> CreateMockUsersService(UserWithSubscriptionCounts mockUserWithSubscriptionCounts)
+        {
+            var mockUsersService = new Mock<IUsersService>();
+            mockUsersService.Setup(x => x.GetUserByIdAsync(It.IsAny<Guid>())).ReturnsAsync(mockUserWithSubscriptionCounts);
+            return mockUsersService;
+        }
+
     }
 }
