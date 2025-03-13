@@ -9,6 +9,7 @@ using reeltok.api.auth.Interfaces.Services;
 using reeltok.api.auth.Services;
 using System.Security.Claims;
 using System.ComponentModel.DataAnnotations;
+using reeltok.api.auth.Tests.Factories;
 
 namespace reeltok.api.auth.Tests.Services
 {
@@ -36,7 +37,7 @@ namespace reeltok.api.auth.Tests.Services
         {
             // Arrange
             string accessTokenValue = "validAccessToken";
-            Guid expectedUserId = Guid.NewGuid();
+            Guid expectedUserId = TestDataFactory.GenerateGuid();
             ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.NameIdentifier, expectedUserId.ToString())
@@ -61,7 +62,7 @@ namespace reeltok.api.auth.Tests.Services
 
             _tokenValidationServiceMock
                 .Setup(service => service.DecodeAccessToken(accessTokenValue))
-                .Returns((ClaimsPrincipal)null);
+                .Returns((ClaimsPrincipal) null);
 
             // Act & Assert
             Assert.Throws<FormatException>(() => _usersService.GetUserIdByAccessTokenAsync(accessTokenValue));
@@ -71,11 +72,11 @@ namespace reeltok.api.auth.Tests.Services
         public async Task SignUpAsync_Success()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
             string plainTextPassword = "ValidPassword123!";
             Credentials userCredentials = new Credentials(userId, plainTextPassword);
-            HashedPasswordDetails hashedPasswordDetails = new HashedPasswordDetails("hashedPassword", "salt");
-            UserCredentialsEntity userCredentialsEntity = new UserCredentialsEntity(userId, hashedPasswordDetails);
+            UserCredentialsEntity userCredentialsEntity = TestDataFactory
+                .GenerateUserCredentialsEntity(userId, "hashedPassword", "salt");
             AccessToken accessToken = new AccessToken("accessTokenValue", 1234567890, 1234567990);
             RefreshToken refreshToken = new RefreshToken("refreshTokenValue", 1234567890, 1234569990);
 
@@ -104,7 +105,7 @@ namespace reeltok.api.auth.Tests.Services
         public async Task SignUpAsync_Failure_UserExists()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
             string plainTextPassword = "ValidPassword123!";
             Credentials userCredentials = new Credentials(userId, plainTextPassword);
 
@@ -120,7 +121,7 @@ namespace reeltok.api.auth.Tests.Services
         public async Task DeleteUser_Success()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
 
             _authRepositoryMock
                 .Setup(repo => repo.DeleteUser(userId))
@@ -137,7 +138,7 @@ namespace reeltok.api.auth.Tests.Services
         public async Task DeleteUser_Failure()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
 
             _authRepositoryMock
                 .Setup(repo => repo.DeleteUser(userId))
