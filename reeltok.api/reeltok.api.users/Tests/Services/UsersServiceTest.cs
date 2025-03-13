@@ -205,7 +205,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task GetUsersByIdsAsync_ReturnsUsers()
         {
             // Arrange
-            List<Guid> userIds = new List<Guid> { TestDataFactory.GenerateUserId(), TestDataFactory.GenerateUserId() };
+            List<Guid> userIds = new List<Guid> { TestDataFactory.GenerateGuid(), TestDataFactory.GenerateGuid() };
             List<UserEntity> users = TestDataFactory.CreateUserEntitiesList(userIds);
 
             _mockUserRepository.Setup(x => x.GetUsersByUserIdsAsync(userIds)).ReturnsAsync(users);
