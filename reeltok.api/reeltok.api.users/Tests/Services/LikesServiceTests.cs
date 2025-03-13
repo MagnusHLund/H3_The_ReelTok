@@ -5,6 +5,10 @@ using reeltok.api.users.Services;
 using reeltok.api.users.Interfaces.Repositories;
 using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.ValueObjects;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using reeltok.api.users.Tests.Factories;
 
 namespace reeltok.api.users.Tests.Services
 {
@@ -16,7 +20,7 @@ namespace reeltok.api.users.Tests.Services
 
         public LikesServiceTests()
         {
-            _mockLikesRepository = new Mock<ILikesRepository>();
+            _mockLikesRepository = TestDataFactory.CreateMockLikesRepository();
             _mockUsersService = new Mock<IUsersService>();
             _likesService = new LikesService(_mockLikesRepository.Object, _mockUsersService.Object);
         }
@@ -27,21 +31,11 @@ namespace reeltok.api.users.Tests.Services
         public async Task AddToLikedVideosAsync_WithValidDetails_ReturnsTrue()
         {
             // Arrange
-            LikedDetails likedDetails = new LikedDetails(Guid.NewGuid(), Guid.NewGuid());
+            LikedDetails likedDetails = TestDataFactory
+                .CreateLikedDetails(TestDataFactory.GenerateGuid(), TestDataFactory.GenerateGuid());
 
-            // Create the required instances for the constructor of UserWithSubscriptionCounts
-            Guid userId = Guid.NewGuid();
-            UserDetails userDetails = new UserDetails("testUser", "test@example.com", "http://example.com/profile.jpg"); // Assuming this is a valid constructor
-            HiddenUserDetails hiddenUserDetails = new HiddenUserDetails("true@mail.com"); // Assuming this is a valid constructor
-            int subscriptionCount = 5;
-            int otherCount = 10;
-
-            ExternalUserEntity externalUserEntity = new ExternalUserEntity(userId, userDetails);
-
-            // Manually create an instance of UserWithSubscriptionCounts
-            UserWithSubscriptionCounts mockUserWithSubscriptionCounts = new UserWithSubscriptionCounts(externalUserEntity, subscriptionCount, otherCount);
-
-            // Setup the mock to return the created object
+            UserWithSubscriptionCounts mockUserWithSubscriptionCounts = TestDataFactory
+                .CreateMockUserWithSubscriptionCounts(TestDataFactory.GenerateGuid(), "testUser", "test@example.com", 5, 10);
             _mockUsersService.Setup(x => x.GetUserByIdAsync(It.IsAny<Guid>())).ReturnsAsync(mockUserWithSubscriptionCounts);
             _mockLikesRepository.Setup(x => x.AddToLikedVideoAsync(It.IsAny<LikedVideoEntity>())).ReturnsAsync(true);
 
@@ -52,14 +46,12 @@ namespace reeltok.api.users.Tests.Services
             Assert.True(result);
         }
 
-
-
         [Fact]
         public async Task RemoveFromLikedVideosAsync_WithValidUserIdAndVideoId_ReturnsTrue()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            Guid likedVideoId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
+            Guid likedVideoId = TestDataFactory.GenerateGuid();
             _mockLikesRepository.Setup(x => x.RemoveFromLikedVideoAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
 
             // Act
@@ -73,13 +65,9 @@ namespace reeltok.api.users.Tests.Services
         public async Task GetHasUserLikedVideosAsync_WithValidData_ReturnsCorrectLikedStatus()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            List<Guid> videoIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
-            List<HasUserLikedVideoEntity> likedVideos = new List<HasUserLikedVideoEntity>
-            {
-                new HasUserLikedVideoEntity(videoIds[0], true),
-                new HasUserLikedVideoEntity(videoIds[1], false)
-            };
+            Guid userId = TestDataFactory.GenerateGuid();
+            List<Guid> videoIds = new List<Guid> { TestDataFactory.GenerateGuid(), TestDataFactory.GenerateGuid() };
+            List<HasUserLikedVideoEntity> likedVideos = TestDataFactory.CreateHasUserLikedVideoEntities(videoIds);
 
             _mockLikesRepository.Setup(x => x.CheckUserLikesForVideosAsync(It.IsAny<Guid>(), It.IsAny<List<Guid>>())).ReturnsAsync(likedVideos);
 
@@ -100,7 +88,8 @@ namespace reeltok.api.users.Tests.Services
         public async Task AddToLikedVideosAsync_WithNonExistingUser_ThrowsException()
         {
             // Arrange
-            LikedDetails likedDetails = new LikedDetails(Guid.NewGuid(), Guid.NewGuid());
+            LikedDetails likedDetails = TestDataFactory
+                .CreateLikedDetails(TestDataFactory.GenerateGuid(), TestDataFactory.GenerateGuid());
 
             // Mock the user service to return null (simulating a non-existing user)
             _mockUsersService.Setup(x => x.GetUserByIdAsync(It.IsAny<Guid>())).ReturnsAsync((UserWithSubscriptionCounts) null);
@@ -115,14 +104,12 @@ namespace reeltok.api.users.Tests.Services
             Assert.Contains("Repository error", exception.Message);
         }
 
-
-
         [Fact]
         public async Task RemoveFromLikedVideosAsync_WithInvalidVideoId_ReturnsFalse()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            Guid likedVideoId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
+            Guid likedVideoId = TestDataFactory.GenerateGuid();
             _mockLikesRepository.Setup(x => x.RemoveFromLikedVideoAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(false);
 
             // Act
@@ -136,8 +123,8 @@ namespace reeltok.api.users.Tests.Services
         public async Task GetHasUserLikedVideosAsync_WithInvalidData_ThrowsException()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            List<Guid> videoIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+            Guid userId = TestDataFactory.GenerateGuid();
+            List<Guid> videoIds = new List<Guid> { TestDataFactory.GenerateGuid(), TestDataFactory.GenerateGuid() };
 
             _mockLikesRepository.Setup(x => x.CheckUserLikesForVideosAsync(It.IsAny<Guid>(), It.IsAny<List<Guid>>()))
                 .ThrowsAsync(new Exception("Failed to check likes"));
