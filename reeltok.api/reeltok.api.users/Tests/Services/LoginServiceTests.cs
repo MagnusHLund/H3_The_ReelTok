@@ -4,6 +4,9 @@ using reeltok.api.users.Entities;
 using reeltok.api.users.Services;
 using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.ValueObjects;
+using System;
+using System.Threading.Tasks;
+using reeltok.api.users.Tests.Factories;
 
 namespace reeltok.api.users.Tests.Services
 {
@@ -30,9 +33,7 @@ namespace reeltok.api.users.Tests.Services
             string password = "password";
             Guid userId = Guid.NewGuid();
             byte userInterest = 5;
-            UserDetails userDetails = new UserDetails("Manike", "httpsSomethingSomething", "ProfilePictureUrlPath");
-            HiddenUserDetails hiddenUserDetails = new HiddenUserDetails("test@mail.com");
-            UserEntity userEntity = new UserEntity(userId, userDetails, hiddenUserDetails);
+            UserEntity userEntity = TestDataFactory.CreateUserEntity(userId, "Manike", "test@example.com");
 
             _mockUsersService.Setup(x => x.GetUserByEmail(email)).ReturnsAsync(userEntity);
             _mockExternalApiService.Setup(x => x.LoginUserInAuthApiAsync(userId, password)).Returns(Task.CompletedTask);
@@ -72,9 +73,7 @@ namespace reeltok.api.users.Tests.Services
             string email = "test@example.com";
             string password = "wrongPassword";
             Guid userId = Guid.NewGuid();
-            UserDetails userDetails = new UserDetails("Manike", "httpsSomethingSomething", "ProfilePictureUrlPath");
-            HiddenUserDetails hiddenUserDetails = new HiddenUserDetails("test@mail.com");
-            UserEntity userEntity = new UserEntity(userId, userDetails, hiddenUserDetails);
+            UserEntity userEntity = TestDataFactory.CreateUserEntity(userId, "Manike", "test@example.com");
 
             _mockUsersService.Setup(x => x.GetUserByEmail(email)).ReturnsAsync(userEntity);
             _mockExternalApiService.Setup(x => x.LoginUserInAuthApiAsync(userId, password))
@@ -92,9 +91,7 @@ namespace reeltok.api.users.Tests.Services
             string email = "test@example.com";
             string password = "password";
             Guid userId = Guid.NewGuid();
-            UserDetails userDetails = new UserDetails("Manike", "httpsSomethingSomething", "ProfilePictureUrlPath");
-            HiddenUserDetails hiddenUserDetails = new HiddenUserDetails("test@mail.com");
-            UserEntity userEntity = new UserEntity(userId, userDetails, hiddenUserDetails);
+            UserEntity userEntity = TestDataFactory.CreateUserEntity(userId, "Manike", "test@example.com");
 
             _mockUsersService.Setup(x => x.GetUserByEmail(email)).ReturnsAsync(userEntity);
             _mockExternalApiService.Setup(x => x.LoginUserInAuthApiAsync(userId, password)).Returns(Task.CompletedTask);
