@@ -12,8 +12,6 @@ import useAppSelector from '../../../hooks/useAppSelector'
 import Creator from './Creator'
 import { UserDetails } from '../../../redux/slices/usersSlice'
 
-// import { Video } from 'expo' video is getting imported twice i commented this out because im unsure which is being used i just think the other one is more likely
-
 interface VideoOverlayProps {
   videoDetails: Video
   userdetails: UserDetails
