@@ -64,10 +64,8 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(byte amount)
+        public async Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(byte amount, Guid userId)
         {
-            Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
-
             ServiceGetVideosForFeedRequestDto requestDto = new ServiceGetVideosForFeedRequestDto(userId, amount);
             Uri targetUrl = _endpointFactory.GetVideosApiUrl("videos/feed");
 

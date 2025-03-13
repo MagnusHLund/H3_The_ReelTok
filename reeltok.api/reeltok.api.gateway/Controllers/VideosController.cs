@@ -11,6 +11,7 @@ using reeltok.api.gateway.DTOs.Videos.DeleteVideo;
 using reeltok.api.gateway.DTOs.Videos.UploadVideo;
 using reeltok.api.gateway.DTOs.Videos.GetVideosForFeed;
 using reeltok.api.gateway.DTOs.Videos.GetVideosForProfile;
+using reeltok.api.gateway.Utils;
 
 namespace reeltok.api.gateway.Controllers
 {
@@ -21,10 +22,12 @@ namespace reeltok.api.gateway.Controllers
     public class VideosController : ControllerBase
     {
         private readonly IVideosService _videosService;
+        private readonly IAuthService _authService;
 
-        public VideosController(IVideosService videosService)
+        public VideosController(IVideosService videosService, IAuthService authService)
         {
             _videosService = videosService;
+            _authService = authService;
         }
 
         [HttpGet("profile")]
@@ -44,7 +47,17 @@ namespace reeltok.api.gateway.Controllers
         [HttpGet("feed")]
         public async Task<IActionResult> GetVideosForFeedAsync([FromQuery, Range(1, byte.MaxValue)] byte amount)
         {
-            List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(amount).ConfigureAwait(false);
+            // This endpoint can use UserId, but its not mandatory.
+            // We fetch it, if there are cookies present, else we provide an empty guid.
+
+            Guid userId = Guid.Empty;
+
+            if (CookieUtils.HasCookie(HttpContext, "AccessToken") && CookieUtils.HasCookie(HttpContext, "RefreshToken"))
+            {
+                userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
+            }
+
+            List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(amount, userId).ConfigureAwait(false);
             GatewayGetVideosForFeedResponseDto responseDto = new GatewayGetVideosForFeedResponseDto(videos);
 
             return Ok(responseDto);

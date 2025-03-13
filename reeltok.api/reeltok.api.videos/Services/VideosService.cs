@@ -40,7 +40,7 @@ namespace reeltok.api.videos.Services
         {
             List<Guid> videoIds;
 
-            if (userId == Guid.Empty)
+            if (userId != Guid.Empty)
             {
                 videoIds = await _externalApiService.GetRecommendedVideoIdsAsync(userId, amount).ConfigureAwait(false);
             }
