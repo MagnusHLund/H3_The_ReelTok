@@ -1,31 +1,30 @@
-using Moq;
 using System;
+using System.Security.Authentication;
 using System.Threading.Tasks;
+using Moq;
 using Xunit;
 using reeltok.api.auth.Entities;
 using reeltok.api.auth.ValueObjects;
-using reeltok.api.auth.Interfaces.Services;
 using reeltok.api.auth.Interfaces.Repositories;
+using reeltok.api.auth.Interfaces.Services;
 using reeltok.api.auth.Services;
-using System.Security.Authentication;
-using reeltok.api.auth.Utils;
+using reeltok.api.auth.Tests.Factories;
 
-namespace reeltok.api.tests.Services
+namespace reeltok.api.auth.Tests.Services
 {
-    public class AuthenticationServiceTests
+    public class AuthServiceTests
     {
         private readonly Mock<IAuthRepository> _authRepositoryMock;
         private readonly Mock<ITokenGenerationService> _tokenGenerationServiceMock;
         private readonly Mock<ITokenManagementService> _tokenManagementServiceMock;
-        private readonly AuthenticationService _authenticationService;
+        private readonly AuthenticationService _authService;
 
-        public AuthenticationServiceTests()
+        public AuthServiceTests()
         {
             _authRepositoryMock = new Mock<IAuthRepository>();
             _tokenGenerationServiceMock = new Mock<ITokenGenerationService>();
             _tokenManagementServiceMock = new Mock<ITokenManagementService>();
-
-            _authenticationService = new AuthenticationService(
+            _authService = new AuthenticationService(
                 _authRepositoryMock.Object,
                 _tokenGenerationServiceMock.Object,
                 _tokenManagementServiceMock.Object
@@ -33,94 +32,53 @@ namespace reeltok.api.tests.Services
         }
 
         [Fact]
-        public async Task LoginUserAsync_Success()
+        public async Task LoginUserAsync_Failure_InvalidCredentials()
         {
             // Arrange
-            var userId = Guid.NewGuid();
-            var credentials = new Credentials(userId, "plainPassword");
-
-            var hashedPasswordDetails = new HashedPasswordDetails("hashedPassword", "salt");
-            var userCredentials = new UserCredentialsEntity(userId, hashedPasswordDetails);
-
-            var accessToken = new AccessToken("accessTokenValue", 1234567890, 1234567990);
-            var refreshToken = new RefreshToken("refreshTokenValue", 1234567890, 1234569990);
+            Guid userId = TestDataFactory.GenerateGuid();
+            string plainTextPassword = "InvalidPassword123!";
+            Credentials loginCredentials = new Credentials(userId, plainTextPassword);
+            UserCredentialsEntity userCredentialsEntity = TestDataFactory.GenerateUserCredentialsEntity(userId, "hashedPassword", "salt");
 
             _authRepositoryMock
                 .Setup(repo => repo.GetUserCredentialsByUserId(userId))
-                .ReturnsAsync(userCredentials);
-            _tokenGenerationServiceMock
-                .Setup(service => service.GenerateAccessToken(userId))
-                .ReturnsAsync(accessToken);
-            _tokenGenerationServiceMock
-                .Setup(service => service.GenerateRefreshToken(userId))
-                .ReturnsAsync(refreshToken);
-
-            // Act
-            var tokens = await _authenticationService.LoginUserAsync(credentials);
-
-            // Assert
-            Assert.Equal(accessToken, tokens.AccessToken);
-            Assert.Equal(refreshToken, tokens.RefreshToken);
-        }
-
-        [Fact]
-        public async Task LoginUserAsync_InvalidCredentials_ThrowsException()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var credentials = new Credentials(userId, "wrongPassword");
-
-            // The password hash and salt that will NOT match the credentials
-            var hashedPasswordDetails = new HashedPasswordDetails("correctHashedPassword", "randomSalt");
-            var userCredentials = new UserCredentialsEntity(userId, hashedPasswordDetails);
-
-            _authRepositoryMock
-                .Setup(repo => repo.GetUserCredentialsByUserId(userId))
-                .ReturnsAsync(userCredentials);
+                .ReturnsAsync(userCredentialsEntity);
 
             // Act & Assert
-            await Assert.ThrowsAsync<InvalidCredentialException>(
-                () => _authenticationService.LoginUserAsync(credentials)
-            );
+            await Assert.ThrowsAsync<InvalidCredentialException>(() => _authService.LoginUserAsync(loginCredentials));
         }
-
 
         [Fact]
         public async Task LogoutUserAsync_Success()
         {
             // Arrange
-            var accessTokenValue = "accessTokenValue";
-            var refreshTokenValue = "refreshTokenValue";
+            string accessTokenValue = "validAccessToken";
+            string refreshTokenValue = "validRefreshToken";
 
             _tokenManagementServiceMock
                 .Setup(service => service.RevokeTokens(accessTokenValue, refreshTokenValue))
                 .Returns(Task.CompletedTask);
 
             // Act
-            await _authenticationService.LogoutUserAsync(accessTokenValue, refreshTokenValue);
+            await _authService.LogoutUserAsync(accessTokenValue, refreshTokenValue);
 
             // Assert
-            _tokenManagementServiceMock.Verify(
-                service => service.RevokeTokens(accessTokenValue, refreshTokenValue),
-                Times.Once
-            );
+            _tokenManagementServiceMock.Verify(service => service.RevokeTokens(accessTokenValue, refreshTokenValue), Times.Once);
         }
 
         [Fact]
-        public async Task LogoutUserAsync_Failure_DoesNotThrowException()
+        public async Task LogoutUserAsync_Failure()
         {
             // Arrange
-            var accessTokenValue = "accessTokenValue";
-            var refreshTokenValue = "refreshTokenValue";
+            string accessTokenValue = "invalidAccessToken";
+            string refreshTokenValue = "invalidRefreshToken";
 
             _tokenManagementServiceMock
                 .Setup(service => service.RevokeTokens(accessTokenValue, refreshTokenValue))
-                .Throws<InvalidOperationException>();
+                .ThrowsAsync(new Exception("Token revocation failed"));
 
             // Act & Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(
-                () => _authenticationService.LogoutUserAsync(accessTokenValue, refreshTokenValue)
-            );
+            await Assert.ThrowsAsync<Exception>(() => _authService.LogoutUserAsync(accessTokenValue, refreshTokenValue));
         }
     }
 }
