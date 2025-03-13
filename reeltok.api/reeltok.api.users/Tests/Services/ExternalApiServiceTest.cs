@@ -8,6 +8,7 @@ using reeltok.api.users.Exceptions;
 using reeltok.api.users.DTOs.CreateUser;
 using reeltok.api.users.DTOs.Login;
 using reeltok.api.users.DTOs.GetUserInterest;
+using reeltok.api.users.Tests.Factories;
 
 namespace reeltok.api.users.Tests.Services
 {
@@ -30,7 +31,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task CreateUserInAuthApiAsync_WithValidRequest_Succeeds()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
             string password = "testPassword";
             Uri targetUrl = new Uri("https://testauthapi.com/users");
             AuthServiceCreateUserResponseDto responseDto = new AuthServiceCreateUserResponseDto { Success = true };
@@ -52,7 +53,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task CreateUserInRecommendationsApiAsync_WithValidRequest_Succeeds()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
             byte userInterests = 5;
             Uri targetUrl = new Uri("https://testrecommendationsapi.com/users");
             RecommendationsServiceCreateUserResponseDto responseDto = new RecommendationsServiceCreateUserResponseDto { Success = true };
@@ -74,7 +75,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task LoginUserInAuthApiAsync_WithValidRequest_Succeeds()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
             string password = "testpassword";
             Uri targetUrl = new Uri("https://testauthapi.com/auth");
             AuthServiceLoginResponseDto responseDto = new AuthServiceLoginResponseDto { Success = true };
@@ -96,7 +97,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task GetUserInterestFromRecommendationsApiAsync_WithValidRequest_ReturnsInterest()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
             Uri targetUrl = new Uri("https://testrecommendationsapi.com/users");
             RecommendationServiceGetUserInterestResponseDto responseDto = new RecommendationServiceGetUserInterestResponseDto(5);
 
@@ -120,7 +121,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task CreateUserInAuthApiAsync_WithFailureResponse_ThrowsException()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
             string password = "testpassword";
             Uri targetUrl = new Uri("https://testauthapi.com/users");
             FailureResponseDto responseDto = new FailureResponseDto("Error");
@@ -139,7 +140,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task CreateUserInRecommendationsApiAsync_WithFailureResponse_ThrowsException()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
             byte userInterests = 5;
             Uri targetUrl = new Uri("https://testrecommendationsapi.com/users");
             FailureResponseDto responseDto = new FailureResponseDto("Error");
@@ -158,7 +159,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task LoginUserInAuthApiAsync_WithFailureResponse_ThrowsException()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
             string password = "testpassword";
             Uri targetUrl = new Uri("https://testauthapi.com/auth");
             FailureResponseDto responseDto = new FailureResponseDto("Error");
@@ -177,7 +178,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task GetUserInterestFromRecommendationsApiAsync_WithFailureResponse_ThrowsException()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateGuid();
             Uri targetUrl = new Uri("https://testrecommendationsapi.com/users");
             FailureResponseDto responseDto = new FailureResponseDto("Error");
 
