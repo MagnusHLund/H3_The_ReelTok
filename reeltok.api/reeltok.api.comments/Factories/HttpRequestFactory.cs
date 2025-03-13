@@ -43,10 +43,10 @@ namespace reeltok.api.comments.Factories
         }
 
         private static HttpRequestMessage PrepareMultipartFormDataRequest<TRequest>(
-            TRequest requestDto,
-            Uri targetUrl,
-            HttpMethod httpMethod
-        )
+                    TRequest requestDto,
+                    Uri targetUrl,
+                    HttpMethod httpMethod
+                )
         {
             MultipartFormDataContent formDataContent = new MultipartFormDataContent();
             foreach (PropertyInfo property in typeof(TRequest).GetProperties())
@@ -54,12 +54,26 @@ namespace reeltok.api.comments.Factories
                 object? value = property.GetValue(requestDto);
                 if (value != null)
                 {
-                    StringContent stringContent = new StringContent(value.ToString() ?? string.Empty);
-                    stringContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                    if (value is IFormFile formFile)
                     {
-                        Name = property.Name
-                    };
-                    formDataContent.Add(stringContent);
+                        StreamContent fileContent = new StreamContent(formFile.OpenReadStream());
+                        fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                        {
+                            Name = property.Name,
+                            FileName = formFile.FileName
+                        };
+                        fileContent.Headers.ContentType = new MediaTypeHeaderValue(formFile.ContentType);
+                        formDataContent.Add(fileContent);
+                    }
+                    else
+                    {
+                        StringContent stringContent = new StringContent(value.ToString() ?? string.Empty);
+                        stringContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                        {
+                            Name = property.Name
+                        };
+                        formDataContent.Add(stringContent);
+                    }
                 }
             }
             return new HttpRequestMessage(httpMethod, targetUrl)

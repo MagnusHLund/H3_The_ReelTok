@@ -111,7 +111,7 @@ namespace reeltok.api.gateway.Services
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync
                 <ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(
-                requestDto, targetUrl, HttpMethod.Put)
+                requestDto, targetUrl, HttpMethod.Put, true)
                 .ConfigureAwait(false);
 
             if (response.Success && response is ServiceUpdateProfilePictureResponseDto responseDto)

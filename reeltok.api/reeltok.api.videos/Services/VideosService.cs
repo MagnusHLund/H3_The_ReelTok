@@ -50,9 +50,10 @@ namespace reeltok.api.videos.Services
             }
 
             List<VideoEntity> videos = await _videosRepository.GetVideosForFeedAsync(videoIds, amount).ConfigureAwait(false);
+            List<Guid> videoCreatorIds = videos.ConvertAll(video => video.UserId);
 
-            List<VideoCreatorEntity> videoCreatorDetails = await _externalApiService.GetVideoCreatorDetailsAsync(videoIds)
-                .ConfigureAwait(false);
+            List<UserEntity> videoCreatorDetails = await _externalApiService.GetVideoCreatorDetailsAsync(videoCreatorIds)
+                .ConfigureAwait(false); 
 
             List<VideoLikesEntity> videoLikes = await _likesService.GetLikesForVideosAsync(userId, videoIds)
                 .ConfigureAwait(false);

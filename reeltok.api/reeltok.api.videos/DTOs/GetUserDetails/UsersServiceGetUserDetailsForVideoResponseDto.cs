@@ -7,10 +7,10 @@ namespace reeltok.api.videos.DTOs.GetUserDetails
     public class UsersServiceGetUserDetailsForVideoResponseDto : BaseResponseDto
     {
         [Required]
-        [JsonProperty("VideoCreator")]
-        public List<VideoCreatorEntity> VideoCreators { get; set; }
+        [JsonProperty("Users")]
+        public List<UserEntity> VideoCreators { get; set; }
 
-        public UsersServiceGetUserDetailsForVideoResponseDto(List<VideoCreatorEntity> videoCreators, bool success) : base(success)
+        public UsersServiceGetUserDetailsForVideoResponseDto(List<UserEntity> videoCreators, bool success) : base(success)
         {
             VideoCreators = videoCreators;
         }

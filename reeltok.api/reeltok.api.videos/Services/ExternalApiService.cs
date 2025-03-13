@@ -27,7 +27,7 @@ namespace reeltok.api.videos.Services
         public async Task<List<Guid>> GetRecommendedVideoIdsAsync(Guid userId, byte amount)
         {
             RecommendationsServiceGetRecommendedVideosRequestDto requestDto = new RecommendationsServiceGetRecommendedVideosRequestDto(userId, amount);
-            Uri targetUrl = _endpointFactory.GetRecommendationsApiUrl("recommendations");
+            Uri targetUrl = _endpointFactory.GetRecommendationsApiUrl("videos");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<RecommendationsServiceGetRecommendedVideosRequestDto, RecommendedServiceGetRecommendedVideosResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 
@@ -39,10 +39,10 @@ namespace reeltok.api.videos.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<List<VideoCreatorEntity>> GetVideoCreatorDetailsAsync(List<Guid> videoIds)
+        public async Task<List<UserEntity>> GetVideoCreatorDetailsAsync(List<Guid> UserIds)
         {
-            UsersServiceGetUserDetailsForVideoRequestDto requestDto = new UsersServiceGetUserDetailsForVideoRequestDto(videoIds);
-            Uri targetUrl = _endpointFactory.GetUsersApiUrl("users");
+            UsersServiceGetUserDetailsForVideoRequestDto requestDto = new UsersServiceGetUserDetailsForVideoRequestDto(UserIds);
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("users/GetUsersByIds");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<UsersServiceGetUserDetailsForVideoRequestDto, UsersServiceGetUserDetailsForVideoResponseDto>(requestDto, targetUrl, HttpMethod.Get).ConfigureAwait(false);
 
@@ -109,7 +109,7 @@ namespace reeltok.api.videos.Services
         {
             RecommendationsServiceAddVideoIdToRecommendationsApiRequestDto requestDto = new RecommendationsServiceAddVideoIdToRecommendationsApiRequestDto(videoId, category);
 
-            Uri targetUrl = _endpointFactory.GetRecommendationsApiUrl("recommendations");
+            Uri targetUrl = _endpointFactory.GetRecommendationsApiUrl("videos");
 
             BaseResponseDto response = await _httpService.
                 ProcessRequestAsync<RecommendationsServiceAddVideoIdToRecommendationsApiRequestDto, RecommendationsServiceAddVideoIdToRecommendationsApiResponseDto>(

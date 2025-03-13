@@ -8,7 +8,7 @@ namespace reeltok.api.gateway.ValueObjects
     {
         [Required]
         [JsonProperty("UserId")]
-        public Guid? UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required]
         [JsonProperty("Title")]
@@ -20,13 +20,13 @@ namespace reeltok.api.gateway.ValueObjects
 
         [Required]
         [JsonProperty("Category")]
-        public CategoryType Category { get; set; }
+        public string Category { get; set; }
 
         [Required]
         [JsonProperty("VideoFile")]
         public IFormFile VideoFile { get; }
 
-        public VideoUpload(string title, string description, CategoryType category, IFormFile videoFile)
+        public VideoUpload(string title, string description, string category, IFormFile videoFile)
         {
             Title = title;
             Description = description;
@@ -34,7 +34,7 @@ namespace reeltok.api.gateway.ValueObjects
             VideoFile = videoFile;
         }
 
-        public VideoUpload(Guid userId, string title, string description, CategoryType category, IFormFile videoFile)
+        public VideoUpload(string userId, string title, string description, string category, IFormFile videoFile)
         {
             UserId = userId;
             Title = title;

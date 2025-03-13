@@ -84,13 +84,13 @@ namespace reeltok.api.gateway.Services
         public async Task<bool> UploadVideoAsync(VideoUpload video)
         {
             Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
-            video.UserId = userId;
+            video.UserId = userId.ToString();
 
             ServiceUploadVideoRequestDto requestDto = VideoMapper.ConvertVideoUploadToUploadVideoRequestDto(video);
             Uri targetUrl = _endpointFactory.GetVideosApiUrl("videos");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync
-                <ServiceUploadVideoRequestDto, ServiceUploadVideoResponseDto>(requestDto, targetUrl, HttpMethod.Post)
+                <ServiceUploadVideoRequestDto, ServiceUploadVideoResponseDto>(requestDto, targetUrl, HttpMethod.Post, true)
                 .ConfigureAwait(false);
 
             if (response.Success && response is ServiceUploadVideoResponseDto responseDto)

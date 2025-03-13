@@ -4,6 +4,7 @@ using reeltok.api.users.ActionFilters;
 using reeltok.api.users.DTOs.CreateUser;
 using reeltok.api.users.DTOs.UpdateUser;
 using reeltok.api.users.DTOs.GetUserById;
+using reeltok.api.users.DTOs.GetUsersByIds;
 using reeltok.api.users.Interfaces.Services;
 using reeltok.api.users.DTOs.UpdateProfilePicture;
 
@@ -41,6 +42,21 @@ namespace reeltok.api.users.Controllers
                 .ConfigureAwait(false);
 
             GetUserByIdResponseDto response = new GetUserByIdResponseDto(user);
+            return Ok(response);
+        }
+
+        // Called by videos api
+        [HttpGet("GetUsersByIds")]
+        public async Task<IActionResult> GetUsersByIdsAsync([FromQuery] List<Guid> userIds)
+        {
+            List<UserEntity> users = await _usersService
+                .GetUsersByIdsAsync(userIds)
+                .ConfigureAwait(false);
+
+            List<ExternalUserEntity> externalUsers = users.ConvertAll(subscriber =>
+                new ExternalUserEntity(subscriber.UserId, subscriber.UserDetails));
+
+            GetUsersByIdsResponseDto response = new GetUsersByIdsResponseDto(externalUsers);
             return Ok(response);
         }
 

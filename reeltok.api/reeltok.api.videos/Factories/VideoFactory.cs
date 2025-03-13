@@ -7,13 +7,13 @@ namespace reeltok.api.videos.Factories
     {
         internal static VideoForFeedEntity CreateVideoForFeedEntity(
             VideoEntity videoEntity,
-            VideoCreatorEntity videoCreatorDetails,
+            UserEntity videoCreatorDetails,
             VideoLikesEntity videoLikes
             )
         {
-            if (videoEntity.VideoId != videoCreatorDetails.VideoId || videoEntity.VideoId != videoLikes.VideoId)
+            if (videoEntity.UserId != videoCreatorDetails.UserId || videoEntity.VideoId != videoLikes.VideoId)
             {
-                throw new ArgumentException("Video ids do not match, across videoEntity, videoCreatorDetails and videoLikes!");
+                throw new ArgumentException("Entities do not match each other!");
             }
 
             VideoDetails videoDetails = new VideoDetails(
@@ -38,22 +38,25 @@ namespace reeltok.api.videos.Factories
 
         internal static List<VideoForFeedEntity> CreateVideoForFeedEntityList(
             List<Guid> videoIds,
-            List<VideoEntity> videoEntity,
-            List<VideoCreatorEntity> videoCreatorDetails,
-            List<VideoLikesEntity> videoLikes)
+            List<VideoEntity> videoEntities,
+            List<UserEntity> videoCreatorDetails,
+            List<VideoLikesEntity> videoLikesEntity)
         {
-            Dictionary<Guid, VideoEntity> videoDict = videoEntity.ToDictionary(v => v.VideoId);
-            Dictionary<Guid, VideoCreatorEntity> creatorDict = videoCreatorDetails.ToDictionary(c => c.VideoId);
-            Dictionary<Guid, VideoLikesEntity> likesDict = videoLikes.ToDictionary(l => l.VideoId);
+            Dictionary<Guid, VideoEntity> videoDict = videoEntities.ToDictionary(v => v.VideoId);
+            Dictionary<Guid, UserEntity> creatorDict = videoCreatorDetails.ToDictionary(c => c.UserId);
+            Dictionary<Guid, VideoLikesEntity> likesDict = videoLikesEntity.ToDictionary(l => l.VideoId);
 
             List<VideoForFeedEntity> videosForFeed = new List<VideoForFeedEntity>();
             foreach (Guid videoId in videoIds)
             {
                 if (videoDict.TryGetValue(videoId, out VideoEntity? video) &&
-                    creatorDict.TryGetValue(videoId, out VideoCreatorEntity? creator) &&
-                    likesDict.TryGetValue(videoId, out VideoLikesEntity? likes))
+                    creatorDict.TryGetValue(video.UserId, out UserEntity? creator))
                 {
-                    VideoForFeedEntity videoForFeed = CreateVideoForFeedEntity(video, creator, likes);
+                    VideoLikesEntity videoLikes = likesDict.TryGetValue(videoId, out VideoLikesEntity? likes)
+                        ? likes
+                        : new VideoLikesEntity(videoId, new VideoLikes(0, false));
+
+                    VideoForFeedEntity videoForFeed = CreateVideoForFeedEntity(video, creator, videoLikes);
                     videosForFeed.Add(videoForFeed);
                 }
             }

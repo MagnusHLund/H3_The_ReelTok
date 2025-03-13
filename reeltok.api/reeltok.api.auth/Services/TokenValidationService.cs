@@ -1,8 +1,6 @@
 using System.Text;
 using System.Security.Claims;
 using reeltok.api.auth.Utils;
-using reeltok.api.auth.Entities;
-using reeltok.api.auth.ValueObjects;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using reeltok.api.auth.Interfaces.Services;

@@ -59,8 +59,10 @@ namespace reeltok.api.videos.Controllers
         public async Task<IActionResult> UploadVideoAsync([FromForm] UploadVideoRequestDto request)
         {
             VideoUpload videoUpload = VideoMapper.ConvertUploadVideoRequestDtoToVideoUpload(request);
+            byte category = (byte)FormDataMapper.ConvertStringToint(request.Category);
+            Guid userId = FormDataMapper.ConvertStringToGuid(request.UserId);
 
-            await _videosService.UploadVideoAsync(videoUpload, request.UserId, request.Category).ConfigureAwait(false);
+            await _videosService.UploadVideoAsync(videoUpload, userId, category).ConfigureAwait(false);
 
             UploadVideoResponseDto responseDto = new UploadVideoResponseDto();
             return Ok(responseDto);

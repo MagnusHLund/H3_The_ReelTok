@@ -1,36 +1,31 @@
 using Newtonsoft.Json;
-using reeltok.api.gateway.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.gateway.DTOs.Videos.UploadVideo
 {
+    // Form data request
     public class ServiceUploadVideoRequestDto
     {
         [Required]
-        [JsonProperty("UserId")]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required]
-        [JsonProperty("Title")]
         public string Title { get; set; }
 
         [Required]
-        [JsonProperty("Description")]
         public string Description { get; set; }
 
         [Required]
-        [JsonProperty("Category")]
-        public CategoryType Category { get; set; }
+        public string Category { get; set; }
 
         [Required]
-        [JsonProperty("VideoFile")]
         public IFormFile VideoFile { get; set; }
 
         public ServiceUploadVideoRequestDto(
-            Guid userId,
+            string userId,
             string title,
             string description,
-            CategoryType category,
+            string category,
             IFormFile videoFile
         )
         {

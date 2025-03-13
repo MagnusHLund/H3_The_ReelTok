@@ -16,13 +16,27 @@ namespace reeltok.api.users.Utils
             }
         }
 
-        public static async Task<TResponse> DeserializeResponseAsync<TResponse>(HttpResponseMessage response)
+        public static async Task<BaseResponseDto> DeserializeResponseAsync<TResponse>(HttpResponseMessage response)
             where TResponse : BaseResponseDto
         {
             string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            return JsonConvert.DeserializeObject<TResponse>(responseContent)
-                ?? throw new InvalidOperationException("Failed to deserialize response content.");
+            try
+            {
+                TResponse deserializedResponse = JsonConvert.DeserializeObject<TResponse>(responseContent);
+
+                if (!deserializedResponse.Success)
+                {
+                    FailureResponseDto failureResponse = JsonConvert.DeserializeObject<FailureResponseDto>(responseContent);
+                    return failureResponse;
+                }
+
+                return deserializedResponse;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Failed to deserialize response.", ex);
+            }
         }
     }
 }

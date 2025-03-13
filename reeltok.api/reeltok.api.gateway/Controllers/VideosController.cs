@@ -65,7 +65,7 @@ namespace reeltok.api.gateway.Controllers
 
         [HttpPost]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UploadVideoAsync([FromBody] GatewayUploadVideoRequestDto request)
+        public async Task<IActionResult> UploadVideoAsync([FromForm] GatewayUploadVideoRequestDto request)
         {
             VideoUpload videoUpload = VideoMapper.ConvertRequestDtoToVideoUpload(request);
             bool success = await _videosService.UploadVideoAsync(videoUpload).ConfigureAwait(false);

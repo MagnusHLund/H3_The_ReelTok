@@ -97,7 +97,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUserDetailsAsync([FromBody] GatewayUpdateUserDetailsRequestDto request)
+        public async Task<IActionResult> UpdateUserDetailsAsync([FromForm] GatewayUpdateUserDetailsRequestDto request)
         {
             UserEntity user = await _usersService
                 .UpdateUserDetailsAsync(request.Username, request.Email, request.Interest)

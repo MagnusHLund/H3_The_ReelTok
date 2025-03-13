@@ -54,10 +54,10 @@ namespace reeltok.api.videos.Tests.Services
                 TestDataFactory.CreateVideoEntity()
             };
 
-            List<VideoCreatorEntity> videoCreatorDetails = new List<VideoCreatorEntity>
+            List<UserEntity> videoCreatorDetails = new List<UserEntity>
             {
-                TestDataFactory.CreateVideoCreatorEntity(),
-                TestDataFactory.CreateVideoCreatorEntity()
+                TestDataFactory.CreateUserEntity(),
+                TestDataFactory.CreateUserEntity()
             };
 
             List<VideoLikesEntity> videoLikes = new List<VideoLikesEntity>
@@ -66,9 +66,11 @@ namespace reeltok.api.videos.Tests.Services
                 TestDataFactory.CreateVideoLikesEntity()
             };
 
+            List<Guid> videoCreatorIds = videosRepositoryResponse.ConvertAll(video => video.UserId);
+
             _mockExternalApiService.Setup(x => x.GetRecommendedVideoIdsAsync(userId, amount)).ReturnsAsync(videoIds);
             _mockVideosRepository.Setup(x => x.GetVideosForFeedAsync(videoIds, amount)).ReturnsAsync(videosRepositoryResponse);
-            _mockExternalApiService.Setup(x => x.GetVideoCreatorDetailsAsync(videoIds)).ReturnsAsync(videoCreatorDetails);
+            _mockExternalApiService.Setup(x => x.GetVideoCreatorDetailsAsync(videoCreatorIds)).ReturnsAsync(videoCreatorDetails);
             _mockLikesService.Setup(x => x.GetLikesForVideosAsync(userId, videoIds)).ReturnsAsync(videoLikes);
 
             List<VideoForFeedEntity> expectedVideos = VideoFactory.CreateVideoForFeedEntityList(
@@ -190,7 +192,7 @@ namespace reeltok.api.videos.Tests.Services
             // Mock other dependencies to return empty lists
             _mockExternalApiService
                 .Setup(x => x.GetVideoCreatorDetailsAsync(It.IsAny<List<Guid>>()))
-                .ReturnsAsync(new List<VideoCreatorEntity>());
+                .ReturnsAsync(new List<UserEntity>());
 
             _mockLikesService
                 .Setup(x => x.GetLikesForVideosAsync(userId, It.IsAny<List<Guid>>()))
