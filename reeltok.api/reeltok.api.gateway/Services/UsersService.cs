@@ -167,7 +167,7 @@ namespace reeltok.api.gateway.Services
             Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
             ServiceSubscribeToUserRequestDto requestDto = new ServiceSubscribeToUserRequestDto(userId, subscribeToUserId);
-            Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscribers");
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscribe");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync
                 <ServiceSubscribeToUserRequestDto, ServiceSubscribeToUserResponseDto>(
@@ -182,12 +182,12 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<bool> UnsubscribeToUserAsync(Guid subscribeToUserId)
+        public async Task<bool> UnsubscribeToUserAsync(Guid unsubscribingToUserId)
         {
             Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
-            ServiceUnsubscribeToUserRequestDto requestDto = new ServiceUnsubscribeToUserRequestDto(userId, subscribeToUserId);
-            Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscribers");
+            ServiceUnsubscribeToUserRequestDto requestDto = new ServiceUnsubscribeToUserRequestDto(userId, unsubscribingToUserId);
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscribe");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync
                 <ServiceUnsubscribeToUserRequestDto, ServiceUnsubscribeToUserResponseDto>(

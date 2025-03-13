@@ -28,7 +28,7 @@ namespace reeltok.api.comments.Services
             }
 
             HttpRequestMessage request = httpMethod == HttpMethod.Get || httpMethod == HttpMethod.Delete
-                ? PrepareHttpRequestWithQueryParameters(requestDto, targetUrl)
+                ? PrepareHttpRequestWithQueryParameters(requestDto, targetUrl, httpMethod)
                 : PrepareHttpRequestBody(requestDto, targetUrl, httpMethod);
 
             using (request)
@@ -61,12 +61,16 @@ namespace reeltok.api.comments.Services
             };
         }
 
-        private static HttpRequestMessage PrepareHttpRequestWithQueryParameters<TRequest>(TRequest requestDto, Uri targetUrl)
+        private static HttpRequestMessage PrepareHttpRequestWithQueryParameters<TRequest>(
+            TRequest requestDto,
+            Uri targetUrl,
+            HttpMethod httpMethod
+        )
         {
             Dictionary<string, string> requestQueryParameters = ConvertRequestDtoToQueryParameters(requestDto);
             string targetUrlWithQueryParameters = QueryHelpers.AddQueryString(targetUrl.ToString(), requestQueryParameters);
 
-            return new HttpRequestMessage(HttpMethod.Get, targetUrlWithQueryParameters);
+            return new HttpRequestMessage(httpMethod, targetUrlWithQueryParameters);
         }
 
         private static StringContent CreateStringContent(string content)

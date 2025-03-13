@@ -46,7 +46,7 @@ namespace reeltok.api.videos.Services
         {
             if (httpMethod == HttpMethod.Get || httpMethod == HttpMethod.Delete)
             {
-                return PrepareHttpRequestWithQueryParameters(requestDto, targetUrl);
+                return PrepareHttpRequestWithQueryParameters(requestDto, targetUrl, httpMethod);
             }
             else if (isMultipartFormData)
             {
@@ -134,13 +134,14 @@ namespace reeltok.api.videos.Services
 
         private static HttpRequestMessage PrepareHttpRequestWithQueryParameters<TRequest>(
             TRequest requestDto,
-            Uri targetUrl
+            Uri targetUrl,
+            HttpMethod httpMethod
         )
         {
             Dictionary<string, string> requestQueryParameters = ConvertRequestDtoToQueryParameters(requestDto);
             string targetUrlWithQueryParameters = QueryHelpers.AddQueryString(targetUrl.ToString(), requestQueryParameters);
 
-            return new HttpRequestMessage(HttpMethod.Get, targetUrlWithQueryParameters);
+            return new HttpRequestMessage(httpMethod, targetUrlWithQueryParameters);
         }
 
         private static StringContent CreateStringContent(string content)
