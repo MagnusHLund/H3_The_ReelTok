@@ -69,7 +69,7 @@ namespace reeltok.api.videos.Tests.Services
             _mockExternalApiService.Setup(x => x.GetRecommendedVideoIdsAsync(userId, amount)).ReturnsAsync(videoIds);
             _mockVideosRepository.Setup(x => x.GetVideosForFeedAsync(videoIds, amount)).ReturnsAsync(videosRepositoryResponse);
             _mockExternalApiService.Setup(x => x.GetVideoCreatorDetailsAsync(videoIds)).ReturnsAsync(videoCreatorDetails);
-            _mockLikesService.Setup(x => x.GetLikesForVideos(userId, videoIds)).ReturnsAsync(videoLikes);
+            _mockLikesService.Setup(x => x.GetLikesForVideosAsync(userId, videoIds)).ReturnsAsync(videoLikes);
 
             List<VideoForFeedEntity> expectedVideos = VideoFactory.CreateVideoForFeedEntityList(
                 videoIds,
@@ -87,7 +87,7 @@ namespace reeltok.api.videos.Tests.Services
             {
                 Assert.Equal(expectedVideos[i].VideoId, result[i].VideoId);
                 Assert.Equal(expectedVideos[i].VideoDetails.Title, result[i].VideoDetails.Title);
-                Assert.Equal(expectedVideos[i].VideoCreator.Username, result[i].VideoCreator.Username);
+                Assert.Equal(expectedVideos[i].VideoCreator.UserDetails.Username, result[i].VideoCreator.UserDetails.Username);
                 Assert.Equal(expectedVideos[i].VideoLikes.TotalLikes, result[i].VideoLikes.TotalLikes);
             }
         }
@@ -193,7 +193,7 @@ namespace reeltok.api.videos.Tests.Services
                 .ReturnsAsync(new List<VideoCreatorEntity>());
 
             _mockLikesService
-                .Setup(x => x.GetLikesForVideos(userId, It.IsAny<List<Guid>>()))
+                .Setup(x => x.GetLikesForVideosAsync(userId, It.IsAny<List<Guid>>()))
                 .ReturnsAsync(new List<VideoLikesEntity>());
 
             // Act

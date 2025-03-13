@@ -58,6 +58,7 @@ namespace reeltok.api.comments
                     options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
                 });
 
+            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -65,6 +66,7 @@ namespace reeltok.api.comments
             WebApplication app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<ForwardCookiesMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

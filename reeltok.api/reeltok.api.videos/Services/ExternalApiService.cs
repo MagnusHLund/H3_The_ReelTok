@@ -9,7 +9,7 @@ using reeltok.api.videos.DTOs.UserLikedVideo;
 using reeltok.api.videos.Interfaces.Services;
 using reeltok.api.videos.Interfaces.Factories;
 using reeltok.api.videos.DTOs.GetRecommendedVideos;
-using reeltok.api.videos.DTOs.GetUserDetailsForVideo;
+using reeltok.api.videos.DTOs.AddVideoIdToRecommendationsApi;
 
 namespace reeltok.api.videos.Services
 {

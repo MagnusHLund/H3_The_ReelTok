@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json;
 using System.Reflection;
 using reeltok.api.users.DTOs;
+using System.Net.Http.Headers;
 using Microsoft.AspNetCore.WebUtilities;
 using reeltok.api.users.Interfaces.Services;
 
@@ -10,16 +11,19 @@ namespace reeltok.api.videos.Services
     public class HttpService : IHttpService
     {
         private readonly HttpClient _httpClient;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HttpService(HttpClient httpClient)
+        public HttpService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
         {
             _httpClient = httpClient;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(
             TRequest requestDto,
             Uri targetUrl,
-            HttpMethod httpMethod
+            HttpMethod httpMethod,
+            bool isMultipartFormData = false
         ) where TResponse : BaseResponseDto
         {
             if (Equals(requestDto, default(TRequest)))
@@ -27,25 +31,66 @@ namespace reeltok.api.videos.Services
                 throw new ArgumentNullException(nameof(requestDto));
             }
 
-            HttpRequestMessage request = httpMethod == HttpMethod.Get || httpMethod == HttpMethod.Delete
-                ? PrepareHttpRequestWithQueryParameters(requestDto, targetUrl)
-                : PrepareHttpRequestBody(requestDto, targetUrl, httpMethod);
+            HttpRequestMessage request = CreateHttpRequest(requestDto, targetUrl, httpMethod, isMultipartFormData);
+            HandleCookies(request);
 
-            using (request)
+            return await SendRequestAsync<TResponse>(request).ConfigureAwait(false);
+        }
+
+        private static HttpRequestMessage CreateHttpRequest<TRequest>(
+            TRequest requestDto,
+            Uri targetUrl,
+            HttpMethod httpMethod,
+            bool isMultipartFormData
+        )
+        {
+            if (httpMethod == HttpMethod.Get || httpMethod == HttpMethod.Delete)
             {
-                BaseResponseDto response = await RouteRequestAsync<TResponse>(request).ConfigureAwait(false);
-                return response;
+                return PrepareHttpRequestWithQueryParameters(requestDto, targetUrl);
+            }
+            else if (isMultipartFormData)
+            {
+                return PrepareMultipartFormDataRequest(requestDto, targetUrl, httpMethod);
+            }
+            else
+            {
+                return PrepareHttpRequestBody(requestDto, targetUrl, httpMethod);
             }
         }
 
-        public async Task<BaseResponseDto> RouteRequestAsync<TResponse>(HttpRequestMessage request)
+        private void HandleCookies(HttpRequestMessage request)
+        {
+            IRequestCookieCollection? requestCookies = _httpContextAccessor.HttpContext?.Request.Cookies;
+            if (requestCookies != null)
+            {
+                foreach (var cookie in requestCookies)
+                {
+                    request.Headers.Add("Cookie", $"{cookie.Key}={cookie.Value}");
+                }
+            }
+        }
+
+        private void HandleResponseCookies(HttpResponseMessage response)
+        {
+            if (response.Headers.TryGetValues("Set-Cookie", out var cookies))
+            {
+                foreach (var cookie in cookies)
+                {
+                    _httpContextAccessor.HttpContext?.Response.Headers.Append("Set-Cookie", cookie);
+                }
+            }
+        }
+
+        private async Task<BaseResponseDto> SendRequestAsync<TResponse>(HttpRequestMessage request)
             where TResponse : BaseResponseDto
         {
-            HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
+            using (request)
+            {
+                HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
+                HandleResponseCookies(response);
 
-            return response.IsSuccessStatusCode
-                ? await DeserializeJsonToDto<TResponse>(response).ConfigureAwait(false)
-                : await DeserializeJsonToDto<FailureResponseDto>(response).ConfigureAwait(false);
+                return await DeserializeResponseAsync<TResponse>(response).ConfigureAwait(false);
+            }
         }
 
         private static HttpRequestMessage PrepareHttpRequestBody<TRequest>(
@@ -61,7 +106,36 @@ namespace reeltok.api.videos.Services
             };
         }
 
-        private static HttpRequestMessage PrepareHttpRequestWithQueryParameters<TRequest>(TRequest requestDto, Uri targetUrl)
+        private static HttpRequestMessage PrepareMultipartFormDataRequest<TRequest>(
+            TRequest requestDto,
+            Uri targetUrl,
+            HttpMethod httpMethod
+        )
+        {
+            MultipartFormDataContent formDataContent = new MultipartFormDataContent();
+            foreach (PropertyInfo property in typeof(TRequest).GetProperties())
+            {
+                object? value = property.GetValue(requestDto);
+                if (value != null)
+                {
+                    StringContent stringContent = new StringContent(value.ToString() ?? string.Empty);
+                    stringContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                    {
+                        Name = property.Name
+                    };
+                    formDataContent.Add(stringContent);
+                }
+            }
+            return new HttpRequestMessage(httpMethod, targetUrl)
+            {
+                Content = formDataContent
+            };
+        }
+
+        private static HttpRequestMessage PrepareHttpRequestWithQueryParameters<TRequest>(
+            TRequest requestDto,
+            Uri targetUrl
+        )
         {
             Dictionary<string, string> requestQueryParameters = ConvertRequestDtoToQueryParameters(requestDto);
             string targetUrlWithQueryParameters = QueryHelpers.AddQueryString(targetUrl.ToString(), requestQueryParameters);
@@ -74,7 +148,7 @@ namespace reeltok.api.videos.Services
             return new StringContent(content, Encoding.UTF8, "application/json");
         }
 
-        private static async Task<BaseResponseDto> DeserializeJsonToDto<TResponse>(HttpResponseMessage response)
+        private static async Task<BaseResponseDto> DeserializeResponseAsync<TResponse>(HttpResponseMessage response)
             where TResponse : BaseResponseDto
         {
             string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

@@ -102,7 +102,7 @@ namespace reeltok.api.videos.Tests.Services
             _mockLikesRepository.Setup(x => x.GetTotalLikesForVideosAsync(videoIds)).ReturnsAsync(videoTotalLikes);
 
             // Act
-            List<VideoLikesEntity> result = await _likesService.GetLikesForVideos(userId, videoIds);
+            List<VideoLikesEntity> result = await _likesService.GetLikesForVideosAsync(userId, videoIds);
 
             // Assert
             Assert.Equal(2, result.Count);

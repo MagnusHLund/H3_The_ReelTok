@@ -12,6 +12,7 @@ namespace reeltok.api.videos.Tests.Services
     public class HttpServiceTests
     {
         private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
+        private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
         private readonly HttpClient _httpClient;
         private readonly HttpService _httpService;
 
@@ -19,7 +20,8 @@ namespace reeltok.api.videos.Tests.Services
         {
             _mockHttpMessageHandler = new Mock<HttpMessageHandler>();
             _httpClient = new HttpClient(_mockHttpMessageHandler.Object);
-            _httpService = new HttpService(_httpClient);
+            _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            _httpService = new HttpService(_httpClient, _mockHttpContextAccessor.Object);
         }
 
         [Fact]

@@ -54,6 +54,8 @@ namespace UsersServiceApi
 
             builder.Services.AddSingleton(sp => new AppSettingsUtils(builder.Configuration));
 
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddHttpClient<IHttpService, HttpService>();
 
             builder.Services.AddControllers()
@@ -70,6 +72,7 @@ namespace UsersServiceApi
 
             // Configure the HTTP request pipeline
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<ForwardCookiesMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {

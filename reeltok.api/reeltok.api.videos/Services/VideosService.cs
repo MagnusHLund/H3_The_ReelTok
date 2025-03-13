@@ -54,7 +54,8 @@ namespace reeltok.api.videos.Services
             List<VideoCreatorEntity> videoCreatorDetails = await _externalApiService.GetVideoCreatorDetailsAsync(videoIds)
                 .ConfigureAwait(false);
 
-            List<VideoLikesEntity> videoLikes = await _likesService.GetLikesForVideos(userId, videoIds).ConfigureAwait(false);
+            List<VideoLikesEntity> videoLikes = await _likesService.GetLikesForVideosAsync(userId, videoIds)
+                .ConfigureAwait(false);
 
             List<VideoForFeedEntity> videosForFeed = VideoFactory.CreateVideoForFeedEntityList(
                 videoIds,
@@ -82,7 +83,7 @@ namespace reeltok.api.videos.Services
             VideoEntity videoToUpload = VideoMapper.ConvertVideoUploadToVideoEntity(video, userId);
             VideoEntity videoEntity = await _videosRepository.CreateVideoAsync(videoToUpload).ConfigureAwait(false);
 
-            await _externalApiService.AddVideoToRecommendationsApi(
+            await _externalApiService.AddVideoToRecommendationsApiAsync(
                 videoEntity.VideoId, category)
                 .ConfigureAwait(false);
 

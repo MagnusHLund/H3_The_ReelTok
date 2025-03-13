@@ -48,6 +48,8 @@ namespace reeltok.api.gateway
                     options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
                 });
 
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddSingleton(sp => new AppSettingsUtils(builder.Configuration));
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
