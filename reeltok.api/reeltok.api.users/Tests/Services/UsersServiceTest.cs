@@ -86,7 +86,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task UpdateUserProfilePictureAsync_WithValidImage_ReturnsUpdatedUser()
         {
             // Arrange
-            Guid userId = TestDataFactory.GenerateUserId();
+            Guid userId = TestDataFactory.GenerateGuid();
             string fileName = "testImage.png";
             string contentType = "image/png";
             byte[] fileContent = new byte[] { 0x89, 0x50, 0x4E, 0x47 }; // PNG file signature
@@ -124,7 +124,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task UpdateUserAsync_WithValidUsernameAndEmail_ReturnsUpdatedUser()
         {
             // Arrange
-            Guid userId = TestDataFactory.GenerateUserId();
+            Guid userId = TestDataFactory.GenerateGuid();
             string newUsername = "newUsername";
             string newEmail = "newemail@example.com";
             UserEntity user = TestDataFactory.CreateUserEntity(userId, "oldUsername", "oldemail@example.com");
@@ -145,7 +145,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task UpdateUserAsync_WithInvalidUsername_ThrowsInvalidOperationException()
         {
             // Arrange
-            Guid userId = TestDataFactory.GenerateUserId();
+            Guid userId = TestDataFactory.GenerateGuid();
             string invalidUsername = "inv@lidUser"; // Invalid username
             string newEmail = "newemail@example.com";
             UserEntity user = TestDataFactory.CreateUserEntity(userId, "oldUsername", "oldemail@example.com");
@@ -166,7 +166,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task GetUserByIdAsync_ReturnsUserWithSubscriptionCounts()
         {
             // Arrange
-            Guid userId = TestDataFactory.GenerateUserId();
+            Guid userId = TestDataFactory.GenerateGuid();
             UserEntity user = TestDataFactory.CreateUserEntity(userId, "testUser", "test@example.com");
             int subscriberCount = 10;
             int subscriptionCount = 5;
@@ -188,7 +188,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task GetUserByIdAsync_WithInvalidUserId_ThrowsException()
         {
             // Arrange
-            Guid userId = TestDataFactory.GenerateUserId();
+            Guid userId = TestDataFactory.GenerateGuid();
 
             _mockUserRepository.Setup(x => x.GetUserByIdAsync(userId)).ThrowsAsync(new Exception("User not found"));
 
