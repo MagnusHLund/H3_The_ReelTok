@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using reeltok.api.users.ValueObjects;
+using System.IO;
+using reeltok.api.users.Tests.Factories;
 
 namespace reeltok.api.users.Tests.Services
 {
@@ -46,7 +48,8 @@ namespace reeltok.api.users.Tests.Services
             string email = "test@example.com";
             string password = "password123";
             byte interests = 5;
-            UserEntity newUser = new UserEntity(Guid.NewGuid(), new UserDetails(username, "bio", "ProfilePictureUrl"), new HiddenUserDetails(email));
+
+            UserEntity newUser = TestDataFactory.CreateUserEntity(Guid.NewGuid(), username, email);
 
             _mockUserRepository.Setup(x => x.CreateUserAsync(It.IsAny<UserEntity>())).ReturnsAsync(newUser);
             _mockExternalApiService.Setup(x => x.CreateUserInAuthApiAsync(It.IsAny<Guid>(), password)).Returns(Task.CompletedTask);
@@ -83,7 +86,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task UpdateUserProfilePictureAsync_WithValidImage_ReturnsUpdatedUser()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateUserId();
             string fileName = "testImage.png";
             string contentType = "image/png";
             byte[] fileContent = new byte[] { 0x89, 0x50, 0x4E, 0x47 }; // PNG file signature
@@ -96,7 +99,7 @@ namespace reeltok.api.users.Tests.Services
             mockFile.Setup(f => f.FileName).Returns(fileName);
             mockFile.Setup(f => f.ContentType).Returns(contentType);
 
-            UserEntity user = new UserEntity(userId, new UserDetails("testUser", "bio", "oldProfileUrl"), new HiddenUserDetails("test@example.com"));
+            UserEntity user = TestDataFactory.CreateUserEntity(userId, "testUser", "test@example.com");
             string newProfilePictureUrl = "newProfilePictureUrl";
 
             _mockStorageService.Setup(x => x.UploadProfilePictureToFileServerAsync(mockFile.Object, userId)).ReturnsAsync(newProfilePictureUrl);
@@ -104,7 +107,6 @@ namespace reeltok.api.users.Tests.Services
             _mockUserRepository
                 .Setup(x => x.UpdateUserAsync(It.IsAny<UserEntity>()))
                 .ReturnsAsync((UserEntity u) => u); // Return the updated user object
-
 
             // Act
             UserEntity updatedUser = await _usersService.UpdateUserProfilePictureAsync(mockFile.Object, userId);
@@ -122,10 +124,10 @@ namespace reeltok.api.users.Tests.Services
         public async Task UpdateUserAsync_WithValidUsernameAndEmail_ReturnsUpdatedUser()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateUserId();
             string newUsername = "newUsername";
             string newEmail = "newemail@example.com";
-            UserEntity user = new UserEntity(userId, new UserDetails("oldUsername", "bio", "oldProfileUrl"), new HiddenUserDetails("oldemail@example.com"));
+            UserEntity user = TestDataFactory.CreateUserEntity(userId, "oldUsername", "oldemail@example.com");
 
             _mockUserRepository.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(user);
             _mockUserRepository.Setup(x => x.UpdateUserAsync(It.IsAny<UserEntity>())).ReturnsAsync((UserEntity u) => u);
@@ -143,10 +145,10 @@ namespace reeltok.api.users.Tests.Services
         public async Task UpdateUserAsync_WithInvalidUsername_ThrowsInvalidOperationException()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateUserId();
             string invalidUsername = "inv@lidUser"; // Invalid username
             string newEmail = "newemail@example.com";
-            UserEntity user = new UserEntity(userId, new UserDetails("oldUsername", "bio", "oldProfileUrl"), new HiddenUserDetails("oldemail@example.com"));
+            UserEntity user = TestDataFactory.CreateUserEntity(userId, "oldUsername", "oldemail@example.com");
 
             // Mock repository to return the user
             _mockUserRepository.Setup(x => x.GetUserByIdAsync(userId)).ThrowsAsync(new ArgumentException("Invalid username"));
@@ -164,8 +166,8 @@ namespace reeltok.api.users.Tests.Services
         public async Task GetUserByIdAsync_ReturnsUserWithSubscriptionCounts()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
-            UserEntity user = new UserEntity(userId, new UserDetails("testUser", "bio", "profilePic"), new HiddenUserDetails("test@example.com"));
+            Guid userId = TestDataFactory.GenerateUserId();
+            UserEntity user = TestDataFactory.CreateUserEntity(userId, "testUser", "test@example.com");
             int subscriberCount = 10;
             int subscriptionCount = 5;
 
@@ -186,7 +188,7 @@ namespace reeltok.api.users.Tests.Services
         public async Task GetUserByIdAsync_WithInvalidUserId_ThrowsException()
         {
             // Arrange
-            Guid userId = Guid.NewGuid();
+            Guid userId = TestDataFactory.GenerateUserId();
 
             _mockUserRepository.Setup(x => x.GetUserByIdAsync(userId)).ThrowsAsync(new Exception("User not found"));
 
@@ -203,12 +205,8 @@ namespace reeltok.api.users.Tests.Services
         public async Task GetUsersByIdsAsync_ReturnsUsers()
         {
             // Arrange
-            List<Guid> userIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
-            List<UserEntity> users = new List<UserEntity>
-            {
-                new UserEntity(userIds[0], new UserDetails("testUser1", "bio", "profilePic1"), new HiddenUserDetails("test1@example.com")),
-                new UserEntity(userIds[1], new UserDetails("testUser2", "bio", "profilePic2"), new HiddenUserDetails("test2@example.com"))
-            };
+            List<Guid> userIds = new List<Guid> { TestDataFactory.GenerateUserId(), TestDataFactory.GenerateUserId() };
+            List<UserEntity> users = TestDataFactory.CreateUserEntitiesList(userIds);
 
             _mockUserRepository.Setup(x => x.GetUsersByUserIdsAsync(userIds)).ReturnsAsync(users);
 
@@ -229,7 +227,6 @@ namespace reeltok.api.users.Tests.Services
             _mockUserRepository.Setup(x => x.GetUsersByUserIdsAsync(userIds))
                 .ThrowsAsync(new ArgumentException("User ids list cannot be empty"));
 
-
             // Act & Assert
             ArgumentException exception = await Assert.ThrowsAsync<ArgumentException>(() => _usersService.GetUsersByIdsAsync(userIds));
             Assert.Contains("User ids list cannot be empty", exception.Message);
@@ -244,7 +241,7 @@ namespace reeltok.api.users.Tests.Services
         {
             // Arrange
             string email = "test@example.com";
-            UserEntity user = new UserEntity(Guid.NewGuid(), new UserDetails("testUser", "bio", "profilePic"), new HiddenUserDetails(email));
+            UserEntity user = TestDataFactory.CreateUserEntity(Guid.NewGuid(), "testUser", email);
 
             _mockUserRepository.Setup(x => x.GetUserByEmailAsync(email)).ReturnsAsync(user);
 
