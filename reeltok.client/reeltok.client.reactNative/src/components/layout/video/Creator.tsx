@@ -13,11 +13,7 @@ interface CreatorProps {
 }
 
 const Creator: React.FC<CreatorProps> = ({ user, video }) => {
-  const username = user.username
-  const profilePictureUrl = user.profilePictureUrl
-  const videoTitle = video.title
-  const videoDescription = video.description
-
+  
   const isCreator = user.userId === video.creatorUserId
 
   return (
@@ -25,12 +21,12 @@ const Creator: React.FC<CreatorProps> = ({ user, video }) => {
       {isCreator ? (
         <View style={styles.container}>
           <View style={styles.pictureContainer}>
-            <CreatorImage profilePictureUrl={profilePictureUrl} />
+            <CreatorImage profilePictureUrl={user.profilePictureUrl} />
           </View>
           <View style={styles.textContainer}>
-            <Username username={username} />
-            <Title title={videoTitle} />
-            <Description description={videoDescription} />
+            <Username username={user.username} />
+            <Title title={video.title} />
+            <Description description={video.description} />
           </View>
         </View>
       ) : (
