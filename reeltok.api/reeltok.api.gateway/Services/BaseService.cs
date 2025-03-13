@@ -12,7 +12,7 @@ namespace reeltok.api.gateway.Services
                 return new FailureNetworkResponseException(failureResponse.Message);
             }
 
-            return new FailureNetworkResponseException("An unknown error has occurred!");
+            return new InvalidOperationException("An unknown error has occurred!");
         }
     }
 }

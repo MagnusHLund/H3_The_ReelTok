@@ -41,7 +41,7 @@ namespace reeltok.api.gateway.Controllers
         [HttpGet("{userId}/subscriptions")]
         public async Task<IActionResult> GetUserSubscriptionsAsync(
             [FromRoute] Guid userId,
-            [FromQuery, Range(1, int.MaxValue)] int pageNumber,
+            [FromQuery] int pageNumber,
             [FromQuery, Range(1, byte.MaxValue)] byte pageSize = 15
         )
         {
@@ -55,7 +55,7 @@ namespace reeltok.api.gateway.Controllers
         [HttpGet("{userId}/subscribers")]
         public async Task<IActionResult> GetUserSubscribersAsync(
             [FromRoute] Guid userId,
-            [FromQuery, Range(1, int.MaxValue)] int pageNumber,
+            [FromQuery] int pageNumber,
             [FromQuery, Range(1, byte.MaxValue)] byte pageSize = 15
         )
         {
@@ -108,6 +108,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpPut("profile-picture")]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> UpdateProfilePictureAsync([FromBody] GatewayUpdateProfilePictureRequestDto request)
         {
             UserEntity user = await _usersService.UpdateProfilePictureAsync(request.ProfilePicture)

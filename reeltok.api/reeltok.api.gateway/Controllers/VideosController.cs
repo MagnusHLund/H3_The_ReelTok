@@ -34,7 +34,7 @@ namespace reeltok.api.gateway.Controllers
         public async Task<IActionResult> GetVideosForProfileAsync(
             [FromRoute] Guid userId,
             [FromQuery] int pageNumber,
-            [FromQuery] byte pageSize
+            [FromQuery, Range(1, byte.MaxValue)] byte pageSize = 15
         )
         {
             List<BaseVideoEntity> videos = await _videosService.GetVideosForProfileAsync(userId, pageNumber, pageSize)

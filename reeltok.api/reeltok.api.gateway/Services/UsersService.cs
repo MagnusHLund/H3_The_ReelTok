@@ -162,7 +162,6 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        // TODO: Implement in controller as well!
         public async Task<bool> SubscribeToUserAsync(Guid subscribeToUserId)
         {
             Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
@@ -183,7 +182,6 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        // TODO: Implement in controller as well!
         public async Task<bool> UnsubscribeToUserAsync(Guid subscribeToUserId)
         {
             Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);

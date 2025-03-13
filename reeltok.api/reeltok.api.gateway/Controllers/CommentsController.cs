@@ -23,7 +23,7 @@ namespace reeltok.api.gateway.Controllers
         [HttpGet("{videoId}")]
         public async Task<IActionResult> LoadCommentsAsync(
             [FromRoute] Guid videoId,
-            [FromQuery, Range(1, int.MaxValue)] int pageNumber,
+            [FromQuery] int pageNumber,
             [FromQuery, Range(1, byte.MaxValue)] byte pageSize = 15
             )
         {

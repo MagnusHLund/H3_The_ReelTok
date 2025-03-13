@@ -13,6 +13,8 @@ namespace reeltok.api.auth.Services
     public class TokenValidationService : ITokenValidationService
     {
         private const string SecretKeyConfig = "JWTSettings:SecretKey";
+        private const string AudienceKeyConfig = "JWTSettings:Audience";
+        private const string IssuerKeyConfig = "JWTSettings:Issuer";
 
         private readonly AppSettingsUtils _appSettingsUtils;
         private readonly ITokensRepository _tokensRepository;
@@ -44,16 +46,16 @@ namespace reeltok.api.auth.Services
 
         public ClaimsPrincipal DecodeAccessToken(string accessTokenValue)
         {
+
             string secretKey = _appSettingsUtils.GetConfigurationValue(SecretKeyConfig);
+
             byte[] encodedSecretKey = Encoding.UTF8.GetBytes(secretKey);
 
             TokenValidationParameters validationParameters = new TokenValidationParameters
             {
-                ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(encodedSecretKey),
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
+                ValidIssuer = _appSettingsUtils.GetConfigurationValue(IssuerKeyConfig),
+                ValidAudience = _appSettingsUtils.GetConfigurationValue(AudienceKeyConfig),
                 ClockSkew = TimeSpan.Zero
             };
 
