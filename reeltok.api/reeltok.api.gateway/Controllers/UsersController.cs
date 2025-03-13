@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
 using reeltok.api.gateway.ActionFilters;
 using reeltok.api.gateway.Entities.Users;
@@ -10,6 +11,8 @@ using reeltok.api.gateway.DTOs.Users.GetUserProfileData;
 using reeltok.api.gateway.DTOs.Users.UpdateProfilePicture;
 using reeltok.api.gateway.DTOs.Users.GetAllSubscribingToUser;
 using reeltok.api.gateway.DTOs.Users.GetAllSubscriptionsForUser;
+using reeltok.api.gateway.DTOs.Users.SubscribeToUser;
+using reeltok.api.gateway.DTOs.Users.UnsubscribeToUser;
 
 namespace reeltok.api.gateway.Controllers
 {
@@ -24,6 +27,15 @@ namespace reeltok.api.gateway.Controllers
         public UsersController(IUsersService usersService)
         {
             _usersService = usersService;
+        }
+
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetUserByIdAsync([FromRoute] Guid userId)
+        {
+            ExternalUserEntity user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
+
+            GatewayGetUserByIdResponseDto responseDto = new GatewayGetUserByIdResponseDto(user);
+            return Ok(responseDto);
         }
 
         [HttpGet("{userId}/subscriptions")]
@@ -75,12 +87,12 @@ namespace reeltok.api.gateway.Controllers
             return Ok(responseDto);
         }
 
-        [HttpPost("{userId}")]
-        public async Task<IActionResult> GetUserByIdAsync([FromRoute] Guid userId)
+        [HttpPost("subscribe")]
+        public async Task<IActionResult> SubscribeToUserAsync([FromBody] GatewaySubscribeToUserRequestDto request)
         {
-            ExternalUserEntity user = await _usersService.GetUserByIdAsync(userId).ConfigureAwait(false);
+            bool success = await _usersService.SubscribeToUserAsync(request.SubscribingToUserId).ConfigureAwait(false);
 
-            GatewayGetUserByIdResponseDto responseDto = new GatewayGetUserByIdResponseDto(user);
+            GatewaySubscribeToUserResponseDto responseDto = new GatewaySubscribeToUserResponseDto(success);
             return Ok(responseDto);
         }
 
@@ -102,6 +114,15 @@ namespace reeltok.api.gateway.Controllers
                 .ConfigureAwait(false);
 
             GatewayUpdateProfilePictureResponseDto responseDto = new GatewayUpdateProfilePictureResponseDto(user);
+            return Ok(responseDto);
+        }
+
+        [HttpDelete("unsubscribe")]
+        public async Task<IActionResult> UnsubscribeToUserAsync([FromQuery, JsonProperty("UserId")] Guid unsubscribingToUserId)
+        {
+            bool success = await _usersService.UnsubscribeToUserAsync(unsubscribingToUserId).ConfigureAwait(false);
+
+            GatewayUnsubscribeToUserResponseDto responseDto = new GatewayUnsubscribeToUserResponseDto(success);
             return Ok(responseDto);
         }
     }
