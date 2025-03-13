@@ -5,9 +5,6 @@ using reeltok.api.comments.Interfaces.Services;
 using reeltok.api.comments.DTOs.DoesVideoIdExist;
 using reeltok.api.comments.Exceptions;
 using reeltok.api.comments.Tests.Factories;
-using System;
-using System.Threading.Tasks;
-using System.Net.Http;
 using reeltok.api.comments.Interfaces.Factories;
 using reeltok.api.comments.DTOs;
 
@@ -40,7 +37,7 @@ namespace reeltok.api.comments.Tests.Services
             VideosServiceDoesVideoIdExistResponseDto successResponse = new VideosServiceDoesVideoIdExistResponseDto(true); // Correct initialization with constructor
 
             _mockHttpService.Setup(x => x.ProcessRequestAsync<VideosServiceDoesVideoIdExistRequestDto, VideosServiceDoesVideoIdExistResponseDto>(
-                    It.IsAny<VideosServiceDoesVideoIdExistRequestDto>(), targetUrl, HttpMethod.Get))
+                    It.IsAny<VideosServiceDoesVideoIdExistRequestDto>(), targetUrl, HttpMethod.Get, false))
                 .ReturnsAsync(successResponse);
 
             // Act
@@ -48,7 +45,7 @@ namespace reeltok.api.comments.Tests.Services
 
             // Assert
             _mockHttpService.Verify(x => x.ProcessRequestAsync<VideosServiceDoesVideoIdExistRequestDto, VideosServiceDoesVideoIdExistResponseDto>(
-                It.IsAny<VideosServiceDoesVideoIdExistRequestDto>(), targetUrl, HttpMethod.Get), Times.Once);
+                It.IsAny<VideosServiceDoesVideoIdExistRequestDto>(), targetUrl, HttpMethod.Get, false), Times.Once);
         }
 
         #endregion
@@ -67,7 +64,7 @@ namespace reeltok.api.comments.Tests.Services
             FailureResponseDto failureResponse = new FailureResponseDto("Video not found");
 
             _mockHttpService.Setup(x => x.ProcessRequestAsync<VideosServiceDoesVideoIdExistRequestDto, VideosServiceDoesVideoIdExistResponseDto>(
-                    It.IsAny<VideosServiceDoesVideoIdExistRequestDto>(), targetUrl, HttpMethod.Get))
+                    It.IsAny<VideosServiceDoesVideoIdExistRequestDto>(), targetUrl, HttpMethod.Get, false))
                 .ReturnsAsync(failureResponse);
 
             // Act & Assert
@@ -86,7 +83,7 @@ namespace reeltok.api.comments.Tests.Services
             FailureResponseDto unexpectedResponse = new FailureResponseDto("Unexpected response");
 
             _mockHttpService.Setup(x => x.ProcessRequestAsync<VideosServiceDoesVideoIdExistRequestDto, VideosServiceDoesVideoIdExistResponseDto>(
-                    It.IsAny<VideosServiceDoesVideoIdExistRequestDto>(), targetUrl, HttpMethod.Get))
+                    It.IsAny<VideosServiceDoesVideoIdExistRequestDto>(), targetUrl, HttpMethod.Get, false))
                 .ReturnsAsync(unexpectedResponse);
 
             // Act & Assert

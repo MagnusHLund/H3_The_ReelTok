@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using reeltok.api.users.Data;
 using reeltok.api.users.utils;
 using reeltok.api.users.Services;
-using reeltok.api.videos.Services;
 using reeltok.api.users.factories;
 using reeltok.api.users.Middleware;
 using Microsoft.EntityFrameworkCore;

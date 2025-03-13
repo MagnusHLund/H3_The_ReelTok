@@ -7,7 +7,7 @@ namespace reeltok.api.users.DTOs.GetSubscribers
     public class GetSubscribersResponseDto : BaseResponseDto
     {
         [Required]
-        [JsonProperty("Subscriptions")]
+        [JsonProperty("Subscribers")]
         public List<ExternalUserEntity> Subscriptions { get; }
 
         public GetSubscribersResponseDto(List<ExternalUserEntity> subscriptions, bool success = true) : base(success)
