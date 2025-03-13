@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using reeltok.api.gateway.DTOs.Videos.UploadVideo;
 using reeltok.api.gateway.ValueObjects;
+using reeltok.api.gateway.DTOs.Videos.UploadVideo;
 
 namespace reeltok.api.gateway.Mappers
 {
@@ -11,16 +7,23 @@ namespace reeltok.api.gateway.Mappers
     {
         internal static VideoUpload ConvertRequestDtoToVideoUpload(GatewayUploadVideoRequestDto requestDto)
         {
-            VideoDetails videoDetails = new VideoDetails(
-                requestDto.Title,
-                requestDto.Description,
-                requestDto.Tag
-                );
-
             return new VideoUpload(
-                videoDetails: videoDetails,
+                title: requestDto.Title,
+                description: requestDto.Description,
+                category: requestDto.Category,
                 videoFile: requestDto.Video
-                );
+            );
+        }
+
+        internal static ServiceUploadVideoRequestDto ConvertVideoUploadToUploadVideoRequestDto(VideoUpload videoUpload)
+        {
+            return new ServiceUploadVideoRequestDto(
+                userId: videoUpload.UserId ?? Guid.Empty,
+                title: videoUpload.Title,
+                description: videoUpload.Description,
+                category: videoUpload.Category,
+                videoFile: videoUpload.VideoFile
+            );
         }
     }
 }

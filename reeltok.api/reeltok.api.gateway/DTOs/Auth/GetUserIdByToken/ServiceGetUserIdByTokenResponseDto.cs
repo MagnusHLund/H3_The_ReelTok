@@ -1,16 +1,18 @@
-using System.Xml.Serialization;
+using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
-namespace reeltok.api.gateway.DTOs.Auth
+namespace reeltok.api.gateway.DTOs.Auth.GetUserIdByToken
 {
-    [XmlRoot("GetUserIdByTokenResponseDto")]
     public class ServiceGetUserIdByTokenResponseDto : BaseResponseDto
     {
-        [XmlElement(elementName: "UserId")]
+        [Required]
+        [JsonProperty("UserId")]
         public Guid UserId { get; set; }
+
         public ServiceGetUserIdByTokenResponseDto(Guid userId, bool success = true) : base(success)
         {
             UserId = userId;
         }
-        public ServiceGetUserIdByTokenResponseDto() { }
+
     }
 }

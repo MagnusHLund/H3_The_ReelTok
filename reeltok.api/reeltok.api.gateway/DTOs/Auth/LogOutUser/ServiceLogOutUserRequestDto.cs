@@ -1,10 +1,4 @@
-using System.Xml.Serialization;
-
-namespace reeltok.api.gateway.DTOs.Auth
+namespace reeltok.api.gateway.DTOs.Auth.LogOutUser
 {
-    [XmlRoot("LogOutUserRequestDto")]
-    public class ServiceLogOutUserRequestDto
-    {
-
-    }
+    public class ServiceLogOutUserRequestDto { }
 }

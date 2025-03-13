@@ -1,25 +1,28 @@
+using Newtonsoft.Json;
+using reeltok.api.gateway.Enums;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
 
-namespace reeltok.api.gateway.DTOs.Users
+namespace reeltok.api.gateway.DTOs.Users.UpdateUserDetails
 {
-    [XmlRoot("UpdateUserDetailsRequestDto")]
     public class GatewayUpdateUserDetailsRequestDto
     {
-        [XmlElement("Username")]
-        [Required]
         [StringLength(25, MinimumLength = 3)]
-        public string Username { get; set; }
-        [XmlElement("Email")]
-        [Required]
-        [Range(1, 320)]
-        [EmailAddress]
-        public string Email { get; set; }
+        [JsonProperty("Username")]
+        public string? Username { get; set; }
 
-        public GatewayUpdateUserDetailsRequestDto(string username, string email)
+        [StringLength(320, MinimumLength = 3)]
+        [EmailAddress]
+        [JsonProperty("Email")]
+        public string? Email { get; set; }
+
+        [JsonProperty("Interest")]
+        public CategoryType Interest { get; set; }
+
+        public GatewayUpdateUserDetailsRequestDto(string? username, string? email, CategoryType interest)
         {
             Username = username;
             Email = email;
+            Interest = interest;
         }
     }
 }

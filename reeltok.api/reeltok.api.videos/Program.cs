@@ -1,5 +1,6 @@
 using Serilog;
 using Serilog.Events;
+using Newtonsoft.Json;
 using reeltok.api.videos.Data;
 using reeltok.api.videos.Utils;
 using reeltok.api.videos.Services;
@@ -50,7 +51,15 @@ namespace reeltok.api.videos
 
             builder.Services.AddHttpClient<IHttpService, HttpService>();
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
+                });
+
+            builder.Services.AddHttpContextAccessor();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

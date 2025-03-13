@@ -14,7 +14,7 @@ namespace reeltok.api.auth.Middleware
 
         private readonly string[] _publicRoutes = new string[]
         {
-            "/API/USER/SIGNUP",
+            "/API/USERS/SIGNUP",
             "/API/AUTH/LOGIN",
             "/FAVICON.ICO",
             "/"

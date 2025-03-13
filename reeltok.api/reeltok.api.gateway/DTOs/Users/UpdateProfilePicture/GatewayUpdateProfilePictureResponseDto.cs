@@ -1,18 +1,18 @@
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using reeltok.api.gateway.Entities.Users;
 
-namespace reeltok.api.gateway.DTOs.Users
+namespace reeltok.api.gateway.DTOs.Users.UpdateProfilePicture
 {
-    [XmlRoot("UpdateProfilePictureResponseDto")]
     public class GatewayUpdateProfilePictureResponseDto : BaseResponseDto
     {
-        [XmlElement("ProfilePictureUrl")]
-        [StringLength(50)]
-        public string ProfilePictureUrl { get; set; }
+        [Required]
+        [JsonProperty("User")]
+        public UserEntity User { get; set; }
 
-        public GatewayUpdateProfilePictureResponseDto(string profilePictureUrl, bool success = true) : base(success)
+        public GatewayUpdateProfilePictureResponseDto(UserEntity user, bool success = true) : base(success)
         {
-            ProfilePictureUrl = profilePictureUrl;
+            User = user;
         }
     }
 }

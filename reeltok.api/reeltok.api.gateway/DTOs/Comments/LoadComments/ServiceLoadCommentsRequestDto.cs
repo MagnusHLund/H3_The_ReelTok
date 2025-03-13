@@ -1,22 +1,27 @@
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
-namespace reeltok.api.gateway.DTOs.Comments
+namespace reeltok.api.gateway.DTOs.Comments.LoadComments
 {
-    [XmlRoot("LoadCommentsRequestDto")]
     public class ServiceLoadCommentsRequestDto
     {
-        [XmlElement(elementName: "VideoId")]
         [Required]
+        [JsonProperty("VideoId")]
         public Guid VideoId { get; set; }
-        [XmlElement(elementName: "Amount")]
-        [Required]
-        public byte Amount { get; set; }
 
-        public ServiceLoadCommentsRequestDto(Guid videoId, byte amount)
+        [Required]
+        [JsonProperty("PageNumber")]
+        public int PageNumber { get; set; }
+
+        [Required]
+        [JsonProperty("PageSize")]
+        public byte PageSize { get; set; }
+
+        public ServiceLoadCommentsRequestDto(Guid videoId, int pageNumber, byte pageSize)
         {
             VideoId = videoId;
-            Amount = amount;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
         }
     }
 }

@@ -23,9 +23,7 @@ namespace reeltok.api.videos.Factories
 
             UserEntity videoCreator = new UserEntity(
                 userId: videoCreatorDetails.UserId,
-                username: videoCreatorDetails.Username,
-                profileUrlPath: videoCreatorDetails.ProfileUrlPath,
-                profilePictureUrlPath: videoCreatorDetails.ProfilePictureUrlPath
+                userDetails: videoCreatorDetails.UserDetails
             );
 
             return new VideoForFeedEntity(

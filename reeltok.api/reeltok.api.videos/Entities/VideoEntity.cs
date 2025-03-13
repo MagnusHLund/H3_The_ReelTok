@@ -7,9 +7,11 @@ namespace reeltok.api.videos.Entities
     {
         [Required]
         public Guid UserId { get; set; }
+
         [Required]
         [MaxLength(50)]
         public string Title { get; set; }
+
         [Required]
         [MaxLength(256)]
         public string Description { get; set; }

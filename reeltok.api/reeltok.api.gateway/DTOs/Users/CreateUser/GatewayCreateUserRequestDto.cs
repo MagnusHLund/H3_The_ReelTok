@@ -1,31 +1,37 @@
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using reeltok.api.gateway.Enums;
 
-namespace reeltok.api.gateway.DTOs.Users
+namespace reeltok.api.gateway.DTOs.Users.CreateUser
 {
-    [XmlRoot("CreateUserRequestDto")]
     public class GatewayCreateUserRequestDto
     {
-        [XmlElement(elementName: "Email")]
         [Required]
         [EmailAddress]
-        [Range(1, 320)]
-
+        [StringLength(320, MinimumLength = 3)]
+        [JsonProperty("Email")]
         public string Email { get; set; }
-        [XmlElement(elementName: "Username")]
+
         [Required]
         [StringLength(25)]
+        [JsonProperty("Username")]
         public string Username { get; set; }
-        [XmlElement(elementName: "Password")]
+
         [Required]
         [MinLength(8)]
+        [JsonProperty("Password")]
         public string Password { get; set; }
 
-        public GatewayCreateUserRequestDto(string email, string username, string password)
+        [Required]
+        [JsonProperty("Interest")]
+        public CategoryType Interest { get; set; }
+
+        public GatewayCreateUserRequestDto(string email, string username, string password, CategoryType interest)
         {
             Email = email;
             Username = username;
             Password = password;
+            Interest = interest;
         }
     }
 }

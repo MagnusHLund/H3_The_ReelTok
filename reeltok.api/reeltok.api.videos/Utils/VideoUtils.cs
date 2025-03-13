@@ -4,7 +4,7 @@ namespace reeltok.api.videos.Utils
 {
     public static class VideoUtils
     {
-        public static async Task EnsureValidVideoFile(IFormFile video)
+        public static async Task EnsureValidVideoFileAsync(IFormFile video)
         {
             if (video == null || video.Length == 0)
             {
@@ -16,12 +16,12 @@ namespace reeltok.api.videos.Utils
                 throw new InvalidOperationException("Invalid video file extension.");
             }
 
-            if (!await HasVideoStream(video).ConfigureAwait(false))
+            if (!await HasVideoStreamAsync(video).ConfigureAwait(false))
             {
                 throw new InvalidOperationException("The video file does not contain a valid video stream.");
             }
 
-            if (!await IsVideoMinimumLength(video).ConfigureAwait(false))
+            if (!await IsVideoMinimumLengthAsync(video).ConfigureAwait(false))
             {
                 throw new InvalidOperationException("The video file is too short.");
             }
@@ -32,7 +32,7 @@ namespace reeltok.api.videos.Utils
             return $"{userId}/{videoId}";
         }
 
-        private static async Task<bool> IsVideoMinimumLength(IFormFile video)
+        private static async Task<bool> IsVideoMinimumLengthAsync(IFormFile video)
         {
             var mediaInfo = await GetMediaInfoAsync(video).ConfigureAwait(false);
             TimeSpan minimumDuration = TimeSpan.FromSeconds(1);
@@ -46,10 +46,10 @@ namespace reeltok.api.videos.Utils
             return allowedFileExtensions.Contains(fileExtension);
         }
 
-        private static async Task<bool> HasVideoStream(IFormFile video)
+        private static async Task<bool> HasVideoStreamAsync(IFormFile video)
         {
             var mediaInfo = await GetMediaInfoAsync(video).ConfigureAwait(false);
-            return mediaInfo.VideoStreams.Count() > 0;
+            return mediaInfo.VideoStreams.Any();
         }
 
         private static async Task<IMediaInfo> GetMediaInfoAsync(IFormFile video)
@@ -57,14 +57,14 @@ namespace reeltok.api.videos.Utils
             string temporaryFilePath = Path.GetTempFileName();
             using (FileStream stream = new FileStream(temporaryFilePath, FileMode.Create))
             {
-                await video.CopyToAsync(stream);
+                await video.CopyToAsync(stream).ConfigureAwait(false);
             }
 
             IMediaInfo mediaInfo;
 
             try
             {
-                mediaInfo = await FFmpeg.GetMediaInfo(temporaryFilePath);
+                mediaInfo = await FFmpeg.GetMediaInfo(temporaryFilePath).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

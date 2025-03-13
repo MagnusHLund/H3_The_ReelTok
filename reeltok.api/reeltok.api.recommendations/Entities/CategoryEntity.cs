@@ -7,6 +7,7 @@ namespace reeltok.api.recommendations.Entities
     {
         [Key]
         public uint CategoryId { get; set; }
+        
         [Required]
         public CategoryType Category { get; set; }
 

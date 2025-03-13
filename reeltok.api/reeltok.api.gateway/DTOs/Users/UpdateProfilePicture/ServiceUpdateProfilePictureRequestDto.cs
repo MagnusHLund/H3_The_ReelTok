@@ -1,16 +1,16 @@
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
-namespace reeltok.api.gateway.DTOs.Users
+namespace reeltok.api.gateway.DTOs.Users.UpdateProfilePicture
 {
-    [XmlRoot("UpdateProfilePictureRequestDto")]
     public class ServiceUpdateProfilePictureRequestDto
     {
-        [XmlElement("UserId")]
         [Required]
+        [JsonProperty("UserId")]
         public Guid UserId { get; set; }
-        [XmlElement("ProfilePicture")]
+
         [Required]
+        [JsonProperty("ProfilePicture")]
         public IFormFile ProfilePicture { get; set; }
 
         public ServiceUpdateProfilePictureRequestDto(Guid userId, IFormFile profilePicture)
@@ -18,5 +18,8 @@ namespace reeltok.api.gateway.DTOs.Users
             UserId = userId;
             ProfilePicture = profilePicture;
         }
+
+        // Parameterless constructor required for multipart/form-data requests
+        public ServiceUpdateProfilePictureRequestDto() { }
     }
 }

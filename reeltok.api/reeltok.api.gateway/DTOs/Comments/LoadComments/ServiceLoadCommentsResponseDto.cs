@@ -1,20 +1,18 @@
-using System.Xml.Serialization;
-using reeltok.api.gateway.Entities;
+using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using reeltok.api.gateway.Entities.comments;
 
-namespace reeltok.api.gateway.DTOs.Comments
+namespace reeltok.api.gateway.DTOs.Comments.LoadComments
 {
-    [XmlRoot("LoadCommentsResponseDto")]
     public class ServiceLoadCommentsResponseDto : BaseResponseDto
     {
-        [XmlElement(elementName: "Comments")]
-        [XmlArray]
-        [XmlArrayItem("Comment")]
+        [Required]
+        [JsonProperty("Comments")]
         public List<CommentUsingUnixTime> Comments { get; set; }
 
         public ServiceLoadCommentsResponseDto(List<CommentUsingUnixTime> comments, bool success = true) : base(success)
         {
             Comments = comments;
         }
-        public ServiceLoadCommentsResponseDto() { }
     }
 }

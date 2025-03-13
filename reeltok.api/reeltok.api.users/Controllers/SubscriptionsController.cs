@@ -17,6 +17,7 @@ namespace reeltok.api.users.Controllers
     [Consumes("application/json")]
     public class SubscriptionsController : ControllerBase
     {
+        // TODO: Split this controller up into 2 controllers. Subscriptions and subscribers.
         private readonly ISubscriptionsService _subscriptionService;
 
         public SubscriptionsController(ISubscriptionsService subscriptionService)

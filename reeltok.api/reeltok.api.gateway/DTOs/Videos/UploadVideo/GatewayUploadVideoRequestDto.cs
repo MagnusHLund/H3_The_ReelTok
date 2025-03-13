@@ -1,34 +1,39 @@
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using reeltok.api.gateway.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.gateway.DTOs.Videos.UploadVideo
 {
-    [XmlRoot("UploadVideoRequestDto")]
     public class GatewayUploadVideoRequestDto
     {
-        [XmlElement(elementName: "Title")]
         [Required]
         [StringLength(50)]
+        [JsonProperty("Title")]
         public string Title { get; set; }
-        [XmlElement(elementName: "Description")]
+
         [Required]
         [StringLength(256)]
+        [JsonProperty("Description")]
         public string Description { get; set; }
-        [XmlElement(elementName: "Tag")]
+
         [Required]
         [StringLength(30)]
-        public RecommendedCategories Tag { get; set; }
-        [XmlElement(elementName: "Video")]
+        [JsonProperty("Category")]
+        public CategoryType Category { get; set; }
+
         [Required]
+        [JsonProperty("Video")]
         public IFormFile Video { get; set; }
 
-        public GatewayUploadVideoRequestDto(string title, string description, RecommendedCategories tag, IFormFile video)
+        public GatewayUploadVideoRequestDto(string title, string description, CategoryType category, IFormFile video)
         {
             Title = title;
             Description = description;
-            Tag = tag;
+            Category = category;
             Video = video;
         }
+
+        // Parameterless constructor required for multipart/form-data requests
+        public GatewayUploadVideoRequestDto() { }
     }
 }

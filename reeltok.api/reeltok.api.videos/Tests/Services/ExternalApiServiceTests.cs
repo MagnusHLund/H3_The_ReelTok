@@ -39,7 +39,7 @@ namespace reeltok.api.videos.Tests.Services
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
             _mockHttpService.Setup(x => x.ProcessRequestAsync<RecommendationsServiceGetRecommendedVideosRequestDto, RecommendedServiceGetRecommendedVideosResponseDto>(
-                It.IsAny<RecommendationsServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                It.IsAny<RecommendationsServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false))
                 .ReturnsAsync(responseDto);
 
             // Act
@@ -60,7 +60,7 @@ namespace reeltok.api.videos.Tests.Services
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
             _mockHttpService.Setup(x => x.ProcessRequestAsync<RecommendationsServiceGetRecommendedVideosRequestDto, BaseResponseDto>(
-                It.IsAny<RecommendationsServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                It.IsAny<RecommendationsServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false))
                 .ReturnsAsync(responseDto); // Returning FailureResponseDto
 
             // Act & Assert
@@ -83,7 +83,7 @@ namespace reeltok.api.videos.Tests.Services
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
             _mockHttpService.Setup(x => x.ProcessRequestAsync<RecommendationsServiceGetRecommendedVideosRequestDto, RecommendedServiceGetRecommendedVideosResponseDto>(
-                It.IsAny<RecommendationsServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                It.IsAny<RecommendationsServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false))
                 .ThrowsAsync(new HttpRequestException("Service unavailable", null, HttpStatusCode.ServiceUnavailable));
 
             // Act & Assert
@@ -105,7 +105,7 @@ namespace reeltok.api.videos.Tests.Services
 
             _mockEndpointFactory.Setup(x => x.GetRecommendationsApiUrl(It.IsAny<string>())).Returns(targetUrl);
             _mockHttpService.Setup(x => x.ProcessRequestAsync<RecommendationsServiceGetRecommendedVideosRequestDto, RecommendedServiceGetRecommendedVideosResponseDto>(
-                It.IsAny<RecommendationsServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>()))
+                It.IsAny<RecommendationsServiceGetRecommendedVideosRequestDto>(), It.IsAny<Uri>(), It.IsAny<HttpMethod>(), false))
                 .ReturnsAsync(responseDto);
 
             // Act

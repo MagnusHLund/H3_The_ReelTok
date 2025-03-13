@@ -1,11 +1,17 @@
+using Newtonsoft.Json;
 using reeltok.api.videos.ValueObjects;
 
 namespace reeltok.api.videos.Entities
 {
     public class VideoForFeedEntity : BaseVideoEntity
     {
+        [JsonProperty("VideoDetails")]
         public VideoDetails VideoDetails { get; set; }
+
+        [JsonProperty("VideoLikes")]
         public VideoLikes VideoLikes { get; set; }
+
+        [JsonProperty("User")]
         public UserEntity VideoCreator { get; set; }
 
         public VideoForFeedEntity(
@@ -15,7 +21,7 @@ namespace reeltok.api.videos.Entities
             UserEntity videoCreator,
             string streamPath,
             uint uploadedAt
-            ) : base(videoId, streamPath, uploadedAt)
+        ) : base(videoId, streamPath, uploadedAt)
         {
             VideoId = videoId;
             VideoDetails = videoDetails;

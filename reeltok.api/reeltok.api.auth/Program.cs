@@ -6,10 +6,10 @@ using reeltok.api.auth.Services;
 using reeltok.api.auth.Middleware;
 using Microsoft.EntityFrameworkCore;
 using reeltok.api.auth.Repositories;
-using Newtonsoft.Json.Serialization;
 using reeltok.api.auth.Interfaces.Services;
 using reeltok.api.auth.Interfaces.Repositories;
 using reeltok.api.auth.BackgroundServices;
+using Newtonsoft.Json;
 
 namespace AuthServiceApi
 {
@@ -55,8 +55,11 @@ namespace AuthServiceApi
             builder.Services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
-                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
                 });
+
+            builder.Services.AddHttpContextAccessor();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -65,6 +68,7 @@ namespace AuthServiceApi
             WebApplication app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<ForwardCookiesMiddleware>();
             app.UseMiddleware<TokenValidationMiddleware>();
 
             // Configure the HTTP request pipeline.

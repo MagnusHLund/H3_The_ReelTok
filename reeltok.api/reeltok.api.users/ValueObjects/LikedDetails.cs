@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using reeltok.api.users.Entities;
+using Newtonsoft.Json;
 
 namespace reeltok.api.users.ValueObjects
 {

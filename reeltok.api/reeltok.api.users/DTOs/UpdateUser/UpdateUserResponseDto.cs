@@ -7,7 +7,7 @@ namespace reeltok.api.users.DTOs.UpdateUser
     public class UpdateUserResponseDto : BaseResponseDto
     {
         [Required]
-        [JsonProperty("UserEntity")]
+        [JsonProperty("User")]
         public UserEntity UserEntity { get; set; }
 
         public UpdateUserResponseDto(UserEntity userEntity, bool success = true) : base(success)

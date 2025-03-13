@@ -1,20 +1,18 @@
-using reeltok.api.gateway.Entities;
+using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using reeltok.api.gateway.Entities.Videos;
 
 namespace reeltok.api.gateway.DTOs.Videos.GetVideosForProfile
 {
-    internal class GatewayGetVideosForProfileResponseDto : BaseResponseDto
+    public class GatewayGetVideosForProfileResponseDto : BaseResponseDto
     {
-        internal List<Video> Videos { get; set; }
+        [Required]
+        [JsonProperty("Videos")]
+        public List<BaseVideoEntity> Videos { get; set; }
 
-
-        internal GatewayGetVideosForProfileResponseDto(List<Video> videos, bool success = true) : base(success)
+        public GatewayGetVideosForProfileResponseDto(List<BaseVideoEntity> videos, bool success = true) : base(success)
         {
             Videos = videos;
         }
-
-        internal GatewayGetVideosForProfileResponseDto()
-        {
-        }
-
     }
 }

@@ -1,25 +1,18 @@
+using Newtonsoft.Json;
+using reeltok.api.gateway.Entities.Users;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
-using reeltok.api.gateway.DTOs.Interfaces;
 
-namespace reeltok.api.gateway.DTOs.Users
+namespace reeltok.api.gateway.DTOs.Users.UpdateUserDetails
 {
-    [XmlRoot("UpdateUserDetailsResponseDto")]
-    public class GatewayUpdateUserDetailsResponseDto : BaseResponseDto, IEditableUserDetailsDto
+    public class GatewayUpdateUserDetailsResponseDto : BaseResponseDto
     {
-        [XmlElement("Username")]
-        [StringLength(25, MinimumLength = 3)]
-        public string Username { get; set; }
-        [XmlElement("Email")]
-        [EmailAddress]
-        [Range(1, 320)]
-        public string Email { get; set; }
-        public GatewayUpdateUserDetailsResponseDto(string username, string email, bool success = true) : base(success)
-        {
-            Username = username;
-            Email = email;
-        }
+        [Required]
+        [JsonProperty("User")]
+        public UserEntity User { get; set; }
 
-        public GatewayUpdateUserDetailsResponseDto() { }
+        public GatewayUpdateUserDetailsResponseDto(UserEntity user, bool success = true) : base(success)
+        {
+            User = user;
+        }
     }
 }

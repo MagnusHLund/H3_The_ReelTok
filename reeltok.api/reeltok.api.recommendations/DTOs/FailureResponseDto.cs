@@ -8,6 +8,7 @@ namespace reeltok.api.recommendations.DTOs
         [Required]
         [JsonProperty("Message")]
         public string Message { get; set; }
+        
         [JsonProperty("Success")]
         public override bool Success { get; set; }
 

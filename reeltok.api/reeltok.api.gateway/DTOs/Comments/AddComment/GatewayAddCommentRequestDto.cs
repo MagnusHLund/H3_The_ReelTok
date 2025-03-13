@@ -1,23 +1,23 @@
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
-namespace reeltok.api.gateway.DTOs.Comments
+namespace reeltok.api.gateway.DTOs.Comments.AddComment
 {
-    [XmlRoot("AddCommentRequestDto")]
     public class GatewayAddCommentRequestDto
     {
-        [XmlElement(elementName: "VideoId")]
         [Required]
+        [JsonProperty("VideoId")]
         public Guid VideoId { get; set; }
-        [XmlElement(elementName: "CommentText")]
+
         [Required]
         [Range(1, 1024)]
-        public string CommentText { get; set; }
+        [JsonProperty("Message")]
+        public string Message { get; set; }
 
-        public GatewayAddCommentRequestDto(Guid videoId, string commentText)
+        public GatewayAddCommentRequestDto(Guid videoId, string message)
         {
             VideoId = videoId;
-            CommentText = commentText;
+            Message = message;
         }
     }
 }

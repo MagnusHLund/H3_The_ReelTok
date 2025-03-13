@@ -24,29 +24,29 @@ namespace reeltok.api.videos.Tests.Factories
             );
         }
 
-        public static UserServiceAddLikeRequestDto CreateAddLikeRequest()
+        public static UsersServiceAddLikeRequestDto CreateAddLikeRequest()
         {
             Guid userId = Guid.NewGuid();
             Guid videoId = Guid.NewGuid();
 
-            return new UserServiceAddLikeRequestDto
+            return new UsersServiceAddLikeRequestDto
             (
                 userId: userId,
                 videoId: videoId
             );
         }
 
-        public static UserServiceAddLikeResponseDto CreateAddLikeResponse()
+        public static UsersServiceAddLikeResponseDto CreateAddLikeResponse()
         {
-            return new UserServiceAddLikeResponseDto
+            return new UsersServiceAddLikeResponseDto
             (
                 success: true
             );
         }
 
-        public static UserServiceRemoveLikeResponseDto CreateRemoveLikeResponse()
+        public static UsersServiceRemoveLikeResponseDto CreateRemoveLikeResponse()
         {
-            return new UserServiceRemoveLikeResponseDto
+            return new UsersServiceRemoveLikeResponseDto
             (
                 success: true
             );
@@ -139,12 +139,11 @@ namespace reeltok.api.videos.Tests.Factories
         public static UserEntity CreateUserEntity()
         {
             Guid userId = Guid.NewGuid();
+            UserDetails userDetails = CreateUserDetails();
 
             return new UserEntity(
                 userId: userId,
-                username: "Test user",
-                profileUrlPath: userId.ToString(),
-                profilePictureUrlPath: "Test profile picture"
+                userDetails: userDetails
             );
         }
 
@@ -156,9 +155,7 @@ namespace reeltok.api.videos.Tests.Factories
             return new VideoCreatorEntity(
                 videoId: videoId,
                 userId: userEntity.UserId,
-                username: userEntity.Username,
-                profileUrlPath: userEntity.ProfileUrlPath,
-                profilePictureUrlPath: userEntity.ProfilePictureUrlPath
+                userDetails: userEntity.UserDetails
             );
         }
 
@@ -185,6 +182,15 @@ namespace reeltok.api.videos.Tests.Factories
             Guid videoId = Guid.NewGuid();
 
             return new TotalVideoLikesEntity(videoId, totalLikes);
+        }
+
+        public static UserDetails CreateUserDetails()
+        {
+            return new UserDetails(
+                username: "Test user",
+                profileUrlPath: "TestProfileUrlPath",
+                profilePictureUrlPath: "TestProfilePicturePath"
+            );
         }
     }
 }

@@ -60,7 +60,7 @@ namespace reeltok.api.users.Services
             int totalSubscriber = await _subscriptions.GetSubscribersCountAsync(userId).ConfigureAwait(false);
             int totalSubscription = await _subscriptions.GetSubscriptionsCountAsync(userId).ConfigureAwait(false);
 
-            return new UserWithSubscriptionCounts(user, totalSubscriber, totalSubscription);
+            return new UserWithSubscriptionCounts(user.UserId, user.UserDetails, totalSubscriber, totalSubscription);
         }
 
         public async Task<UserEntity> UpdateUserAsync(Guid userId, string? username, string? email)

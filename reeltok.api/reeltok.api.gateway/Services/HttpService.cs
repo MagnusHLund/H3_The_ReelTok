@@ -1,62 +1,141 @@
 using System.Text;
+using System.Text.Json;
 using System.Reflection;
+using System.Net.Http.Headers;
 using reeltok.api.gateway.DTOs;
-using reeltok.api.gateway.Utils;
-using reeltok.api.gateway.Interfaces;
 using Microsoft.AspNetCore.WebUtilities;
+using reeltok.api.gateway.Interfaces.Services;
 
 namespace reeltok.api.gateway.Services
 {
-    internal class HttpService : BaseService, IHttpService
+    public class HttpService : IHttpService
     {
         private readonly HttpClient _httpClient;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HttpService(HttpClient httpClient)
+        public HttpService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
         {
             _httpClient = httpClient;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(TRequest requestDto, Uri targetUrl, HttpMethod httpMethod) where TResponse : BaseResponseDto
+        public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(
+            TRequest requestDto,
+            Uri targetUrl,
+            HttpMethod httpMethod,
+            bool isMultipartFormData = false
+        ) where TResponse : BaseResponseDto
         {
             if (Equals(requestDto, default(TRequest)))
             {
                 throw new ArgumentNullException(nameof(requestDto));
             }
 
-            HttpRequestMessage request = httpMethod == HttpMethod.Get || httpMethod == HttpMethod.Delete
-                ? PrepareHttpRequestWithQueryParameters(requestDto, targetUrl)
-                : PrepareHttpRequestBody(requestDto, targetUrl, httpMethod);
+            HttpRequestMessage request = CreateHttpRequest(requestDto, targetUrl, httpMethod, isMultipartFormData);
+            ForwardCookies(request);
 
-            BaseResponseDto response = await RouteRequestAsync<TResponse>(request).ConfigureAwait(false);
-
-            return response;
+            return await SendRequestAsync<TResponse>(request).ConfigureAwait(false);
         }
 
-        public async Task<BaseResponseDto> RouteRequestAsync<TResponse>(HttpRequestMessage request) where TResponse : BaseResponseDto
+        private static HttpRequestMessage CreateHttpRequest<TRequest>(
+            TRequest requestDto,
+            Uri targetUrl,
+            HttpMethod httpMethod,
+            bool isMultipartFormData
+        )
         {
-
-            HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
-
-            return response.IsSuccessStatusCode
-                ? await DeserializeXmlToDto<TResponse>(response).ConfigureAwait(false)
-                : await DeserializeXmlToDto<FailureResponseDto>(response).ConfigureAwait(false);
+            if (httpMethod == HttpMethod.Get || httpMethod == HttpMethod.Delete)
+            {
+                return PrepareHttpRequestWithQueryParameters(requestDto, targetUrl);
+            }
+            else if (isMultipartFormData)
+            {
+                return PrepareMultipartFormDataRequest(requestDto, targetUrl, httpMethod);
+            }
+            else
+            {
+                return PrepareHttpRequestBody(requestDto, targetUrl, httpMethod);
+            }
         }
 
-        private static HttpRequestMessage PrepareHttpRequestBody<TRequest>(TRequest requestDto, Uri targetUrl, HttpMethod httpMethod)
+        private void ForwardCookies(HttpRequestMessage request)
         {
-            string requestContent = XmlUtils.SerializeDtoToXml(requestDto);
+            IRequestCookieCollection? cookies = _httpContextAccessor.HttpContext?.Request.Cookies;
+            if (cookies != null)
+            {
+                foreach (var cookie in cookies)
+                {
+                    request.Headers.Add("Cookie", $"{cookie.Key}={cookie.Value}");
+                }
+            }
+        }
+
+        private void HandleResponseCookies(HttpResponseMessage response)
+        {
+            if (response.Headers.TryGetValues("Set-Cookie", out var cookies))
+            {
+                foreach (var cookie in cookies)
+                {
+                    _httpContextAccessor.HttpContext?.Response.Headers.Append("Set-Cookie", cookie);
+                }
+            }
+        }
+
+        private async Task<BaseResponseDto> SendRequestAsync<TResponse>(HttpRequestMessage request)
+            where TResponse : BaseResponseDto
+        {
+            using (request)
+            {
+                HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
+                HandleResponseCookies(response);
+
+                return await DeserializeResponseAsync<TResponse>(response).ConfigureAwait(false);
+            }
+        }
+
+        private static HttpRequestMessage PrepareHttpRequestBody<TRequest>(
+            TRequest requestDto,
+            Uri targetUrl,
+            HttpMethod httpMethod
+        )
+        {
+            string requestContent = JsonSerializer.Serialize(requestDto);
             return new HttpRequestMessage(httpMethod, targetUrl)
             {
                 Content = CreateStringContent(requestContent)
             };
         }
 
-        private static StringContent CreateStringContent(string content)
+        private static HttpRequestMessage PrepareMultipartFormDataRequest<TRequest>(
+            TRequest requestDto,
+            Uri targetUrl,
+            HttpMethod httpMethod
+        )
         {
-            return new StringContent(content, Encoding.UTF8, "application/xml");
+            MultipartFormDataContent formDataContent = new MultipartFormDataContent();
+            foreach (PropertyInfo property in typeof(TRequest).GetProperties())
+            {
+                object? value = property.GetValue(requestDto);
+                if (value != null)
+                {
+                    StringContent stringContent = new StringContent(value.ToString() ?? string.Empty);
+                    stringContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                    {
+                        Name = property.Name
+                    };
+                    formDataContent.Add(stringContent);
+                }
+            }
+            return new HttpRequestMessage(httpMethod, targetUrl)
+            {
+                Content = formDataContent
+            };
         }
 
-        private HttpRequestMessage PrepareHttpRequestWithQueryParameters<TRequest>(TRequest requestDto, Uri targetUrl)
+        private static HttpRequestMessage PrepareHttpRequestWithQueryParameters<TRequest>(
+            TRequest requestDto,
+            Uri targetUrl
+        )
         {
             Dictionary<string, string> requestQueryParameters = ConvertRequestDtoToQueryParameters(requestDto);
             string targetUrlWithQueryParameters = QueryHelpers.AddQueryString(targetUrl.ToString(), requestQueryParameters);
@@ -64,10 +143,18 @@ namespace reeltok.api.gateway.Services
             return new HttpRequestMessage(HttpMethod.Get, targetUrlWithQueryParameters);
         }
 
-        private static async Task<BaseResponseDto> DeserializeXmlToDto<TResponse>(HttpResponseMessage response) where TResponse : BaseResponseDto
+        private static StringContent CreateStringContent(string content)
+        {
+            return new StringContent(content, Encoding.UTF8, "application/json");
+        }
+
+        private static async Task<BaseResponseDto> DeserializeResponseAsync<TResponse>(HttpResponseMessage response)
+            where TResponse : BaseResponseDto
         {
             string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return XmlUtils.DeserializeFromXml<TResponse>(responseContent);
+
+            return JsonSerializer.Deserialize<TResponse>(responseContent)
+                ?? throw new InvalidOperationException("Failed to deserialize response content.");
         }
 
         private static Dictionary<string, string> ConvertRequestDtoToQueryParameters<TRequest>(TRequest request)

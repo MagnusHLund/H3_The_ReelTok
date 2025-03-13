@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
-namespace reeltok.api.gateway.DTOs.Users
+namespace reeltok.api.gateway.DTOs.Users.UpdateProfilePicture
 {
-    [XmlRoot("UpdateProfilePictureRequestDto")]
     public class GatewayUpdateProfilePictureRequestDto
     {
-        [XmlElement("ProfilePicture")]
         [Required]
+        [JsonProperty("ProfilePicture")]
         public IFormFile ProfilePicture { get; set; }
 
         public GatewayUpdateProfilePictureRequestDto(IFormFile profilePicture)

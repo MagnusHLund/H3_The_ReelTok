@@ -1,16 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using reeltok.api.gateway.ActionFilters;
-using reeltok.api.gateway.DTOs;
-using reeltok.api.gateway.DTOs.Comments;
-using reeltok.api.gateway.Entities;
-using reeltok.api.gateway.Interfaces;
-using reeltok.api.gateway.Mappers;
+using System.ComponentModel.DataAnnotations;
+using reeltok.api.gateway.Entities.comments;
+using reeltok.api.gateway.Interfaces.Services;
+using reeltok.api.gateway.DTOs.Comments.AddComment;
+using reeltok.api.gateway.DTOs.Comments.LoadComments;
 
 namespace reeltok.api.gateway.Controllers
 {
     [ApiController]
     [ValidateModel]
     [Route("api/[controller]")]
+    [Consumes("application/json")]
     public class CommentsController : ControllerBase
     {
         private readonly ICommentsService _commentsService;
@@ -19,34 +20,28 @@ namespace reeltok.api.gateway.Controllers
             _commentsService = commentsService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddComment([FromBody] GatewayAddCommentRequestDto request)
+        [HttpGet("{videoId}")]
+        public async Task<IActionResult> LoadCommentsAsync(
+            [FromRoute] Guid videoId,
+            [FromQuery, Range(1, int.MaxValue)] int pageNumber = 15,
+            [FromQuery, Range(1, byte.MaxValue)] byte pageSize = 15
+            )
         {
+            List<CommentUsingDateTime> comments = await _commentsService.LoadCommentsAsync(videoId, pageNumber, pageSize)
+                .ConfigureAwait(false);
 
-            CommentUsingDateTime comment = await _commentsService.AddComment(request.VideoId, request.CommentText).ConfigureAwait(false);
-
-            GatewayAddCommentResponseDto responseDto = CommentMapper.ConvertToResponseDto<GatewayAddCommentResponseDto>(comment);
+            GatewayLoadCommentsResponseDto responseDto = new GatewayLoadCommentsResponseDto(comments);
 
             return Ok(responseDto);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> LoadComments([FromBody] GatewayLoadCommentsRequestDto request)
+        [HttpPost]
+        public async Task<IActionResult> AddCommentAsync([FromBody] GatewayAddCommentRequestDto request)
         {
-            if (request.Amount <= 0)
-            {
-                return BadRequest(new FailureResponseDto("Amount should be greater than zero!"));
-            }
+            CommentUsingDateTime comment = await _commentsService.AddCommentAsync(request.VideoId, request.Message)
+                .ConfigureAwait(false);
 
-            List<CommentUsingDateTime> comments = await _commentsService.LoadComments(request.VideoId, request.Amount).ConfigureAwait(false);
-
-            if (comments.Count.Equals(0))
-            {
-                return NoContent();
-            }
-
-            GatewayLoadCommentsResponseDto responseDto = new GatewayLoadCommentsResponseDto(comments);
-
+            GatewayAddCommentResponseDto responseDto = new GatewayAddCommentResponseDto(comment);
             return Ok(responseDto);
         }
     }

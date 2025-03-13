@@ -1,17 +1,16 @@
-using System.Xml.Serialization;
-using reeltok.api.gateway.ValueObjects;
+using Newtonsoft.Json;
+using reeltok.api.gateway.Entities.Users;
+using System.ComponentModel.DataAnnotations;
 
-namespace reeltok.api.gateway.DTOs.Users
+namespace reeltok.api.gateway.DTOs.Users.GetAllSubscribingToUser
 {
-    [XmlRoot("GetAllSubscribingToUserResponseDto")]
     public class GatewayGetAllSubscribingToUserResponseDto : BaseResponseDto
     {
-        [XmlElement("Users")]
-        [XmlArray("Users")]
-        [XmlArrayItem("UserDetails")]
-        public List<UserDetails> Users { get; set; }
+        [Required]
+        [JsonProperty("Users")]
+        public List<ExternalUserEntity> Users { get; set; }
 
-        public GatewayGetAllSubscribingToUserResponseDto(List<UserDetails> users, bool success = true) : base(success)
+        public GatewayGetAllSubscribingToUserResponseDto(List<ExternalUserEntity> users, bool success = true) : base(success)
         {
             Users = users;
         }
