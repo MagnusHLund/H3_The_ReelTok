@@ -8,9 +8,9 @@ namespace reeltok.api.gateway.Entities.comments
     {
         [Required]
         [JsonProperty("CommentDetails")]
-        public BaseCommentDetails<uint> CommentDetails { get; set; }
+        public CommentDetailsUsingUnixTime CommentDetails { get; set; }
 
-        public CommentUsingUnixTime(uint commentId, BaseCommentDetails<uint> commentDetails) : base(commentId)
+        public CommentUsingUnixTime(uint commentId, CommentDetailsUsingUnixTime commentDetails) : base(commentId)
         {
             CommentDetails = commentDetails;
         }

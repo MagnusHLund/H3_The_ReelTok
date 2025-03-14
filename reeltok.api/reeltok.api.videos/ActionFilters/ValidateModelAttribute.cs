@@ -19,7 +19,6 @@ namespace reeltok.api.videos.ActionFilters
 
         private static void ValidateRequest(ActionExecutingContext context)
         {
-            // If there are any FromRoute parameters, they will be added to the ModelState
             AddFromRouteParametersToModelState(context);
 
             foreach (object? actionArgument in context.ActionArguments.Values)
@@ -43,21 +42,26 @@ namespace reeltok.api.videos.ActionFilters
         private static void ValidateProperties(object model, ModelStateDictionary modelState)
         {
             if (model == null)
+            {
                 return;
+            }
 
             PropertyInfo[] properties = model.GetType().GetProperties();
 
             foreach (PropertyInfo property in properties)
             {
-                object? value = property.GetValue(model);
+                if (property.GetIndexParameters().Length == 0)
+                {
+                    object? value = property.GetValue(model);
 
-                if (property.PropertyType == typeof(Guid) && (Guid) value == Guid.Empty)
-                {
-                    modelState.AddModelError(property.Name, $"{property.Name} cannot be an empty GUID.");
-                }
-                else if (property.PropertyType == typeof(DateTime) && (DateTime) value == DateTime.MinValue)
-                {
-                    modelState.AddModelError(property.Name, $"{property.Name} cannot be the minimum DateTime value.");
+                    if (property.PropertyType == typeof(Guid) && (Guid)value == Guid.Empty)
+                    {
+                        modelState.AddModelError(property.Name, $"{property.Name} cannot be an empty GUID.");
+                    }
+                    else if (property.PropertyType == typeof(DateTime) && (DateTime)value == DateTime.MinValue)
+                    {
+                        modelState.AddModelError(property.Name, $"{property.Name} cannot be the minimum DateTime value.");
+                    }
                 }
             }
         }

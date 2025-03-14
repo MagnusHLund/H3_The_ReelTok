@@ -1,9 +1,10 @@
-using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using reeltok.api.gateway.ValueObjects;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.gateway.Entities.Videos
 {
-    public class BaseVideoEntity
+    public class BaseVideoUsingUnixTimeEntity : AbstractCreatedAtType<uint>
     {
         [Required]
         [JsonProperty("VideoId")]
@@ -15,13 +16,13 @@ namespace reeltok.api.gateway.Entities.Videos
 
         [Required]
         [JsonProperty("UploadedAt")]
-        public uint UploadedAt { get; set; }
+        public override uint CreatedAt { get; }
 
-        protected BaseVideoEntity(Guid videoId, string streamPath, uint uploadedAt)
+        protected BaseVideoUsingUnixTimeEntity(Guid videoId, string streamPath, uint createdAt)
         {
             VideoId = videoId;
             StreamPath = streamPath;
-            UploadedAt = uploadedAt;
+            CreatedAt = createdAt;
         }
     }
 }

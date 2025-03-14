@@ -8,9 +8,12 @@ namespace reeltok.api.gateway.DTOs.Videos.GetVideosForFeed
     {
         [Required]
         [JsonProperty("Videos")]
-        public List<VideoForFeedEntity> Videos { get; set; }
+        public List<VideoForFeedUsingDateTimeEntity> Videos { get; set; }
 
-        public GatewayGetVideosForFeedResponseDto(List<VideoForFeedEntity> videos, bool success = true) : base(success)
+        public GatewayGetVideosForFeedResponseDto(
+            List<VideoForFeedUsingDateTimeEntity> videos,
+            bool success = true
+        ) : base(success)
         {
             Videos = videos;
         }

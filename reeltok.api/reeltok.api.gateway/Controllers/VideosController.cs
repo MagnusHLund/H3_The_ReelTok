@@ -37,7 +37,8 @@ namespace reeltok.api.gateway.Controllers
             [FromQuery, Range(1, byte.MaxValue)] byte pageSize = 15
         )
         {
-            List<BaseVideoEntity> videos = await _videosService.GetVideosForProfileAsync(userId, pageNumber, pageSize)
+            List<BaseVideoUsingDateTimeEntity> videos = await _videosService
+                .GetVideosForProfileAsync(userId, pageNumber, pageSize)
                 .ConfigureAwait(false);
 
             GatewayGetVideosForProfileResponseDto responseDto = new GatewayGetVideosForProfileResponseDto(videos);
@@ -57,9 +58,11 @@ namespace reeltok.api.gateway.Controllers
                 userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
             }
 
-            List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(amount, userId).ConfigureAwait(false);
-            GatewayGetVideosForFeedResponseDto responseDto = new GatewayGetVideosForFeedResponseDto(videos);
+            List<VideoForFeedUsingDateTimeEntity> videos = await _videosService
+                .GetVideosForFeedAsync(amount, userId)
+                .ConfigureAwait(false);
 
+            GatewayGetVideosForFeedResponseDto responseDto = new GatewayGetVideosForFeedResponseDto(videos);
             return Ok(responseDto);
         }
 

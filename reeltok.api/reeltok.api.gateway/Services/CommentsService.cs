@@ -33,7 +33,7 @@ namespace reeltok.api.gateway.Services
             if (response.Success && response is ServiceAddCommentResponseDto responseDto)
             {
                 CommentUsingUnixTime comment = responseDto.Comment;
-                return CommentMapper.ConvertToDateTime(comment);
+                return TimeMapper.ConvertCommentToDateTime(comment);
             }
 
             throw HandleNetworkResponseExceptions(response);
@@ -49,7 +49,7 @@ namespace reeltok.api.gateway.Services
             if (response.Success && response is ServiceLoadCommentsResponseDto responseDto)
             {
                 List<CommentUsingUnixTime> comments = responseDto.Comments;
-                return comments.Select(comment => CommentMapper.ConvertToDateTime(comment)).ToList();
+                return comments.Select(comment => TimeMapper.ConvertCommentToDateTime(comment)).ToList();
             }
 
             throw HandleNetworkResponseExceptions(response);

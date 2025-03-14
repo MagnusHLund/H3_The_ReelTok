@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace reeltok.api.users.ActionFilters
 {
+    // AttributeTargets.Class       : Allows the attribute to be applied to classes.
+    // Inherited attribute = true   : Gets attributes from parent class
+    // AllowMultiple = false        : Ensures a single instance of this class.
     [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
     public class ValidateModelAttribute : ActionFilterAttribute
     {
@@ -39,7 +42,9 @@ namespace reeltok.api.users.ActionFilters
         private static void ValidateProperties(object model, ModelStateDictionary modelState)
         {
             if (model == null)
+            {
                 return;
+            }
 
             PropertyInfo[] properties = model.GetType().GetProperties();
 
