@@ -8,7 +8,7 @@ namespace reeltok.api.comments.Factories
     {
         internal static CommentEntity CreateCommentEntity(Guid videoId, Guid userId, string commentText)
         {
-            uint createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.Now);
+            long createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.Now);
 
             CommentDetails commentDetails = new CommentDetails(
                 videoId: videoId,

@@ -7,6 +7,6 @@ namespace reeltok.api.auth.Interfaces.Entities
         [Key]
         uint TokenId { get; set; }
         TToken Token { get; set; }
-        uint? RevokedAt { get; set; }
+        long? RevokedAt { get; set; }
     }
 }

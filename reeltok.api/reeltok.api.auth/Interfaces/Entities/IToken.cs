@@ -4,6 +4,6 @@ namespace reeltok.api.auth.Interfaces.Entities
     {
         string TokenValue { get; }
 
-        uint ExpiresAt { get; }
+        long ExpiresAt { get; }
     }
 }

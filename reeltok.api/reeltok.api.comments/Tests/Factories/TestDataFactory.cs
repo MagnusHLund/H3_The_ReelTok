@@ -22,7 +22,7 @@ namespace reeltok.api.comments.Tests.Factories
             Guid userId = CreateGuid();
             Guid videoId = CreateGuid();
             string message = "This is a test comment.";
-            uint createdAt = (uint) DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            long createdAt =  DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             var commentDetails = new CommentDetails(userId, videoId, message, createdAt);
             return new CommentEntity(commentDetails);

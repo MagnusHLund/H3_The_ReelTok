@@ -20,7 +20,7 @@ namespace reeltok.api.videos.Entities
             VideoLikes videoLikes,
             UserEntity videoCreator,
             string streamPath,
-            uint uploadedAt
+            long uploadedAt
         ) : base(videoId, streamPath, uploadedAt)
         {
             VideoId = videoId;

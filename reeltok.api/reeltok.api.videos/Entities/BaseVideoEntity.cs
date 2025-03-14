@@ -16,9 +16,9 @@ namespace reeltok.api.videos.Entities
 
         [Required]
         [JsonProperty("UploadedAt")]
-        public uint UploadedAt { get; set; }
+        public long UploadedAt { get; set; }
 
-        public BaseVideoEntity(Guid videoId, string streamPath, uint uploadedAt)
+        public BaseVideoEntity(Guid videoId, string streamPath, long uploadedAt)
         {
             VideoId = videoId;
             StreamPath = streamPath;

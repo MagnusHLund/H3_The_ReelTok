@@ -10,10 +10,10 @@ namespace reeltok.api.recommendations.Entities
         public Guid UserId { get; set; }
         public Guid VideoId { get; set; }
         public ushort WatchCount { get; set; }
-        public uint LastWatchedAt { get; set; }
+        public long LastWatchedAt { get; set; }
 
 
-        public WatchedVideoEntity(Guid userId, Guid videoId, ushort watchCount, uint lastWatchedAt)
+        public WatchedVideoEntity(Guid userId, Guid videoId, ushort watchCount, long lastWatchedAt)
         {
             UserId = userId;
             VideoId = videoId;

@@ -90,7 +90,7 @@ namespace reeltok.api.auth.Repositories
                 return null;
             }
 
-            uint currentUnixTime = DateTimeUtils.DateTimeToUnixTime(DateTime.UtcNow);
+            long currentUnixTime = DateTimeUtils.DateTimeToUnixTime(DateTime.UtcNow);
 
             if (tokenEntity.Token.ExpiresAt <= currentUnixTime)
             {

@@ -33,7 +33,7 @@ namespace reeltok.api.videos.Mappers
         {
             Guid videoId = Guid.NewGuid();
             string streamPath = VideoUtils.CreateStreamPath(videoCreator, videoId);
-            uint currentUnixTime = DateTimeUtils.DateTimeToUnixTime(DateTime.Now);
+            long currentUnixTime = DateTimeUtils.DateTimeToUnixTime(DateTime.Now);
 
             return new VideoEntity(
                 videoId: videoId,
