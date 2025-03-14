@@ -2,7 +2,7 @@ import useAppBackHandler from '../../../hooks/useAppBackHandler'
 import useAppNavigation from '../../../hooks/useAppNavigation'
 import useAppDimensions from '../../../hooks/useAppDimensions'
 import CustomButton from '../../input/CustomButton'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Modal, TouchableWithoutFeedback } from 'react-native'
 import MediaSelector from './MediaSelector'
 import RotatingIcon from './RotatingIcon'
 import React, { useState } from 'react'
@@ -19,9 +19,18 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <View style={{ display: displayMediaSelector ? 'flex' : 'none' }}>
-        <MediaSelector handleSelectMedia={toggleMediaSelector} />
-      </View>
+      <Modal
+        visible={displayMediaSelector}
+        transparent={true}
+        onRequestClose={toggleMediaSelector}
+        animationType="none"
+      >
+        <TouchableWithoutFeedback onPress={toggleMediaSelector}>
+          <View style={{ flex: 1 }}>
+            <MediaSelector handleSelectMedia={toggleMediaSelector} />
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
       <View style={[styles.container, { height: navbarHeight }]}>
         <CustomButton transparent={true} onPress={() => navigateToScreen('VideoFeed')}>
           <RotatingIcon name="play" color="white" />

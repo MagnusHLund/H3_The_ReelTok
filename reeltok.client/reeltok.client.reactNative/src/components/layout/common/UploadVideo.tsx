@@ -16,7 +16,6 @@ export const isImage = (uri: string) => {
 }
 
 const UploadVideo: React.FC = ({}) => {
-  const route = useRoute()
   const t = useTranslation()
   const uploadedVideo = useAppSelector((state) => state.upload.video)
 

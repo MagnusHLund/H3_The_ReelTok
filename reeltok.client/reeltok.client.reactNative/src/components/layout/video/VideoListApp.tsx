@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlashList } from '@shopify/flash-list';
+import { FlashList } from '@shopify/flash-list'
 import type { ListRenderItem, ViewToken } from '@shopify/flash-list'
 import { Video } from '../../../redux/slices/videosSlice'
 
@@ -9,10 +9,7 @@ interface VideoListAppProps {
   renderItem: ListRenderItem<Video>
   contentHeight: number
   viewabilityConfig: object
-  handleViewableItemsChanged: (info: {
-    viewableItems: ViewToken[]
-    changed: ViewToken[]
-  }) => void 
+  handleViewableItemsChanged: (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => void
   style?: object
 }
 
@@ -34,7 +31,6 @@ const VideoListApp: React.FC<VideoListAppProps> = ({
       keyExtractor={(item) => item.videoId}
       pagingEnabled
       showsVerticalScrollIndicator={false}
-      style={[style, { height: contentHeight }]}
       decelerationRate="fast"
       disableIntervalMomentum
       snapToInterval={contentHeight}

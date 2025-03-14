@@ -27,7 +27,7 @@ const VideoOverlay: React.FC<VideoOverlayProps> = ({
 }) => {
   const dispatch = useAppDispatch()
   const orientation = useOrientation('', 'VideoOverlay')
-  const { fullWidth } = useAppDimensions()
+  const { fullWidth, contentHeight } = useAppDimensions()
 
   const user = useAppSelector((state) => state.users.users.find((user) => user))
   const video = useAppSelector((state) => state.videos.videos.find((video) => video))
@@ -37,7 +37,7 @@ const VideoOverlay: React.FC<VideoOverlayProps> = ({
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { width: fullWidth, height: contentHeight }]}>
       <View style={styles.icons}>
         <CustomButton
           transparent
@@ -53,8 +53,6 @@ const VideoOverlay: React.FC<VideoOverlayProps> = ({
           />
           <Text style={styles.iconText}>{videoDetails.likes}</Text>
         </CustomButton>
-      </View>
-      <View style={styles.icons}>
         <CustomButton
           transparent
           borders={false}
@@ -76,23 +74,20 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     justifyContent: 'center',
-    zIndex: 1,
-    right: 0,
+    right: 1,
   },
   icons: {
+    position: 'absolute',
+    right: '-1%',
     zIndex: 1,
-    justifyContent: 'center',
   },
   iconText: {
-    color: 'black',
+    color: 'white',
   },
   aboutContainer: {
     position: 'absolute',
-    flexDirection: 'row',
-    zIndex: 1,
-    top: '350%',
-    right: '900%',
-    height: '50%',
+
+    bottom: '10%',
   },
 })
 
