@@ -57,6 +57,11 @@ namespace reeltok.api.videos.Services
                 videoIds = await _videosRepository.GetRandomVideoIdsAsync(userId, amount).ConfigureAwait(false);
             }
 
+            if (!videoIds.Any())
+            {
+                throw new KeyNotFoundException($"No videos found, for user id {userId}");
+            }
+
             List<VideoEntity> videos = await _videosRepository.GetVideosForFeedAsync(videoIds, amount).ConfigureAwait(false);
             List<Guid> videoCreatorIds = videos.ConvertAll(video => video.UserId);
 

@@ -28,6 +28,8 @@ namespace reeltok.api.videos.Data
                 .WithOne(vl => vl.Video)
                 .HasForeignKey<VideoTotalLikesEntity>(vl => vl.VideoId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

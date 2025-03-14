@@ -97,7 +97,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUserDetailsAsync([FromForm] GatewayUpdateUserDetailsRequestDto request)
+        public async Task<IActionResult> UpdateUserDetailsAsync([FromBody] GatewayUpdateUserDetailsRequestDto request)
         {
             UserEntity user = await _usersService
                 .UpdateUserDetailsAsync(request.Username, request.Email, request.Interest)
@@ -109,7 +109,7 @@ namespace reeltok.api.gateway.Controllers
 
         [HttpPut("profile-picture")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UpdateProfilePictureAsync([FromBody] GatewayUpdateProfilePictureRequestDto request)
+        public async Task<IActionResult> UpdateProfilePictureAsync([FromForm] GatewayUpdateProfilePictureRequestDto request)
         {
             UserEntity user = await _usersService.UpdateProfilePictureAsync(request.ProfilePicture)
                 .ConfigureAwait(false);
