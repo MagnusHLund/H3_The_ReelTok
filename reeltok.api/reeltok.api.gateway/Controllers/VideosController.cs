@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using reeltok.api.gateway.Enums;
+using reeltok.api.gateway.Utils;
 using reeltok.api.gateway.Mappers;
 using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.ActionFilters;
@@ -11,7 +13,6 @@ using reeltok.api.gateway.DTOs.Videos.DeleteVideo;
 using reeltok.api.gateway.DTOs.Videos.UploadVideo;
 using reeltok.api.gateway.DTOs.Videos.GetVideosForFeed;
 using reeltok.api.gateway.DTOs.Videos.GetVideosForProfile;
-using reeltok.api.gateway.Utils;
 
 namespace reeltok.api.gateway.Controllers
 {
@@ -33,7 +34,7 @@ namespace reeltok.api.gateway.Controllers
         [HttpGet("profile/{userId}")]
         public async Task<IActionResult> GetVideosForProfileAsync(
             [FromRoute] Guid userId,
-            [FromQuery] int pageNumber,
+            [FromQuery, Range(0, int.MaxValue)] int pageNumber = 0,
             [FromQuery, Range(1, byte.MaxValue)] byte pageSize = 15
         )
         {
@@ -46,7 +47,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpGet("feed")]
-        public async Task<IActionResult> GetVideosForFeedAsync([FromQuery, Range(1, byte.MaxValue)] byte amount)
+        public async Task<IActionResult> GetVideosForFeedAsync([FromQuery, Range(1, byte.MaxValue)] byte amount = 3)
         {
             // This endpoint can use UserId, but its not mandatory.
             // We fetch it, if there are cookies present, else we provide an empty guid.
@@ -70,6 +71,11 @@ namespace reeltok.api.gateway.Controllers
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadVideoAsync([FromForm] GatewayUploadVideoRequestDto request)
         {
+            if (!CategoryValidationUtils.IsValidCategoryType(request.Category))
+            {
+                throw new ArgumentException("Invalid category type!");
+            }
+
             VideoUpload videoUpload = VideoMapper.ConvertRequestDtoToVideoUpload(request);
             bool success = await _videosService.UploadVideoAsync(videoUpload).ConfigureAwait(false);
 

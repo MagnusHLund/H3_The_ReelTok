@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
 using reeltok.api.gateway.ActionFilters;
 using reeltok.api.gateway.Entities.Users;
@@ -41,7 +40,7 @@ namespace reeltok.api.gateway.Controllers
         [HttpGet("{userId}/subscriptions")]
         public async Task<IActionResult> GetUserSubscriptionsAsync(
             [FromRoute] Guid userId,
-            [FromQuery] int pageNumber,
+            [FromQuery, Range(0, int.MaxValue)] int pageNumber = 0,
             [FromQuery, Range(1, byte.MaxValue)] byte pageSize = 15
         )
         {
@@ -55,7 +54,7 @@ namespace reeltok.api.gateway.Controllers
         [HttpGet("{userId}/subscribers")]
         public async Task<IActionResult> GetUserSubscribersAsync(
             [FromRoute] Guid userId,
-            [FromQuery] int pageNumber,
+            [FromQuery, Range(0, int.MaxValue)] int pageNumber = 0,
             [FromQuery, Range(1, byte.MaxValue)] byte pageSize = 15
         )
         {
@@ -119,7 +118,7 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpDelete("unsubscribe")]
-        public async Task<IActionResult> UnsubscribeToUserAsync([FromQuery, JsonProperty("UserId")] Guid unsubscribingToUserId)
+        public async Task<IActionResult> UnsubscribeToUserAsync([FromQuery] Guid unsubscribingToUserId)
         {
             bool success = await _usersService.UnsubscribeToUserAsync(unsubscribingToUserId).ConfigureAwait(false);
 
