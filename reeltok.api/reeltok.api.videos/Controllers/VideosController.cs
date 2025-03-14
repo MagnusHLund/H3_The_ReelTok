@@ -74,9 +74,10 @@ namespace reeltok.api.videos.Controllers
             byte category = (byte)FormDataMapper.ConvertStringToint(request.Category);
             Guid userId = FormDataMapper.ConvertStringToGuid(request.UserId);
 
-            await _videosService.UploadVideoAsync(videoUpload, userId, category).ConfigureAwait(false);
+            VideoEntity uploadedVideo = await _videosService.UploadVideoAsync(videoUpload, userId, category)
+                .ConfigureAwait(false);
 
-            UploadVideoResponseDto responseDto = new UploadVideoResponseDto();
+            UploadVideoResponseDto responseDto = new UploadVideoResponseDto(uploadedVideo);
             return Ok(responseDto);
         }
 

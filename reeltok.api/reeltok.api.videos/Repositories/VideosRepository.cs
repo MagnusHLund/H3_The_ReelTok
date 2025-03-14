@@ -32,13 +32,15 @@ namespace reeltok.api.videos.Repositories
             return video;
         }
 
-        public async Task DeleteVideoAsync(Guid userId, Guid videosId)
+        public async Task<string> DeleteVideoAsync(Guid userId, Guid videosId)
         {
             VideoEntity video = await _context.Videos.FirstOrDefaultAsync(v => v.VideoId == videosId && v.UserId == userId).ConfigureAwait(false)
                 ?? throw new KeyNotFoundException("Video not found or unauthorized!");
 
             _context.Videos.Remove(video);
             await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            return video.StreamPath;
         }
 
         public async Task<List<VideoEntity>> GetVideosForFeedAsync(List<Guid> videoIds, byte amount)

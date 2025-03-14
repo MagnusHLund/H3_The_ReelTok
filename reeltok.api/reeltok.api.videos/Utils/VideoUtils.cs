@@ -27,9 +27,10 @@ namespace reeltok.api.videos.Utils
             }
         }
 
-        public static string CreateStreamPath(Guid userId, Guid videoId)
+        public static string CreateStreamPath(Guid userId, Guid videoId, IFormFile videofile)
         {
-            return $"{userId}/{videoId}";
+            string fileExtension = Path.GetExtension(videofile.FileName).ToUpperInvariant();
+            return $"{userId}/{videoId}{fileExtension}";
         }
 
         private static async Task<bool> IsVideoMinimumLengthAsync(IFormFile video)

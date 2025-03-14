@@ -86,8 +86,8 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<bool> UploadVideoAsync(VideoUpload video)
-        { // TODO: Test upload while logged out!
+        public async Task<BaseVideoUsingDateTimeEntity> UploadVideoAsync(VideoUpload video)
+        {
             Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
             video.UserId = userId.ToString();
 
@@ -100,7 +100,8 @@ namespace reeltok.api.gateway.Services
 
             if (response.Success && response is ServiceUploadVideoResponseDto responseDto)
             {
-                return responseDto.Success;
+                BaseVideoUsingDateTimeEntity uploadedVideo = TimeMapper.ConverBaseVideoToDateTime(responseDto.Video);
+                return uploadedVideo;
             }
 
             throw HandleNetworkResponseExceptions(response);

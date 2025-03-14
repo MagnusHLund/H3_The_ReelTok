@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using reeltok.api.gateway.ValueObjects;
 using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.gateway.Entities.Videos

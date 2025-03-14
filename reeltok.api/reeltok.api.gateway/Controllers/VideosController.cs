@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using reeltok.api.gateway.Enums;
 using reeltok.api.gateway.Utils;
 using reeltok.api.gateway.Mappers;
 using reeltok.api.gateway.ValueObjects;
@@ -77,9 +76,10 @@ namespace reeltok.api.gateway.Controllers
             }
 
             VideoUpload videoUpload = VideoMapper.ConvertRequestDtoToVideoUpload(request);
-            bool success = await _videosService.UploadVideoAsync(videoUpload).ConfigureAwait(false);
+            BaseVideoUsingDateTimeEntity uploadedVideo = await _videosService.UploadVideoAsync(videoUpload)
+                .ConfigureAwait(false);
 
-            GatewayUploadVideoResponseDto responseDto = new GatewayUploadVideoResponseDto(success);
+            GatewayUploadVideoResponseDto responseDto = new GatewayUploadVideoResponseDto(uploadedVideo);
             return Ok(responseDto);
         }
 

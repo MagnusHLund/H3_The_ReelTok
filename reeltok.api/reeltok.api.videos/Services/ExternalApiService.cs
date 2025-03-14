@@ -4,6 +4,7 @@ using reeltok.api.videos.Interfaces;
 using reeltok.api.videos.Exceptions;
 using reeltok.api.videos.DTOs.LikeVideo;
 using reeltok.api.videos.DTOs.RemoveLike;
+using reeltok.api.videos.DTOs.DeleteVideo;
 using reeltok.api.videos.DTOs.GetUserDetails;
 using reeltok.api.videos.DTOs.UserLikedVideo;
 using reeltok.api.videos.Interfaces.Services;
@@ -117,6 +118,25 @@ namespace reeltok.api.videos.Services
                 .ConfigureAwait(false);
 
             if (response is RecommendationsServiceAddVideoIdToRecommendationsApiResponseDto responseDto)
+            {
+                return responseDto.Success;
+            }
+
+            throw HandleNetworkResponseExceptions(response);
+        }
+
+        public async Task<bool> DeleteVideoFromRecommendationsApiAsync(Guid videoId)
+        {
+            RecommendationsServiceDeleteVideoRequestDto requestDto = new RecommendationsServiceDeleteVideoRequestDto(videoId);
+
+            Uri targetUrl = _endpointFactory.GetRecommendationsApiUrl("videos");
+
+            BaseResponseDto response = await _httpService.
+                ProcessRequestAsync<RecommendationsServiceDeleteVideoRequestDto, RecommendationsServiceDeleteVideoResponseDto>(
+                requestDto, targetUrl, HttpMethod.Delete)
+                .ConfigureAwait(false);
+
+            if (response is RecommendationsServiceDeleteVideoResponseDto responseDto)
             {
                 return responseDto.Success;
             }

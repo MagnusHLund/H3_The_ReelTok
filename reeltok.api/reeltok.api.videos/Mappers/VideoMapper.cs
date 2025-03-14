@@ -29,10 +29,14 @@ namespace reeltok.api.videos.Mappers
             );
         }
 
-        internal static VideoEntity ConvertVideoUploadToVideoEntity(VideoUpload videoUpload, Guid videoCreator)
+        internal static VideoEntity ConvertVideoUploadToVideoEntity(
+            VideoUpload videoUpload,
+            Guid videoCreator,
+            IFormFile formFile
+        )
         {
             Guid videoId = Guid.NewGuid();
-            string streamPath = VideoUtils.CreateStreamPath(videoCreator, videoId);
+            string streamPath = VideoUtils.CreateStreamPath(videoCreator, videoId, formFile);
             long currentUnixTime = DateTimeUtils.DateTimeToUnixTime(DateTime.Now);
 
             return new VideoEntity(

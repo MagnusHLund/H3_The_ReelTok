@@ -1,7 +1,18 @@
+using Newtonsoft.Json;
+using reeltok.api.videos.Entities;
+using System.ComponentModel.DataAnnotations;
+
 namespace reeltok.api.videos.DTOs.UploadVideo
 {
     public class UploadVideoResponseDto : BaseResponseDto
     {
-        public UploadVideoResponseDto(bool success = true) : base(success) { }
+        [Required]
+        [JsonProperty("Video")]
+        BaseVideoEntity Video { get; set; }
+
+        public UploadVideoResponseDto(BaseVideoEntity video, bool success = true) : base(success)
+        {
+            Video = video;
+        }
     }
 }
