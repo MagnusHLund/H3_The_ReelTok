@@ -19,9 +19,9 @@ namespace reeltok.api.comments.ValueObjects
 
         [Required]
         [JsonProperty("CreatedAt")]
-        public uint CreatedAt { get; private set; } = 0;
+        public long CreatedAt { get; private set; } = 0;
 
-        public CommentDetails(Guid userId, Guid videoId, string message, uint createdAt)
+        public CommentDetails(Guid userId, Guid videoId, string message, long createdAt)
         {
             UserId = userId;
             VideoId = videoId;

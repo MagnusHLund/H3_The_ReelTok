@@ -2,9 +2,9 @@ namespace reeltok.api.comments.Utils
 {
     internal static class DateTimeUtils
     {
-        internal static uint DateTimeToUnixTime(DateTime timeToConvert)
+        internal static long DateTimeToUnixTime(DateTime timeToConvert)
         {
-            return (uint)new DateTimeOffset(timeToConvert).ToUnixTimeSeconds();
+            return new DateTimeOffset(timeToConvert).ToUnixTimeSeconds();
         }
     }
 }

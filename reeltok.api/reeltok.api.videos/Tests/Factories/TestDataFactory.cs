@@ -71,7 +71,7 @@ namespace reeltok.api.videos.Tests.Factories
             string title = "Test video";
             string description = "Test description";
             string streamPath = "/some/test/uri.mp4";
-            uint uploadedAt = 1739803271;
+            long uploadedAt = 1739803271;
 
             return new VideoEntity
             (
@@ -116,7 +116,7 @@ namespace reeltok.api.videos.Tests.Factories
         {
             Guid videoId = Guid.NewGuid();
             string streamPath = "/some/test/uri.mp4";
-            uint uploadedAt = 1739803271;
+            long uploadedAt = 1739803271;
 
             return new VideoForFeedEntity(
                 videoId: videoId,

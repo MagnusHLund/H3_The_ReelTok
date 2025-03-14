@@ -45,7 +45,7 @@ namespace reeltok.api.auth.BackgroundServices
             {
                 AuthDbContext dbContext = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
 
-                uint currentTime = DateTimeUtils.DateTimeToUnixTime(DateTime.Now);
+                long currentTime = DateTimeUtils.DateTimeToUnixTime(DateTime.Now);
 
                 List<TTokenEntity> expiredTokens = await dbContext.Set<TTokenEntity>()
                     .Where(t => t.Token.ExpiresAt < currentTime && !t.RevokedAt.HasValue)

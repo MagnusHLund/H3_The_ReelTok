@@ -79,7 +79,7 @@ namespace reeltok.api.gateway.Factories
             Guid commentId = Guid.NewGuid();
             Guid userId = Guid.NewGuid();
             string commentText = "Amazing test!";
-            uint createdAt = (uint)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+            long createdAt = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
 
             return new ServiceAddCommentResponseDto
             (
@@ -103,7 +103,7 @@ namespace reeltok.api.gateway.Factories
 
         public static ServiceLoadCommentsResponseDto CreateLoadCommentsResponse(Guid videoId)
         {
-            uint createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.Now);
+            long createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.Now);
 
             List<CommentUsingUnixTime> comments = new List<CommentUsingUnixTime>
             {
@@ -118,7 +118,7 @@ namespace reeltok.api.gateway.Factories
             );
         }
 
-        public static CommentUsingUnixTime CreateCommentUsingUnixTime(Guid commentId, Guid userId, Guid videoId, string commentText, uint createdAt)
+        public static CommentUsingUnixTime CreateCommentUsingUnixTime(Guid commentId, Guid userId, Guid videoId, string commentText, long createdAt)
         {
             return new CommentUsingUnixTime
             (

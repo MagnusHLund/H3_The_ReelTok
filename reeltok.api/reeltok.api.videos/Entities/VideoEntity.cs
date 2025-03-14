@@ -22,7 +22,7 @@ namespace reeltok.api.videos.Entities
             string title,
             string description,
             string streamPath,
-            uint uploadedAt
+            long uploadedAt
         ) : base(videoId, streamPath, uploadedAt)
         {
             UserId = userId;

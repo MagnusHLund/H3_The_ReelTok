@@ -15,9 +15,9 @@ namespace reeltok.api.auth.Entities
         [Required]
         public RefreshToken Token { get; set; }
 
-        public uint? RevokedAt { get; set; }
+        public long? RevokedAt { get; set; }
 
-        public RefreshTokenEntity(uint tokenId, Guid userId, RefreshToken refreshToken, uint? revokedAt)
+        public RefreshTokenEntity(uint tokenId, Guid userId, RefreshToken refreshToken, long? revokedAt)
         {
             TokenId = tokenId;
             UserId = userId;

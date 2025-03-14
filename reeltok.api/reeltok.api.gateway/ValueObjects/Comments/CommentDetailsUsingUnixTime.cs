@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace reeltok.api.gateway.ValueObjects
 {
-    public class CommentDetailsUsingUnixTime : AbstractCreatedAtType<uint>
+    public class CommentDetailsUsingUnixTime
     {
         [Required]
         [JsonProperty("UserId")]
@@ -19,18 +19,19 @@ namespace reeltok.api.gateway.ValueObjects
 
         [Required]
         [JsonProperty("CreatedAt")]
-        public override uint CreatedAt { get; }
+        public long CreatedAt { get; }
 
         public CommentDetailsUsingUnixTime(
             Guid userId,
             Guid videoId,
             string message,
-            uint createdAt
-        ) : base(createdAt)
+            long createdAt
+        )
         {
             UserId = userId;
             VideoId = videoId;
             Message = message;
+            CreatedAt = createdAt;
         }
     }
 }

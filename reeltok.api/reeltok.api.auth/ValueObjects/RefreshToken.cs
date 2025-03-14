@@ -10,12 +10,12 @@ namespace reeltok.api.auth.ValueObjects
         public string TokenValue { get; private set; }
 
         [Required]
-        public uint CreatedAt { get; private set; }
+        public long CreatedAt { get; private set; }
 
         [Required]
-        public uint ExpiresAt { get; private set; }
+        public long ExpiresAt { get; private set; }
 
-        public RefreshToken(string tokenValue, uint createdAt, uint expiresAt)
+        public RefreshToken(string tokenValue, long createdAt, long expiresAt)
         {
             TokenValue = tokenValue;
             CreatedAt = createdAt;
