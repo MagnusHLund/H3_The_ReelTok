@@ -102,12 +102,19 @@ namespace reeltok.api.comments.Factories
         private static Dictionary<string, string> ConvertRequestDtoToQueryParameters<TRequest>(TRequest request)
         {
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
-            foreach (PropertyInfo properties in typeof(TRequest).GetProperties())
+            foreach (PropertyInfo property in typeof(TRequest).GetProperties())
             {
-                object? value = properties.GetValue(request);
+                object? value = property.GetValue(request);
                 if (value != null)
                 {
-                    dictionary.Add(properties.Name, value.ToString());
+                    if (value is IEnumerable<Guid> guidList) // Handle List<Guid>
+                    {
+                        dictionary.Add(property.Name, string.Join(",", guidList));
+                    }
+                    else
+                    {
+                        dictionary.Add(property.Name, value.ToString());
+                    }
                 }
             }
             return dictionary;
