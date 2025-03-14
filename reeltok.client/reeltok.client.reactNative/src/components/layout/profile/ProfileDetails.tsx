@@ -10,15 +10,12 @@ interface ProfileDetailsProps {
   user: UserDetails
 }
 
-const ProfileDetails : React.FC<ProfileDetailsProps> = ({user}) => {
+const ProfileDetails: React.FC<ProfileDetailsProps> = ({ user }) => {
   return (
     <View style={styles.outercontainer}>
       <View style={styles.ProfilePictureContainer}>
         <View style={styles.image}>
-          <ProfileImage
-            source={require('./../../../../assets/images/placeholders/profile-default-img.png')}
-            allowedToChangePicture={true}
-          />
+          <ProfileImage source={{ uri: user.profilePictureUrl }} allowedToChangePicture={true} />
         </View>
       </View>
       <View style={styles.StackedContainer}>
@@ -66,7 +63,7 @@ const styles = StyleSheet.create({
     top: '-40%',
   },
   image: {
-    top: '50%',
+    top: '55%',
   },
 })
 
