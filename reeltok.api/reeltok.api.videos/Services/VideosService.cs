@@ -28,6 +28,14 @@ namespace reeltok.api.videos.Services
             _likesService = likesService;
         }
 
+        public async Task<VideoEntity> GetVideoByIdAsync(Guid videoId)
+        {
+            VideoEntity video = await _videosRepository.GetVideoByIdAsync(videoId)
+                .ConfigureAwait(false);
+
+            return video;
+        }
+
         public async Task DeleteVideoAsync(Guid userId, Guid videoId)
         {
             await _videosRepository.DeleteVideoAsync(userId, videoId).ConfigureAwait(false);
@@ -53,7 +61,7 @@ namespace reeltok.api.videos.Services
             List<Guid> videoCreatorIds = videos.ConvertAll(video => video.UserId);
 
             List<UserEntity> videoCreatorDetails = await _externalApiService.GetVideoCreatorDetailsAsync(videoCreatorIds)
-                .ConfigureAwait(false); 
+                .ConfigureAwait(false);
 
             List<VideoLikesEntity> videoLikes = await _likesService.GetLikesForVideosAsync(userId, videoIds)
                 .ConfigureAwait(false);

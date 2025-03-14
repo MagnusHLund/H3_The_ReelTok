@@ -58,7 +58,7 @@ namespace reeltok.api.videos.Repositories
             List<VideoEntity> videoForProfile = await _context.Videos
                 .Where(v => v.UserId == userId)
                 .OrderByDescending(v => v.UploadedAt)
-                .Skip((int) (pageNumber * pageSize))
+                .Skip((int)(pageNumber * pageSize))
                 .Take(pageSize)
                 .AsNoTracking()
                 .ToListAsync()
@@ -78,6 +78,16 @@ namespace reeltok.api.videos.Repositories
                 .ConfigureAwait(false);
 
             return randomVideoIds;
+        }
+
+        public async Task<VideoEntity> GetVideoByIdAsync(Guid videoId)
+        {
+            VideoEntity video = await _context.Videos
+                .FirstOrDefaultAsync(v => v.VideoId == videoId)
+                .ConfigureAwait(false)
+                ?? throw new KeyNotFoundException($"Unable to find video with id {videoId}");
+
+            return video;
         }
     }
 }

@@ -9,6 +9,7 @@ using reeltok.api.videos.DTOs.DeleteVideo;
 using reeltok.api.videos.DTOs.UploadVideo;
 using reeltok.api.videos.DTOs.GetVideosForFeed;
 using reeltok.api.videos.DTOs.GetVideosForProfile;
+using reeltok.api.videos.DTOs.GetVideoById;
 
 namespace reeltok.api.videos.Controllers
 {
@@ -23,6 +24,15 @@ namespace reeltok.api.videos.Controllers
         public VideosController(IVideosService videosService)
         {
             _videosService = videosService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVideoByIdAsync([FromQuery] Guid VideoId)
+        {
+            VideoEntity video = await _videosService.GetVideoByIdAsync(VideoId).ConfigureAwait(false);
+
+            GetVideoByIdResponseDto responseDto = new GetVideoByIdResponseDto(video);
+            return Ok(responseDto);
         }
 
         [HttpGet]
