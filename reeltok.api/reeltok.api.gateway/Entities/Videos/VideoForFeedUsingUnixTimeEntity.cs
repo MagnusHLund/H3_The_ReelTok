@@ -16,7 +16,7 @@ namespace reeltok.api.gateway.Entities.Videos
         public VideoLikes VideoLikes { get; set; }
 
         [Required]
-        [JsonProperty("VideoCreator")]
+        [JsonProperty("User")]
         public UserEntity VideoCreator { get; set; }
 
         public VideoForFeedUsingUnixTimeEntity(

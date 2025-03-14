@@ -87,7 +87,7 @@ namespace reeltok.api.gateway.Services
         }
 
         public async Task<bool> UploadVideoAsync(VideoUpload video)
-        {
+        { // TODO: Test upload while logged out!
             Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
             video.UserId = userId.ToString();
 

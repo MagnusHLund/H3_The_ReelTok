@@ -44,7 +44,8 @@ namespace reeltok.api.videos.Controllers
         )
         {
             Guid userIdOrDefault = userId ?? Guid.Empty;
-            List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(userIdOrDefault, amount).ConfigureAwait(false);
+            List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(userIdOrDefault, amount)
+                .ConfigureAwait(false);
 
             GetVideosForFeedResponseDto responseDto = new GetVideosForFeedResponseDto(videos);
             return Ok(responseDto);

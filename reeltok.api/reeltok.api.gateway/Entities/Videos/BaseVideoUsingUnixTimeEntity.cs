@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.gateway.Entities.Videos
 {
-    public class BaseVideoUsingUnixTimeEntity : AbstractCreatedAtType<uint>
+    public class BaseVideoUsingUnixTimeEntity
     {
         [Required]
         [JsonProperty("VideoId")]
@@ -16,12 +16,13 @@ namespace reeltok.api.gateway.Entities.Videos
 
         [Required]
         [JsonProperty("UploadedAt")]
-        public override uint CreatedAt { get; }
+        public uint CreatedAt { get; }
 
-        protected BaseVideoUsingUnixTimeEntity(Guid videoId, string streamPath, uint createdAt) : base(createdAt)
+        protected BaseVideoUsingUnixTimeEntity(Guid videoId, string streamPath, uint createdAt)
         {
             VideoId = videoId;
             StreamPath = streamPath;
+            CreatedAt = createdAt;
         }
     }
 }
