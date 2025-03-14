@@ -18,12 +18,14 @@ namespace reeltok.api.gateway.Entities.Videos
         [JsonProperty("UploadedAt")]
         public override DateTime CreatedAt { get; }
 
-        public BaseVideoUsingDateTimeEntity(Guid videoId, string streamPath, DateTime createdAt)
+        public BaseVideoUsingDateTimeEntity(
+            Guid videoId,
+            string streamPath,
+            DateTime createdAt
+        ) : base(createdAt)
         {
             VideoId = videoId;
             StreamPath = streamPath;
-            CreatedAt = createdAt;
-
         }
     }
 }

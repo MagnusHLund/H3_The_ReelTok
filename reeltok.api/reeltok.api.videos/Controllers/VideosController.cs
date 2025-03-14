@@ -26,6 +26,7 @@ namespace reeltok.api.videos.Controllers
             _videosService = videosService;
         }
 
+        // Called by Comments api
         [HttpGet]
         public async Task<IActionResult> GetVideoByIdAsync([FromQuery] Guid VideoId)
         {

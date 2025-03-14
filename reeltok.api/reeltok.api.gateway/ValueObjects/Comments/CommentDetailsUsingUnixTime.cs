@@ -26,12 +26,11 @@ namespace reeltok.api.gateway.ValueObjects
             Guid videoId,
             string message,
             uint createdAt
-        )
+        ) : base(createdAt)
         {
             UserId = userId;
             VideoId = videoId;
             Message = message;
-            CreatedAt = createdAt;
         }
     }
 }

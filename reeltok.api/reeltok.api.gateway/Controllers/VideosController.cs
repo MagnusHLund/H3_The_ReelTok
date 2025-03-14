@@ -30,7 +30,7 @@ namespace reeltok.api.gateway.Controllers
             _authService = authService;
         }
 
-        [HttpGet("profile")]
+        [HttpGet("profile/{userId}")]
         public async Task<IActionResult> GetVideosForProfileAsync(
             [FromRoute] Guid userId,
             [FromQuery] int pageNumber,

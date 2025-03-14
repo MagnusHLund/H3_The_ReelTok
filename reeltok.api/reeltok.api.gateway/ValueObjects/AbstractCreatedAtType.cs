@@ -7,6 +7,11 @@ namespace reeltok.api.gateway.ValueObjects
     {
         [Required]
         [JsonProperty("CreatedAt")]
-        public abstract T CreatedAt { get; }
+        public virtual T CreatedAt { get; }
+
+        protected AbstractCreatedAtType(T createdAt)
+        {
+            CreatedAt = createdAt;
+        }
     }
 }
