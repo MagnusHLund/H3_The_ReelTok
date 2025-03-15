@@ -59,6 +59,7 @@ namespace reeltok.api.gateway
             var app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<CorsMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
