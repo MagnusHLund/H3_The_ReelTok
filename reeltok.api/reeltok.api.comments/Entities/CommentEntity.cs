@@ -8,7 +8,7 @@ namespace reeltok.api.comments.Entities
     {
         [Key]
         [JsonProperty("CommentId")]
-        public uint CommentId { get; private set; }
+        public uint CommentId { get; set; }
 
         [Required]
         [JsonProperty("CommentDetails")]

@@ -100,6 +100,8 @@ namespace reeltok.api.recommendations.Data
                 .ToArray();
 
             modelBuilder.Entity<CategoryEntity>().HasData(categories);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

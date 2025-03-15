@@ -14,7 +14,6 @@ namespace reeltok.api.gateway.DTOs.Comments.AddComment
         public Guid VideoId { get; set; }
 
         [Required]
-        [Range(1, 1024)]
         [JsonProperty("Message")]
         public string Message { get; set; }
 

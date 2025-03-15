@@ -50,5 +50,10 @@ namespace reeltok.api.recommendations.Services
 
             return savedVideoCategory;
         }
+
+        public async Task DeleteVideoAsync(Guid videoId)
+        {
+            await _videoCategoriesRepository.DeleteVideoAsync(videoId).ConfigureAwait(false);
+        }
     }
 }

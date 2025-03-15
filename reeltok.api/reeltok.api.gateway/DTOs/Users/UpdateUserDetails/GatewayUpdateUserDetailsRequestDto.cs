@@ -16,9 +16,9 @@ namespace reeltok.api.gateway.DTOs.Users.UpdateUserDetails
         public string? Email { get; set; }
 
         [JsonProperty("Interest")]
-        public CategoryType Interest { get; set; }
+        public CategoryType? Interest { get; set; }
 
-        public GatewayUpdateUserDetailsRequestDto(string? username, string? email, CategoryType interest)
+        public GatewayUpdateUserDetailsRequestDto(string? username, string? email, CategoryType? interest)
         {
             Username = username;
             Email = email;

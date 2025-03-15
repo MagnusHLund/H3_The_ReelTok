@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using reeltok.api.recommendations.Data;
 using reeltok.api.recommendations.Entities;
 using reeltok.api.recommendations.Interfaces.Repositories;
@@ -32,6 +33,17 @@ namespace reeltok.api.recommendations.Repositories
             }
 
             return savedCategoryVideoCategoryEntity.CategoryId;
+        }
+
+        public async Task DeleteVideoAsync(Guid videoId)
+        {
+            VideoEntity videoEntity = await _context.VideoCategories
+                .FirstOrDefaultAsync(v => v.VideoId == videoId)
+                .ConfigureAwait(false)
+                ?? throw new KeyNotFoundException($"Video with id {videoId} not found.");
+
+            _context.VideoCategories.Remove(videoEntity);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

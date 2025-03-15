@@ -6,5 +6,6 @@ namespace reeltok.api.recommendations.Interfaces.Services
     {
         Task<List<Guid>> GetRecommendedVideosForUsersFeedAsync(Guid userId, byte amountOfVideos);
         Task<CategoryType> AddVideoCategoryAsync(Guid videoId, CategoryType videoCategory);
+        Task DeleteVideoAsync(Guid videoId);
     }
 }

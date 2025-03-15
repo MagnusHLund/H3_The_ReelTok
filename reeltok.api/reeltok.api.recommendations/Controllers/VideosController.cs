@@ -5,6 +5,7 @@ using reeltok.api.recommendations.Interfaces.Services;
 using reeltok.api.recommendations.DTOs.AddVideoCategory;
 using reeltok.api.recommendations.DTOs.GetRecommendedVideosForUsersFeed;
 using reeltok.api.recommendations.DTOs.UpdateTotalTimesUserWatchedAVideo;
+using reeltok.api.recommendations.DTOs.DeleteVideoCategory;
 
 namespace reeltok.api.recommendations.Controllers
 {
@@ -42,6 +43,16 @@ namespace reeltok.api.recommendations.Controllers
                 .ConfigureAwait(false);
 
             AddVideoCategoryResponseDto response = new AddVideoCategoryResponseDto(videoCategory);
+            return Ok(response);
+        }
+
+        // Called from videos api
+        [HttpDelete]
+        public async Task<IActionResult> DeleteVideoAsync([FromQuery] Guid videoId)
+        {
+            await _videosService.DeleteVideoAsync(videoId).ConfigureAwait(false);
+
+            DeleteVideoResponseDto response = new DeleteVideoResponseDto();
             return Ok(response);
         }
 

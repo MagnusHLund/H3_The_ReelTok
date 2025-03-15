@@ -43,7 +43,7 @@ namespace reeltok.api.gateway.Mappers
                 videoLikes: videoLikes,
                 videoCreator: videoToConvert.VideoCreator,
                 streamPath: videoToConvert.StreamPath,
-                uploadedAt: DateTimeUtils.UnixTimeToDateTime(videoToConvert.CreatedAt)
+                uploadedAt: DateTimeUtils.UnixTimeToDateTime(videoToConvert.UploadedAt)
             );
         }
 
@@ -54,7 +54,7 @@ namespace reeltok.api.gateway.Mappers
             return new BaseVideoUsingDateTimeEntity(
                 videoId: videoToConvert.VideoId,
                 streamPath: videoToConvert.StreamPath,
-                createdAt: DateTimeUtils.UnixTimeToDateTime(videoToConvert.CreatedAt)
+                createdAt: DateTimeUtils.UnixTimeToDateTime(videoToConvert.UploadedAt)
             );
         }
     }

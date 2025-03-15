@@ -28,12 +28,20 @@ namespace reeltok.api.videos.Services
             _likesService = likesService;
         }
 
+        public async Task<VideoEntity> GetVideoByIdAsync(Guid videoId)
+        {
+            VideoEntity video = await _videosRepository.GetVideoByIdAsync(videoId)
+                .ConfigureAwait(false);
+
+            return video;
+        }
+
         public async Task DeleteVideoAsync(Guid userId, Guid videoId)
         {
-            await _videosRepository.DeleteVideoAsync(userId, videoId).ConfigureAwait(false);
+            string filePathToDelete = await _videosRepository.DeleteVideoAsync(userId, videoId).ConfigureAwait(false);
+            await _externalApiService.DeleteVideoFromRecommendationsApiAsync(videoId).ConfigureAwait(false);
 
-            string streamPath = VideoUtils.CreateStreamPath(userId, videoId);
-            await _storageService.RemoveVideoFromFileServerAsync(streamPath).ConfigureAwait(false);
+            await _storageService.RemoveVideoFromFileServerAsync(filePathToDelete).ConfigureAwait(false);
         }
 
         public async Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(Guid userId, byte amount)
@@ -49,11 +57,16 @@ namespace reeltok.api.videos.Services
                 videoIds = await _videosRepository.GetRandomVideoIdsAsync(userId, amount).ConfigureAwait(false);
             }
 
+            if (!videoIds.Any())
+            {
+                throw new KeyNotFoundException($"No videos found, for user id {userId}");
+            }
+
             List<VideoEntity> videos = await _videosRepository.GetVideosForFeedAsync(videoIds, amount).ConfigureAwait(false);
             List<Guid> videoCreatorIds = videos.ConvertAll(video => video.UserId);
 
             List<UserEntity> videoCreatorDetails = await _externalApiService.GetVideoCreatorDetailsAsync(videoCreatorIds)
-                .ConfigureAwait(false); 
+                .ConfigureAwait(false);
 
             List<VideoLikesEntity> videoLikes = await _likesService.GetLikesForVideosAsync(userId, videoIds)
                 .ConfigureAwait(false);
@@ -81,7 +94,7 @@ namespace reeltok.api.videos.Services
         {
             await VideoUtils.EnsureValidVideoFileAsync(video.VideoFile).ConfigureAwait(false);
 
-            VideoEntity videoToUpload = VideoMapper.ConvertVideoUploadToVideoEntity(video, userId);
+            VideoEntity videoToUpload = VideoMapper.ConvertVideoUploadToVideoEntity(video, userId, video.VideoFile);
             VideoEntity videoEntity = await _videosRepository.CreateVideoAsync(videoToUpload).ConfigureAwait(false);
 
             await _externalApiService.AddVideoToRecommendationsApiAsync(
@@ -96,6 +109,7 @@ namespace reeltok.api.videos.Services
             }
             catch
             {
+                await _externalApiService.DeleteVideoFromRecommendationsApiAsync(videoEntity.VideoId).ConfigureAwait(false);
                 await _videosRepository.DeleteVideoAsync(videoEntity.VideoId, userId).ConfigureAwait(false);
                 throw;
             }

@@ -32,13 +32,15 @@ namespace reeltok.api.videos.Repositories
             return video;
         }
 
-        public async Task DeleteVideoAsync(Guid userId, Guid videosId)
+        public async Task<string> DeleteVideoAsync(Guid userId, Guid videosId)
         {
             VideoEntity video = await _context.Videos.FirstOrDefaultAsync(v => v.VideoId == videosId && v.UserId == userId).ConfigureAwait(false)
                 ?? throw new KeyNotFoundException("Video not found or unauthorized!");
 
             _context.Videos.Remove(video);
             await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            return video.StreamPath;
         }
 
         public async Task<List<VideoEntity>> GetVideosForFeedAsync(List<Guid> videoIds, byte amount)
@@ -58,7 +60,7 @@ namespace reeltok.api.videos.Repositories
             List<VideoEntity> videoForProfile = await _context.Videos
                 .Where(v => v.UserId == userId)
                 .OrderByDescending(v => v.UploadedAt)
-                .Skip((int) (pageNumber * pageSize))
+                .Skip((int)(pageNumber * pageSize))
                 .Take(pageSize)
                 .AsNoTracking()
                 .ToListAsync()
@@ -78,6 +80,16 @@ namespace reeltok.api.videos.Repositories
                 .ConfigureAwait(false);
 
             return randomVideoIds;
+        }
+
+        public async Task<VideoEntity> GetVideoByIdAsync(Guid videoId)
+        {
+            VideoEntity video = await _context.Videos
+                .FirstOrDefaultAsync(v => v.VideoId == videoId)
+                .ConfigureAwait(false)
+                ?? throw new KeyNotFoundException($"Unable to find video with id {videoId}");
+
+            return video;
         }
     }
 }

@@ -5,7 +5,6 @@ namespace reeltok.api.users.Data
 {
     public class UserDbContext : DbContext
     {
-
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
         public DbSet<UserEntity> Users { get; set; }
@@ -35,13 +34,33 @@ namespace reeltok.api.users.Data
                     hd.HasIndex(h => h.Email).IsUnique();
                 });
 
+            // LikedVideoEntity configuration
             modelBuilder.Entity<LikedVideoEntity>()
                 .HasIndex(lv => new { lv.UserId, lv.VideoId })
                 .IsUnique();
 
+            modelBuilder.Entity<LikedVideoEntity>()
+                .HasOne<UserEntity>()
+                .WithMany()
+                .HasForeignKey(lv => lv.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // SubscriptionEntity configuration
             modelBuilder.Entity<SubscriptionEntity>()
                 .HasIndex(s => new { s.UserId, s.SubscribingToUserId })
                 .IsUnique();
+
+            modelBuilder.Entity<SubscriptionEntity>()
+                .HasOne<UserEntity>()
+                .WithMany()
+                .HasForeignKey(s => s.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SubscriptionEntity>()
+                .HasOne<UserEntity>()
+                .WithMany()
+                .HasForeignKey(s => s.SubscribingToUserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }

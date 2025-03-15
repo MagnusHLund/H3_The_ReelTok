@@ -67,6 +67,8 @@ namespace reeltok.api.auth.Data
                 .WithOne()
                 .HasForeignKey(at => at.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace reeltok.api.videos.DTOs.GetRecommendedVideos
     public class RecommendedServiceGetRecommendedVideosResponseDto : BaseResponseDto
     {
         [Required]
-        [JsonProperty("VideoIdList")]
+        [JsonProperty("VideoIds")]
         public List<Guid> VideoIdList { get; set; }
 
         public RecommendedServiceGetRecommendedVideosResponseDto(List<Guid> videoIdList, bool success = true) : base(success)

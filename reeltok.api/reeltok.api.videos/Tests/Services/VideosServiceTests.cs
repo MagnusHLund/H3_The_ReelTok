@@ -155,9 +155,10 @@ namespace reeltok.api.videos.Tests.Services
             // Arrange
             Guid userId = Guid.NewGuid();
             Guid videoId = Guid.NewGuid();
-            string streamPath = VideoUtils.CreateStreamPath(userId, videoId);
+            Mock<IFormFile> fileMock = TestDataFactory.CreateMockVideoFile();
+            string streamPath = VideoUtils.CreateStreamPath(userId, videoId, (IFormFile)fileMock);
 
-            _mockVideosRepository.Setup(x => x.DeleteVideoAsync(userId, videoId)).Returns(Task.CompletedTask);
+            _mockVideosRepository.Setup(x => x.DeleteVideoAsync(userId, videoId)).Returns(Task.FromResult(streamPath));
             _mockStorageService.Setup(x => x.RemoveVideoFromFileServerAsync(streamPath)).Returns(Task.CompletedTask);
 
             // Act

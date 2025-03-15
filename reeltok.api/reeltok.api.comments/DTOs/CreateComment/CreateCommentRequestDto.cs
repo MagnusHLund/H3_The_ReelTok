@@ -14,7 +14,7 @@ namespace reeltok.api.comments.DTOs.CreateComment
         public Guid UserId { get; set; }
 
         [Required]
-        [JsonProperty("Text")]
+        [JsonProperty("Message")]
         public string CommentText { get; set; }
 
         public CreateCommentRequestDto(Guid videoId, Guid userId, string commentText)

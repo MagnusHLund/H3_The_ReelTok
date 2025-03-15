@@ -27,8 +27,7 @@ namespace reeltok.api.comments.Data
                 commentDetails.HasIndex(cd => new { cd.UserId, cd.VideoId });
             });
 
-
+            base.OnModelCreating(modelBuilder);
         }
-
     }
 }

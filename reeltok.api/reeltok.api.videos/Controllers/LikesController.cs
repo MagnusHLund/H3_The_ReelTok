@@ -30,7 +30,7 @@ namespace reeltok.api.videos.Controllers
         [HttpDelete]
         public async Task<IActionResult> RemoveLikeFromVideoAsync([FromQuery] Guid userId, [FromQuery] Guid videoId)
         {
-            bool success = await _likesService.LikeVideoAsync(userId, videoId).ConfigureAwait(false);
+            bool success = await _likesService.RemoveLikeFromVideoAsync(userId, videoId).ConfigureAwait(false);
 
             RemoveLikeResponseDto responseDto = new RemoveLikeResponseDto(success);
             return Ok(responseDto);
