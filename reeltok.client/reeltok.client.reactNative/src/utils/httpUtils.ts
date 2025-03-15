@@ -2,6 +2,12 @@ import { HttpMethod } from './../services/httpService'
 import { PayloadType } from '../services/httpService'
 import { AxiosRequestConfig } from 'axios'
 
+const baseAxiosRequestConfig: AxiosRequestConfig = {
+  headers: {
+    accept: 'application/json',
+  },
+}
+
 export function prepareJsonRequestBody<TRequestDto>(
   body: TRequestDto,
   url: URL,
@@ -16,6 +22,7 @@ export function prepareJsonRequestBody<TRequestDto>(
       'Content-Type': 'application/json',
     },
     data: jsonStringBody,
+    ...baseAxiosRequestConfig,
   }
 }
 
@@ -34,6 +41,7 @@ export function prepareQueryParametersRequest<TRequestDto>(
   return {
     url: url.toString(),
     method: httpMethod,
+    ...baseAxiosRequestConfig,
   }
 }
 
@@ -46,13 +54,18 @@ export function prepareMultipartFormDataRequestBody<TRequestDto>(
 
   Object.entries(body as Record<string, unknown>).forEach(([key, value]) => {
     if (value instanceof URL) {
-      formData.append(key, {
-        uri: value,
+      // Map URLs as files
+      const file = {
+        uri: value.toString(),
         name: key,
         type: 'application/octet-stream', // Default MIME type for files
-      } as any)
-    } else {
+      }
+      formData.append(key, file as any) // Add the file to the form-data
+    } else if (typeof value === 'string' || typeof value === 'number' || value === null) {
+      // Convert other values to strings and add them as text
       formData.append(key, value?.toString() || '')
+    } else {
+      console.warn(`Unexpected data type for key "${key}" - skipping`)
     }
   })
 
@@ -63,6 +76,7 @@ export function prepareMultipartFormDataRequestBody<TRequestDto>(
       'Content-Type': 'multipart/form-data',
     },
     data: formData,
+    ...baseAxiosRequestConfig,
   }
 }
 
