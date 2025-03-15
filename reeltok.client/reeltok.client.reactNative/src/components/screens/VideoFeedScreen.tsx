@@ -17,10 +17,9 @@ interface RenderItemProps {
   index: number
 }
 
-// TODO: Fix bug with it not being able to scroll more than 48 times.
-// TODO: Once the phone rotates, video and comments are displayed next to each other.
 const VideoFeedScreen: React.FC = () => {
   const videos = useAppSelector((state) => state.videos.videos)
+  const users = useAppSelector((state) => state.users.users)
   const dispatch = useAppDispatch()
   const { contentHeight } = useAppDimensions()
   const [currentlyDisplayedVideoIndex, setCurrentlyDisplayedVideoIndex] = useState(0)
@@ -94,24 +93,22 @@ const VideoFeedScreen: React.FC = () => {
   }, [currentlyDisplayedVideoIndex, videos, dispatch])
 
   const renderItem = useCallback(
-    ({ item, index }: RenderItemProps) => (
-      <Animated.View
-        style={[styles.videoContainer, { transform: [{ rotate: rotationInterpolation }] }]}
-      >
-        <VideoPlayer
-          videoDetails={item}
-          onAutoScroll={handleAutoScroll}
-          isDisplayed={currentlyDisplayedVideoIndex === index}
-          userDetails={{
-            userId: 'guidUserId3',
-            username: 'Magnus',
-            profileUrl: 'someurl',
-            profilePictureUrl: 'https://avatars.githubusercontent.com/u/124877369?v=4',
-          }}
-        />
-      </Animated.View>
-    ),
-    [currentlyDisplayedVideoIndex, handleAutoScroll]
+    ({ item, index }: RenderItemProps) => {
+      const user = users.find((user) => user.userId === item.creatorUserId)
+      return (
+        <Animated.View
+          style={[styles.videoContainer, { transform: [{ rotate: rotationInterpolation }] }]}
+        >
+          <VideoPlayer
+            videoDetails={item}
+            onAutoScroll={handleAutoScroll}
+            isDisplayed={currentlyDisplayedVideoIndex === index}
+            userDetails={user}
+          />
+        </Animated.View>
+      )
+    },
+    [currentlyDisplayedVideoIndex, handleAutoScroll, users, rotationInterpolation]
   )
 
   const styles = StyleSheet.create({

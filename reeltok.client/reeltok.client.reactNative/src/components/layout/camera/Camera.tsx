@@ -87,7 +87,7 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode, onClose }) => {
 
   const renderContent = () => {
     return (
-      <View style={[styles.contentContainer, { height: contentHeight }]}>
+      <View style={[styles.contentContainer, { height: contentHeight, width: fullWidth }]}>
         <CapturedContent
           uri={uri.fileUri}
           cameraMode={cameraMode}
@@ -106,7 +106,7 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode, onClose }) => {
 
   const renderCamera = () => {
     return (
-      <>
+      <View>
         <CameraViewComponent
           ref={ref}
           cameraMode={cameraMode}
@@ -119,22 +119,20 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode, onClose }) => {
           contentHeight={contentHeight}
         />
         <CloseButton onClose={onClose} />
-      </>
+      </View>
     )
   }
 
   return (
-    <View style={styles.container}>{uri.fileUri !== '' ? renderContent() : renderCamera()}</View>
+    <View style={[styles.container, { height: contentHeight, width: fullWidth }]}>
+      {uri.fileUri !== '' ? renderContent() : renderCamera()}
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
-    width: '100%',
     backgroundColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
     zIndex: 1,
     position: 'absolute',
   },
@@ -144,14 +142,11 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   contentContainer: {
-    height: '100%',
-    width: '100%',
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
+    backgroundColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
     zIndex: 1,
+    position: 'absolute',
   },
 })
 
