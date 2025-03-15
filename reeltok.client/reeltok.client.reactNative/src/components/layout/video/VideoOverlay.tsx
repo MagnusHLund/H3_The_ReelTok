@@ -6,9 +6,7 @@ import CustomButton from '../../input/CustomButton'
 import { Ionicons } from '@expo/vector-icons'
 import useOrientation from '../../../hooks/useOrientation'
 import React from 'react'
-import ProfileImage from '../profile/ProfileImage'
 import useAppDimensions from '../../../hooks/useAppDimensions'
-import useAppSelector from '../../../hooks/useAppSelector'
 import Creator from './Creator'
 import { UserDetails } from '../../../redux/slices/usersSlice'
 
@@ -18,8 +16,6 @@ interface VideoOverlayProps {
   onCommentsOpen: () => void
 }
 
-// TODO: Use icons & text font with an outline, so they are visible on any video background!
-// TODO: Add video creator and video information to the overlay
 const VideoOverlay: React.FC<VideoOverlayProps> = ({
   videoDetails,
   userdetails,
@@ -28,9 +24,6 @@ const VideoOverlay: React.FC<VideoOverlayProps> = ({
   const dispatch = useAppDispatch()
   const orientation = useOrientation('', 'VideoOverlay')
   const { fullWidth, contentHeight } = useAppDimensions()
-
-  const user = useAppSelector((state) => state.users.users.find((user) => user))
-  const video = useAppSelector((state) => state.videos.videos.find((video) => video))
 
   const handleLikeButtonPress = () => {
     dispatch(hasLikedVideoThunk(videoDetails))
@@ -86,7 +79,7 @@ const styles = StyleSheet.create({
   },
   aboutContainer: {
     position: 'absolute',
-
+    zIndex: 1,
     bottom: '10%',
   },
 })

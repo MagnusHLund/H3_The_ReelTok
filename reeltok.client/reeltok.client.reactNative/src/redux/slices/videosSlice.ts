@@ -41,7 +41,7 @@ const initialState: VideosProps = {
     },
     {
       videoId: 'guidVideoId2',
-      creatorUserId: 'guidUserId3',
+      creatorUserId: 'guidUserId4',
       title: 'Mock video 2',
       description: 'Mock description 2',
       likes: 321,

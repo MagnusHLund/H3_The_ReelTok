@@ -1,18 +1,21 @@
+import React from 'react'
+import { useRoute } from '@react-navigation/native'
 import ProfileDetails from '../layout/profile/ProfileDetails'
 import VideoGallery from '../layout/profile/VideoGallery'
-import React from 'react'
+import { UserDetails } from '../../redux/slices/usersSlice'
+import { Text } from 'react-native'
 
 const UserProfileScreen: React.FC = () => {
+  const route = useRoute()
+  const { userDetails } = route.params as { userDetails: UserDetails }
+
+  if (!userDetails) {
+    return <Text>User details not found</Text>
+  }
+
   return (
     <>
-      <ProfileDetails
-        user={{
-          userId: 'guidUserId3',
-          username: 'Magnus',
-          profileUrl: 'someurl',
-          profilePictureUrl: 'https://avatars.githubusercontent.com/u/124877369?v=4',
-        }}
-      />
+      <ProfileDetails user={userDetails} />
       <VideoGallery />
     </>
   )
