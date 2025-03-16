@@ -55,7 +55,6 @@ namespace RecommendationsServiceApi
                 });
 
             builder.Services.AddHttpClient();
-            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

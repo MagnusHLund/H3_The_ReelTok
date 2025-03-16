@@ -58,8 +58,6 @@ namespace reeltok.api.comments
                     options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
                 });
 
-            builder.Services.AddHttpContextAccessor();
-
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 

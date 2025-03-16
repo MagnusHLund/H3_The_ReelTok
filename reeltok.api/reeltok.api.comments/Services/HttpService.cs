@@ -8,12 +8,10 @@ namespace reeltok.api.comments.Services
     public class HttpService : IHttpService
     {
         private readonly HttpClient _httpClient;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HttpService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
+        public HttpService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(
@@ -39,7 +37,6 @@ namespace reeltok.api.comments.Services
             using (request)
             {
                 HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
-                HttpResponseUtils.HandleResponseCookies(response, _httpContextAccessor);
 
                 return await HttpResponseUtils.DeserializeResponseAsync<TResponse>(response).ConfigureAwait(false);
             }

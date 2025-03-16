@@ -5,17 +5,6 @@ namespace reeltok.api.videos.Utils
 {
     public static class HttpResponseUtils
     {
-        public static void HandleResponseCookies(HttpResponseMessage response, IHttpContextAccessor httpContextAccessor)
-        {
-            if (response.Headers.TryGetValues("Set-Cookie", out var cookies))
-            {
-                foreach (var cookie in cookies)
-                {
-                    httpContextAccessor.HttpContext?.Response.Headers.Append("Set-Cookie", cookie);
-                }
-            }
-        }
-
         public static async Task<BaseResponseDto> DeserializeResponseAsync<TResponse>(HttpResponseMessage response)
             where TResponse : BaseResponseDto
         {
