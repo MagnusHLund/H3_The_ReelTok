@@ -2,12 +2,6 @@ import { HttpMethod } from './../services/httpService'
 import { PayloadType } from '../services/httpService'
 import { AxiosRequestConfig } from 'axios'
 
-const baseAxiosRequestConfig: AxiosRequestConfig = {
-  headers: {
-    accept: 'application/json',
-  },
-}
-
 export function prepareJsonRequestBody<TRequestDto>(
   body: TRequestDto,
   url: URL,
@@ -22,7 +16,6 @@ export function prepareJsonRequestBody<TRequestDto>(
       'Content-Type': 'application/json',
     },
     data: jsonStringBody,
-    ...baseAxiosRequestConfig,
   }
 }
 
@@ -41,7 +34,6 @@ export function prepareQueryParametersRequest<TRequestDto>(
   return {
     url: url.toString(),
     method: httpMethod,
-    ...baseAxiosRequestConfig,
   }
 }
 
@@ -76,7 +68,6 @@ export function prepareMultipartFormDataRequestBody<TRequestDto>(
       'Content-Type': 'multipart/form-data',
     },
     data: formData,
-    ...baseAxiosRequestConfig,
   }
 }
 
