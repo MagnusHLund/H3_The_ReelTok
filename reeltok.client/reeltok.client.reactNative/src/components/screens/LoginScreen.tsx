@@ -1,11 +1,38 @@
 import useAppDimensions from '../../hooks/useAppDimensions'
-import { View, StyleSheet, Image } from 'react-native'
+import { View, StyleSheet, Image, Alert } from 'react-native'
 import CustomTextInput from '../input/CustomTextInput'
 import CustomButton from '../input/CustomButton'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { LoginRequestDto } from '../../DTOs/login/LoginRequestDto'
+import { userLoginThunk } from '../../redux/thunks/authThunks'
+import { AppDispatch } from '../../redux/store'
+import useAppNavigation from '../../hooks/useAppNavigation'
+import useAppSelector from '../../hooks/useAppSelector'
 
 const LoginScreen = () => {
+  const navigateToScreen = useAppNavigation()
+
+  const dispatch = useDispatch<AppDispatch>()
   const { contentHeight } = useAppDimensions()
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleLogin = () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter both email and password.')
+      return
+    }
+
+    const loginData: LoginRequestDto = { email, password }
+
+    try {
+      dispatch(userLoginThunk(loginData)).unwrap()
+    } catch (er) {
+      Alert.alert('Login Failed', 'Invalid credentials or network error.' + er)
+    }
+  }
 
   return (
     <View style={styles.outerContainer}>
@@ -16,13 +43,24 @@ const LoginScreen = () => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <CustomTextInput placeholder="Email.."></CustomTextInput>
-        <CustomTextInput placeholder="password.." password></CustomTextInput>
+        <CustomTextInput
+          placeholder="Email.."
+          value={email}
+          onChangeText={setEmail}
+        ></CustomTextInput>
+        <CustomTextInput
+          placeholder="password.."
+          password
+          value={password}
+          onChangeText={setPassword}
+        ></CustomTextInput>
+        <CustomButton widthPercentage={0.8} onPress={handleLogin} title="Log ind" />
         <CustomButton
           widthPercentage={0.8}
-          onPress={() => console.log('submitted')}
-          title="Log ind"
-        ></CustomButton>
+          transparent
+          title="Sign up"
+          onPress={() => navigateToScreen('Signup')}
+        />
       </View>
     </View>
   )
