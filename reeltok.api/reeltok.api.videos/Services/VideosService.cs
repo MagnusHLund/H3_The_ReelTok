@@ -11,18 +11,21 @@ namespace reeltok.api.videos.Services
     public class VideosService : IVideosService
     {
         private readonly IExternalApiService _externalApiService;
+        private readonly IThumbnailService _thumbnailService;
         private readonly IVideosRepository _videosRepository;
         private readonly IStorageService _storageService;
         private readonly ILikesService _likesService;
 
         public VideosService(
             IExternalApiService externalApiService,
+            IThumbnailService thumbnailService,
             IVideosRepository videosRepository,
             IStorageService storageService,
             ILikesService likesService
             )
         {
             _externalApiService = externalApiService;
+            _thumbnailService = thumbnailService;
             _videosRepository = videosRepository;
             _storageService = storageService;
             _likesService = likesService;
@@ -41,7 +44,7 @@ namespace reeltok.api.videos.Services
             string filePathToDelete = await _videosRepository.DeleteVideoAsync(userId, videoId).ConfigureAwait(false);
             await _externalApiService.DeleteVideoFromRecommendationsApiAsync(videoId).ConfigureAwait(false);
 
-            await _storageService.RemoveVideoFromFileServerAsync(filePathToDelete).ConfigureAwait(false);
+            await _storageService.DeleteVideoFilesUsingSftpAsync(filePathToDelete).ConfigureAwait(false);
         }
 
         public async Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(Guid userId, byte amount)
@@ -97,14 +100,16 @@ namespace reeltok.api.videos.Services
             VideoEntity videoToUpload = VideoMapper.ConvertVideoUploadToVideoEntity(video, userId, video.VideoFile);
             VideoEntity videoEntity = await _videosRepository.CreateVideoAsync(videoToUpload).ConfigureAwait(false);
 
+            IFormFile thumbnailFile = await _thumbnailService.GenerateVideoThumbnailAsync(video.VideoFile).ConfigureAwait(false);
+
             await _externalApiService.AddVideoToRecommendationsApiAsync(
                 videoEntity.VideoId, category)
                 .ConfigureAwait(false);
 
             try
             {
-                await _storageService.UploadVideoToFileServerAsync(
-                    video.VideoFile, videoEntity.VideoId, videoEntity.UserId)
+                await _storageService.UploadVideoFilesUsingSftpAsync(
+                    video.VideoFile, thumbnailFile, videoEntity.VideoId, videoEntity.UserId)
                     .ConfigureAwait(false);
             }
             catch

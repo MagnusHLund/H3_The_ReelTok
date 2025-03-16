@@ -22,11 +22,14 @@ namespace reeltok.api.videos.Services
             _sftpPassword = appSettingsUtils.GetConfigurationValue($"{baseFileServerAppSettingsConfig}:Password");
         }
 
-        public async Task UploadVideoToFileServerAsync(IFormFile videoFile, Guid videoId, Guid userId)
+        public async Task UploadVideoFilesUsingSftpAsync(IFormFile videoFile, IFormFile thumbnailFile, Guid videoId, Guid userId)
         {
-            string fileExtension = Path.GetExtension(videoFile.FileName).ToUpperInvariant();
+            string videoFileExtension = Path.GetExtension(videoFile.FileName).ToUpperInvariant();
             string userDirectory = $"{_sftpDirectory}/{userId}";
-            string filePath = $"{userDirectory}/{videoId}{fileExtension}";
+            string filePath = $"{userDirectory}/{videoId}";
+
+            string videoFilePath = $"{filePath}{videoFileExtension}";
+            string thumbnailFilePath = $"{filePath}.jpg";
 
             using (var sftpClient = new SftpClient(_sftpHostname, _sftpUsername, _sftpPassword))
             {
@@ -39,10 +42,8 @@ namespace reeltok.api.videos.Services
                         await sftpClient.CreateDirectoryAsync(userDirectory).ConfigureAwait(false);
                     }
 
-                    using (Stream inStream = videoFile.OpenReadStream())
-                    {
-                        await Task.Run(() => sftpClient.UploadFile(inStream, $"{filePath}")).ConfigureAwait(false);
-                    }
+                    await UploadFileAsync(sftpClient, videoFile, videoFilePath).ConfigureAwait(false);
+                    await UploadFileAsync(sftpClient, thumbnailFile, thumbnailFilePath).ConfigureAwait(false);
                 }
                 catch (SshException ex)
                 {
@@ -59,23 +60,19 @@ namespace reeltok.api.videos.Services
             }
         }
 
-        public async Task RemoveVideoFromFileServerAsync(string streamPath)
+        public async Task DeleteVideoFilesUsingSftpAsync(string streamPath)
         {
+            string videoFilePath = $"{_sftpDirectory}/{streamPath}";
+            string thumbnailFilePath = $"{FileNameWithoutExtension(videoFilePath)}.jpg";
+
             using (var sftpClient = new SftpClient(_sftpHostname, _sftpUsername, _sftpPassword))
             {
                 try
                 {
                     sftpClient.Connect();
-                    string fullPath = $"{_sftpDirectory}/{streamPath}";
 
-                    if (!await sftpClient.ExistsAsync(fullPath).ConfigureAwait(false))
-                    {
-                        throw new FileNotFoundException("Video not found.");
-                    }
-
-                    await Task.Run(() => sftpClient.DeleteFile(fullPath)).ConfigureAwait(false);
-
-                    sftpClient.Disconnect();
+                    await DeleteFileAsync(sftpClient, videoFilePath).ConfigureAwait(false);
+                    await DeleteFileAsync(sftpClient, thumbnailFilePath).ConfigureAwait(false);
                 }
                 catch (SshException ex)
                 {
@@ -85,7 +82,32 @@ namespace reeltok.api.videos.Services
                 {
                     throw new IOException("An error occurred while removing the video from the SFTP server!", ex);
                 }
+                finally
+                {
+                    sftpClient.Disconnect();
+                }
             }
+        }
+
+        private static async Task UploadFileAsync(SftpClient sftpClient, IFormFile file, string filePath)
+        {
+            using (Stream inStream = file.OpenReadStream())
+            {
+                await Task.Run(() => sftpClient.UploadFile(inStream, $"{filePath}")).ConfigureAwait(false);
+            }
+        }
+
+        private static async Task DeleteFileAsync(SftpClient sftpClient, string filePath)
+        {
+            if (await sftpClient.ExistsAsync(filePath).ConfigureAwait(false))
+            {
+                await Task.Run(() => sftpClient.DeleteFile(filePath)).ConfigureAwait(false);
+            }
+        }
+
+        private static string FileNameWithoutExtension(string fileName)
+        {
+            return Path.GetFileNameWithoutExtension(fileName);
         }
     }
 }

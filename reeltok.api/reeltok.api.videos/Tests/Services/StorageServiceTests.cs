@@ -37,6 +37,7 @@ namespace reeltok.api.videos.Tests.Services
             var videoFileMock = new Mock<IFormFile>();
             var fileName = "test_video.mp4";
             var videoContent = Array.Empty<byte>();
+            IFormFile thumbnail = TestDataFactory.CreateThumbnailFile();
 
             using (var memoryStream = new MemoryStream(videoContent))
             {
@@ -47,7 +48,8 @@ namespace reeltok.api.videos.Tests.Services
                 VideoEntity video = TestDataFactory.CreateVideoEntity();
 
                 // Act & Assert
-                await Assert.ThrowsAsync<IOException>(() => _storageService.UploadVideoToFileServerAsync(videoFile, video.VideoId, video.UserId));
+                await Assert.ThrowsAsync<IOException>(() => _storageService
+                    .UploadVideoFilesUsingSftpAsync(videoFile, thumbnail, video.VideoId, video.UserId));
             }
         }
 
@@ -58,6 +60,7 @@ namespace reeltok.api.videos.Tests.Services
             var videoFileMock = new Mock<IFormFile>();
             var fileName = "test_video.mp4";
             var videoContent = Array.Empty<byte>();
+            IFormFile thumbnail = TestDataFactory.CreateThumbnailFile();
 
             using (var memoryStream = new MemoryStream(videoContent))
             {
@@ -68,7 +71,7 @@ namespace reeltok.api.videos.Tests.Services
                 VideoEntity video = TestDataFactory.CreateVideoEntity();
 
                 // Act
-                await _storageService.UploadVideoToFileServerAsync(videoFile, video.VideoId, video.UserId);
+                await _storageService.UploadVideoFilesUsingSftpAsync(videoFile, thumbnail, video.VideoId, video.UserId);
 
                 // Assert
                 // No exceptions should be thrown, implying success
@@ -82,7 +85,7 @@ namespace reeltok.api.videos.Tests.Services
             string streamPath = TestDataFactory.CreateVideoEntity().StreamPath;
 
             // Act & Assert
-            await Assert.ThrowsAsync<FileNotFoundException>(() => _storageService.RemoveVideoFromFileServerAsync(streamPath));
+            await Assert.ThrowsAsync<FileNotFoundException>(() => _storageService.DeleteVideoFilesUsingSftpAsync(streamPath));
         }
 
         [Fact]
@@ -92,7 +95,7 @@ namespace reeltok.api.videos.Tests.Services
             string streamPath = TestDataFactory.CreateVideoEntity().StreamPath;
 
             // Act
-            await _storageService.RemoveVideoFromFileServerAsync(streamPath);
+            await _storageService.DeleteVideoFilesUsingSftpAsync(streamPath);
 
             // Assert
             // No exceptions should be thrown, implying success
