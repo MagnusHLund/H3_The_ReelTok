@@ -99,6 +99,8 @@ namespace reeltok.api.auth.Middleware
         {
             CookieUtils.AppendTokenToCookie(context, newAccessToken, TokenName.AccessToken);
             CookieUtils.AppendTokenToCookie(context, newRefreshToken, TokenName.RefreshToken);
+
+            context.Items["NewAccessToken"] = newAccessToken.TokenValue;
         }
     }
 }

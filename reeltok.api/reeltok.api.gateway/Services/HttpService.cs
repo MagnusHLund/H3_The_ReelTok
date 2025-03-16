@@ -28,7 +28,9 @@ namespace reeltok.api.gateway.Services
                 throw new ArgumentNullException(nameof(requestDto));
             }
 
-            HttpRequestMessage request = HttpRequestFactory.CreateHttpRequest(requestDto, targetUrl, httpMethod, isMultipartFormData);
+            HttpRequestMessage request = HttpRequestFactory
+                .CreateHttpRequest(requestDto, targetUrl, httpMethod, isMultipartFormData);
+
             ForwardCookies(request);
 
             return await SendRequestAsync<TResponse>(request).ConfigureAwait(false);

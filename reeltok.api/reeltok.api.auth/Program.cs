@@ -68,7 +68,6 @@ namespace AuthServiceApi
             WebApplication app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<ForwardCookiesMiddleware>();
             app.UseMiddleware<TokenValidationMiddleware>();
 
             // Configure the HTTP request pipeline.

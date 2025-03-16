@@ -29,21 +29,8 @@ namespace reeltok.api.comments.Services
             }
 
             HttpRequestMessage request = HttpRequestFactory.CreateHttpRequest(requestDto, targetUrl, httpMethod, isMultipartFormData);
-            ForwardCookies(request);
 
             return await SendRequestAsync<TResponse>(request).ConfigureAwait(false);
-        }
-
-        private void ForwardCookies(HttpRequestMessage request)
-        {
-            IRequestCookieCollection? cookies = _httpContextAccessor.HttpContext?.Request.Cookies;
-            if (cookies != null)
-            {
-                foreach (var cookie in cookies)
-                {
-                    request.Headers.Add("Cookie", $"{cookie.Key}={cookie.Value}");
-                }
-            }
         }
 
         private async Task<BaseResponseDto> SendRequestAsync<TResponse>(HttpRequestMessage request)

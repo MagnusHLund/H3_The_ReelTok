@@ -63,7 +63,6 @@ namespace RecommendationsServiceApi
             WebApplication app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<ForwardCookiesMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
