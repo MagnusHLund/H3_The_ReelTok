@@ -5,8 +5,9 @@ import CustomButton from '../../input/CustomButton'
 import { View, StyleSheet, Modal, TouchableWithoutFeedback } from 'react-native'
 import MediaSelector from './MediaSelector'
 import RotatingIcon from './RotatingIcon'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { UserDetails } from '../../../redux/slices/usersSlice'
+import useAppSelector from '../../../hooks/useAppSelector'
 
 const Navbar: React.FC = () => {
   const navigateToScreen = useAppNavigation()
@@ -33,7 +34,7 @@ const Navbar: React.FC = () => {
   const defaultUser: UserDetails = {
     userId: 'guidUserId3',
     username: 'Magnus',
-    profileUrl: 'someurl.com',
+    email: 'someUrl.com',
     profilePictureUrl: 'https://avatars.githubusercontent.com/u/124877369?v=4',
   }
 
@@ -60,7 +61,7 @@ const Navbar: React.FC = () => {
         </CustomButton>
         <CustomButton
           transparent={true}
-          onPress={() => navigateToScreen('Profile', { userDetails: defaultUser })}
+          onPress={() => navigateToScreen(isLoggedIn ? 'Profile' : 'Login', isLoggedIn ? { userDetails: defaultUser } : undefined)}
         >
           <RotatingIcon name="person-circle-sharp" color="white" />
         </CustomButton>
