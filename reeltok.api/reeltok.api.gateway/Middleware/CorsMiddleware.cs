@@ -8,28 +8,37 @@ namespace reeltok.api.gateway.Middleware
         };
 
         private readonly RequestDelegate _next;
+        private readonly ILogger<CorsMiddleware> _logger;
 
-        public CorsMiddleware(RequestDelegate next)
+        public CorsMiddleware(RequestDelegate next, ILogger<CorsMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-            Console.WriteLine("Origin header: " + context.Request.Headers.Origin.ToString());
             string origin = context.Request.Headers.Origin.ToString();
+            _logger.LogInformation("Received Origin header: {Origin}", origin);
 
             if (IsValidOrigin(origin))
             {
+                _logger.LogInformation("Origin {Origin} is valid, applying CORS headers.", origin);
+
                 context.Response.Headers.Append("Access-Control-Allow-Origin", origin);
                 context.Response.Headers.Append("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
                 context.Response.Headers.Append("Access-Control-Allow-Headers", "Content-Type, Authorization");
                 context.Response.Headers.Append("Access-Control-Allow-Credentials", "true");
             }
+            else
+            {
+                _logger.LogWarning("Origin {Origin} is not valid. Request may be blocked.", origin);
+            }
 
             // Handle preflight requests for CORS
             if (context.Request.Method == HttpMethods.Options)
             {
+                _logger.LogInformation("Handling preflight OPTIONS request for {Path}", context.Request.Path);
                 context.Response.StatusCode = StatusCodes.Status204NoContent;
                 return;
             }
@@ -41,18 +50,15 @@ namespace reeltok.api.gateway.Middleware
         {
             if (!string.IsNullOrEmpty(origin) && allowedOrigins.Contains(origin))
             {
-                Console.WriteLine("Origin is allowed by allowedOrigins array");
                 return true;
             }
 
             // For development purposes
             if (origin.StartsWith("http://localhost:") || origin.StartsWith("https://localhost:"))
             {
-                Console.WriteLine("Origin is allowed because it is localhost");
                 return true;
             }
 
-            Console.WriteLine("Origin is not allowed");
             return false;
         }
     }
