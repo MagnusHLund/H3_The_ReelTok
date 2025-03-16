@@ -28,7 +28,8 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
     if (allowedToChangePicture) {
       setShowCamera(true)
     } else {
-      navigateToScreen('Profile', { userDetails: user })
+      // console.log('Navigating to Profile with user:', user)
+      // navigateToScreen('Profile', { userDetails: user })
     }
   }
 

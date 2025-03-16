@@ -8,7 +8,7 @@ import { Text } from 'react-native'
 const UserProfileScreen: React.FC = () => {
   const route = useRoute()
   const { userDetails } = route.params as { userDetails: UserDetails }
-
+  console.log(userDetails)
   if (!userDetails) {
     return <Text>User details not found</Text>
   }
