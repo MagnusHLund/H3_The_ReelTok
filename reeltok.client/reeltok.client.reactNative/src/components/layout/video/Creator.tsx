@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     top: '0%',
   },
   pictureContainer: {
-    left: '-5%',
+    left: '5%',
     width: '20%',
     justifyContent: 'flex-start',
   },
