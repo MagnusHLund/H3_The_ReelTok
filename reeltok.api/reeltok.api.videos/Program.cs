@@ -43,6 +43,7 @@ namespace reeltok.api.videos
             builder.Services.AddScoped<IEndpointFactory, EndpointFactory>();
             builder.Services.AddScoped<IVideosRepository, VideosRepository>();
             builder.Services.AddScoped<IExternalApiService, ExternalApiService>();
+            builder.Services.AddScoped<IThumbnailService, ThumbnailService>();
 
             builder.Services.AddDbContext<VideosDbContext>(
                 options => options.UseSqlServer(builder.Configuration.GetConnectionString("VideosDb")));
