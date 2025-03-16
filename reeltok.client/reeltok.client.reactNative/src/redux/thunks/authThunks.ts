@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { LoginRequestDto } from '../../DTOs/login/LoginRequestDto'
-import httpService, { HttpMethod } from '../../services/httpService'
+import httpService, { HttpMethod, PayloadType } from '../../services/httpService'
 import { UserDetails, userLogin } from '../slices/usersSlice'
 import { Alert } from 'react-native'
 
@@ -8,17 +8,23 @@ export const userLoginThunk = createAsyncThunk(
   'users/userLogin',
 
   async (loginData: LoginRequestDto, { dispatch }) => {
-    const method: HttpMethod = 'POST'
-    const url: URL = new URL('https://api.reeltok.site/api/users/login')
+    const httpMethod: HttpMethod = 'POST'
+    const url: string = 'users/login'
+    const payloadType: PayloadType = 'JsonBody'
 
     try {
-      const userResponse = await httpService<LoginRequestDto>({ method, url, body: loginData })
+      const userResponse = await httpService<LoginRequestDto>({
+        httpMethod,
+        url,
+        body: loginData,
+        payloadType,
+      })
       if (userResponse?.data && userResponse.data.Success) {
         const loggedInUser: UserDetails = {
           email: '',
           userId: userResponse.data.User.UserId,
           username: userResponse.data.User.UserDetails.Username,
-          profilePictureUrl: '', // Assuming profilePictureUrl is not provided in the response
+          profilePictureUrl: '',
         }
         dispatch(userLogin([loggedInUser]))
         console.log('Login successfully')

@@ -1,6 +1,9 @@
 import { prepareHttpPayload } from '../utils/httpUtils'
 import axios from 'axios'
 
+axios.defaults.headers.post['Content-Type'] = '' // Reset default Content-Type
+axios.defaults.headers.common['Content-Type'] = '' // Just in case for all requests
+
 export type PayloadType = 'JsonBody' | 'FormDataBody' | 'queryParameters'
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
