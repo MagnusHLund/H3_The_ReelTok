@@ -55,13 +55,9 @@ const SignUpScreen = () => {
         <CustomButton
           widthPercentage={0.8}
           onPress={() => console.log('Create user')}
-          title="Opret bruger"
+          title="Create User"
         ></CustomButton>
-        <CustomButton
-          widthPercentage={0.8}
-          onPress={() => console.log('already account')}
-          title="Login hvis du allerede har en bruger"
-        ></CustomButton>
+        <CustomButton widthPercentage={0.8} transparent title="Back to login" onPress={() => {}} />
       </View>
     </View>
   )
