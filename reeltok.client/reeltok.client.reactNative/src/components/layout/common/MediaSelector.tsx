@@ -39,7 +39,7 @@ const MediaSelector: React.FC<mediaSelectorProps> = ({ handleSelectMedia }) => {
   }
 
   return (
-    <Modal transparent={true} onRequestClose={handleSelectMedia}>
+    // <Modal transparent={true} onRequestClose={handleSelectMedia}>
       <TouchableWithoutFeedback onPress={handleSelectMedia}>
         <View style={styles.overlay}>
           {showCamera ? (
@@ -66,7 +66,7 @@ const MediaSelector: React.FC<mediaSelectorProps> = ({ handleSelectMedia }) => {
           )}
         </View>
       </TouchableWithoutFeedback>
-    </Modal>
+    // </Modal>
   )
 }
 
