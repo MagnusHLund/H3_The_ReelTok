@@ -111,7 +111,7 @@ namespace reeltok.api.gateway.Services
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync
                 <ServiceUpdateProfilePictureRequestDto, ServiceUpdateProfilePictureResponseDto>(
-                requestDto, targetUrl, HttpMethod.Put)
+                requestDto, targetUrl, HttpMethod.Put, true)
                 .ConfigureAwait(false);
 
             if (response.Success && response is ServiceUpdateProfilePictureResponseDto responseDto)
@@ -162,13 +162,12 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        // TODO: Implement in controller as well!
         public async Task<bool> SubscribeToUserAsync(Guid subscribeToUserId)
         {
             Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
             ServiceSubscribeToUserRequestDto requestDto = new ServiceSubscribeToUserRequestDto(userId, subscribeToUserId);
-            Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscribers");
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscribe");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync
                 <ServiceSubscribeToUserRequestDto, ServiceSubscribeToUserResponseDto>(
@@ -183,13 +182,12 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        // TODO: Implement in controller as well!
-        public async Task<bool> UnsubscribeToUserAsync(Guid subscribeToUserId)
+        public async Task<bool> UnsubscribeToUserAsync(Guid unsubscribingToUserId)
         {
             Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
 
-            ServiceUnsubscribeToUserRequestDto requestDto = new ServiceUnsubscribeToUserRequestDto(userId, subscribeToUserId);
-            Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscribers");
+            ServiceUnsubscribeToUserRequestDto requestDto = new ServiceUnsubscribeToUserRequestDto(userId, unsubscribingToUserId);
+            Uri targetUrl = _endpointFactory.GetUsersApiUrl("subscriptions/subscribe");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync
                 <ServiceUnsubscribeToUserRequestDto, ServiceUnsubscribeToUserResponseDto>(

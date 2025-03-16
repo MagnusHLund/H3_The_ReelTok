@@ -1,8 +1,6 @@
-using System.Text;
-using System.Text.Json;
-using System.Reflection;
 using reeltok.api.comments.DTOs;
-using Microsoft.AspNetCore.WebUtilities;
+using reeltok.api.comments.Utils;
+using reeltok.api.comments.Factories;
 using reeltok.api.comments.Interfaces.Services;
 
 namespace reeltok.api.comments.Services
@@ -10,16 +8,19 @@ namespace reeltok.api.comments.Services
     public class HttpService : IHttpService
     {
         private readonly HttpClient _httpClient;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HttpService(HttpClient httpClient)
+        public HttpService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
         {
             _httpClient = httpClient;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(
             TRequest requestDto,
             Uri targetUrl,
-            HttpMethod httpMethod
+            HttpMethod httpMethod,
+            bool isMultipartFormData = false
         ) where TResponse : BaseResponseDto
         {
             if (Equals(requestDto, default(TRequest)))
@@ -27,74 +28,34 @@ namespace reeltok.api.comments.Services
                 throw new ArgumentNullException(nameof(requestDto));
             }
 
-            HttpRequestMessage request = httpMethod == HttpMethod.Get || httpMethod == HttpMethod.Delete
-                ? PrepareHttpRequestWithQueryParameters(requestDto, targetUrl)
-                : PrepareHttpRequestBody(requestDto, targetUrl, httpMethod);
+            HttpRequestMessage request = HttpRequestFactory.CreateHttpRequest(requestDto, targetUrl, httpMethod, isMultipartFormData);
+            ForwardCookies(request);
 
-            using (request)
+            return await SendRequestAsync<TResponse>(request).ConfigureAwait(false);
+        }
+
+        private void ForwardCookies(HttpRequestMessage request)
+        {
+            IRequestCookieCollection? cookies = _httpContextAccessor.HttpContext?.Request.Cookies;
+            if (cookies != null)
             {
-                BaseResponseDto response = await RouteRequestAsync<TResponse>(request).ConfigureAwait(false);
-                return response;
-            }
-        }
-
-        public async Task<BaseResponseDto> RouteRequestAsync<TResponse>(HttpRequestMessage request)
-            where TResponse : BaseResponseDto
-        {
-            HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
-
-            return response.IsSuccessStatusCode
-                ? await DeserializeJsonToDtoAsync<TResponse>(response).ConfigureAwait(false)
-                : await DeserializeJsonToDtoAsync<FailureResponseDto>(response).ConfigureAwait(false);
-        }
-
-        private static HttpRequestMessage PrepareHttpRequestBody<TRequest>(
-            TRequest requestDto,
-            Uri targetUrl,
-            HttpMethod httpMethod
-        )
-        {
-            string requestContent = JsonSerializer.Serialize(requestDto);
-            return new HttpRequestMessage(httpMethod, targetUrl)
-            {
-                Content = CreateStringContent(requestContent)
-            };
-        }
-
-        private static HttpRequestMessage PrepareHttpRequestWithQueryParameters<TRequest>(TRequest requestDto, Uri targetUrl)
-        {
-            Dictionary<string, string> requestQueryParameters = ConvertRequestDtoToQueryParameters(requestDto);
-            string targetUrlWithQueryParameters = QueryHelpers.AddQueryString(targetUrl.ToString(), requestQueryParameters);
-
-            return new HttpRequestMessage(HttpMethod.Get, targetUrlWithQueryParameters);
-        }
-
-        private static StringContent CreateStringContent(string content)
-        {
-            return new StringContent(content, Encoding.UTF8, "application/json");
-        }
-
-        private static async Task<BaseResponseDto> DeserializeJsonToDtoAsync<TResponse>(HttpResponseMessage response)
-            where TResponse : BaseResponseDto
-        {
-            string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-            return JsonSerializer.Deserialize<TResponse>(responseContent)
-                ?? throw new InvalidOperationException("Failed to deserialize response content.");
-        }
-
-        private static Dictionary<string, string> ConvertRequestDtoToQueryParameters<TRequest>(TRequest request)
-        {
-            Dictionary<string, string> dictionary = new Dictionary<string, string>();
-            foreach (PropertyInfo properties in typeof(TRequest).GetProperties())
-            {
-                object? value = properties.GetValue(request);
-                if (value != null)
+                foreach (var cookie in cookies)
                 {
-                    dictionary.Add(properties.Name, value.ToString());
+                    request.Headers.Add("Cookie", $"{cookie.Key}={cookie.Value}");
                 }
             }
-            return dictionary;
+        }
+
+        private async Task<BaseResponseDto> SendRequestAsync<TResponse>(HttpRequestMessage request)
+            where TResponse : BaseResponseDto
+        {
+            using (request)
+            {
+                HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
+                HttpResponseUtils.HandleResponseCookies(response, _httpContextAccessor);
+
+                return await HttpResponseUtils.DeserializeResponseAsync<TResponse>(response).ConfigureAwait(false);
+            }
         }
     }
 }

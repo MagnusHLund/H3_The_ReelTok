@@ -1,11 +1,11 @@
-using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
-using reeltok.api.gateway.Entities.Users;
 using reeltok.api.gateway.ValueObjects;
+using reeltok.api.gateway.Entities.Users;
+using System.ComponentModel.DataAnnotations;
 
 namespace reeltok.api.gateway.Entities.Videos
 {
-    public class VideoForFeedEntity : BaseVideoEntity
+    public class VideoForFeedUsingUnixTimeEntity : BaseVideoUsingUnixTimeEntity
     {
         [Required]
         [JsonProperty("VideoDetails")]
@@ -16,16 +16,16 @@ namespace reeltok.api.gateway.Entities.Videos
         public VideoLikes VideoLikes { get; set; }
 
         [Required]
-        [JsonProperty("VideoCreator")]
+        [JsonProperty("User")]
         public UserEntity VideoCreator { get; set; }
 
-        public VideoForFeedEntity(
+        public VideoForFeedUsingUnixTimeEntity(
             Guid videoId,
             VideoDetails videoDetails,
             VideoLikes videoLikes,
             UserEntity videoCreator,
             string streamPath,
-            uint uploadedAt
+            long uploadedAt
         ) : base(videoId, streamPath, uploadedAt)
         {
             VideoId = videoId;

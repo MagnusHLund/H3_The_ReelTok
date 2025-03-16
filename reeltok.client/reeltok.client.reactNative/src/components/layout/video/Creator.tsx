@@ -6,6 +6,7 @@ import Description from './Description'
 import CreatorImage from './CreatorImage'
 import { UserDetails } from '../../../redux/slices/usersSlice'
 import { Video } from '../../../redux/slices/videosSlice'
+import useAppDimensions from './../../../hooks/useAppDimensions'
 
 interface CreatorProps {
   user: UserDetails
@@ -13,13 +14,13 @@ interface CreatorProps {
 }
 
 const Creator: React.FC<CreatorProps> = ({ user, video }) => {
-  
   const isCreator = user.userId === video.creatorUserId
+  const { fullWidth } = useAppDimensions()
 
   return (
     <View>
       {isCreator ? (
-        <View style={styles.container}>
+        <View style={[styles.container, { width: fullWidth }]}>
           <View style={styles.pictureContainer}>
             <CreatorImage profilePictureUrl={user.profilePictureUrl} />
           </View>
@@ -40,15 +41,14 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     flexDirection: 'row',
-    width: 400,
-    left: -30,
-    top: '60%',
+    justifyContent: 'flex-start',
+    top: '0%',
   },
   pictureContainer: {
-    left: -50,
+    left: '-5%',
     width: '20%',
     justifyContent: 'flex-start',
-    top: -100,
+   
   },
   textContainer: {
     flexDirection: 'column',

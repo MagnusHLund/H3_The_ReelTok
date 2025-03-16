@@ -11,10 +11,10 @@ namespace reeltok.api.comments.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Consumes("application/json")]
-    public class CommentController : ControllerBase
+    public class CommentsController : ControllerBase
     {
         private readonly ICommentsService _commentsService;
-        public CommentController(ICommentsService commentService)
+        public CommentsController(ICommentsService commentService)
         {
             _commentsService = commentService;
         }
@@ -39,7 +39,8 @@ namespace reeltok.api.comments.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCommentAsync([FromBody] CreateCommentRequestDto request)
         {
-            CommentEntity comment = await _commentsService.CreateCommentAsync(request.VideoId, request.UserId, request.CommentText)
+            CommentEntity comment = await _commentsService
+                .CreateCommentAsync(request.VideoId, request.UserId, request.CommentText)
                 .ConfigureAwait(false);
 
             CreateCommentResponseDto response = new CreateCommentResponseDto(comment);

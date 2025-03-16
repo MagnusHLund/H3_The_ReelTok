@@ -14,7 +14,7 @@ namespace reeltok.api.gateway.Entities.Users
         [JsonProperty("UserDetails")]
         public UserDetails UserDetails { get; set; }
 
-        protected ExternalUserEntity(Guid userId, UserDetails details)
+        public ExternalUserEntity(Guid userId, UserDetails details)
         {
             UserId = userId;
             UserDetails = details;

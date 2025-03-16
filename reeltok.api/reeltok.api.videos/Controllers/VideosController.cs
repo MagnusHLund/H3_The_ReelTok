@@ -9,6 +9,7 @@ using reeltok.api.videos.DTOs.DeleteVideo;
 using reeltok.api.videos.DTOs.UploadVideo;
 using reeltok.api.videos.DTOs.GetVideosForFeed;
 using reeltok.api.videos.DTOs.GetVideosForProfile;
+using reeltok.api.videos.DTOs.GetVideoById;
 
 namespace reeltok.api.videos.Controllers
 {
@@ -25,6 +26,16 @@ namespace reeltok.api.videos.Controllers
             _videosService = videosService;
         }
 
+        // Called by Comments api
+        [HttpGet]
+        public async Task<IActionResult> GetVideoByIdAsync([FromQuery] Guid VideoId)
+        {
+            VideoEntity video = await _videosService.GetVideoByIdAsync(VideoId).ConfigureAwait(false);
+
+            GetVideoByIdResponseDto responseDto = new GetVideoByIdResponseDto(video);
+            return Ok(responseDto);
+        }
+
         [HttpGet]
         [Route("feed")]
         public async Task<IActionResult> GetVideosForFeedAsync(
@@ -33,7 +44,8 @@ namespace reeltok.api.videos.Controllers
         )
         {
             Guid userIdOrDefault = userId ?? Guid.Empty;
-            List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(userIdOrDefault, amount).ConfigureAwait(false);
+            List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(userIdOrDefault, amount)
+                .ConfigureAwait(false);
 
             GetVideosForFeedResponseDto responseDto = new GetVideosForFeedResponseDto(videos);
             return Ok(responseDto);
@@ -59,10 +71,13 @@ namespace reeltok.api.videos.Controllers
         public async Task<IActionResult> UploadVideoAsync([FromForm] UploadVideoRequestDto request)
         {
             VideoUpload videoUpload = VideoMapper.ConvertUploadVideoRequestDtoToVideoUpload(request);
+            byte category = (byte)FormDataMapper.ConvertStringToint(request.Category);
+            Guid userId = FormDataMapper.ConvertStringToGuid(request.UserId);
 
-            await _videosService.UploadVideoAsync(videoUpload, request.UserId, request.Category).ConfigureAwait(false);
+            VideoEntity uploadedVideo = await _videosService.UploadVideoAsync(videoUpload, userId, category)
+                .ConfigureAwait(false);
 
-            UploadVideoResponseDto responseDto = new UploadVideoResponseDto();
+            UploadVideoResponseDto responseDto = new UploadVideoResponseDto(uploadedVideo);
             return Ok(responseDto);
         }
 

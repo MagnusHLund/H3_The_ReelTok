@@ -4,12 +4,14 @@ import CustomImage from '../common/CustomImage'
 import React, { useState } from 'react'
 import Camera from '../camera/Camera'
 import useAppNavigation from '../../../hooks/useAppNavigation'
+import { UserDetails } from '../../../redux/slices/usersSlice'
 
 interface ProfileImageProps {
   source: ImageSourcePropType
   height?: number
   width?: number
   allowedToChangePicture: boolean
+  user?: UserDetails
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({
@@ -17,6 +19,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   height = 80,
   width = 80,
   allowedToChangePicture,
+  user,
 }) => {
   const [showCamera, setShowCamera] = useState(false)
   const navigateToScreen = useAppNavigation()
@@ -25,7 +28,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
     if (allowedToChangePicture) {
       setShowCamera(true)
     } else {
-      navigateToScreen('Profile')
+      navigateToScreen('Profile', { userDetails: user })
     }
   }
 
@@ -60,10 +63,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   ProfilePicture: {
-    top: 100,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
     zIndex: 3,
   },
 })

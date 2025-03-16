@@ -29,8 +29,13 @@ namespace reeltok.api.videos.Repositories
         public async Task IncrementTotalLikesAsync(Guid videoId)
         {
             VideoTotalLikesEntity? videoLikeEntity = await _context.VideosLikes
-                .FirstOrDefaultAsync(vl => vl.VideoId == videoId).ConfigureAwait(false)
-                ?? throw new KeyNotFoundException($"Unable to find likes for video id: {videoId}");
+                .FirstOrDefaultAsync(vl => vl.VideoId == videoId).ConfigureAwait(false);
+
+            if (videoLikeEntity == null)
+            {
+                await CreateNewLikesEntityAsync(videoId).ConfigureAwait(false);
+                return;
+            }
 
             videoLikeEntity.TotalLikes += 1;
             await _context.SaveChangesAsync().ConfigureAwait(false);
@@ -50,6 +55,14 @@ namespace reeltok.api.videos.Repositories
             }
 
             videoLikeEntity.TotalLikes -= 1;
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        private async Task CreateNewLikesEntityAsync(Guid videoId)
+        {
+            uint totalLikes = 1;
+            VideoTotalLikesEntity videoLikeEntity = new VideoTotalLikesEntity(videoId, totalLikes);
+            await _context.VideosLikes.AddAsync(videoLikeEntity).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
     }

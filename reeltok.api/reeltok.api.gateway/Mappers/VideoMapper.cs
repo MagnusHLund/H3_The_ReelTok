@@ -1,5 +1,6 @@
 using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.DTOs.Videos.UploadVideo;
+using reeltok.api.gateway.Enums;
 
 namespace reeltok.api.gateway.Mappers
 {
@@ -18,7 +19,7 @@ namespace reeltok.api.gateway.Mappers
         internal static ServiceUploadVideoRequestDto ConvertVideoUploadToUploadVideoRequestDto(VideoUpload videoUpload)
         {
             return new ServiceUploadVideoRequestDto(
-                userId: videoUpload.UserId ?? Guid.Empty,
+                userId: videoUpload.UserId,
                 title: videoUpload.Title,
                 description: videoUpload.Description,
                 category: videoUpload.Category,

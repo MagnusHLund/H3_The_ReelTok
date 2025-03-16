@@ -37,9 +37,9 @@ namespace reeltok.api.auth.Services
             SymmetricSecurityKey key = new SymmetricSecurityKey(encodedSecretKey);
             SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            uint createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.UtcNow);
-            uint oneHourInSeconds = 3600;
-            uint expiresAt = createdAt + oneHourInSeconds;
+            long createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.UtcNow);
+            ushort oneHourInSeconds = 3600;
+            long expiresAt = createdAt + oneHourInSeconds;
 
             Claim[] claims = new Claim[]
             {
@@ -87,9 +87,9 @@ namespace reeltok.api.auth.Services
 
             string tokenString = Convert.ToBase64String(randomBytes);
 
-            uint createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.UtcNow);
+            long createdAt = DateTimeUtils.DateTimeToUnixTime(DateTime.UtcNow);
             uint sevenDaysInSeconds = 604800;
-            uint expiresAt = createdAt + sevenDaysInSeconds;
+            long expiresAt = createdAt + sevenDaysInSeconds;
 
             RefreshToken refreshToken = new RefreshToken(
                 tokenValue: tokenString,

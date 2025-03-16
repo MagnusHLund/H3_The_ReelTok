@@ -57,7 +57,7 @@ namespace reeltok.api.users.Services
         public async Task LoginUserInAuthApiAsync(Guid userId, string password)
         {
             AuthServiceLoginRequestDto requestDto = new AuthServiceLoginRequestDto(userId, password);
-            Uri targetUrl = _endpointFactory.GetAuthApiUrl("auth");
+            Uri targetUrl = _endpointFactory.GetAuthApiUrl("auth/login");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<AuthServiceLoginRequestDto, AuthServiceLoginResponseDto>(
                 requestDto, targetUrl, HttpMethod.Post)

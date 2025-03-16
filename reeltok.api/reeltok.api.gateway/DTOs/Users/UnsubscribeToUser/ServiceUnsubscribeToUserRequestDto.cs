@@ -10,13 +10,13 @@ namespace reeltok.api.gateway.DTOs.Users.UnsubscribeToUser
         public Guid UserId { get; }
 
         [Required]
-        [JsonProperty("SubscribingToUserId")]
-        public Guid SubscribingToUserId { get; }
+        [JsonProperty("UnsubscribingToUserId")]
+        public Guid UnsubscribingToUserId { get; }
 
-        public ServiceUnsubscribeToUserRequestDto(Guid userId, Guid subscribingToUserId)
+        public ServiceUnsubscribeToUserRequestDto(Guid userId, Guid unsubscribingToUserId)
         {
             UserId = userId;
-            SubscribingToUserId = subscribingToUserId;
+            UnsubscribingToUserId = unsubscribingToUserId;
         }
     }
 }

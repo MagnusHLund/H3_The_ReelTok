@@ -1,38 +1,29 @@
-import axios, { AxiosRequestConfig } from 'axios'
-import {
-  determinePayloadType,
-  prepareHttpRequestBody,
-  prepareHttpRequestWithQueryParameters,
-} from '../utils/httpUtils'
+import { prepareHttpPayload } from '../utils/httpUtils'
+import axios from 'axios'
 
-export type PayloadType = 'requestBody' | 'queryParameters' | undefined
+export type PayloadType = 'JsonBody' | 'FormDataBody' | 'queryParameters'
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
-interface HttpServiceProps<TBody> {
-  method: HttpMethod
-  url: URL
-  body: TBody
+interface HttpServiceProps<TRequestDto> {
+  httpMethod: HttpMethod
+  url: string
+  body: TRequestDto
+  payloadType: PayloadType
 }
 
-async function httpService<TBody = undefined>({ method, url, body }: HttpServiceProps<TBody>) {
-  const payloadType = determinePayloadType<TBody>(method, body)
+const baseUrl = 'https://api.reeltok.site/api/'
 
-  const config: AxiosRequestConfig = {
-    url: url.toString(),
-    method: method,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: payloadType === 'requestBody' ? prepareHttpRequestBody<TBody>(body) : undefined,
-  }
-
-  if (payloadType === 'queryParameters' && body !== undefined) {
-    url = prepareHttpRequestWithQueryParameters(url, body)
-    config.url = url.toString()
-  }
+async function httpService<TRequestDto = undefined>({
+  httpMethod,
+  url,
+  body,
+  payloadType = 'JsonBody',
+}: HttpServiceProps<TRequestDto>) {
+  const requestUrl = new URL(`${baseUrl}${url}`)
+  const requestConfig = prepareHttpPayload(body, requestUrl, httpMethod, payloadType)
 
   try {
-    const response = await axios(config)
+    const response = await axios(requestConfig)
     return response
   } catch (error) {
     console.error(error)

@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 150,
     height: 150,
-    resizeMode: 'contain', // Ensure the logo maintains its aspect ratio
+    resizeMode: 'contain',
   },
 })
 

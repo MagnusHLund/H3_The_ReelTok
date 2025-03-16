@@ -9,10 +9,10 @@ namespace reeltok.api.users.ValueObjects
         [JsonProperty("Username")]
         public string Username { get; private set; } = string.Empty;
 
-        [JsonProperty("ProfileUrlPath")]
+        [JsonProperty("ProfileUrl")]
         public string? ProfileUrlPath { get; private set; }
 
-        [JsonProperty("ProfilePictureUrlPath")]
+        [JsonProperty("ProfilePictureUrl")]
         public string? ProfilePictureUrlPath { get; private set; }
 
         public UserDetails(string username, string? profileUrlPath, string? profilePictureUrlPath)

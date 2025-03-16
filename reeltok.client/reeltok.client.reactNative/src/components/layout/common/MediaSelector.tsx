@@ -8,11 +8,11 @@ import Gradient from './GradientBackground'
 import Camera from '../camera/Camera'
 import React, { useState } from 'react'
 
-interface mediaSelectorProps {
+interface MediaSelectorProps {
   handleSelectMedia: () => void
 }
 
-const MediaSelector: React.FC<mediaSelectorProps> = ({ handleSelectMedia }) => {
+const MediaSelector: React.FC<MediaSelectorProps> = ({ handleSelectMedia }) => {
   const [selectedMedia, setSelectedMedia] = useState<string>()
   const [showCamera, setShowCamera] = useState(false)
   const navigateToScreen = useAppNavigation()
@@ -39,41 +39,39 @@ const MediaSelector: React.FC<mediaSelectorProps> = ({ handleSelectMedia }) => {
   }
 
   return (
-    // <Modal transparent={true} onRequestClose={handleSelectMedia}>
-      <TouchableWithoutFeedback onPress={handleSelectMedia}>
-        <View style={styles.overlay}>
-          {showCamera ? (
-            <Camera cameraMode="video" onClose={handleHideCamera} />
-          ) : (
-            <View style={styles.outerContainer}>
-              <Gradient colors={['transparent', 'transparent', 'black', 'black']}>
-                <View style={styles.innerContainer}>
-                  <CustomButton widthPercentage={0.45} onPress={handleShowCamera}>
-                    <Entypo name="camera" size={24} color="white" />
-                  </CustomButton>
-                  <CustomButton
-                    widthPercentage={0.45}
-                    onPress={() => {
-                      handlePickMedia()
-                      handleSelectMedia()
-                    }}
-                  >
-                    <MaterialIcons name="photo-library" size={24} color="white" />
-                  </CustomButton>
-                </View>
-              </Gradient>
+
+    <View style={styles.overlay}>
+      {showCamera ? (
+        <Camera cameraMode="video" onClose={handleHideCamera} />
+      ) : (
+        <View style={styles.outerContainer}>
+          <Gradient colors={['transparent', 'transparent', 'black', 'black']}>
+            <View style={styles.innerContainer}>
+              <CustomButton widthPercentage={0.45} onPress={handleShowCamera}>
+                <Entypo name="camera" size={24} color="white" />
+              </CustomButton>
+              <CustomButton
+                widthPercentage={0.45}
+                onPress={() => {
+                  handlePickMedia()
+                  handleSelectMedia()
+                }}
+              >
+                <MaterialIcons name="photo-library" size={24} color="white" />
+              </CustomButton>
             </View>
-          )}
+          </Gradient>
         </View>
-      </TouchableWithoutFeedback>
-    // </Modal>
+      )}
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
+    zIndex: 1,
   },
   outerContainer: {
     backgroundColor: 'transparent',

@@ -33,7 +33,7 @@ namespace reeltok.api.recommendations.Repositories
 
         public async Task UpdateWatchedVideosAsync(List<WatchedVideoEntity> watchedVideos)
         {
-            uint currentUtcTime = DateTimeUtils.DateTimeToUnixTime(DateTime.UtcNow);
+            long currentUtcTime = DateTimeUtils.DateTimeToUnixTime(DateTime.UtcNow);
             foreach (WatchedVideoEntity watchedVideo in watchedVideos)
             {
                 watchedVideo.WatchCount++;

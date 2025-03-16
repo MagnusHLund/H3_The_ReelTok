@@ -16,13 +16,15 @@ namespace reeltok.api.videos.Entities
         [MaxLength(256)]
         public string Description { get; set; }
 
+        public VideoTotalLikesEntity VideoTotalLikes { get; set; }
+
         public VideoEntity(
             Guid videoId,
             Guid userId,
             string title,
             string description,
             string streamPath,
-            uint uploadedAt
+            long uploadedAt
         ) : base(videoId, streamPath, uploadedAt)
         {
             UserId = userId;

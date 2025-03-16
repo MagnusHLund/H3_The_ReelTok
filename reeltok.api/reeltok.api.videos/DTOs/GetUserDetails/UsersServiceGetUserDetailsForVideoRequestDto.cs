@@ -6,12 +6,12 @@ namespace reeltok.api.videos.DTOs.GetUserDetails
     public class UsersServiceGetUserDetailsForVideoRequestDto
     {
         [Required]
-        [JsonProperty("VideoIds")]
-        public List<Guid> VideoIds { get; set; }
+        [JsonProperty("UserIds")]
+        public List<Guid> UserIds { get; set; }
 
-        public UsersServiceGetUserDetailsForVideoRequestDto(List<Guid> videoIds)
+        public UsersServiceGetUserDetailsForVideoRequestDto(List<Guid> userIds)
         {
-            VideoIds = videoIds;
+            UserIds = userIds;
         }
     }
 }

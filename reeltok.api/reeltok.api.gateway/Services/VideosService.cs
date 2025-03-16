@@ -64,10 +64,8 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<List<VideoForFeedEntity>> GetVideosForFeedAsync(byte amount)
+        public async Task<List<VideoForFeedUsingDateTimeEntity>> GetVideosForFeedAsync(byte amount, Guid userId)
         {
-            Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
-
             ServiceGetVideosForFeedRequestDto requestDto = new ServiceGetVideosForFeedRequestDto(userId, amount);
             Uri targetUrl = _endpointFactory.GetVideosApiUrl("videos/feed");
 
@@ -77,27 +75,33 @@ namespace reeltok.api.gateway.Services
 
             if (response.Success && response is ServiceGetVideosForFeedResponseDto responseDto)
             {
-                return responseDto.Videos;
+
+                List<VideoForFeedUsingDateTimeEntity> videos = responseDto.Videos.
+                    Select(video => TimeMapper.ConvertVideoForFeedToDateTime(video))
+                    .ToList();
+
+                return videos;
             }
 
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<bool> UploadVideoAsync(VideoUpload video)
+        public async Task<BaseVideoUsingDateTimeEntity> UploadVideoAsync(VideoUpload video)
         {
             Guid userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
-            video.UserId = userId;
+            video.UserId = userId.ToString();
 
             ServiceUploadVideoRequestDto requestDto = VideoMapper.ConvertVideoUploadToUploadVideoRequestDto(video);
             Uri targetUrl = _endpointFactory.GetVideosApiUrl("videos");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync
-                <ServiceUploadVideoRequestDto, ServiceUploadVideoResponseDto>(requestDto, targetUrl, HttpMethod.Post)
+                <ServiceUploadVideoRequestDto, ServiceUploadVideoResponseDto>(requestDto, targetUrl, HttpMethod.Post, true)
                 .ConfigureAwait(false);
 
             if (response.Success && response is ServiceUploadVideoResponseDto responseDto)
             {
-                return responseDto.Success;
+                BaseVideoUsingDateTimeEntity uploadedVideo = TimeMapper.ConverBaseVideoToDateTime(responseDto.Video);
+                return uploadedVideo;
             }
 
             throw HandleNetworkResponseExceptions(response);
@@ -122,7 +126,7 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<List<BaseVideoEntity>> GetVideosForProfileAsync(Guid userId, int pageNumber, byte pageSize)
+        public async Task<List<BaseVideoUsingDateTimeEntity>> GetVideosForProfileAsync(Guid userId, int pageNumber, byte pageSize)
         {
             ServiceGetVideosForProfileRequestDto requestDto = new
                 ServiceGetVideosForProfileRequestDto(userId, pageNumber, pageSize);
@@ -136,7 +140,11 @@ namespace reeltok.api.gateway.Services
 
             if (response.Success && response is ServiceGetVideosForProfileResponseDto responseDto)
             {
-                return responseDto.Videos;
+                List<BaseVideoUsingDateTimeEntity> videos = responseDto.Videos
+                    .Select(video => TimeMapper.ConverBaseVideoToDateTime(video))
+                    .ToList();
+
+                return videos;
             }
 
             throw HandleNetworkResponseExceptions(response);

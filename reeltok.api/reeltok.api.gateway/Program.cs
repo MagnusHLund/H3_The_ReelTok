@@ -18,7 +18,7 @@ namespace reeltok.api.gateway
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .WriteTo.File(
@@ -59,6 +59,7 @@ namespace reeltok.api.gateway
             var app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<CorsMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

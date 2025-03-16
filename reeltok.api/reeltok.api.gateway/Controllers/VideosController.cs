@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using reeltok.api.gateway.Utils;
 using reeltok.api.gateway.Mappers;
 using reeltok.api.gateway.ValueObjects;
 using reeltok.api.gateway.ActionFilters;
@@ -21,20 +22,23 @@ namespace reeltok.api.gateway.Controllers
     public class VideosController : ControllerBase
     {
         private readonly IVideosService _videosService;
+        private readonly IAuthService _authService;
 
-        public VideosController(IVideosService videosService)
+        public VideosController(IVideosService videosService, IAuthService authService)
         {
             _videosService = videosService;
+            _authService = authService;
         }
 
-        [HttpGet("profile")]
+        [HttpGet("profile/{userId}")]
         public async Task<IActionResult> GetVideosForProfileAsync(
             [FromRoute] Guid userId,
-            [FromQuery] int pageNumber,
-            [FromQuery] byte pageSize
+            [FromQuery, Range(0, int.MaxValue)] int pageNumber = 0,
+            [FromQuery, Range(1, byte.MaxValue)] byte pageSize = 15
         )
         {
-            List<BaseVideoEntity> videos = await _videosService.GetVideosForProfileAsync(userId, pageNumber, pageSize)
+            List<BaseVideoUsingDateTimeEntity> videos = await _videosService
+                .GetVideosForProfileAsync(userId, pageNumber, pageSize)
                 .ConfigureAwait(false);
 
             GatewayGetVideosForProfileResponseDto responseDto = new GatewayGetVideosForProfileResponseDto(videos);
@@ -42,21 +46,40 @@ namespace reeltok.api.gateway.Controllers
         }
 
         [HttpGet("feed")]
-        public async Task<IActionResult> GetVideosForFeedAsync([FromQuery, Range(1, byte.MaxValue)] byte amount)
+        public async Task<IActionResult> GetVideosForFeedAsync([FromQuery, Range(1, byte.MaxValue)] byte amount = 3)
         {
-            List<VideoForFeedEntity> videos = await _videosService.GetVideosForFeedAsync(amount).ConfigureAwait(false);
-            GatewayGetVideosForFeedResponseDto responseDto = new GatewayGetVideosForFeedResponseDto(videos);
+            // This endpoint can use UserId, but its not mandatory.
+            // We fetch it, if there are cookies present, else we provide an empty guid.
 
+            Guid userId = Guid.Empty;
+
+            if (CookieUtils.HasCookie(HttpContext, "AccessToken") && CookieUtils.HasCookie(HttpContext, "RefreshToken"))
+            {
+                userId = await _authService.GetUserIdByAccessTokenAsync().ConfigureAwait(false);
+            }
+
+            List<VideoForFeedUsingDateTimeEntity> videos = await _videosService
+                .GetVideosForFeedAsync(amount, userId)
+                .ConfigureAwait(false);
+
+            GatewayGetVideosForFeedResponseDto responseDto = new GatewayGetVideosForFeedResponseDto(videos);
             return Ok(responseDto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadVideoAsync([FromBody] GatewayUploadVideoRequestDto request)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadVideoAsync([FromForm] GatewayUploadVideoRequestDto request)
         {
-            VideoUpload videoUpload = VideoMapper.ConvertRequestDtoToVideoUpload(request);
-            bool success = await _videosService.UploadVideoAsync(videoUpload).ConfigureAwait(false);
+            if (!CategoryValidationUtils.IsValidCategoryType(request.Category))
+            {
+                throw new ArgumentException("Invalid category type!");
+            }
 
-            GatewayUploadVideoResponseDto responseDto = new GatewayUploadVideoResponseDto(success);
+            VideoUpload videoUpload = VideoMapper.ConvertRequestDtoToVideoUpload(request);
+            BaseVideoUsingDateTimeEntity uploadedVideo = await _videosService.UploadVideoAsync(videoUpload)
+                .ConfigureAwait(false);
+
+            GatewayUploadVideoResponseDto responseDto = new GatewayUploadVideoResponseDto(uploadedVideo);
             return Ok(responseDto);
         }
 
