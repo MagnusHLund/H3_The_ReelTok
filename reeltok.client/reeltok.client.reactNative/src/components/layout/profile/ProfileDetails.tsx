@@ -63,7 +63,8 @@ const styles = StyleSheet.create({
     top: '-40%',
   },
   image: {
-    top: '55%',
+    top: '38%',
+    left: '7%',
   },
 })
 
