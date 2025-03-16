@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Username from './Username'
 import Title from './Title'
@@ -7,6 +7,7 @@ import CreatorImage from './CreatorImage'
 import { UserDetails } from '../../../redux/slices/usersSlice'
 import { Video } from '../../../redux/slices/videosSlice'
 import useAppDimensions from './../../../hooks/useAppDimensions'
+import useAppNavigation from '../../../hooks/useAppNavigation'
 
 interface CreatorProps {
   user: UserDetails
@@ -16,20 +17,27 @@ interface CreatorProps {
 const Creator: React.FC<CreatorProps> = ({ user, video }) => {
   const isCreator = user.userId === video.creatorUserId
   const { fullWidth } = useAppDimensions()
+  const navigateToScreen = useAppNavigation()
+
+  function handleNavigation() {
+    navigateToScreen('Profile', { userDetails: user })
+  }
 
   return (
     <View>
       {isCreator ? (
-        <View style={[styles.container, { width: fullWidth }]}>
-          <View style={styles.pictureContainer}>
-            <CreatorImage profilePictureUrl={user.profilePictureUrl} />
+        <TouchableOpacity onPress={handleNavigation} style={styles.touch}>
+          <View style={[styles.container, { width: fullWidth }]}>
+            <View style={styles.pictureContainer}>
+              <CreatorImage profilePictureUrl={user.profilePictureUrl} />
+            </View>
+            <View style={styles.textContainer}>
+              <Username username={user.username} />
+              <Title title={video.title} />
+              <Description description={video.description} />
+            </View>
           </View>
-          <View style={styles.textContainer}>
-            <Username username={user.username} />
-            <Title title={video.title} />
-            <Description description={video.description} />
-          </View>
-        </View>
+        </TouchableOpacity>
       ) : (
         <></>
       )}
@@ -48,11 +56,13 @@ const styles = StyleSheet.create({
     left: '-5%',
     width: '20%',
     justifyContent: 'flex-start',
-   
   },
   textContainer: {
     flexDirection: 'column',
     flex: 1,
+  },
+  touch: {
+    zIndex: 2,
   },
 })
 
