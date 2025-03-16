@@ -16,6 +16,7 @@ namespace reeltok.api.gateway.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
+            Console.WriteLine("Origin header: " + context.Request.Headers.Origin.ToString());
             string origin = context.Request.Headers.Origin.ToString();
 
             if (IsValidOrigin(origin))
@@ -40,15 +41,18 @@ namespace reeltok.api.gateway.Middleware
         {
             if (!string.IsNullOrEmpty(origin) && allowedOrigins.Contains(origin))
             {
+                Console.WriteLine("Origin is allowed by allowedOrigins array");
                 return true;
             }
 
             // For development purposes
             if (origin.StartsWith("http://localhost:") || origin.StartsWith("https://localhost:"))
             {
+                Console.WriteLine("Origin is allowed because it is localhost");
                 return true;
             }
 
+            Console.WriteLine("Origin is not allowed");
             return false;
         }
     }
