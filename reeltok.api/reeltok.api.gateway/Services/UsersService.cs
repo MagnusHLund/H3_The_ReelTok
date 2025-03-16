@@ -28,7 +28,7 @@ namespace reeltok.api.gateway.Services
             _endpointFactory = endpointFactory;
         }
 
-        public async Task<UserEntity> LoginUserAsync(string email, string password)
+        public async Task<UserWithInterestEntity> LoginUserAsync(string email, string password)
         {
             ServiceLoginRequestDto requestDto = new ServiceLoginRequestDto(email, password);
             Uri targetUrl = _endpointFactory.GetUsersApiUrl("login");
@@ -43,7 +43,12 @@ namespace reeltok.api.gateway.Services
             throw HandleNetworkResponseExceptions(response);
         }
 
-        public async Task<UserEntity> CreateUserAsync(string email, string username, string password, CategoryType userInterest)
+        public async Task<UserWithInterestEntity> CreateUserAsync(
+            string email,
+            string username,
+            string password,
+            CategoryType userInterest
+        )
         {
             ServiceCreateUserRequestDto requestDto = new ServiceCreateUserRequestDto(email, username, password, userInterest);
             Uri targetUrl = _endpointFactory.GetUsersApiUrl("users");

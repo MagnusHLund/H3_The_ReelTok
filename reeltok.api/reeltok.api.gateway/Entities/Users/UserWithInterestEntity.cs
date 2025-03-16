@@ -1,8 +1,8 @@
-using Newtonsoft.Json;
-using reeltok.api.users.ValueObjects;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using reeltok.api.gateway.ValueObjects;
 
-namespace reeltok.api.users.Entities
+namespace reeltok.api.gateway.Entities.Users
 {
     public class UserWithInterestEntity : UserEntity
     {
