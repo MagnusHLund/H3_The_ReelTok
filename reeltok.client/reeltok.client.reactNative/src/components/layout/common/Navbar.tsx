@@ -88,7 +88,7 @@ const Navbar: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute', // Keeps it fixed at the bottom
+    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
