@@ -1,6 +1,7 @@
 import useTranslation from '../../../../hooks/useTranslations'
 import CustomDropdown, { DropdownOption } from '../../../input/CustomDropdown'
 import { changeLanguageThunk } from '../../../../redux/thunks/settingsThunks'
+import { Language } from '../../../../redux/slices/settingsSlice'
 import useAppSelector from '../../../../hooks/useAppSelector'
 import useAppDispatch from '../../../../hooks/useAppDispatch'
 import SettingsSection from '../SettingsSection'
@@ -8,8 +9,8 @@ import Setting from '../Setting'
 import React from 'react'
 
 const languages = [
-  { label: 'English', value: 'en_GB' },
-  { label: 'Danish', value: 'da_DK' },
+  { key: 0, label: 'English', value: 'en_GB' },
+  { key: 1, label: 'Danish', value: 'da_DK' },
 ]
 
 const LanguageSettingsSection: React.FC = () => {
@@ -18,12 +19,18 @@ const LanguageSettingsSection: React.FC = () => {
   const t = useTranslation()
 
   const handleChangeLanguage = (selectedOption: DropdownOption) => {
-    dispatch(changeLanguageThunk(selectedOption))
+    dispatch(
+      changeLanguageThunk({
+        LanguageName: selectedOption.label,
+        locale: selectedOption.value,
+      } as Language)
+    )
   }
 
   const defaultOption: DropdownOption = {
     label: language.LanguageName,
     value: language.locale,
+    key: 0,
   }
 
   return (

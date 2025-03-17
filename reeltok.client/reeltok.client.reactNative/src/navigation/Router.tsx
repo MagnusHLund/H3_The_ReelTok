@@ -40,8 +40,8 @@ const Router: React.FC = () => {
       const selectedLanguage = country === 'Denmark' ? 'da_DK' : 'en_GB'
       dispatch(
         changeLanguageThunk({
-          label: selectedLanguage === 'da_DK' ? 'Danish' : 'English',
-          value: selectedLanguage,
+          LanguageName: selectedLanguage === 'da_DK' ? 'Danish' : 'English',
+          locale: selectedLanguage,
         })
       )
     }

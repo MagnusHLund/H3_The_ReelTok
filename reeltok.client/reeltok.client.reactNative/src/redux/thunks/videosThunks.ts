@@ -17,40 +17,25 @@ export const addVideoToFeedThunk = createAsyncThunk(
     const newVideos: Video[] = [
       {
         videoId: getRandomNumber().toString(),
-
         creatorUserId: 'guidUserId3',
-
         title: 'Mock video 1',
-
         description: 'Mock description 1',
-
         likes: 123,
-
         hasLiked: true,
-
         category: VideoRecommendationCategories.Gaming,
-
         streamUrl:
           'https://cdn.viggle.ai/gras/f2736735-7bbd-4c8f-b0e7-2f84ec6aff0e.mp4?Expires=1740772331&KeyName=vigglecloudcdn2&Signature=BoAeGxk5B9bhr9a20ZaTiIDixc8=',
 
         uploadedAt: new Date(Date.now()).toDateString(),
       },
-
       {
         videoId: getRandomNumber().toString(),
-
         creatorUserId: 'guidUserId3',
-
         title: 'Mock video 2',
-
         description: 'Mock description 2',
-
         likes: 321,
-
         hasLiked: false,
-
         category: VideoRecommendationCategories.Gaming,
-
         streamUrl:
           'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
 
