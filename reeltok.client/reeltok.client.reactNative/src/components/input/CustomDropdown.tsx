@@ -6,6 +6,7 @@ import {
   FlatList,
   StyleSheet,
   useWindowDimensions,
+
 } from 'react-native'
 import useTranslation from '../../hooks/useTranslations'
 
@@ -13,6 +14,7 @@ import useTranslation from '../../hooks/useTranslations'
 // TODO: Add arrow icon to dropdown
 
 export type DropdownOption = {
+  key: number
   label: string
   value: string
 }

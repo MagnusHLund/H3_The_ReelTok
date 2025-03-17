@@ -1,23 +1,16 @@
-import { DropdownOption } from './../../components/input/CustomDropdown'
 import {
   changeUsername,
   changeEmail,
   changeCategory,
   changeLanguage,
-  LanguageName,
-  LocaleCode,
+  Language,
 } from '../slices/settingsSlice'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
 export const changeLanguageThunk = createAsyncThunk(
   'settings/changeLanguageThunk',
-  async (dropdownOption: DropdownOption, { dispatch }) => {
-    const languagePayload = {
-      LanguageName: dropdownOption.label as LanguageName,
-      locale: dropdownOption.value as LocaleCode,
-    }
-
-    dispatch(changeLanguage(languagePayload))
+  async (language: Language, { dispatch }) => {
+    dispatch(changeLanguage(language))
   }
 )
 

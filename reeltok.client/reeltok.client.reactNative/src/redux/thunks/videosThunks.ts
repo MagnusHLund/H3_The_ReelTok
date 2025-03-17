@@ -12,7 +12,6 @@ import { HttpMethod } from '../../services/httpService'
 export const addVideoToFeedThunk = createAsyncThunk(
   'videos/addVideoToFeed',
   async (videosInFeed: Video[], { dispatch }) => {
-
     const httpMethod: HttpMethod = 'GET'
     const url: string = 'videos/feed'
     const body: GetVideosForFeedRequestDto = {

@@ -8,7 +8,7 @@ interface HttpServiceProps<TRequestDto> {
   httpMethod: HttpMethod
   url: string
   body: TRequestDto
-  payloadType: PayloadType
+  payloadType?: PayloadType
 }
 
 const baseUrl = 'https://api.reeltok.site/api/'
