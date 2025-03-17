@@ -5,22 +5,26 @@ import ProfileImage from './ProfileImage'
 import Username from './Username'
 import React from 'react'
 import { UserDetails } from '../../../redux/slices/usersSlice'
+import useAppSelector from '../../../hooks/useAppSelector'
 
 interface ProfileDetailsProps {
-  user: UserDetails
+  userId: string
 }
 
-const ProfileDetails: React.FC<ProfileDetailsProps> = ({ user }) => {
+const ProfileDetails: React.FC<ProfileDetailsProps> = ({ userId }) => {
+  const user = useAppSelector((state) => state.users.users.find((user) => user.userId === userId))
+  const baseUrl = 'cdn.reeltok.site/profile/'
+  const profilePictureUrl = `${baseUrl}${userId}/${user?.profilePictureUrl}`
   return (
     <View style={styles.outercontainer}>
       <View style={styles.ProfilePictureContainer}>
         <View style={styles.image}>
-          <ProfileImage source={{ uri: user.profilePictureUrl }} allowedToChangePicture={true} />
+          <ProfileImage source={{ uri: profilePictureUrl }} allowedToChangePicture={true} />
         </View>
       </View>
       <View style={styles.StackedContainer}>
         <View style={styles.UpperContainer}>
-          <Username username={user.username} />
+          <Username username={user?.username ?? ''} />
           <SettingsButton />
         </View>
         <View style={styles.LowerContainer}>
@@ -30,6 +34,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ user }) => {
     </View>
   )
 }
+
 const styles = StyleSheet.create({
   outercontainer: {
     flexDirection: 'column',

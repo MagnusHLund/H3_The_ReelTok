@@ -1,44 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export type UserDetails = {
-  email: string
   userId: string
   username: string
   profilePictureUrl: string
 }
 
+export type MyUser = UserDetails & {
+  email: string
+}
+
 export interface UsersProps {
   users: UserDetails[]
-  myUser: UserDetails
+  myUser: MyUser
 }
 
 const initialState: UsersProps = {
-  users: [
-    {
-      email: 'manike@zbc.dk',
-      userId: 'guidUserId1',
-      username: 'Yordan',
-      profilePictureUrl: 'someUrl.com',
-    },
-    {
-      email: 'manike@zbc.dk ',
-      userId: 'guidUserId2',
-      username: 'Shazil',
-      profilePictureUrl: 'someUrl.com',
-    },
-    {
-      email: 'manike@zbc.dk ',
-      userId: 'guidUserId3',
-      username: 'Magnus',
-      profilePictureUrl: 'someUrl.com',
-    },
-    {
-      email: 'manike@zbc.dk ',
-      userId: 'guidUserId4',
-      username: 'Marcus',
-      profilePictureUrl: 'someUrl.com',
-    },
-  ],
+  users: [],
   myUser: {
     email: '',
     userId: '',
@@ -58,8 +36,11 @@ const usersSlice = createSlice({
     userSignup: (state, action: PayloadAction<UserDetails>) => {
       state.users.push(action.payload)
     },
+    addUsers: (state, action: PayloadAction<UserDetails[]>) => {
+      state.users = action.payload
+    },
   },
 })
 
-export const { userLogin, userSignup } = usersSlice.actions
+export const { userLogin, userSignup, addUsers } = usersSlice.actions
 export default usersSlice.reducer

@@ -1,4 +1,5 @@
 import { addVideoToFeedThunk } from '../../redux/thunks/videosThunks'
+import { addUserFromVideoThunk } from '../../redux/thunks/usersThunks'
 import React, { useState, useEffect, useRef, useCallback, RefObject } from 'react'
 import useAppDimensions from '../../hooks/useAppDimensions'
 import { Platform, Animated, StyleSheet, View, FlatList } from 'react-native'
@@ -31,7 +32,9 @@ const VideoFeedScreen: React.FC = () => {
 
   useEffect(() => {
     if (videos.length === 0) {
+      console.log('Fetching videos:', videos)
       dispatch(addVideoToFeedThunk(videos))
+      dispatch(addUserFromVideoThunk(videos))
     }
   }, [videos, dispatch])
 
@@ -39,6 +42,7 @@ const VideoFeedScreen: React.FC = () => {
     if (currentlyDisplayedVideoIndex > highestDisplayedVideoIndex) {
       setHighestDisplayedVideoIndex(currentlyDisplayedVideoIndex)
       dispatch(addVideoToFeedThunk(videos))
+      dispatch(addUserFromVideoThunk(videos))
       console.log(highestDisplayedVideoIndex)
     }
   }, [currentlyDisplayedVideoIndex])
@@ -88,17 +92,25 @@ const VideoFeedScreen: React.FC = () => {
       }
 
       dispatch(addVideoToFeedThunk(videos))
+      dispatch(addUserFromVideoThunk(videos))
     }
   }, [currentlyDisplayedVideoIndex, videos, dispatch])
 
   const renderItem = useCallback(
     ({ item, index }: RenderItemProps) => {
-      const user = users.find((u) => u.userId === item.creatorUserId) ?? {
-        userId: item.creatorUserId,
-        username: '',
-        profileUrl: '',
-        profilePictureUrl: '',
+      if (!item.creatorUserId || !item.videoId) {
+        console.warn(`VideoCreator or UserId or VideoId not found for video with ID ${item.videoId}`)
+        return null
       }
+
+      const user = users.find((u) => u.userId === item.creatorUserId)
+      if (!user) {
+        console.warn(`User with ID ${item.creatorUserId} not found`)
+        return null
+      }
+
+      console.log('Rendering video with user:', user)
+
       return (
         <Animated.View
           style={[styles.videoContainer, { transform: [{ rotate: rotationInterpolation }] }]}
