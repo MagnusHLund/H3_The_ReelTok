@@ -208,7 +208,7 @@ namespace reeltok.api.videos.Tests.Factories
 
             fileMock.Setup(f => f.OpenReadStream()).Returns(stream);
             fileMock.Setup(f => f.Length).Returns(fileContent.Length);
-            fileMock.Setup(f => f.FileName).Returns("test_thumbnail.jpg");
+            fileMock.Setup(f => f.FileName).Returns("test_thumbnail.JPG");
             fileMock.Setup(f => f.ContentType).Returns("image/jpeg");
 
             return fileMock.Object;

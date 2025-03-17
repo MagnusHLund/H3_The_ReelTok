@@ -34,7 +34,7 @@ namespace reeltok.api.videos.Services
                     0,
                     new FileInfo(thumbnailPath).Length,
                     "thumbnail",
-                    "thumbnail.jpg"
+                    "thumbnail.JPG"
                 );
             }
             finally

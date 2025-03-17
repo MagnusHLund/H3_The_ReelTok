@@ -29,7 +29,7 @@ namespace reeltok.api.videos.Tests.Services
 
             // Assert
             Assert.NotNull(thumbnail);
-            Assert.Equal("thumbnail.jpg", thumbnail.FileName);
+            Assert.Equal("thumbnail.JPG", thumbnail.FileName);
             Assert.True(thumbnail.Length > 0);
         }
 

@@ -29,7 +29,7 @@ namespace reeltok.api.videos.Services
             string filePath = $"{userDirectory}/{videoId}";
 
             string videoFilePath = $"{filePath}{videoFileExtension}";
-            string thumbnailFilePath = $"{filePath}.jpg";
+            string thumbnailFilePath = $"{filePath}.JPG";
 
             using (var sftpClient = new SftpClient(_sftpHostname, _sftpUsername, _sftpPassword))
             {
@@ -63,7 +63,7 @@ namespace reeltok.api.videos.Services
         public async Task DeleteVideoFilesUsingSftpAsync(string streamPath)
         {
             string videoFilePath = $"{_sftpDirectory}/{streamPath}";
-            string thumbnailFilePath = $"{FileNameWithoutExtension(videoFilePath)}.jpg";
+            string thumbnailFilePath = $"{FileNameWithoutExtension(videoFilePath)}.JPG";
 
             using (var sftpClient = new SftpClient(_sftpHostname, _sftpUsername, _sftpPassword))
             {
