@@ -11,14 +11,12 @@ export const userLoginThunk = createAsyncThunk(
   async (loginData: LoginRequestDto, { dispatch }) => {
     const httpMethod: HttpMethod = 'POST'
     const url: string = 'users/login'
-    const payloadType: PayloadType = 'JsonBody'
 
     try {
       const userResponse = await httpService<LoginRequestDto>({
         httpMethod,
         url,
         body: loginData,
-        payloadType,
       })
       if (userResponse?.data && userResponse.data.Success) {
         const loggedInUser: UserDetails = {
