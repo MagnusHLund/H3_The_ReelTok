@@ -10,12 +10,12 @@ import { useDispatch } from 'react-redux'
 import { CreateUserRequestDto } from '../../DTOs/login/CreateUserRequestDto'
 
 const Categories = [
-  { label: 'Gaming', value: 'Gaming' },
-  { label: 'Tech', value: 'Tech' },
-  { label: 'Dance', value: 'Dance' },
-  { label: 'Fight', value: 'Fight' },
-  { label: 'Sport', value: 'Sport' },
-  { label: 'Comedy', value: 'Comedy' },
+  { key: 1, label: 'Gaming', value: 'Gaming' },
+  { key: 2, label: 'Tech', value: 'Tech' },
+  { key: 3, label: 'Dance', value: 'Dance' },
+  { key: 4, label: 'Fight', value: 'Fight' },
+  { key: 5, label: 'Sport', value: 'Sport' },
+  { key: 6, label: 'Comedy', value: 'Comedy' },
 ]
 
 const SignUpScreen = () => {
@@ -25,22 +25,27 @@ const SignUpScreen = () => {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [interest, setInterest] = useState('')
+  const [interest, setInterest] = useState(0)
   const dispatch = useDispatch<AppDispatch>()
 
   const handleChangeCategory = (selectedCategory: DropdownOption) => {
-    setInterest(selectedCategory.value)
+    setInterest(selectedCategory.key)
   }
 
   const handleSignup = () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please enter both email and password.')
-      return
-    }
+    // if (!email || !password) {
+    //   Alert.alert('Error', 'Please enter both email and password.')
+    //   return
+    // }
 
-    const signup: CreateUserRequestDto = {email, password, username, interest
-      
-    }
+    console.log(username)
+    console.log(email)
+    console.log(password)
+    console.log(interest)
+
+    // const signup: CreateUserRequestDto = {email, password, username, interest
+
+    // }
   }
 
   const { height, width } = useWindowDimensions()
@@ -100,7 +105,12 @@ const SignUpScreen = () => {
           onPress={() => console.log('Create user')}
           title="Create User"
         ></CustomButton>
-        <CustomButton widthPercentage={0.8} transparent title="Back to login" onPress={() => {}} />
+        <CustomButton
+          widthPercentage={0.8}
+          transparent
+          title="Back to login"
+          onPress={handleSignup}
+        />
       </View>
     </View>
   )

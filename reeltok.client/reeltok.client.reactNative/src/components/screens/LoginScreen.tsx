@@ -37,7 +37,7 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (user?.userId) {
-      navigateToScreen('Profile')
+      navigateToScreen('Profile', { userDetails: user })
     }
   }, [user])
 
