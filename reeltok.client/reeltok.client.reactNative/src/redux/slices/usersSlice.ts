@@ -13,32 +13,7 @@ export interface UsersProps {
 }
 
 const initialState: UsersProps = {
-  users: [
-    {
-      email: 'manike@zbc.dk',
-      userId: 'guidUserId1',
-      username: 'Yordan',
-      profilePictureUrl: 'someUrl.com',
-    },
-    {
-      email: 'manike@zbc.dk ',
-      userId: 'guidUserId2',
-      username: 'Shazil',
-      profilePictureUrl: 'someUrl.com',
-    },
-    {
-      email: 'manike@zbc.dk ',
-      userId: 'guidUserId3',
-      username: 'Magnus',
-      profilePictureUrl: 'someUrl.com',
-    },
-    {
-      email: 'manike@zbc.dk ',
-      userId: 'guidUserId4',
-      username: 'Marcus',
-      profilePictureUrl: 'someUrl.com',
-    },
-  ],
+  users: [],
   myUser: {
     email: '',
     userId: '',
