@@ -30,6 +30,8 @@ const UploadVideo: React.FC = ({}) => {
     category: { label: selectedCategory?.label, value: selectedCategory.value },
     fileUri: useAppSelector((state) => state.upload.video.fileUri),
   } 
+  
+  console.log(uploadedVideo.fileUri)
 
   const handleChangeTitle = (text: string) => {
     setUploadedVideoTitle(text)

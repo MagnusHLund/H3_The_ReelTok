@@ -26,7 +26,7 @@ const VideoFeedScreen: React.FC = () => {
   const [highestDisplayedVideoIndex, setHighestDisplayedVideoIndex] = useState(0)
   const videoFeedRef = React.useRef<FlashList<Video> | FlatList>(null)
   const route = useRoute()
-  const orientation = UseOrientation(route.name,'')
+  const orientation = UseOrientation(route.name, '')
   const videoRotation = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
@@ -75,7 +75,7 @@ const VideoFeedScreen: React.FC = () => {
   }, [])
 
   const viewabilityConfig = {
-    itemVisiblePercentThreshold: 10,
+    itemVisiblePercentThreshold: 50,
   }
 
   const handleAutoScroll = useCallback(() => {
@@ -93,7 +93,12 @@ const VideoFeedScreen: React.FC = () => {
 
   const renderItem = useCallback(
     ({ item, index }: RenderItemProps) => {
-      const user = users.find((user) => user.userId === item.creatorUserId)
+      const user = users.find((u) => u.userId === item.creatorUserId) ?? {
+        userId: item.creatorUserId,
+        username: '',
+        profileUrl: '',
+        profilePictureUrl: '',
+      }
       return (
         <Animated.View
           style={[styles.videoContainer, { transform: [{ rotate: rotationInterpolation }] }]}
