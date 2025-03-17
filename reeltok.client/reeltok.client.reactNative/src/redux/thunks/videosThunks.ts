@@ -15,11 +15,16 @@ export const addVideoToFeedThunk = createAsyncThunk(
     const httpMethod: HttpMethod = 'GET'
     const url: string = 'videos/feed'
     const body: GetVideosForFeedRequestDto = {
-      amount: 2
+      amount: 2,
     }
-    const payloadType: PayloadType = 'queryParameters';
+    const payloadType: PayloadType = 'queryParameters'
 
-    const videoFeed = await httpService<GetVideosForFeedRequestDto>({ httpMethod, url, body, payloadType })
+    const videoFeed = await httpService<GetVideosForFeedRequestDto>({
+      httpMethod,
+      url,
+      body,
+      payloadType,
+    })
 
     console.log(videoFeed?.data.Videos)
 
@@ -33,11 +38,11 @@ export const addVideoToFeedThunk = createAsyncThunk(
       videoId: v.VideoId,
       streamUrl: `https://cdn.reeltok.site/videos/${v.StreamPath}`,
       uploadedAt: v.UploadedAt,
-    }));
+    }))
 
-    let newVideoFeed = [...videosInFeed, ...mappedVideos];
+    let newVideoFeed = [...videosInFeed, ...mappedVideos]
 
-    newVideoFeed = [...new Map(newVideoFeed.map(video => [video.videoId, video])).values()];
+    newVideoFeed = [...new Map(newVideoFeed.map((video) => [video.videoId, video])).values()]
 
     if (newVideoFeed.length > 50) {
       newVideoFeed = newVideoFeed.slice(newVideoFeed.length - 50)

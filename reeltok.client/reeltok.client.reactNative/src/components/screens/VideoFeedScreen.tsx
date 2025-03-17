@@ -75,7 +75,7 @@ const VideoFeedScreen: React.FC = () => {
   }, [])
 
   const viewabilityConfig = {
-    itemVisiblePercentThreshold: 50,
+    itemVisiblePercentThreshold: 10,
   }
 
   const handleAutoScroll = useCallback(() => {
