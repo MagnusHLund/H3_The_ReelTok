@@ -7,7 +7,7 @@ import { Button, StyleSheet, Text, View, Image } from 'react-native'
 import useAppDimensions from '../../../hooks/useAppDimensions'
 import useAppDispatch from '../../../hooks/useAppDispatch'
 import { useNavigation } from '@react-navigation/native'
-import UploadedVideo from './../upload/UploadedVideo'
+import UploadedMedia from '../upload/UploadedMedia'
 import AntDesign from '@expo/vector-icons/AntDesign'
 import { useState, useRef, useEffect } from 'react'
 import CustomButton from '../../input/CustomButton'
@@ -86,7 +86,7 @@ export const Camera: React.FC<CameraProps> = ({ cameraMode }) => {
             style={[styles.picture, { height: contentHeight }]}
           />
         )}
-        {cameraMode === 'video' && uri.fileUri !== '' && <UploadedVideo uri={uri.fileUri} />}
+        {cameraMode === 'video' && uri.fileUri !== '' && <UploadedMedia uri={uri.fileUri} />}
         <View style={styles.contentButtons}>
           <CustomButton onPress={() => setUri({ fileUri: '' })} transparent>
             <MaterialCommunityIcons name="restore" size={50} color={'white'} />

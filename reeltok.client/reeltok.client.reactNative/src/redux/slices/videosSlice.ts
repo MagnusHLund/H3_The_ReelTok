@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export enum VideoRecommendationCategories {
-  Gaming,
-  Tech,
-  Dance,
-  Fight,
-  Sport,
-  Comedy,
+  Gaming = 0,
+  Tech = 1,
+  Dance = 2,
+  Fight = 3,
+  Sport = 4,
+  Comedy = 5,
 }
 
 export type Video = {
@@ -26,32 +26,7 @@ export interface VideosProps {
 }
 
 const initialState: VideosProps = {
-  videos: [
-    {
-      videoId: 'guidVideoId1',
-      creatorUserId: 'guidUserId3',
-      title: 'Mock video 1',
-      description: 'Mock description 1',
-      likes: 123,
-      hasLiked: true,
-      category: VideoRecommendationCategories.Gaming,
-      streamUrl:
-        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-      uploadedAt: new Date(Date.now()).toDateString(),
-    },
-    {
-      videoId: 'guidVideoId2',
-      creatorUserId: 'guidUserId4',
-      title: 'Mock video 2',
-      description: 'Mock description 2',
-      likes: 321,
-      hasLiked: false,
-      category: VideoRecommendationCategories.Gaming,
-      streamUrl:
-        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-      uploadedAt: new Date(Date.now()).toDateString(),
-    },
-  ],
+  videos: [],
 }
 
 const videosSlice = createSlice({

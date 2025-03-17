@@ -1,5 +1,5 @@
-import React from 'react'
-import { FlashList } from '@shopify/flash-list'
+import React, { useState } from 'react'
+import { FlashList } from '@shopify/flash-list';
 import type { ListRenderItem, ViewToken } from '@shopify/flash-list'
 import { Video } from '../../../redux/slices/videosSlice'
 
@@ -20,8 +20,8 @@ const VideoListApp: React.FC<VideoListAppProps> = ({
   contentHeight,
   viewabilityConfig,
   handleViewableItemsChanged,
-  style,
 }) => {
+
   return (
     <FlashList<Video>
       ref={videoFeedRef}

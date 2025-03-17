@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { DropdownOption } from '../../components/input/CustomDropdown'
 
 export type UploadedVideo = {
+  title: string
+  description: string
+  category: DropdownOption
   fileUri: string
 }
 
@@ -10,6 +14,9 @@ export interface UploadProps {
 
 const initialState: UploadProps = {
   video: {
+    title: '',
+    description: '',
+    category: { label: '', value: '' },
     fileUri: '',
   },
 }
@@ -19,7 +26,6 @@ const uploadSlice = createSlice({
   initialState,
   reducers: {
     setUploadedVideo: (state, action: PayloadAction<UploadedVideo>) => {
-      console.log('test 3: ' + action.payload.fileUri)
       state.video = action.payload
     },
   },
