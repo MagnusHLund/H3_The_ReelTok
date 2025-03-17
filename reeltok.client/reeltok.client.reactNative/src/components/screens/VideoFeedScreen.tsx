@@ -26,7 +26,7 @@ const VideoFeedScreen: React.FC = () => {
   const [highestDisplayedVideoIndex, setHighestDisplayedVideoIndex] = useState(0)
   const videoFeedRef = React.useRef<FlashList<Video> | FlatList>(null)
   const route = useRoute()
-  const orientation = UseOrientation(route.name)
+  const orientation = UseOrientation(route.name,'')
   const videoRotation = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
@@ -69,14 +69,13 @@ const VideoFeedScreen: React.FC = () => {
   })
 
   const handleViewableItemsChanged = useCallback(({ viewableItems }: any) => {
-    console.log(`Currently rendered items: ${viewableItems.length} ${route.name}`)
     if (viewableItems.length > 0) {
       setCurrentlyDisplayedVideoIndex(viewableItems[0].index)
     }
   }, [])
 
   const viewabilityConfig = {
-    itemVisiblePercentThreshold: 50,
+    itemVisiblePercentThreshold: 10,
   }
 
   const handleAutoScroll = useCallback(() => {

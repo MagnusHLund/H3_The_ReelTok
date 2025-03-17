@@ -5,6 +5,7 @@ interface CustomTextInputProps {
   borders?: boolean
   widthPercentage?: number
   backgroundColor?: string
+  onChange(value:string): void
 }
 
 import React, { useState } from 'react'
@@ -17,6 +18,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
   borders = true,
   widthPercentage = 0.8,
   backgroundColor = 'white',
+  onChange
 }) => {
   const { width } = useWindowDimensions()
   const [isFocused, setIsFocused] = useState(false)
@@ -39,6 +41,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
         placeholderTextColor={'black'}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        onChangeText={(value) => onChange(value)}
       />
     </View>
   )

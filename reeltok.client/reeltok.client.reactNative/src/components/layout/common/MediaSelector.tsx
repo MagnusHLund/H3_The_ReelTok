@@ -7,6 +7,9 @@ import Entypo from '@expo/vector-icons/Entypo'
 import Gradient from './GradientBackground'
 import Camera from '../camera/Camera'
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { setUploadedVideo, UploadedVideo } from '../../../redux/slices/uploadSlice'
+import useAppSelector from '../../../hooks/useAppSelector'
 
 interface MediaSelectorProps {
   handleSelectMedia: () => void
@@ -16,13 +19,25 @@ const MediaSelector: React.FC<MediaSelectorProps> = ({ handleSelectMedia }) => {
   const [selectedMedia, setSelectedMedia] = useState<string>()
   const [showCamera, setShowCamera] = useState(false)
   const navigateToScreen = useAppNavigation()
-
+  const dispatch = useDispatch()
+  const uploadedVideo: UploadedVideo = {
+    title: '',
+    description: '',
+    category: { label: '', value: '' },
+    fileUri: `${useAppSelector((state) => state.upload.video)}`
+  }
   const handlePickMedia = async () => {
     try {
-      const media = await mediaPicker()
-      if (media) {
-        setSelectedMedia(media)
-        navigateToScreen('UploadVideo', { video: media })
+      const media: UploadedVideo = {
+        title: '',
+        description: '',
+        category: { label: '', value: '' },
+        fileUri: `${await mediaPicker()}`
+      }
+      if (media.fileUri != null) {
+        dispatch(setUploadedVideo(media))
+        setSelectedMedia(uploadedVideo.fileUri)
+        navigateToScreen('UploadVideo')
       }
     } catch (error) {
       throw new Error(error.message)
@@ -39,7 +54,6 @@ const MediaSelector: React.FC<MediaSelectorProps> = ({ handleSelectMedia }) => {
   }
 
   return (
- 
     <View style={styles.overlay}>
       {showCamera ? (
         <Camera cameraMode="video" onClose={handleHideCamera} />

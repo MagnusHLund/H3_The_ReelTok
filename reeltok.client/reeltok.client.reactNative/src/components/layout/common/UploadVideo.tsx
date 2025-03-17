@@ -1,5 +1,5 @@
 import CustomDropdown, { DropdownOption } from '../../input/CustomDropdown'
-import UploadedVideo from '../../layout/upload/UploadedVideo'
+import UploadedMedia from '../upload/UploadedMedia'
 import CustomTextInput from '../../input/CustomTextInput'
 import useAppSelector from '../../../hooks/useAppSelector'
 import { useRoute } from '@react-navigation/native'
@@ -7,8 +7,11 @@ import CustomButton from '../../input/CustomButton'
 import Section from '../../layout/common/Section'
 import { View, StyleSheet } from 'react-native'
 import Title from '../../layout/common/Title'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useTranslation from '../../../hooks/useTranslations'
+import { setUploadedVideoThunk } from '../../../redux/thunks/uploadThunks'
+import type { UploadedVideo } from '../../../redux/slices/uploadSlice'
+import { useDispatch } from 'react-redux'
 
 export const isImage = (uri: string) => {
   const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif']
@@ -16,13 +19,32 @@ export const isImage = (uri: string) => {
 }
 
 const UploadVideo: React.FC = ({}) => {
-  const t = useTranslation()
-  const uploadedVideo = useAppSelector((state) => state.upload.video)
+  const t = useTranslation() 
+  const [uploadedVideoTitle, setUploadedVideoTitle] = useState<string>('')
+  const [uploadedVideoDescription, setUploadedVideoDescription] = useState<string>('')
+  const [selectedCategory, setSelectedCategory] = useState<DropdownOption>({label: '', value: ''})
+  const dispatch = useDispatch()
+  const uploadedVideo: UploadedVideo = {
+    title: uploadedVideoTitle,
+    description: uploadedVideoDescription,
+    category: { label: selectedCategory?.label, value: selectedCategory.value },
+    fileUri: useAppSelector((state) => state.upload.video.fileUri),
+  } 
 
-  const [selectedCategory, setSelectedCategory] = useState<DropdownOption>()
+  const handleChangeTitle = (text: string) => {
+    setUploadedVideoTitle(text)
+  }
+
+  const handleChangeDescription = (text: string) => {
+    setUploadedVideoDescription(text)
+  }
 
   const handleChangeCategory = (selectedCategory: DropdownOption) => {
     setSelectedCategory({ label: selectedCategory.label, value: selectedCategory.value })
+  } 
+
+  const handleUpload = () => {
+    dispatch(setUploadedVideoThunk(uploadedVideo)) 
   }
 
   const categories: DropdownOption[] = [
@@ -56,19 +78,19 @@ const UploadVideo: React.FC = ({}) => {
   return (
     <>
       <View style={styles.videoContainer}>
-        <UploadedVideo uri={uploadedVideo.fileUri} />
+        <UploadedMedia uri={uploadedVideo.fileUri} />
       </View>
       <View style={styles.videoScreenContainer}>
         {!isImage(uploadedVideo.fileUri) && (
           <>
             <Section displayDivider={false}>
               <Title title="Title">
-                <CustomTextInput placeholder="Title" />
+                <CustomTextInput placeholder="Title" onChange={(value) => handleChangeTitle(value)}/>
               </Title>
             </Section>
             <Section displayDivider={false}>
               <Title title="Description">
-                <CustomTextInput placeholder="Description" />
+                <CustomTextInput placeholder="Description" onChange={(value) => handleChangeDescription(value)} />
               </Title>
             </Section>
             <Section displayDivider={false}>
@@ -88,7 +110,7 @@ const UploadVideo: React.FC = ({}) => {
           <CustomButton
             widthPercentage={0.8}
             title="Upload"
-            onPress={() => console.log('uploaded video' + uploadedVideo.fileUri)}
+            onPress={() => handleUpload()}
           />
         </Section>
       </View>
