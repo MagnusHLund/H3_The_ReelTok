@@ -1,7 +1,8 @@
-import { View, ScrollView, StyleSheet } from 'react-native'
+import { View, ScrollView, StyleSheet, Text } from 'react-native'
 import CustomButton from '../../input/CustomButton'
 import CustomImage from '../common/CustomImage'
-import React from 'react'
+import React, { useEffect } from 'react'
+import useAppSelector from '../../../hooks/useAppSelector'
 
 type ProfileVideo = {
   source: any
@@ -10,32 +11,30 @@ type ProfileVideo = {
 
 const VideoGallery: React.FC = () => {
   const amountOfVideos = 10 // Define the amount of videos
-  const videoArray = fetchVideosFromApi() // Assume this function fetches the video array from the API
+  const user = useAppSelector((state) => state.users.myUser)
+  const videos = useAppSelector((state) => state.videos.videos)
 
-  function fetchVideosFromApi(): ProfileVideo[] {
-    // Mock API call
-    return Array.from({ length: amountOfVideos }, (_, index) => ({
-      id: index + 1,
-      source: { uri: `https://example.com/video${index + 1}.mp4` },
-      uploadedAt: new Date(Date.now() - index * 1000 * 60 * 60 * 24).toISOString(), // Mock uploadedAt date
-    }))
-  }
+  const userVideos = videos.filter((video) => video.creatorUserId === user.userId)
 
-  // Sort videos by uploadedAt property
-  const sortedVideos = [...videoArray].sort(
-    (a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
-  )
+  const videoThumbnails = userVideos.map((video) => ({
+    ...video,
+    thumbnailUrl: video.streamUrl.replace('.MP4', '.jpg'),
+  }))
+
+  useEffect(() => {
+    console.log()
+  }, [])
 
   return (
     <ScrollView contentContainerStyle={styles.VideoContainer}>
-      {sortedVideos.map((video, index) => (
-        <View key={index} style={styles.videoItem}>
+      {videoThumbnails.map((video) => (
+        <View key={video.videoId} style={styles.videoItem}>
           <CustomButton onPress={() => {}} transparent>
             <CustomImage
               height={80}
               width={80}
               borderRadius={15}
-              source={video.source}
+              source={{ uri: video.thumbnailUrl }}
               resizeMode="cover"
             />
           </CustomButton>
