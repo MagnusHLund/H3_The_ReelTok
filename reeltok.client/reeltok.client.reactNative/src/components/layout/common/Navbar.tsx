@@ -40,13 +40,6 @@ const Navbar: React.FC = () => {
     setDisplayMediaSelector(!displayMediaSelector)
   }
 
-  const defaultUser: UserDetails = {
-    userId: 'guidUserId3',
-    username: 'Magnus',
-    email: 'someUrl.com',
-    profilePictureUrl: 'https://avatars.githubusercontent.com/u/124877369?v=4',
-  }
-
   return (
     <>
       <Modal
@@ -74,7 +67,7 @@ const Navbar: React.FC = () => {
             onPress={() =>
               navigateToScreen(
                 isLoggedIn ? 'Profile' : 'Login',
-                isLoggedIn ? { userDetails: defaultUser } : undefined
+                isLoggedIn ? { userDetails: user } : undefined
               )
             }
           >

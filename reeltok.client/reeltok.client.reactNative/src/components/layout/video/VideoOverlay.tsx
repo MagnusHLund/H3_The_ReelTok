@@ -12,13 +12,13 @@ import { UserDetails } from '../../../redux/slices/usersSlice'
 
 interface VideoOverlayProps {
   videoDetails: Video
-  userdetails: UserDetails
+  userDetails: UserDetails
   onCommentsOpen: () => void
 }
 
 const VideoOverlay: React.FC<VideoOverlayProps> = ({
   videoDetails,
-  userdetails,
+  userDetails,
   onCommentsOpen,
 }) => {
   const dispatch = useAppDispatch()
@@ -57,7 +57,7 @@ const VideoOverlay: React.FC<VideoOverlayProps> = ({
         </CustomButton>
       </View>
       <View style={styles.aboutContainer}>
-        <Creator user={userdetails} video={videoDetails} />
+        <Creator user={userDetails} video={videoDetails} />
       </View>
     </View>
   )

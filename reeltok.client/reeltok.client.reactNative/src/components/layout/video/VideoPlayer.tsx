@@ -25,6 +25,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   isDisplayed,
   onAutoScroll,
 }) => {
+  console.log(userDetails)
   const [playCount, setPlayCount] = useState(0)
   const { contentHeight } = useAppDimensions()
   const isVideoFocused = useIsFocused()
@@ -85,7 +86,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     <View style={[styles.container, { height: contentHeight }]}>
       <VideoOverlay
         videoDetails={videoDetails}
-        userdetails={userDetails}
+        userDetails={userDetails}
         onCommentsOpen={() => setShowCommentsSection(true)}
       />
       <TouchableOpacity
