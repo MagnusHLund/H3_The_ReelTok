@@ -12,6 +12,7 @@ import useAppSelector from '../../hooks/useAppSelector'
 
 const LoginScreen = () => {
   const navigateToScreen = useAppNavigation()
+  const user = useAppSelector((state) => state.users.myUser)
 
   const dispatch = useDispatch<AppDispatch>()
   const { contentHeight } = useAppDimensions()
@@ -33,6 +34,12 @@ const LoginScreen = () => {
       Alert.alert('Login Failed', 'Invalid credentials or network error.' + er)
     }
   }
+
+  useEffect(() => {
+    if (user?.userId) {
+      navigateToScreen('Profile')
+    }
+  }, [user])
 
   return (
     <View style={styles.outerContainer}>

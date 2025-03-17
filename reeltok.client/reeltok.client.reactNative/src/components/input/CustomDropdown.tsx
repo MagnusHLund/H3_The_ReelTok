@@ -6,6 +6,7 @@ import {
   FlatList,
   StyleSheet,
   useWindowDimensions,
+  
 } from 'react-native'
 import useTranslation from '../../hooks/useTranslations'
 

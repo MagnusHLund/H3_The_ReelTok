@@ -1,8 +1,13 @@
-import { View, StyleSheet, Image, useWindowDimensions } from 'react-native'
+import { View, StyleSheet, Image, useWindowDimensions, Alert } from 'react-native'
 import CustomTextInput from '../input/CustomTextInput'
-import CustomDropdown from '../input/CustomDropdown'
+import CustomDropdown, { DropdownOption } from '../input/CustomDropdown'
 import CustomButton from '../input/CustomButton'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import useAppNavigation from '../../hooks/useAppNavigation'
+import useAppSelector from '../../hooks/useAppSelector'
+import { AppDispatch } from '../../redux/store'
+import { useDispatch } from 'react-redux'
+import { CreateUserRequestDto } from '../../DTOs/login/CreateUserRequestDto'
 
 const Categories = [
   { label: 'Gaming', value: 'Gaming' },
@@ -14,6 +19,30 @@ const Categories = [
 ]
 
 const SignUpScreen = () => {
+  const navigateToScreen = useAppNavigation()
+  const user = useAppSelector((state) => state.users.myUser)
+
+  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [interest, setInterest] = useState('')
+  const dispatch = useDispatch<AppDispatch>()
+
+  const handleChangeCategory = (selectedCategory: DropdownOption) => {
+    setInterest(selectedCategory.value)
+  }
+
+  const handleSignup = () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter both email and password.')
+      return
+    }
+
+    const signup: CreateUserRequestDto = {email, password, username, interest
+      
+    }
+  }
+
   const { height, width } = useWindowDimensions()
   const styles = StyleSheet.create({
     container: {
@@ -49,9 +78,23 @@ const SignUpScreen = () => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <CustomTextInput placeholder="Email.."></CustomTextInput>
-        <CustomTextInput placeholder="password.." password></CustomTextInput>
-        <CustomDropdown options={Categories} onChange={() => {}} />
+        <CustomTextInput
+          placeholder="Username.."
+          value={username}
+          onChangeText={setUsername}
+        ></CustomTextInput>
+        <CustomTextInput
+          placeholder="Email.."
+          value={email}
+          onChangeText={setEmail}
+        ></CustomTextInput>
+        <CustomTextInput
+          placeholder="password.."
+          password
+          value={password}
+          onChangeText={setPassword}
+        ></CustomTextInput>
+        <CustomDropdown options={Categories} onChange={handleChangeCategory} />
         <CustomButton
           widthPercentage={0.8}
           onPress={() => console.log('Create user')}

@@ -55,8 +55,11 @@ const usersSlice = createSlice({
       state.myUser = action.payload[0]
       state.users = action.payload
     },
+    userSignup: (state, action: PayloadAction<UserDetails>) => {
+      state.users.push(action.payload)
+    },
   },
 })
 
-export const { userLogin } = usersSlice.actions
+export const { userLogin, userSignup } = usersSlice.actions
 export default usersSlice.reducer
