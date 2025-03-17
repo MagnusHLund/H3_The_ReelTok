@@ -6,44 +6,38 @@ import {
   VideoRecommendationCategories,
 } from '../slices/videosSlice'
 import { GetVideosForFeedRequestDto } from '../../DTOs/videos/GetVideosForFeed/GetVideosForFeedRequestDto'
-import httpService from '../../services/httpService'
+import httpService, { PayloadType } from '../../services/httpService'
 import { HttpMethod } from '../../services/httpService'
-import { getRandomNumber } from './../../../node_modules/react-native-svg/src/lib/util'
 
-// TODO: Update this to use our APIs
 export const addVideoToFeedThunk = createAsyncThunk(
   'videos/addVideoToFeed',
   async (videosInFeed: Video[], { dispatch }) => {
-    const newVideos: Video[] = [
-      {
-        videoId: getRandomNumber().toString(),
-        creatorUserId: 'guidUserId3',
-        title: 'Mock video 1',
-        description: 'Mock description 1',
-        likes: 123,
-        hasLiked: true,
-        category: VideoRecommendationCategories.Gaming,
-        streamUrl:
-          'https://cdn.viggle.ai/gras/f2736735-7bbd-4c8f-b0e7-2f84ec6aff0e.mp4?Expires=1740772331&KeyName=vigglecloudcdn2&Signature=BoAeGxk5B9bhr9a20ZaTiIDixc8=',
+    const httpMethod: HttpMethod = 'GET'
+    const url: string = 'videos/feed'
+    const body: GetVideosForFeedRequestDto = {
+      amount: 2
+    }
+    const payloadType: PayloadType = 'queryParameters';
 
-        uploadedAt: new Date(Date.now()).toDateString(),
-      },
-      {
-        videoId: getRandomNumber().toString(),
-        creatorUserId: 'guidUserId3',
-        title: 'Mock video 2',
-        description: 'Mock description 2',
-        likes: 321,
-        hasLiked: false,
-        category: VideoRecommendationCategories.Gaming,
-        streamUrl:
-          'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    const videoFeed = await httpService<GetVideosForFeedRequestDto>({ httpMethod, url, body, payloadType })
 
-        uploadedAt: new Date(Date.now()).toDateString(),
-      },
-    ]
+    console.log(videoFeed?.data.Videos)
 
-    let newVideoFeed = (videosInFeed ?? []).concat(newVideos)
+    const mappedVideos: Video[] = videoFeed?.data.Videos.map((v: any) => ({
+      creatorUserId: v.VideoCreator.UserId,
+      title: v.VideoDetails.Title,
+      description: v.VideoDetails.Description,
+      category: v.VideoDetails.Category,
+      likes: v.VideoLikes.TotalLikes,
+      hasLiked: v.VideoLikes.UserHasLikedVideo,
+      videoId: v.VideoId,
+      streamUrl: `https://cdn.reeltok.site/videos/${v.StreamPath}`,
+      uploadedAt: v.UploadedAt,
+    }));
+
+    let newVideoFeed = [...videosInFeed, ...mappedVideos];
+
+    newVideoFeed = [...new Map(newVideoFeed.map(video => [video.videoId, video])).values()];
 
     if (newVideoFeed.length > 50) {
       newVideoFeed = newVideoFeed.slice(newVideoFeed.length - 50)

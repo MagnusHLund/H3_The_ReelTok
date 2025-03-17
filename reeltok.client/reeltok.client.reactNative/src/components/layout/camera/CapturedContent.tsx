@@ -1,5 +1,5 @@
 import { View, Image, StyleSheet } from 'react-native'
-import UploadedVideo from './../upload/UploadedVideo'
+import UploadedMedia from '../upload/UploadedMedia'
 import React from 'react'
 import CustomImage from '../common/CustomImage'
 
@@ -28,7 +28,7 @@ const CapturedContent: React.FC<CapturedContentProps> = ({
           />
         </View>
       )}
-      {cameraMode === 'video' && uri !== '' && <UploadedVideo uri={uri} />}
+      {cameraMode === 'video' && uri !== '' && <UploadedMedia uri={uri} />}
     </View>
   )
 }

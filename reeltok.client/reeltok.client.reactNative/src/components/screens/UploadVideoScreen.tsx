@@ -1,11 +1,10 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../redux/store'
+import useAppSelector from '../../hooks/useAppSelector'
 import UploadVideo, { isImage } from '../layout/common/UploadVideo'
 import Header from '../layout/common/Header'
 
 const UploadVideoScreen = () => {
-  const uploadedVideo = useSelector((state: RootState) => state.upload.video)
+  const uploadedVideo = useAppSelector((state) => state.upload.video)
   const title = isImage(uploadedVideo.fileUri) ? 'Upload Image' : 'Upload Video'
 
   return (
