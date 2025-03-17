@@ -8,6 +8,7 @@ import useAppSelector from '../../hooks/useAppSelector'
 import { AppDispatch } from '../../redux/store'
 import { useDispatch } from 'react-redux'
 import { CreateUserRequestDto } from '../../DTOs/login/CreateUserRequestDto'
+import { createUserThunk } from '../../redux/thunks/authThunks'
 
 const Categories = [
   { key: 1, label: 'Gaming', value: 'Gaming' },
@@ -33,20 +34,31 @@ const SignUpScreen = () => {
   }
 
   const handleSignup = () => {
-    // if (!email || !password) {
-    //   Alert.alert('Error', 'Please enter both email and password.')
-    //   return
-    // }
-
+    // Just to test
     console.log(username)
     console.log(email)
     console.log(password)
     console.log(interest)
 
-    // const signup: CreateUserRequestDto = {email, password, username, interest
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter both email and password.')
+      return
+    }
 
-    // }
+    const signup: CreateUserRequestDto = { email, password, username, interest }
+
+    try {
+      dispatch(createUserThunk(signup)).unwrap()
+    } catch (er) {
+      Alert.alert('Singu Failed', 'Invalid credentials or netword error.' + er)
+    }
   }
+
+  useEffect(() => {
+    if (user?.userId) {
+      navigateToScreen('Profile', { userDetails: user })
+    }
+  }, [])
 
   const { height, width } = useWindowDimensions()
   const styles = StyleSheet.create({
