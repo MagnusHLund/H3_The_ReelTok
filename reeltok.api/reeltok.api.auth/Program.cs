@@ -59,8 +59,6 @@ namespace AuthServiceApi
                     options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
                 });
 
-            builder.Services.AddHttpContextAccessor();
-
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -68,7 +66,6 @@ namespace AuthServiceApi
             WebApplication app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<ForwardCookiesMiddleware>();
             app.UseMiddleware<TokenValidationMiddleware>();
 
             // Configure the HTTP request pipeline.

@@ -43,6 +43,7 @@ namespace reeltok.api.videos
             builder.Services.AddScoped<IEndpointFactory, EndpointFactory>();
             builder.Services.AddScoped<IVideosRepository, VideosRepository>();
             builder.Services.AddScoped<IExternalApiService, ExternalApiService>();
+            builder.Services.AddScoped<IThumbnailService, ThumbnailService>();
 
             builder.Services.AddDbContext<VideosDbContext>(
                 options => options.UseSqlServer(builder.Configuration.GetConnectionString("VideosDb")));
@@ -57,8 +58,6 @@ namespace reeltok.api.videos
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                     options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
                 });
-
-            builder.Services.AddHttpContextAccessor();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

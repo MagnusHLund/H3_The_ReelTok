@@ -8,10 +8,12 @@ namespace reeltok.api.gateway.Middleware
         };
 
         private readonly RequestDelegate _next;
+        private readonly ILogger<CorsMiddleware> _logger;
 
-        public CorsMiddleware(RequestDelegate next)
+        public CorsMiddleware(RequestDelegate next, ILogger<CorsMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -20,6 +22,8 @@ namespace reeltok.api.gateway.Middleware
 
             if (IsValidOrigin(origin))
             {
+                _logger.LogInformation("Origin {Origin} is valid, applying CORS headers.", origin);
+
                 context.Response.Headers.Append("Access-Control-Allow-Origin", origin);
                 context.Response.Headers.Append("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
                 context.Response.Headers.Append("Access-Control-Allow-Headers", "Content-Type, Authorization");

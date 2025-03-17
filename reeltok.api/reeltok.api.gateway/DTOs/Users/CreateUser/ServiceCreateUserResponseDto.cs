@@ -8,9 +8,9 @@ namespace reeltok.api.gateway.DTOs.Users.CreateUser
     {
         [Required]
         [JsonProperty("User")]
-        public UserEntity User { get; set; }
+        public UserWithInterestEntity User { get; set; }
 
-        public ServiceCreateUserResponseDto(UserEntity user, bool success = true) : base(success)
+        public ServiceCreateUserResponseDto(UserWithInterestEntity user, bool success = true) : base(success)
         {
             User = user;
         }

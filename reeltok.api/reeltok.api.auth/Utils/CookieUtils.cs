@@ -16,7 +16,7 @@ namespace reeltok.api.auth.Utils
                     Expires = expireDateTime,
                     HttpOnly = true,
                     Secure = true,
-                    // TODO: @MagnusHLund Experiment with SameSite and Domain, when running in docker infrastructure
+                    SameSite = SameSiteMode.None
                 }
             );
         }
@@ -29,8 +29,30 @@ namespace reeltok.api.auth.Utils
 
         internal static string? GetCookieValue(HttpContext httpContext, TokenName cookieNameEnum)
         {
+            string? newlyCreatedAccessToken = GetNewlyCreatedAccessToken(httpContext, cookieNameEnum);
+
+            if (!string.IsNullOrEmpty(newlyCreatedAccessToken))
+            {
+                return newlyCreatedAccessToken;
+            }
+
             string cookieName = cookieNameEnum.ToString();
             return httpContext.Request.Cookies[cookieName];
+        }
+
+        private static string? GetNewlyCreatedAccessToken(HttpContext httpContext, TokenName cookieNameEnum)
+        {
+            if (cookieNameEnum == TokenName.AccessToken)
+            {
+                string? newlyCreatedAccessToken = httpContext.Items["NewAccessToken"] as string;
+
+                if (!string.IsNullOrEmpty(newlyCreatedAccessToken))
+                {
+                    return newlyCreatedAccessToken;
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -5,8 +5,8 @@ namespace reeltok.api.gateway.Interfaces.Services
 {
     public interface IUsersService
     {
-        Task<UserEntity> LoginUserAsync(string email, string password);
-        Task<UserEntity> CreateUserAsync(string email, string username, string password, CategoryType userInterest);
+        Task<UserWithInterestEntity> LoginUserAsync(string email, string password);
+        Task<UserWithInterestEntity> CreateUserAsync(string email, string username, string password, CategoryType userInterest);
         Task<ExternalUserEntity> GetUserByIdAsync(Guid userId);
         Task<UserEntity> UpdateUserDetailsAsync(string? username, string? email, CategoryType? interest);
         Task<UserEntity> UpdateProfilePictureAsync(IFormFile image);

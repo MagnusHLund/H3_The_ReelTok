@@ -14,6 +14,7 @@ namespace reeltok.api.videos.Tests.Services
     public class VideosServiceTests
     {
         private readonly Mock<IExternalApiService> _mockExternalApiService;
+        private readonly Mock<IThumbnailService> _mockThumbnailService;
         private readonly Mock<IVideosRepository> _mockVideosRepository;
         private readonly Mock<IStorageService> _mockStorageService;
         private readonly Mock<ILikesService> _mockLikesService;
@@ -22,11 +23,13 @@ namespace reeltok.api.videos.Tests.Services
         public VideosServiceTests()
         {
             _mockExternalApiService = new Mock<IExternalApiService>();
+            _mockThumbnailService = new Mock<IThumbnailService>();
             _mockVideosRepository = new Mock<IVideosRepository>();
             _mockStorageService = new Mock<IStorageService>();
             _mockLikesService = new Mock<ILikesService>();
             _videosService = new VideosService(
                 _mockExternalApiService.Object,
+                _mockThumbnailService.Object,
                 _mockVideosRepository.Object,
                 _mockStorageService.Object,
                 _mockLikesService.Object
@@ -123,8 +126,7 @@ namespace reeltok.api.videos.Tests.Services
             // Arrange
             Guid userId = Guid.NewGuid();
             VideoUpload videoUpload = TestDataFactory.CreateVideoUpload();
-            Assert.NotNull(videoUpload); // Ensure videoUpload is not null
-            Assert.NotNull(videoUpload.VideoFile); // Ensure video file is not null
+            IFormFile thumbnailFile = TestDataFactory.CreateThumbnailFile();
 
             VideoEntity expectedVideo = TestDataFactory.CreateVideoEntity();
 
@@ -137,9 +139,13 @@ namespace reeltok.api.videos.Tests.Services
                 .Setup(x => x.CreateVideoAsync(It.IsAny<VideoEntity>()))
                 .ReturnsAsync(expectedVideo);
 
+            _mockThumbnailService
+                .Setup(x => x.GenerateVideoThumbnailAsync(videoUpload.VideoFile))
+                .ReturnsAsync(thumbnailFile);
+
             // Mock storage service to successfully upload the video file
             _mockStorageService
-                .Setup(x => x.UploadVideoToFileServerAsync(videoUpload.VideoFile, expectedVideo.VideoId, userId))
+                .Setup(x => x.UploadVideoFilesUsingSftpAsync(videoUpload.VideoFile, thumbnailFile, expectedVideo.VideoId, userId))
                 .Returns(Task.CompletedTask);
 
             // Act
@@ -147,6 +153,8 @@ namespace reeltok.api.videos.Tests.Services
 
             // Assert
             Assert.Equal(expectedVideo, result);
+            Assert.NotNull(videoUpload);
+            Assert.NotNull(videoUpload.VideoFile);
         }
 
         [Fact]
@@ -159,14 +167,14 @@ namespace reeltok.api.videos.Tests.Services
             string streamPath = VideoUtils.CreateStreamPath(userId, videoId, (IFormFile)fileMock);
 
             _mockVideosRepository.Setup(x => x.DeleteVideoAsync(userId, videoId)).Returns(Task.FromResult(streamPath));
-            _mockStorageService.Setup(x => x.RemoveVideoFromFileServerAsync(streamPath)).Returns(Task.CompletedTask);
+            _mockStorageService.Setup(x => x.DeleteVideoFilesUsingSftpAsync(streamPath)).Returns(Task.CompletedTask);
 
             // Act
             await _videosService.DeleteVideoAsync(userId, videoId);
 
             // Assert
             _mockVideosRepository.Verify(x => x.DeleteVideoAsync(userId, videoId), Times.Once);
-            _mockStorageService.Verify(x => x.RemoveVideoFromFileServerAsync(streamPath), Times.Once);
+            _mockStorageService.Verify(x => x.DeleteVideoFilesUsingSftpAsync(streamPath), Times.Once);
         }
 
         #endregion

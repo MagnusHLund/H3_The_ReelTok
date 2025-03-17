@@ -8,12 +8,10 @@ namespace reeltok.api.videos.Services
     public class HttpService : IHttpService
     {
         private readonly HttpClient _httpClient;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HttpService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
+        public HttpService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<BaseResponseDto> ProcessRequestAsync<TRequest, TResponse>(
@@ -29,21 +27,8 @@ namespace reeltok.api.videos.Services
             }
 
             HttpRequestMessage request = HttpRequestFactory.CreateHttpRequest(requestDto, targetUrl, httpMethod, isMultipartFormData);
-            ForwardCookies(request);
 
             return await SendRequestAsync<TResponse>(request).ConfigureAwait(false);
-        }
-
-        private void ForwardCookies(HttpRequestMessage request)
-        {
-            IRequestCookieCollection? cookies = _httpContextAccessor.HttpContext?.Request.Cookies;
-            if (cookies != null)
-            {
-                foreach (var cookie in cookies)
-                {
-                    request.Headers.Add("Cookie", $"{cookie.Key}={cookie.Value}");
-                }
-            }
         }
 
         private async Task<BaseResponseDto> SendRequestAsync<TResponse>(HttpRequestMessage request)
@@ -52,7 +37,6 @@ namespace reeltok.api.videos.Services
             using (request)
             {
                 HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
-                HttpResponseUtils.HandleResponseCookies(response, _httpContextAccessor);
 
                 return await HttpResponseUtils.DeserializeResponseAsync<TResponse>(response).ConfigureAwait(false);
             }

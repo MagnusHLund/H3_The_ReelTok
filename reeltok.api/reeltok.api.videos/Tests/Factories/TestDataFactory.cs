@@ -199,5 +199,33 @@ namespace reeltok.api.videos.Tests.Factories
                 profilePictureUrlPath: "TestProfilePicturePath"
             );
         }
+
+        internal static IFormFile CreateThumbnailFile()
+        {
+            Mock<IFormFile> fileMock = new Mock<IFormFile>();
+            byte[] fileContent = new byte[100];
+            MemoryStream stream = new MemoryStream(fileContent);
+
+            fileMock.Setup(f => f.OpenReadStream()).Returns(stream);
+            fileMock.Setup(f => f.Length).Returns(fileContent.Length);
+            fileMock.Setup(f => f.FileName).Returns("test_thumbnail.jpg");
+            fileMock.Setup(f => f.ContentType).Returns("image/jpeg");
+
+            return fileMock.Object;
+        }
+
+        public static Mock<IFormFile> CreateInvalidMockVideoFile()
+        {
+            Mock<IFormFile> fileMock = new Mock<IFormFile>();
+            byte[] fileContent = new byte[100]; // Mock invalid content
+            MemoryStream stream = new MemoryStream(fileContent);
+
+            fileMock.Setup(f => f.OpenReadStream()).Returns(stream);
+            fileMock.Setup(f => f.Length).Returns(fileContent.Length);
+            fileMock.Setup(f => f.FileName).Returns("invalid_video.txt");
+            fileMock.Setup(f => f.ContentType).Returns("text/plain");
+
+            return fileMock;
+        }
     }
 }

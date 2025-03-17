@@ -36,6 +36,7 @@ namespace reeltok.api.gateway
             builder.Services.AddScoped<IUsersService, UsersService>();
             builder.Services.AddScoped<IVideosService, VideosService>();
             builder.Services.AddScoped<ICommentsService, CommentsService>();
+            builder.Services.AddScoped<IRecommendationsService, RecommendationsService>();
 
             builder.Services.AddScoped<IEndpointFactory, EndpointFactory>();
 

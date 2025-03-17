@@ -68,7 +68,7 @@ namespace reeltok.api.gateway.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUserAsync([FromBody] GatewayCreateUserRequestDto request)
         {
-            UserEntity createdUser = await _usersService
+            UserWithInterestEntity createdUser = await _usersService
                 .CreateUserAsync(request.Email, request.Username, request.Password, request.Interest)
                 .ConfigureAwait(false);
 
@@ -79,7 +79,7 @@ namespace reeltok.api.gateway.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> LoginUserAsync([FromBody] GatewayLoginRequestDto request)
         {
-            UserEntity user = await _usersService.LoginUserAsync(request.Email, request.Password)
+            UserWithInterestEntity user = await _usersService.LoginUserAsync(request.Email, request.Password)
                 .ConfigureAwait(false);
 
             GatewayLoginResponseDto responseDto = new GatewayLoginResponseDto(user);

@@ -33,6 +33,25 @@ namespace reeltok.api.videos.Utils
             return $"{userId}/{videoId}{fileExtension}";
         }
 
+        public static async Task<IMediaInfo> GetMediaInfoAsync(IFormFile video)
+        {
+            string temporaryFilePath = Path.GetTempFileName();
+            using (FileStream stream = new FileStream(temporaryFilePath, FileMode.Create))
+            {
+                await video.CopyToAsync(stream).ConfigureAwait(false);
+            }
+
+            try
+            {
+                IMediaInfo mediaInfo = await FFmpeg.GetMediaInfo(temporaryFilePath).ConfigureAwait(false);
+                return mediaInfo;
+            }
+            finally
+            {
+                File.Delete(temporaryFilePath);
+            }
+        }
+
         private static async Task<bool> IsVideoMinimumLengthAsync(IFormFile video)
         {
             var mediaInfo = await GetMediaInfoAsync(video).ConfigureAwait(false);
@@ -51,32 +70,6 @@ namespace reeltok.api.videos.Utils
         {
             var mediaInfo = await GetMediaInfoAsync(video).ConfigureAwait(false);
             return mediaInfo.VideoStreams.Any();
-        }
-
-        private static async Task<IMediaInfo> GetMediaInfoAsync(IFormFile video)
-        {
-            string temporaryFilePath = Path.GetTempFileName();
-            using (FileStream stream = new FileStream(temporaryFilePath, FileMode.Create))
-            {
-                await video.CopyToAsync(stream).ConfigureAwait(false);
-            }
-
-            IMediaInfo mediaInfo;
-
-            try
-            {
-                mediaInfo = await FFmpeg.GetMediaInfo(temporaryFilePath).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                throw new IOException("An error occurred while getting media info!", ex);
-            }
-            finally
-            {
-                File.Delete(temporaryFilePath);
-            }
-
-            return mediaInfo;
         }
     }
 }

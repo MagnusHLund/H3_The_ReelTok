@@ -55,7 +55,6 @@ namespace RecommendationsServiceApi
                 });
 
             builder.Services.AddHttpClient();
-            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -63,7 +62,6 @@ namespace RecommendationsServiceApi
             WebApplication app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<ForwardCookiesMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

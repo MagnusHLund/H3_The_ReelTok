@@ -20,7 +20,7 @@ namespace reeltok.api.gateway.Services
         public async Task<bool> LogOutUserAsync()
         {
             ServiceLogOutUserRequestDto requestDto = new ServiceLogOutUserRequestDto();
-            Uri targetUrl = _endpointFactory.GetAuthApiUrl("auth/login");
+            Uri targetUrl = _endpointFactory.GetAuthApiUrl("auth/logout");
 
             BaseResponseDto response = await _httpService.ProcessRequestAsync<ServiceLogOutUserRequestDto, ServiceLogOutUserResponseDto>(requestDto, targetUrl, HttpMethod.Post).ConfigureAwait(false);
 

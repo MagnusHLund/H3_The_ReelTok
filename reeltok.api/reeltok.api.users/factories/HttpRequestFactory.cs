@@ -1,8 +1,8 @@
 using System.Text;
 using Newtonsoft.Json;
 using System.Reflection;
+using System.Collections;
 using System.Net.Http.Headers;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace reeltok.api.users.Factories
 {
@@ -88,8 +88,13 @@ namespace reeltok.api.users.Factories
             HttpMethod httpMethod
         )
         {
-            Dictionary<string, string> requestQueryParameters = ConvertRequestDtoToQueryParameters(requestDto);
-            string targetUrlWithQueryParameters = QueryHelpers.AddQueryString(targetUrl.ToString(), requestQueryParameters);
+            var requestQueryParameters = ConvertRequestDtoToQueryParameters(requestDto);
+
+            // Manually build the query string to support repeated keys
+            var queryString = string.Join("&", requestQueryParameters.Select(kvp =>
+                $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value)}"));
+
+            string targetUrlWithQueryParameters = $"{targetUrl}?{queryString}";
 
             return new HttpRequestMessage(httpMethod, targetUrlWithQueryParameters);
         }
@@ -99,25 +104,31 @@ namespace reeltok.api.users.Factories
             return new StringContent(content, Encoding.UTF8, "application/json");
         }
 
-        private static Dictionary<string, string> ConvertRequestDtoToQueryParameters<TRequest>(TRequest request)
+        private static List<KeyValuePair<string, string>> ConvertRequestDtoToQueryParameters<TRequest>(TRequest request)
         {
-            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+            var queryParameters = new List<KeyValuePair<string, string>>();
+
             foreach (PropertyInfo property in typeof(TRequest).GetProperties())
             {
                 object? value = property.GetValue(request);
+
                 if (value != null)
                 {
-                    if (value is IEnumerable<Guid> guidList) // Handle List<Guid>
+                    if (value is IEnumerable enumerable && !(value is string)) // Handle any IEnumerable except string
                     {
-                        dictionary.Add(property.Name, string.Join(",", guidList));
+                        foreach (var item in enumerable)
+                        {
+                            queryParameters.Add(new KeyValuePair<string, string>(property.Name, item.ToString() ?? string.Empty));
+                        }
                     }
-                    else
+                    else // Handle single values
                     {
-                        dictionary.Add(property.Name, value.ToString());
+                        queryParameters.Add(new KeyValuePair<string, string>(property.Name, value.ToString() ?? string.Empty));
                     }
                 }
             }
-            return dictionary;
+
+            return queryParameters;
         }
     }
 }

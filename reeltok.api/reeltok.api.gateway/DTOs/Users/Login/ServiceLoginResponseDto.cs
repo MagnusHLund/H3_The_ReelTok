@@ -8,9 +8,9 @@ namespace reeltok.api.gateway.DTOs.Users.Login
     {
         [Required]
         [JsonProperty("User")]
-        public UserEntity User { get; set; }
+        public UserWithInterestEntity User { get; set; }
 
-        public ServiceLoginResponseDto(UserEntity user)
+        public ServiceLoginResponseDto(UserWithInterestEntity user)
         {
             User = user;
         }

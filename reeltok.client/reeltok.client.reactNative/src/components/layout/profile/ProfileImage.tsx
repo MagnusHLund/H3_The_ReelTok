@@ -21,39 +21,17 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   allowedToChangePicture,
   user,
 }) => {
-  const [showCamera, setShowCamera] = useState(false)
-  const navigateToScreen = useAppNavigation()
-
-  const handleShowCamera = () => {
-    if (allowedToChangePicture) {
-      setShowCamera(true)
-    } else {
-      // console.log('Navigating to Profile with user:', user)
-      // navigateToScreen('Profile', { userDetails: user })
-    }
-  }
-
-  const handleHideCamera = () => {
-    setShowCamera(false)
-  }
-
   return (
     <View style={styles.container}>
-      {showCamera ? (
-        <Camera cameraMode="picture" onClose={handleHideCamera} />
-      ) : (
-        <View style={styles.ProfilePicture}>
-          <CustomButton onPress={handleShowCamera} transparent>
-            <CustomImage
-              resizeMode="cover"
-              height={height}
-              width={width}
-              borderRadius={50}
-              source={source}
-            />
-          </CustomButton>
-        </View>
-      )}
+      <View style={styles.ProfilePicture}>
+        <CustomImage
+          resizeMode="cover"
+          height={height}
+          width={width}
+          borderRadius={50}
+          source={source}
+        />
+      </View>
     </View>
   )
 }

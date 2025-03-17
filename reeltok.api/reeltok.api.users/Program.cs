@@ -69,9 +69,7 @@ namespace UsersServiceApi
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline
             app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<ForwardCookiesMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {
