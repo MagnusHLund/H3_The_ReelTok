@@ -27,14 +27,12 @@ const UserProfileScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       {showCamera ? (
-        <View style={styles.cameraContainer}>
+        // <View style={styles.cameraContainer}>
           <Camera cameraMode="picture" onClose={handleHideCamera} />
-        </View>
+        // {/* </View> */}
       ) : (
         <>
-          <TouchableOpacity onPress={handleShowCamera} style={styles.touchable}>
-            <Text style={styles.touchableText}>Open Camera</Text>
-          </TouchableOpacity>
+          <TouchableOpacity onPress={handleShowCamera} style={styles.touchable}></TouchableOpacity>
           <ProfileDetails userId={userDetails.userId} />
           <VideoGallery />
         </>
@@ -46,7 +44,6 @@ const UserProfileScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
   },
   cameraContainer: {
     flex: 1,
@@ -60,13 +57,9 @@ const styles = StyleSheet.create({
     height: 80,
     width: 80,
     borderRadius: 40,
-    backgroundColor: '#f0f0f0',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 4,
-  },
-  touchableText: {
-    color: '#000',
   },
   errorText: {
     color: 'red',

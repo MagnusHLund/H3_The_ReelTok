@@ -99,17 +99,19 @@ const VideoFeedScreen: React.FC = () => {
   const renderItem = useCallback(
     ({ item, index }: RenderItemProps) => {
       if (!item.creatorUserId || !item.videoId) {
-        console.warn(`VideoCreator or UserId or VideoId not found for video with ID ${item.videoId}`)
+        console.warn(
+          `VideoCreator or UserId or VideoId not found for video with ID ${item.videoId}`
+        )
         return null
       }
 
-      const user = users.find((u) => u.userId === item.creatorUserId)
-      if (!user) {
-        console.warn(`User with ID ${item.creatorUserId} not found`)
-        return null
-      }
+      // const user = users.find((u) => u.userId === item.creatorUserId)
+      // if (!user) {
+      //   console.warn(`User with ID ${item.creatorUserId} not found`)
+      //   return null
+      // }
 
-      console.log('Rendering video with user:', user)
+      console.log('Rendering video with user: ' + item.creatorUserId)
 
       return (
         <Animated.View
@@ -119,7 +121,7 @@ const VideoFeedScreen: React.FC = () => {
             videoDetails={item}
             onAutoScroll={handleAutoScroll}
             isDisplayed={currentlyDisplayedVideoIndex === index}
-            userDetails={user}
+            userId={item.creatorUserId}
           />
         </Animated.View>
       )

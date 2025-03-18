@@ -4,43 +4,46 @@ import Username from './Username'
 import Title from './Title'
 import Description from './Description'
 import CreatorImage from './CreatorImage'
-import { UserDetails } from '../../../redux/slices/usersSlice'
 import { Video } from '../../../redux/slices/videosSlice'
 import useAppDimensions from './../../../hooks/useAppDimensions'
 import useAppNavigation from '../../../hooks/useAppNavigation'
+import useAppSelector from '../../../hooks/useAppSelector'
 
 interface CreatorProps {
-  user: UserDetails
+  userId: string
   video: Video
 }
 
-const Creator: React.FC<CreatorProps> = ({ user, video }) => {
-  const isCreator = user.userId === video.creatorUserId
+const Creator: React.FC<CreatorProps> = ({ userId, video }) => {
   const { fullWidth } = useAppDimensions()
   const navigateToScreen = useAppNavigation()
 
+  // Fetch the user details from the global state
+  const user = useAppSelector((state) => state.users.users.find((user) => user.userId === userId))
+  console.log(user)
+  console.log(userId)
   function handleNavigation() {
-    navigateToScreen('Profile', { userDetails: user })
+    navigateToScreen('Profile', { userDetails: userId })
+  }
+
+  if (!user) {
+    return null // or a loading indicator
   }
 
   return (
     <View>
-      {isCreator ? (
-        <TouchableOpacity onPress={handleNavigation} style={styles.touch}>
-          <View style={[styles.container, { width: fullWidth }]}>
-            <View style={styles.pictureContainer}>
-              <CreatorImage profilePictureUrl={user.profilePictureUrl} />
-            </View>
-            <View style={styles.textContainer}>
-              <Username username={user.username} />
-              <Title title={video.title} />
-              <Description description={video.description} />
-            </View>
+      <TouchableOpacity onPress={handleNavigation} style={styles.touch}>
+        <View style={[styles.container, { width: fullWidth }]}>
+          <View style={styles.pictureContainer}>
+            <CreatorImage profilePictureUrl={user.profilePictureUrl} />
           </View>
-        </TouchableOpacity>
-      ) : (
-        <></>
-      )}
+          <View style={styles.textContainer}>
+            <Username username={user.username} />
+            <Title title={video.title} />
+            <Description description={video.description} />
+          </View>
+        </View>
+      </TouchableOpacity>
     </View>
   )
 }

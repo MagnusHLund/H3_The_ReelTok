@@ -11,7 +11,7 @@ import { UserDetails } from '../../../redux/slices/usersSlice'
 
 interface VideoPlayerProps {
   videoDetails?: Video
-  userDetails: UserDetails
+  userId: string
   loopAmount?: number
   isDisplayed: boolean
   onAutoScroll: () => void
@@ -20,12 +20,12 @@ interface VideoPlayerProps {
 // TODO: Add play icon, when video is paused
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
   videoDetails,
-  userDetails,
+  userId,
   loopAmount = 2,
   isDisplayed,
   onAutoScroll,
 }) => {
-  console.log(userDetails)
+  console.log(userId)
   const [playCount, setPlayCount] = useState(0)
   const { contentHeight } = useAppDimensions()
   const isVideoFocused = useIsFocused()
@@ -75,6 +75,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       player.pause()
     } else {
       player.play()
+      console.log(userId + ' test')
     }
   }
 
@@ -86,7 +87,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     <View style={[styles.container, { height: contentHeight }]}>
       <VideoOverlay
         videoDetails={videoDetails}
-        userDetails={userDetails}
+        userId={userId}
         onCommentsOpen={() => setShowCommentsSection(true)}
       />
       <TouchableOpacity

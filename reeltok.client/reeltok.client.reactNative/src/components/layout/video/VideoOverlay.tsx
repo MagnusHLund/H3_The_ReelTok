@@ -12,21 +12,18 @@ import { UserDetails } from '../../../redux/slices/usersSlice'
 
 interface VideoOverlayProps {
   videoDetails: Video
-  userDetails: UserDetails
+  userId: string
   onCommentsOpen: () => void
 }
 
-const VideoOverlay: React.FC<VideoOverlayProps> = ({
-  videoDetails,
-  userDetails,
-  onCommentsOpen,
-}) => {
+const VideoOverlay: React.FC<VideoOverlayProps> = ({ videoDetails, userId, onCommentsOpen }) => {
   const dispatch = useAppDispatch()
   const orientation = useOrientation('', 'VideoOverlay')
   const { fullWidth, contentHeight } = useAppDimensions()
 
   const handleLikeButtonPress = () => {
     dispatch(hasLikedVideoThunk(videoDetails))
+    console.log(userId + ' overlay test')
   }
 
   return (
@@ -57,7 +54,7 @@ const VideoOverlay: React.FC<VideoOverlayProps> = ({
         </CustomButton>
       </View>
       <View style={styles.aboutContainer}>
-        <Creator user={userDetails} video={videoDetails} />
+        <Creator userId={userId} video={videoDetails} />
       </View>
     </View>
   )

@@ -27,7 +27,7 @@ export const addVideoToFeedThunk = createAsyncThunk(
       payloadType,
     })
 
-    dispatch(addUserFromVideoThunk(videoFeed?.data.videos))
+    dispatch(addUserFromVideoThunk(videoFeed?.data.Videos))
 
     console.log(videoFeed?.data.Videos)
 
