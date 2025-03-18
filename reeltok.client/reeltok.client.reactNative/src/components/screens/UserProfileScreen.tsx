@@ -11,7 +11,7 @@ const UserProfileScreen: React.FC = () => {
   const { userDetails } = route.params as { userDetails: UserDetails }
   console.log(userDetails)
   if (!userDetails) {
-    return <Text>User details not found</Text>
+    return <Text style={styles.errorText}>User details not found</Text>
   }
 
   const [showCamera, setShowCamera] = useState(false)
@@ -25,30 +25,47 @@ const UserProfileScreen: React.FC = () => {
   }
 
   return (
-    <>
+    <View style={styles.container}>
       {showCamera ? (
-        <View>
+        // <View style={styles.cameraContainer}>
           <Camera cameraMode="picture" onClose={handleHideCamera} />
-        </View>
+        // {/* </View> */}
       ) : (
         <>
           <TouchableOpacity onPress={handleShowCamera} style={styles.touchable}></TouchableOpacity>
-          <ProfileDetails user={userDetails} />
+          <ProfileDetails userId={userDetails.userId} />
           <VideoGallery />
         </>
       )}
-    </>
+    </View>
   )
 }
+
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  cameraContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   touchable: {
     position: 'absolute',
     left: '7%',
     top: '7.6%',
     height: 80,
     width: 80,
-    borderRadius: '50%',
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
     zIndex: 4,
   },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
+  },
 })
+
 export default UserProfileScreen

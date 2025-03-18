@@ -1,15 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export type UserDetails = {
-  email: string
   userId: string
   username: string
   profilePictureUrl: string
 }
 
+export type MyUser = UserDetails & {
+  email: string
+}
+
 export interface UsersProps {
   users: UserDetails[]
-  myUser: UserDetails
+  myUser: MyUser
 }
 
 const initialState: UsersProps = {
@@ -33,8 +36,11 @@ const usersSlice = createSlice({
     userSignup: (state, action: PayloadAction<UserDetails>) => {
       state.users.push(action.payload)
     },
+    addUsers: (state, action: PayloadAction<UserDetails[]>) => {
+      state.users = action.payload
+    },
   },
 })
 
-export const { userLogin, userSignup } = usersSlice.actions
+export const { userLogin, userSignup, addUsers } = usersSlice.actions
 export default usersSlice.reducer

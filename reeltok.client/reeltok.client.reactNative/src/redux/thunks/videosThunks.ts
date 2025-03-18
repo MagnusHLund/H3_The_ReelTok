@@ -8,6 +8,7 @@ import {
 import { GetVideosForFeedRequestDto } from '../../DTOs/videos/GetVideosForFeed/GetVideosForFeedRequestDto'
 import httpService, { PayloadType } from '../../services/httpService'
 import { HttpMethod } from '../../services/httpService'
+import { addUserFromVideoThunk } from './usersThunks'
 
 export const addVideoToFeedThunk = createAsyncThunk(
   'videos/addVideoToFeed',
@@ -25,6 +26,8 @@ export const addVideoToFeedThunk = createAsyncThunk(
       body,
       payloadType,
     })
+
+    dispatch(addUserFromVideoThunk(videoFeed?.data.Videos))
 
     console.log(videoFeed?.data.Videos)
 
