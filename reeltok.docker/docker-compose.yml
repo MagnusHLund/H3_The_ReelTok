@@ -15,7 +15,33 @@ services:
     networks:
       - traefik
       - backend
+  
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    command: tunnel --no-autoupdate run
+    restart: unless-stopped
+    environment:
+      - "TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}"
+    networks:
+      - traefik
 
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: expo-client
+    ports:
+      - "8081:8081"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.expo.rule=Host(`reeltok.site`)"
+      - "traefik.http.routers.expo.entrypoints=web"
+      - "traefik.http.services.expo.loadbalancer.server.port=8081"
    
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
